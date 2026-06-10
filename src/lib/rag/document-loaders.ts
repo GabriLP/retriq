@@ -18,6 +18,8 @@ export async function loadSources(inputs: string[], options: { baseUrl?: string 
     }
 
     const absolutePath = path.resolve(input);
+    // The prototype accepts either one file or a documentation folder. Keeping
+    // ingestion file-based makes the corpus reproducible for user-study tasks.
     const stat = await fs.stat(absolutePath);
     const files = stat.isDirectory() ? await collectFiles(absolutePath) : [absolutePath];
 
@@ -51,6 +53,8 @@ async function collectFiles(directory: string): Promise<string[]> {
 async function loadMarkdownFile(filePath: string, rootPath: string, baseUrl?: string) {
   const raw = await fs.readFile(filePath, "utf8");
   const parsed = matter(raw);
+  // Frontmatter is useful for canonical titles/URLs, but it should not pollute
+  // the text that later gets embedded and retrieved.
   const body = stripMdxSyntax(parsed.content);
   const title = String(parsed.data.title ?? findFirstHeading(body) ?? path.basename(filePath));
   const sourceUrl = String(parsed.data.url ?? buildSourceUrl(filePath, rootPath, baseUrl));
@@ -82,6 +86,8 @@ async function loadHtmlFromUrl(url: string) {
 
 function parseHtml(html: string, sourceUrl: string): SourceDocument {
   const $ = cheerio.load(html);
+  // Navigation and decorative page chrome would create noisy embeddings, so the
+  // loader keeps the main documentation text and removes unrelated UI content.
   $("script, style, nav, footer, svg, noscript").remove();
 
   const title = normalizeSourceText($("h1").first().text() || $("title").first().text() || sourceUrl);
@@ -107,6 +113,8 @@ function splitMarkdownIntoSections(content: string, title: string) {
   for (const line of lines) {
     const match = /^(#{2,4})\s+(.+)$/.exec(line);
     if (match && buffer.join("\n").trim()) {
+      // Heading-based sections are a lightweight semantic boundary. They are
+      // not perfect, but they preserve author-provided documentation structure.
       sections.push({ heading, content: normalizeSourceText(buffer.join("\n")) });
       heading = match[2].trim();
       buffer = [line];

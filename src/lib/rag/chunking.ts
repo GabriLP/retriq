@@ -21,6 +21,8 @@ export function createChunksFromDocuments(documents: SourceDocument[]) {
     const content = normalizeWhitespace(document.content);
     if (!content) continue;
 
+    // Word-count chunking is intentionally simple and explainable. For the
+    // thesis prototype, transparency matters more than advanced NLP splitting.
     const words = content.split(/\s+/);
     if (words.length <= TARGET_WORDS) {
       chunks.push(toChunk(document, content));
@@ -32,6 +34,8 @@ export function createChunksFromDocuments(documents: SourceDocument[]) {
       const end = Math.min(start + TARGET_WORDS, words.length);
       const chunkContent = words.slice(start, end).join(" ");
 
+      // Very small chunks often retrieve well by accident but provide weak
+      // evidence. The minimum size keeps enough context for grounded answers.
       if (countWords(chunkContent) >= MIN_WORDS || start === 0) {
         chunks.push(toChunk(document, chunkContent, chunks.length + 1));
       }
