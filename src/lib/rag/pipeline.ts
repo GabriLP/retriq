@@ -1,0 +1,47 @@
+import { performance } from "node:perf_hooks";
+
+import { ragConfig } from "./config";
+import { appendEvaluationLog } from "./evaluation-log";
+import { generateGroundedAnswer } from "./generation";
+import { buildGroundedPrompt } from "./prompt";
+import { retrieveRelevantChunks } from "./retrieval";
+import type { Citation, QueryResponse } from "./types";
+
+export async function answerQuestion(question: string, topK = ragConfig.defaultTopK): Promise<QueryResponse> {
+  const startedAt = performance.now();
+
+  const retrievalStartedAt = performance.now();
+  const retrievedChunks = await retrieveRelevantChunks(question, topK);
+  const retrievalMs = Math.round(performance.now() - retrievalStartedAt);
+
+  const generationStartedAt = performance.now();
+  const answer = await generateGroundedAnswer(question, retrievedChunks);
+  const generationMs = Math.round(performance.now() - generationStartedAt);
+
+  const citations: Citation[] = retrievedChunks.map((chunk) => ({
+    label: `S${chunk.rank}`,
+    title: chunk.title,
+    section: chunk.section,
+    sourceUrl: chunk.sourceUrl,
+  }));
+
+  const response: QueryResponse = {
+    question,
+    answer,
+    citations,
+    retrievedChunks,
+    timings: {
+      retrievalMs,
+      generationMs,
+      totalMs: Math.round(performance.now() - startedAt),
+    },
+    model: ragConfig.model,
+    embeddingModel: ragConfig.embeddingModel,
+    // A short prompt preview is useful for debugging grounding behavior without
+    // turning logs into a second full copy of the vector store.
+    promptPreview: buildGroundedPrompt(question, retrievedChunks).slice(0, 4000),
+  };
+
+  await appendEvaluationLog(response);
+  return response;
+}
