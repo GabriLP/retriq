@@ -21,8 +21,8 @@ export function createChunksFromDocuments(documents: SourceDocument[]) {
     const content = normalizeWhitespace(document.content);
     if (!content) continue;
 
-    // Word-count chunking is intentionally simple and explainable. For the
-    // thesis prototype, transparency matters more than advanced NLP splitting.
+    // Word-count chunking keeps the preprocessing step deterministic and easy
+    // to inspect before introducing more advanced NLP-based segmentation.
     const words = content.split(/\s+/);
     if (words.length <= TARGET_WORDS) {
       chunks.push(toChunk(document, content));

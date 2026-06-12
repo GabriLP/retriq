@@ -17,8 +17,8 @@ export async function readVectorStore(filePath = ragConfig.vectorStorePath) {
 
 export async function writeVectorStore(chunks: EmbeddedChunk[], filePath = ragConfig.vectorStorePath) {
   await fs.mkdir(path.dirname(filePath), { recursive: true });
-  // A plain JSON store is enough for the controlled corpus and makes retrieval
-  // artifacts directly auditable during the thesis evaluation.
+  // A plain JSON store is enough for a controlled corpus and keeps retrieval
+  // artifacts easy to inspect while the dataset is still small.
   await fs.writeFile(
     filePath,
     JSON.stringify(

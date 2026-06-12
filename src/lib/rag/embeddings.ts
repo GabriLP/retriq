@@ -6,8 +6,8 @@ let client: OpenAI | null = null;
 
 export function getOpenAIClient() {
   if (!process.env.OPENAI_API_KEY) {
-    // Failing early keeps the ingestion step explicit: no vectors are generated
-    // unless the experimenter has intentionally configured the API provider.
+    // Failing early prevents silently producing incomplete local artifacts when
+    // the embedding provider has not been configured.
     throw new Error("OPENAI_API_KEY is required to run retrieval generation or ingestion.");
   }
 
@@ -18,8 +18,8 @@ export function getOpenAIClient() {
 export async function embedTexts(texts: string[]) {
   const openai = getOpenAIClient();
   const vectors: number[][] = [];
-  // Batching keeps ingestion practical while preserving a simple local pipeline
-  // that can still be explained in the thesis without queue infrastructure.
+  // Batching keeps ingestion practical without adding background jobs or queue
+  // infrastructure to the local pipeline.
   const batchSize = 64;
 
   for (let index = 0; index < texts.length; index += batchSize) {

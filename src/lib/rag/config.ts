@@ -3,8 +3,8 @@ import path from "node:path";
 const root = process.cwd();
 
 export const ragConfig = {
-  // Local JSON files keep the prototype auditable: chunks, vectors, and logs
-  // can be opened directly during thesis analysis without database tooling.
+  // Local JSON files keep chunks, vectors, and logs directly inspectable
+  // without requiring database tooling during early development.
   chunksPath: path.join(root, "data", "chunks.json"),
   vectorStorePath: path.join(root, "data", "vector-store.json"),
   evaluationLogPath: path.join(root, "data", "evaluation-log.jsonl"),

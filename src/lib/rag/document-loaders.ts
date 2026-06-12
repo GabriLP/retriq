@@ -18,8 +18,8 @@ export async function loadSources(inputs: string[], options: { baseUrl?: string 
     }
 
     const absolutePath = path.resolve(input);
-    // The prototype accepts either one file or a documentation folder. Keeping
-    // ingestion file-based makes the corpus reproducible for user-study tasks.
+    // Accept either one file or a documentation folder so the same controlled
+    // corpus can be ingested repeatedly across local runs.
     const stat = await fs.stat(absolutePath);
     const files = stat.isDirectory() ? await collectFiles(absolutePath) : [absolutePath];
 
