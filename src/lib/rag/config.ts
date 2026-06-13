@@ -10,6 +10,6 @@ export const ragConfig = {
   evaluationLogPath: path.join(root, "data", "evaluation-log.jsonl"),
   defaultTopK: Number(process.env.RETRIQ_TOP_K ?? 4),
   minScore: Number(process.env.RETRIQ_MIN_SCORE ?? 0.18),
-  model: process.env.OPENAI_MODEL ?? "gpt-5-mini",
-  embeddingModel: process.env.OPENAI_EMBEDDING_MODEL ?? "text-embedding-3-small",
+  model: process.env.GEMINI_MODEL ?? "gemini-2.5-flash",
+  embeddingModel: process.env.GEMINI_EMBEDDING_MODEL ?? "gemini-embedding-001",
 };

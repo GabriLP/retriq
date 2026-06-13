@@ -1,5 +1,5 @@
 import { ragConfig } from "./config";
-import { getOpenAIClient } from "./embeddings";
+import { getGeminiClient } from "./embeddings";
 import { answerInstructions, buildGroundedPrompt } from "./prompt";
 import type { RetrievalResult } from "./types";
 
@@ -8,16 +8,17 @@ export async function generateGroundedAnswer(question: string, chunks: Retrieval
     return "The retrieved documentation does not contain enough information to answer this question. Try ingesting more relevant documentation or lowering the retrieval threshold for exploration.";
   }
 
-  const openai = getOpenAIClient();
+  const gemini = getGeminiClient();
   const prompt = buildGroundedPrompt(question, chunks);
 
-  const response = await openai.responses.create({
+  const response = await gemini.models.generateContent({
     model: ragConfig.model,
-    instructions: answerInstructions,
-    input: prompt,
-    max_output_tokens: 900,
-    store: false,
+    contents: prompt,
+    config: {
+      maxOutputTokens: 900,
+      systemInstruction: answerInstructions,
+    },
   });
 
-  return response.output_text?.trim() || "The model returned an empty response for the retrieved context.";
+  return response.text?.trim() || "The model returned an empty response for the retrieved context.";
 }
