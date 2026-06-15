@@ -18,18 +18,20 @@ export function getGeminiClient() {
 export async function embedTexts(texts: string[]) {
   const gemini = getGeminiClient();
   const vectors: number[][] = [];
-  // Batching keeps ingestion practical without adding background jobs or queue
-  // infrastructure to the local pipeline.
-  const batchSize = 64;
 
-  for (let index = 0; index < texts.length; index += batchSize) {
-    const batch = texts.slice(index, index + batchSize);
+  for (const text of texts) {
     const response = await gemini.models.embedContent({
       model: ragConfig.embeddingModel,
-      contents: batch,
+      contents: text,
     });
+    const [embedding] = response.embeddings ?? [];
+    const vector = embedding?.values ?? [];
 
-    vectors.push(...(response.embeddings ?? []).map((item) => item.values ?? []));
+    if (!vector.length) {
+      throw new Error("Gemini did not return a valid embedding for one of the requested texts.");
+    }
+
+    vectors.push(vector);
   }
 
   return vectors;
@@ -37,5 +39,9 @@ export async function embedTexts(texts: string[]) {
 
 export async function embedQuery(query: string) {
   const [embedding] = await embedTexts([query]);
+  if (!embedding?.length) {
+    throw new Error("Gemini did not return a valid embedding for the query.");
+  }
+
   return embedding;
 }

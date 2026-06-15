@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { loadEnvConfig } from "@next/env";
+import * as nextEnv from "@next/env";
 
 import type { EmbeddedChunk } from "../src/lib/rag/types";
 
@@ -11,7 +11,7 @@ type CliOptions = {
 };
 
 async function main() {
-  loadEnvConfig(process.cwd());
+  nextEnv.loadEnvConfig(process.cwd());
 
   const [{ createChunksFromDocuments }, { ragConfig }, { loadSources }, { embedTexts }, { writeVectorStore }] =
     await Promise.all([
