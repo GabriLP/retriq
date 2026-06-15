@@ -1,12 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ExternalLink, FileSearch, Loader2, MessageSquareText, ShieldCheck } from "lucide-react";
+import { BookOpen, ExternalLink, FileSearch, Loader2, MessageSquareText, ShieldCheck } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import type { QueryResponse } from "@/lib/rag/types";
 
@@ -135,6 +136,50 @@ export function QueryWorkbench() {
               ) : (
                 <div className="flex min-h-52 items-center justify-center rounded-md border border-dashed border-zinc-300 text-sm text-zinc-500">
                   The answer appears after retrieval.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+
+        <section>
+          <Card className="rounded-md border-zinc-200 shadow-none">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <BookOpen className="size-4" />
+                Retrieved documentation
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {result?.retrievedChunks.length ? (
+                result.retrievedChunks.map((chunk) => (
+                  <details key={chunk.id} className="group rounded-md border border-zinc-200 bg-white p-4 open:bg-zinc-50">
+                    <summary className="grid cursor-pointer gap-2 marker:text-zinc-400 sm:grid-cols-[1fr_auto] sm:items-center">
+                      <span>
+                        <span className="font-medium text-zinc-950">
+                          S{chunk.rank}. {chunk.section}
+                        </span>
+                        <span className="mt-1 block text-sm text-zinc-500">{chunk.title}</span>
+                      </span>
+                      <span className="font-mono text-xs text-zinc-500">score {chunk.score}</span>
+                    </summary>
+                    <Separator className="my-3" />
+                    <p className="max-h-72 overflow-auto whitespace-pre-wrap text-sm leading-7 text-zinc-700">
+                      {chunk.content}
+                    </p>
+                    <a
+                      href={chunk.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-zinc-950"
+                    >
+                      Open source <ExternalLink className="size-3" />
+                    </a>
+                  </details>
+                ))
+              ) : (
+                <div className="rounded-md border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-500">
+                  Retrieved chunks will be shown here with similarity scores.
                 </div>
               )}
             </CardContent>
