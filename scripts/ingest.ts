@@ -1,12 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { createChunksFromDocuments } from "../src/lib/rag/chunking";
-import { ragConfig } from "../src/lib/rag/config";
-import { loadSources } from "../src/lib/rag/document-loaders";
-import { embedTexts } from "../src/lib/rag/embeddings";
+import { loadEnvConfig } from "@next/env";
+
 import type { EmbeddedChunk } from "../src/lib/rag/types";
-import { writeVectorStore } from "../src/lib/rag/vector-store";
 
 type CliOptions = {
   sources: string[];
@@ -14,6 +11,17 @@ type CliOptions = {
 };
 
 async function main() {
+  loadEnvConfig(process.cwd());
+
+  const [{ createChunksFromDocuments }, { ragConfig }, { loadSources }, { embedTexts }, { writeVectorStore }] =
+    await Promise.all([
+      import("../src/lib/rag/chunking"),
+      import("../src/lib/rag/config"),
+      import("../src/lib/rag/document-loaders"),
+      import("../src/lib/rag/embeddings"),
+      import("../src/lib/rag/vector-store"),
+    ]);
+
   const options = parseArgs(process.argv.slice(2));
   if (!options.sources.length) printUsageAndExit();
 
