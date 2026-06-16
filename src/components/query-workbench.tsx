@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import type { Citation, QueryResponse, RetrievalResult } from "@/lib/rag/types";
 
-const starterQuestion = "How should I choose between client and server components?";
+const starterQuestion = "How should I break a React UI into a component hierarchy?";
 
 export function QueryWorkbench() {
   const [question, setQuestion] = useState(starterQuestion);
@@ -21,8 +21,14 @@ export function QueryWorkbench() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [activeCitationLabel, setActiveCitationLabel] = useState<string | null>(null);
+  const [citationTooltipPosition, setCitationTooltipPosition] = useState<{ left: number; top: number } | null>(null);
+  const citationTooltipRef = useRef<HTMLDivElement>(null);
 
   const retrievalLevel = useMemo(() => {
+    if (result && isInsufficientAnswer(result.answer)) {
+      return { label: "Insufficient context", tone: "bg-zinc-100 text-zinc-700" };
+    }
+
     const topScore = result?.retrievedChunks[0]?.score ?? 0;
     if (topScore >= 0.55) return { label: "High match", tone: "bg-emerald-100 text-emerald-800" };
     if (topScore >= 0.32) return { label: "Partial match", tone: "bg-amber-100 text-amber-800" };
@@ -41,6 +47,37 @@ export function QueryWorkbench() {
     if (!result) return "";
     return linkCitationReferences(result.answer, citationsByLabel);
   }, [citationsByLabel, result]);
+
+  const citationClaimsByLabel = useMemo(() => {
+    if (!result) return new Map<string, string>();
+    return extractCitationClaims(result.answer, citationsByLabel);
+  }, [citationsByLabel, result]);
+
+  const activeCitation = activeCitationLabel ? citationsByLabel.get(activeCitationLabel) : undefined;
+  const activeChunk = activeCitationLabel ? chunksByLabel.get(activeCitationLabel) : undefined;
+  const activeClaim = activeCitationLabel ? citationClaimsByLabel.get(activeCitationLabel) : undefined;
+
+  function openCitationTooltip(label: string, element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
+
+    setActiveCitationLabel(label);
+    setCitationTooltipPosition({
+      left: Math.min(Math.max(rect.left + rect.width / 2, 176), window.innerWidth - 176),
+      top: rect.bottom - 1,
+    });
+  }
+
+  function closeCitationTooltip(event: React.FocusEvent | React.PointerEvent | React.MouseEvent) {
+    const relatedTarget = event.relatedTarget;
+
+    if (relatedTarget instanceof HTMLElement) {
+      if (citationTooltipRef.current?.contains(relatedTarget)) return;
+      if (relatedTarget.closest("[data-citation-label]")) return;
+    }
+
+    setActiveCitationLabel(null);
+    setCitationTooltipPosition(null);
+  }
 
   async function submitQuestion() {
     setIsLoading(true);
@@ -64,6 +101,7 @@ export function QueryWorkbench() {
   }
 
   return (
+    <>
     <main className="min-h-screen bg-[linear-gradient(180deg,#fafafa_0%,#ffffff_48%,#f6f7f8_100%)] text-zinc-950">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-5 sm:px-6 lg:px-8">
         <header className="flex flex-col justify-between gap-4 border-b border-zinc-200 pb-5 md:flex-row md:items-end">
@@ -156,15 +194,13 @@ export function QueryWorkbench() {
                         a: ({ children, href }) => {
                           const label = href?.startsWith("#chunk-") ? href.replace("#chunk-", "") : "";
                           const citation = citationsByLabel.get(label);
-                          const chunk = chunksByLabel.get(label);
-
                           if (citation) {
                             return (
                               <CitationReference
                                 active={activeCitationLabel === label}
                                 citation={citation}
-                                chunk={chunk}
-                                onActiveChange={setActiveCitationLabel}
+                                onClose={closeCitationTooltip}
+                                onOpen={openCitationTooltip}
                               >
                                 {children}
                               </CitationReference>
@@ -189,16 +225,16 @@ export function QueryWorkbench() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {result.citations.map((citation) => (
-                      <a
+                      <CitationReference
                         key={citation.label}
-                        href={citation.sourceUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 rounded-md border border-zinc-200 px-2 py-1 text-xs font-medium text-zinc-700 hover:bg-zinc-50"
+                        active={activeCitationLabel === citation.label}
+                        citation={citation}
+                        onClose={closeCitationTooltip}
+                        onOpen={openCitationTooltip}
                       >
                         {citation.label}
                         <ExternalLink className="size-3" />
-                      </a>
+                      </CitationReference>
                     ))}
                   </div>
                 </div>
@@ -297,15 +333,69 @@ export function QueryWorkbench() {
         </section>
       </div>
     </main>
+    {activeCitation && citationTooltipPosition && typeof document !== "undefined"
+      ? createPortal(
+          <CitationTooltip
+            refObject={citationTooltipRef}
+            citation={activeCitation}
+            claim={activeClaim}
+            chunk={activeChunk}
+            onClose={closeCitationTooltip}
+            onOpen={() => {
+              setActiveCitationLabel(activeCitation.label);
+            }}
+            position={citationTooltipPosition}
+          />,
+          document.body,
+        )
+      : null}
+    </>
   );
 }
 
 function linkCitationReferences(answer: string, citationsByLabel: Map<string, Citation>) {
-  return answer.replace(/\[((?:S\d+)(?:,\s*S\d+)*)\]/g, (match, labelsText: string) => {
+  const linkedBracketReferences = answer.replace(/\[((?:S\d+)(?:,\s*S\d+)*)\]/g, (match, labelsText: string) => {
     const labels = labelsText.split(",").map((label) => label.trim());
     if (!labels.every((label) => citationsByLabel.has(label))) return match;
     return labels.map((label) => `[${label}](#chunk-${label})`).join(", ");
   });
+
+  return linkedBracketReferences.replace(/(^|[\s(,;:])S(\d+)(?=$|[\s).,;:])/g, (match, prefix: string, number: string) => {
+    const label = `S${number}`;
+    if (!citationsByLabel.has(label)) return match;
+    return `${prefix}[${label}](#chunk-${label})`;
+  });
+}
+
+function extractCitationClaims(answer: string, citationsByLabel: Map<string, Citation>) {
+  const claimsByLabel = new Map<string, string>();
+  const units = answer
+    .split(/\n+/)
+    .flatMap((line) => line.split(/(?<=[.!?])\s+/))
+    .map((unit) => unit.trim())
+    .filter(Boolean);
+
+  for (const unit of units) {
+    for (const label of citationsByLabel.keys()) {
+      if (claimsByLabel.has(label)) continue;
+      if (!containsCitationLabel(unit, label)) continue;
+
+      const cleaned = unit
+        .replace(/\[((?:S\d+)(?:,\s*S\d+)*)\]/g, "")
+        .replace(/(^|[\s(,;:])S\d+(?=$|[\s).,;:])/g, "$1")
+        .replace(/[*_`]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      if (cleaned) claimsByLabel.set(label, cleaned);
+    }
+  }
+
+  return claimsByLabel;
+}
+
+function containsCitationLabel(value: string, label: string) {
+  return new RegExp(`(^|[\\s\\[(,;:])${label}(?=$|[\\s\\]).,;:])`).test(value);
 }
 
 function AnswerTextBlock({ children }: { children: React.ReactNode }) {
@@ -319,83 +409,92 @@ function AnswerTextBlock({ children }: { children: React.ReactNode }) {
 function CitationReference({
   active,
   citation,
-  chunk,
   children,
-  onActiveChange,
+  onClose,
+  onOpen,
 }: {
   active: boolean;
   citation: Citation;
-  chunk?: RetrievalResult;
   children: React.ReactNode;
-  onActiveChange: (label: string | null) => void;
+  onClose: (event: React.FocusEvent | React.PointerEvent | React.MouseEvent) => void;
+  onOpen: (label: string, element: HTMLElement) => void;
 }) {
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const triggerRef = useRef<HTMLAnchorElement>(null);
-  const [tooltipPosition, setTooltipPosition] = useState<{ left: number; top: number } | null>(null);
 
-  function openTooltip() {
-    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    const rect = triggerRef.current?.getBoundingClientRect();
-    if (rect) {
-      setTooltipPosition({
-        left: Math.min(Math.max(rect.left + rect.width / 2, 176), window.innerWidth - 176),
-        top: rect.bottom + 8,
-      });
-    }
-    onActiveChange(citation.label);
-  }
-
-  function scheduleCloseTooltip() {
-    closeTimerRef.current = setTimeout(() => {
-      onActiveChange(null);
-      setTooltipPosition(null);
-    }, 200);
+  function handleOpen(event: React.FocusEvent<HTMLAnchorElement> | React.PointerEvent<HTMLAnchorElement> | React.MouseEvent<HTMLAnchorElement>) {
+    onOpen(citation.label, event.currentTarget);
   }
 
   return (
-    <>
-      <a
-        ref={triggerRef}
-        href={`#chunk-${citation.label}`}
-        className={`relative inline-flex items-center rounded border px-1.5 py-0.5 font-mono text-[0.8em] font-semibold text-zinc-950 no-underline shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-300 ${
-          active ? "border-amber-400 bg-amber-100" : "border-zinc-300 bg-white hover:border-zinc-950"
-        }`}
-        data-citation-active={active ? "true" : undefined}
-        aria-label={`${citation.label}: ${citation.title}, ${citation.section}`}
-        onBlur={scheduleCloseTooltip}
-        onFocus={openTooltip}
-        onMouseEnter={openTooltip}
-        onMouseLeave={scheduleCloseTooltip}
-      >
-        {children}
-      </a>
-      {active && tooltipPosition && typeof document !== "undefined"
-        ? createPortal(
-            <span
-              className="fixed z-[9999] w-80 -translate-x-1/2 rounded-md border border-zinc-200 bg-white p-3 text-left font-sans text-xs font-normal leading-5 text-zinc-600 shadow-xl"
-              onMouseEnter={openTooltip}
-              onMouseLeave={scheduleCloseTooltip}
-              style={{ left: tooltipPosition.left, top: tooltipPosition.top }}
-            >
-              <span className="mb-1 flex items-center gap-1 font-mono text-[11px] font-semibold uppercase text-zinc-400">
-                <Hash className="size-3" />
-                {citation.label}
-              </span>
-              <span className="block font-medium text-zinc-950">{citation.title}</span>
-              <span className="mt-1 block">{citation.section}</span>
-              {chunk ? (
-                <span className="mt-3 block rounded border border-amber-100 bg-amber-50 p-2 text-zinc-700">
-                  {createSourcePreview(chunk.content)}
-                </span>
-              ) : null}
-              <span className="mt-2 block truncate font-mono text-[11px] text-zinc-500">
-                {formatSourceHost(citation.sourceUrl)}
-              </span>
-            </span>,
-            document.body,
-          )
-        : null}
-    </>
+    <a
+      ref={triggerRef}
+      href={`#chunk-${citation.label}`}
+      className={`relative inline-flex items-center rounded border px-1.5 py-0.5 font-mono text-[0.8em] font-semibold text-zinc-950 no-underline shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-300 ${
+        active ? "border-amber-400 bg-amber-100" : "border-zinc-300 bg-white hover:border-zinc-950"
+      }`}
+      data-citation-active={active ? "true" : undefined}
+      data-citation-label={citation.label}
+      aria-label={`${citation.label}: ${citation.title}, ${citation.section}`}
+      onBlur={onClose}
+      onClick={handleOpen}
+      onFocus={handleOpen}
+      onMouseEnter={handleOpen}
+      onMouseLeave={onClose}
+      onPointerEnter={handleOpen}
+      onPointerLeave={onClose}
+    >
+      {children}
+    </a>
+  );
+}
+
+function CitationTooltip({
+  citation,
+  claim,
+  chunk,
+  onClose,
+  onOpen,
+  position,
+  refObject,
+}: {
+  citation: Citation;
+  claim?: string;
+  chunk?: RetrievalResult;
+  onClose: (event: React.FocusEvent | React.PointerEvent | React.MouseEvent) => void;
+  onOpen: () => void;
+  position: { left: number; top: number };
+  refObject: React.RefObject<HTMLDivElement | null>;
+}) {
+  return (
+    <div
+      ref={refObject}
+      className="fixed w-80 -translate-x-1/2 rounded-md border border-zinc-200 bg-white p-3 text-left font-sans text-xs font-normal leading-5 text-zinc-600 shadow-sm"
+      data-citation-tooltip={citation.label}
+      onMouseEnter={onOpen}
+      onMouseLeave={onClose}
+      onPointerEnter={onOpen}
+      onPointerLeave={onClose}
+      style={{ left: position.left, top: position.top, zIndex: 9999 }}
+    >
+      <div className="mb-1 flex items-center gap-1 font-mono text-[11px] font-semibold uppercase text-zinc-400">
+        <Hash className="size-3" />
+        {citation.label}
+      </div>
+      <div className="font-medium text-zinc-950">{citation.title}</div>
+      <div className="mt-1">{citation.section}</div>
+      {claim ? (
+        <div className="mt-3 rounded border border-zinc-200 bg-zinc-50 p-2 text-zinc-700">
+          <span className="block font-mono text-[10px] uppercase text-zinc-400">Answer claim</span>
+          <span className="mt-1 block">{claim}</span>
+        </div>
+      ) : null}
+      {chunk ? (
+        <div className="mt-2 rounded border border-amber-100 bg-amber-50 p-2 text-zinc-700">
+          This citation points to the highlighted retrieved chunk below.
+        </div>
+      ) : null}
+      <div className="mt-2 truncate font-mono text-[11px] text-zinc-500">{formatSourceHost(citation.sourceUrl)}</div>
+    </div>
   );
 }
 
@@ -427,14 +526,14 @@ function DocumentationMarkdown({ content }: { content: string }) {
   );
 }
 
-function createSourcePreview(content: string) {
-  const text = content
-    .replace(/```[\s\S]*?```/g, " ")
-    .replace(/[#>*_`-]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  return text.length > 220 ? `${text.slice(0, 220)}...` : text;
+function isInsufficientAnswer(answer: string) {
+  const normalized = answer.toLowerCase();
+  return (
+    normalized.includes("cannot be fully determined") ||
+    normalized.includes("cannot be determined") ||
+    normalized.includes("does not contain enough information") ||
+    normalized.includes("insufficient")
+  );
 }
 
 function formatScorePercent(score: number) {
