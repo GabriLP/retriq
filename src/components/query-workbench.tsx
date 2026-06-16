@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { BookOpen, ExternalLink, FileSearch, Hash, Loader2, MessageSquareText, ShieldCheck } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
@@ -10,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import type { Citation, QueryResponse } from "@/lib/rag/types";
+import type { Citation, QueryResponse, RetrievalResult } from "@/lib/rag/types";
 
 const starterQuestion = "How should I choose between client and server components?";
 
@@ -19,6 +20,7 @@ export function QueryWorkbench() {
   const [result, setResult] = useState<QueryResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeCitationLabel, setActiveCitationLabel] = useState<string | null>(null);
 
   const retrievalLevel = useMemo(() => {
     const topScore = result?.retrievedChunks[0]?.score ?? 0;
@@ -29,6 +31,10 @@ export function QueryWorkbench() {
 
   const citationsByLabel = useMemo(() => {
     return new Map(result?.citations.map((citation) => [citation.label, citation]) ?? []);
+  }, [result]);
+
+  const chunksByLabel = useMemo(() => {
+    return new Map(result?.retrievedChunks.map((chunk) => [`S${chunk.rank}`, chunk]) ?? []);
   }, [result]);
 
   const answerMarkdown = useMemo(() => {
@@ -133,10 +139,14 @@ export function QueryWorkbench() {
                         h1: ({ children }) => <h1 className="mb-3 text-lg font-semibold text-zinc-950">{children}</h1>,
                         h2: ({ children }) => <h2 className="mb-3 text-base font-semibold text-zinc-950">{children}</h2>,
                         h3: ({ children }) => <h3 className="mb-2 text-sm font-semibold text-zinc-950">{children}</h3>,
-                        p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
+                        p: ({ children }) => <AnswerTextBlock>{children}</AnswerTextBlock>,
                         ul: ({ children }) => <ul className="mb-3 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>,
                         ol: ({ children }) => <ol className="mb-3 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>,
-                        li: ({ children }) => <li className="pl-1">{children}</li>,
+                        li: ({ children }) => (
+                          <li className="rounded px-1 py-0.5 transition-colors [&:has(a[data-citation-active='true'])]:bg-amber-50">
+                            {children}
+                          </li>
+                        ),
                         strong: ({ children }) => <strong className="font-semibold text-zinc-950">{children}</strong>,
                         code: ({ children }) => (
                           <code className="rounded border border-zinc-200 bg-white px-1 py-0.5 font-mono text-[0.85em] text-zinc-950">
@@ -146,9 +156,19 @@ export function QueryWorkbench() {
                         a: ({ children, href }) => {
                           const label = href?.startsWith("#chunk-") ? href.replace("#chunk-", "") : "";
                           const citation = citationsByLabel.get(label);
+                          const chunk = chunksByLabel.get(label);
 
                           if (citation) {
-                            return <CitationReference citation={citation}>{children}</CitationReference>;
+                            return (
+                              <CitationReference
+                                active={activeCitationLabel === label}
+                                citation={citation}
+                                chunk={chunk}
+                                onActiveChange={setActiveCitationLabel}
+                              >
+                                {children}
+                              </CitationReference>
+                            );
                           }
 
                           return (
@@ -205,7 +225,9 @@ export function QueryWorkbench() {
                   <details
                     id={`chunk-S${chunk.rank}`}
                     key={chunk.id}
-                    className="group scroll-mt-6 rounded-md border border-zinc-200 bg-white open:bg-zinc-50"
+                    className={`group scroll-mt-6 rounded-md border bg-white transition-colors open:bg-zinc-50 ${
+                      activeCitationLabel === `S${chunk.rank}` ? "border-amber-300 bg-amber-50/40" : "border-zinc-200"
+                    }`}
                   >
                     <summary className="grid cursor-pointer gap-3 p-4 marker:text-zinc-400 sm:grid-cols-[1fr_auto] sm:items-start">
                       <span className="min-w-0">
@@ -260,7 +282,7 @@ export function QueryWorkbench() {
                         </div>
                       </div>
                       <div className="max-h-80 overflow-auto rounded-md border border-zinc-200 bg-white p-4">
-                        <p className="whitespace-pre-wrap text-sm leading-7 text-zinc-700">{chunk.content}</p>
+                        <DocumentationMarkdown content={chunk.content} />
                       </div>
                     </div>
                   </details>
@@ -286,27 +308,133 @@ function linkCitationReferences(answer: string, citationsByLabel: Map<string, Ci
   });
 }
 
-function CitationReference({ citation, children }: { citation: Citation; children: React.ReactNode }) {
+function AnswerTextBlock({ children }: { children: React.ReactNode }) {
   return (
-    <a
-      href={`#chunk-${citation.label}`}
-      className="group relative inline-flex items-center rounded border border-zinc-300 bg-white px-1.5 py-0.5 font-mono text-[0.8em] font-semibold text-zinc-950 no-underline shadow-sm hover:border-zinc-950 focus:outline-none focus:ring-2 focus:ring-zinc-300"
-      aria-label={`${citation.label}: ${citation.title}, ${citation.section}`}
-    >
+    <p className="mb-3 rounded px-1 py-0.5 transition-colors last:mb-0 [&:has(a[data-citation-active='true'])]:bg-amber-50">
       {children}
-      <span className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 hidden w-72 -translate-x-1/2 rounded-md border border-zinc-200 bg-white p-3 text-left font-sans text-xs font-normal leading-5 text-zinc-600 shadow-lg group-hover:block group-focus:block">
-        <span className="mb-1 flex items-center gap-1 font-mono text-[11px] font-semibold uppercase text-zinc-400">
-          <Hash className="size-3" />
-          {citation.label}
-        </span>
-        <span className="block font-medium text-zinc-950">{citation.title}</span>
-        <span className="mt-1 block">{citation.section}</span>
-        <span className="mt-2 block truncate font-mono text-[11px] text-zinc-500">
-          {formatSourceHost(citation.sourceUrl)}
-        </span>
-      </span>
-    </a>
+    </p>
   );
+}
+
+function CitationReference({
+  active,
+  citation,
+  chunk,
+  children,
+  onActiveChange,
+}: {
+  active: boolean;
+  citation: Citation;
+  chunk?: RetrievalResult;
+  children: React.ReactNode;
+  onActiveChange: (label: string | null) => void;
+}) {
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const triggerRef = useRef<HTMLAnchorElement>(null);
+  const [tooltipPosition, setTooltipPosition] = useState<{ left: number; top: number } | null>(null);
+
+  function openTooltip() {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    const rect = triggerRef.current?.getBoundingClientRect();
+    if (rect) {
+      setTooltipPosition({
+        left: Math.min(Math.max(rect.left + rect.width / 2, 176), window.innerWidth - 176),
+        top: rect.bottom + 8,
+      });
+    }
+    onActiveChange(citation.label);
+  }
+
+  function scheduleCloseTooltip() {
+    closeTimerRef.current = setTimeout(() => {
+      onActiveChange(null);
+      setTooltipPosition(null);
+    }, 200);
+  }
+
+  return (
+    <>
+      <a
+        ref={triggerRef}
+        href={`#chunk-${citation.label}`}
+        className={`relative inline-flex items-center rounded border px-1.5 py-0.5 font-mono text-[0.8em] font-semibold text-zinc-950 no-underline shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-300 ${
+          active ? "border-amber-400 bg-amber-100" : "border-zinc-300 bg-white hover:border-zinc-950"
+        }`}
+        data-citation-active={active ? "true" : undefined}
+        aria-label={`${citation.label}: ${citation.title}, ${citation.section}`}
+        onBlur={scheduleCloseTooltip}
+        onFocus={openTooltip}
+        onMouseEnter={openTooltip}
+        onMouseLeave={scheduleCloseTooltip}
+      >
+        {children}
+      </a>
+      {active && tooltipPosition && typeof document !== "undefined"
+        ? createPortal(
+            <span
+              className="fixed z-[9999] w-80 -translate-x-1/2 rounded-md border border-zinc-200 bg-white p-3 text-left font-sans text-xs font-normal leading-5 text-zinc-600 shadow-xl"
+              onMouseEnter={openTooltip}
+              onMouseLeave={scheduleCloseTooltip}
+              style={{ left: tooltipPosition.left, top: tooltipPosition.top }}
+            >
+              <span className="mb-1 flex items-center gap-1 font-mono text-[11px] font-semibold uppercase text-zinc-400">
+                <Hash className="size-3" />
+                {citation.label}
+              </span>
+              <span className="block font-medium text-zinc-950">{citation.title}</span>
+              <span className="mt-1 block">{citation.section}</span>
+              {chunk ? (
+                <span className="mt-3 block rounded border border-amber-100 bg-amber-50 p-2 text-zinc-700">
+                  {createSourcePreview(chunk.content)}
+                </span>
+              ) : null}
+              <span className="mt-2 block truncate font-mono text-[11px] text-zinc-500">
+                {formatSourceHost(citation.sourceUrl)}
+              </span>
+            </span>,
+            document.body,
+          )
+        : null}
+    </>
+  );
+}
+
+function DocumentationMarkdown({ content }: { content: string }) {
+  return (
+    <ReactMarkdown
+      components={{
+        h1: ({ children }) => <h1 className="mb-3 text-base font-semibold text-zinc-950">{children}</h1>,
+        h2: ({ children }) => <h2 className="mb-3 text-sm font-semibold text-zinc-950">{children}</h2>,
+        h3: ({ children }) => <h3 className="mb-2 text-sm font-semibold text-zinc-950">{children}</h3>,
+        h4: ({ children }) => <h4 className="mb-2 text-sm font-medium text-zinc-950">{children}</h4>,
+        p: ({ children }) => <p className="mb-3 text-sm leading-7 text-zinc-700 last:mb-0">{children}</p>,
+        ul: ({ children }) => <ul className="mb-3 list-disc space-y-1 pl-5 text-sm leading-7 text-zinc-700">{children}</ul>,
+        ol: ({ children }) => <ol className="mb-3 list-decimal space-y-1 pl-5 text-sm leading-7 text-zinc-700">{children}</ol>,
+        li: ({ children }) => <li className="pl-1">{children}</li>,
+        pre: ({ children }) => (
+          <pre className="mb-3 overflow-auto rounded-md bg-zinc-950 p-4 text-xs leading-6 text-zinc-50 [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-zinc-50">
+            {children}
+          </pre>
+        ),
+        code: ({ children }) => (
+          <code className="rounded bg-zinc-100 px-1 py-0.5 font-mono text-[0.85em] text-zinc-950">{children}</code>
+        ),
+        strong: ({ children }) => <strong className="font-semibold text-zinc-950">{children}</strong>,
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  );
+}
+
+function createSourcePreview(content: string) {
+  const text = content
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/[#>*_`-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return text.length > 220 ? `${text.slice(0, 220)}...` : text;
 }
 
 function formatScorePercent(score: number) {
