@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { BookOpen, ExternalLink, FileSearch, Loader2, MessageSquareText, ShieldCheck } from "lucide-react";
+import { BookOpen, ExternalLink, FileSearch, Hash, Loader2, MessageSquareText, ShieldCheck } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import type { QueryResponse } from "@/lib/rag/types";
+import type { Citation, QueryResponse } from "@/lib/rag/types";
 
 const starterQuestion = "How should I choose between client and server components?";
 
@@ -26,6 +26,15 @@ export function QueryWorkbench() {
     if (topScore >= 0.32) return { label: "Partial match", tone: "bg-amber-100 text-amber-800" };
     return { label: "Weak match", tone: "bg-zinc-100 text-zinc-700" };
   }, [result]);
+
+  const citationsByLabel = useMemo(() => {
+    return new Map(result?.citations.map((citation) => [citation.label, citation]) ?? []);
+  }, [result]);
+
+  const answerMarkdown = useMemo(() => {
+    if (!result) return "";
+    return linkCitationReferences(result.answer, citationsByLabel);
+  }, [citationsByLabel, result]);
 
   async function submitQuestion() {
     setIsLoading(true);
@@ -134,9 +143,28 @@ export function QueryWorkbench() {
                             {children}
                           </code>
                         ),
+                        a: ({ children, href }) => {
+                          const label = href?.startsWith("#chunk-") ? href.replace("#chunk-", "") : "";
+                          const citation = citationsByLabel.get(label);
+
+                          if (citation) {
+                            return <CitationReference citation={citation}>{children}</CitationReference>;
+                          }
+
+                          return (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="font-medium text-zinc-950 underline decoration-zinc-300 underline-offset-4 hover:decoration-zinc-950"
+                            >
+                              {children}
+                            </a>
+                          );
+                        },
                       }}
                     >
-                      {result.answer}
+                      {answerMarkdown}
                     </ReactMarkdown>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -174,28 +202,67 @@ export function QueryWorkbench() {
             <CardContent className="space-y-3">
               {result?.retrievedChunks.length ? (
                 result.retrievedChunks.map((chunk) => (
-                  <details key={chunk.id} className="group rounded-md border border-zinc-200 bg-white p-4 open:bg-zinc-50">
-                    <summary className="grid cursor-pointer gap-2 marker:text-zinc-400 sm:grid-cols-[1fr_auto] sm:items-center">
-                      <span>
-                        <span className="font-medium text-zinc-950">
-                          S{chunk.rank}. {chunk.section}
+                  <details
+                    id={`chunk-S${chunk.rank}`}
+                    key={chunk.id}
+                    className="group scroll-mt-6 rounded-md border border-zinc-200 bg-white open:bg-zinc-50"
+                  >
+                    <summary className="grid cursor-pointer gap-3 p-4 marker:text-zinc-400 sm:grid-cols-[1fr_auto] sm:items-start">
+                      <span className="min-w-0">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-md bg-zinc-950 px-2 font-mono text-xs font-semibold text-white">
+                            S{chunk.rank}
+                          </span>
+                          <span className="font-medium text-zinc-950">{chunk.section}</span>
                         </span>
-                        <span className="mt-1 block text-sm text-zinc-500">{chunk.title}</span>
+                        <span className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-zinc-500">
+                          <span>{chunk.title}</span>
+                          <span className="hidden h-1 w-1 rounded-full bg-zinc-300 sm:inline-block" />
+                          <span>{chunk.wordCount} words</span>
+                          <span className="hidden h-1 w-1 rounded-full bg-zinc-300 sm:inline-block" />
+                          <span>{formatSourceHost(chunk.sourceUrl)}</span>
+                        </span>
                       </span>
-                      <span className="font-mono text-xs text-zinc-500">score {chunk.score}</span>
+                      <span className="flex min-w-28 flex-col gap-1 text-left sm:text-right">
+                        <span className="font-mono text-xs font-medium text-zinc-600">
+                          {formatScorePercent(chunk.score)} match
+                        </span>
+                        <span className="h-1.5 overflow-hidden rounded-full bg-zinc-200">
+                          <span
+                            className="block h-full rounded-full bg-zinc-950"
+                            style={{ width: `${Math.max(4, Math.min(100, chunk.score * 100))}%` }}
+                          />
+                        </span>
+                      </span>
                     </summary>
-                    <Separator className="my-3" />
-                    <p className="max-h-72 overflow-auto whitespace-pre-wrap text-sm leading-7 text-zinc-700">
-                      {chunk.content}
-                    </p>
-                    <a
-                      href={chunk.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-zinc-950"
-                    >
-                      Open source <ExternalLink className="size-3" />
-                    </a>
+                    <Separator />
+                    <div className="space-y-4 p-4">
+                      <div className="grid gap-3 text-xs text-zinc-500 sm:grid-cols-3">
+                        <div>
+                          <span className="block font-mono uppercase tracking-wide text-zinc-400">Rank</span>
+                          <span className="mt-1 block font-medium text-zinc-800">#{chunk.rank}</span>
+                        </div>
+                        <div>
+                          <span className="block font-mono uppercase tracking-wide text-zinc-400">Similarity</span>
+                          <span className="mt-1 block font-medium text-zinc-800">{chunk.score.toFixed(4)}</span>
+                        </div>
+                        <div>
+                          <span className="block font-mono uppercase tracking-wide text-zinc-400">Source</span>
+                          <a
+                            href={chunk.sourceUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="mt-1 inline-flex max-w-full items-center gap-1 truncate font-medium text-zinc-800 hover:text-zinc-950"
+                          >
+                            {formatSourceHost(chunk.sourceUrl)}
+                            <ExternalLink className="size-3 shrink-0" />
+                          </a>
+                        </div>
+                      </div>
+                      <div className="max-h-80 overflow-auto rounded-md border border-zinc-200 bg-white p-4">
+                        <p className="whitespace-pre-wrap text-sm leading-7 text-zinc-700">{chunk.content}</p>
+                      </div>
+                    </div>
                   </details>
                 ))
               ) : (
@@ -209,4 +276,47 @@ export function QueryWorkbench() {
       </div>
     </main>
   );
+}
+
+function linkCitationReferences(answer: string, citationsByLabel: Map<string, Citation>) {
+  return answer.replace(/\[((?:S\d+)(?:,\s*S\d+)*)\]/g, (match, labelsText: string) => {
+    const labels = labelsText.split(",").map((label) => label.trim());
+    if (!labels.every((label) => citationsByLabel.has(label))) return match;
+    return labels.map((label) => `[${label}](#chunk-${label})`).join(", ");
+  });
+}
+
+function CitationReference({ citation, children }: { citation: Citation; children: React.ReactNode }) {
+  return (
+    <a
+      href={`#chunk-${citation.label}`}
+      className="group relative inline-flex items-center rounded border border-zinc-300 bg-white px-1.5 py-0.5 font-mono text-[0.8em] font-semibold text-zinc-950 no-underline shadow-sm hover:border-zinc-950 focus:outline-none focus:ring-2 focus:ring-zinc-300"
+      aria-label={`${citation.label}: ${citation.title}, ${citation.section}`}
+    >
+      {children}
+      <span className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 hidden w-72 -translate-x-1/2 rounded-md border border-zinc-200 bg-white p-3 text-left font-sans text-xs font-normal leading-5 text-zinc-600 shadow-lg group-hover:block group-focus:block">
+        <span className="mb-1 flex items-center gap-1 font-mono text-[11px] font-semibold uppercase text-zinc-400">
+          <Hash className="size-3" />
+          {citation.label}
+        </span>
+        <span className="block font-medium text-zinc-950">{citation.title}</span>
+        <span className="mt-1 block">{citation.section}</span>
+        <span className="mt-2 block truncate font-mono text-[11px] text-zinc-500">
+          {formatSourceHost(citation.sourceUrl)}
+        </span>
+      </span>
+    </a>
+  );
+}
+
+function formatScorePercent(score: number) {
+  return `${Math.round(score * 100)}%`;
+}
+
+function formatSourceHost(sourceUrl: string) {
+  try {
+    return new URL(sourceUrl).hostname;
+  } catch {
+    return sourceUrl;
+  }
 }
