@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { BookOpen, ExternalLink, FileSearch, Loader2, MessageSquareText, ShieldCheck } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -115,8 +116,28 @@ export function QueryWorkbench() {
             <CardContent>
               {result ? (
                 <div className="space-y-4">
-                  <div className="whitespace-pre-wrap rounded-md border border-zinc-200 bg-zinc-50 p-4 text-sm leading-7 text-zinc-800">
-                    {result.answer}
+                  <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4 text-sm leading-7 text-zinc-800">
+                    <ReactMarkdown
+                      // The generated answer is rendered as Markdown, while
+                      // citations remain plain links shown below the answer.
+                      components={{
+                        h1: ({ children }) => <h1 className="mb-3 text-lg font-semibold text-zinc-950">{children}</h1>,
+                        h2: ({ children }) => <h2 className="mb-3 text-base font-semibold text-zinc-950">{children}</h2>,
+                        h3: ({ children }) => <h3 className="mb-2 text-sm font-semibold text-zinc-950">{children}</h3>,
+                        p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
+                        ul: ({ children }) => <ul className="mb-3 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>,
+                        ol: ({ children }) => <ol className="mb-3 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>,
+                        li: ({ children }) => <li className="pl-1">{children}</li>,
+                        strong: ({ children }) => <strong className="font-semibold text-zinc-950">{children}</strong>,
+                        code: ({ children }) => (
+                          <code className="rounded border border-zinc-200 bg-white px-1 py-0.5 font-mono text-[0.85em] text-zinc-950">
+                            {children}
+                          </code>
+                        ),
+                      }}
+                    >
+                      {result.answer}
+                    </ReactMarkdown>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {result.citations.map((citation) => (
