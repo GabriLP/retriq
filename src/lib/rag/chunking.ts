@@ -23,32 +23,62 @@ export function createChunksFromDocuments(documents: SourceDocument[]) {
 
     // Word-count chunking keeps the preprocessing step deterministic and easy
     // to inspect before introducing more advanced NLP-based segmentation.
-    const words = content.split(/\s+/);
-    if (words.length <= TARGET_WORDS) {
+    const blocks = splitIntoBlocks(content);
+    const totalWords = countWords(content);
+    if (totalWords <= TARGET_WORDS) {
       chunks.push(toChunk(document, content));
       continue;
     }
 
-    let start = 0;
-    while (start < words.length) {
-      const end = Math.min(start + TARGET_WORDS, words.length);
-      const chunkContent = words.slice(start, end).join(" ");
+    let blockIndex = 0;
+    while (blockIndex < blocks.length) {
+      const chunkBlocks: string[] = [];
+      let chunkWords = 0;
+      let nextIndex = blockIndex;
+
+      while (nextIndex < blocks.length && (chunkWords < TARGET_WORDS || !chunkBlocks.length)) {
+        const block = blocks[nextIndex];
+        chunkBlocks.push(block);
+        chunkWords += countWords(block);
+        nextIndex += 1;
+      }
+
+      const chunkContent = normalizeWhitespace(chunkBlocks.join("\n\n"));
 
       // Very small chunks often retrieve well by accident but provide weak
       // evidence. The minimum size keeps enough context for grounded answers.
-      if (countWords(chunkContent) >= MIN_WORDS || start === 0) {
+      if (countWords(chunkContent) >= MIN_WORDS || blockIndex === 0) {
         chunks.push(toChunk(document, chunkContent, chunks.length + 1));
       }
 
-      if (end === words.length) break;
+      if (nextIndex === blocks.length) break;
 
       // Overlap reduces boundary loss: a concept split across two chunks still
       // has enough local context to be retrieved and cited coherently.
-      start = Math.max(end - OVERLAP_WORDS, start + 1);
+      blockIndex = findOverlapStart(blocks, blockIndex, nextIndex);
     }
   }
 
   return chunks;
+}
+
+function splitIntoBlocks(content: string) {
+  return normalizeWhitespace(content)
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+}
+
+function findOverlapStart(blocks: string[], currentIndex: number, nextIndex: number) {
+  let overlapWords = 0;
+  let overlapIndex = nextIndex;
+
+  while (overlapIndex > 0 && overlapWords < OVERLAP_WORDS) {
+    overlapIndex -= 1;
+    overlapWords += countWords(blocks[overlapIndex]);
+  }
+
+  return Math.max(overlapIndex, currentIndex + 1);
 }
 
 function toChunk(document: SourceDocument, content: string, part?: number): DocumentationChunk {

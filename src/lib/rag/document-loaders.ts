@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import * as cheerio from "cheerio";
+import type { AnyNode } from "domhandler";
 import matter from "gray-matter";
 
 import type { SourceDocument } from "./types";
@@ -88,13 +89,13 @@ function parseHtml(html: string, sourceUrl: string): SourceDocument {
   const $ = cheerio.load(html);
   // Navigation and decorative page chrome would create noisy embeddings, so the
   // loader keeps the main documentation text and removes unrelated UI content.
-  $("script, style, nav, footer, svg, noscript").remove();
+  $("script, style, nav, footer, svg, noscript, button").remove();
 
   const title = normalizeSourceText($("h1").first().text() || $("title").first().text() || sourceUrl);
   const main = $("main, article").first();
   const root = main.length ? main : $("body");
   const section = normalizeSourceText(root.find("h2, h3").first().text() || title);
-  const content = normalizeSourceText(root.text());
+  const content = extractReadableHtmlText($, root);
 
   return {
     title,
@@ -102,6 +103,36 @@ function parseHtml(html: string, sourceUrl: string): SourceDocument {
     content,
     sourceUrl,
   };
+}
+
+function extractReadableHtmlText($: cheerio.CheerioAPI, root: cheerio.Cheerio<AnyNode>) {
+  const blocks: string[] = [];
+
+  root.find("h1, h2, h3, h4, p, li, pre").each((_, element) => {
+    const node = $(element);
+    const tagName = element.tagName?.toLowerCase();
+    const text = normalizeSourceText(node.text());
+    if (!text) return;
+
+    if (tagName === "pre") {
+      blocks.push(`\`\`\`\n${text}\n\`\`\``);
+      return;
+    }
+
+    if (tagName === "li") {
+      blocks.push(`- ${text}`);
+      return;
+    }
+
+    if (/^h[1-4]$/.test(tagName ?? "")) {
+      blocks.push(`${"#".repeat(Number(tagName?.[1] ?? 2))} ${text}`);
+      return;
+    }
+
+    blocks.push(text);
+  });
+
+  return normalizeSourceText(blocks.join("\n\n"));
 }
 
 function splitMarkdownIntoSections(content: string, title: string) {
