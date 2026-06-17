@@ -32,11 +32,14 @@ export type Citation = {
   sourceUrl: string;
 };
 
+export type AnswerStatus = "grounded" | "insufficient_context";
+
 // Query responses keep both generated text and raw retrieval evidence. This
 // separation is central to evaluating trust and hallucination risk.
 export type QueryResponse = {
   question: string;
   answer: string;
+  answerStatus: AnswerStatus;
   citations: Citation[];
   retrievedChunks: RetrievalResult[];
   timings: {

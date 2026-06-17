@@ -25,7 +25,7 @@ export function QueryWorkbench() {
   const citationTooltipRef = useRef<HTMLDivElement>(null);
 
   const retrievalLevel = useMemo(() => {
-    if (result && isInsufficientAnswer(result.answer)) {
+    if (result?.answerStatus === "insufficient_context") {
       return { label: "Insufficient context", tone: "bg-zinc-100 text-zinc-700" };
     }
 
@@ -523,16 +523,6 @@ function DocumentationMarkdown({ content }: { content: string }) {
     >
       {content}
     </ReactMarkdown>
-  );
-}
-
-function isInsufficientAnswer(answer: string) {
-  const normalized = answer.toLowerCase();
-  return (
-    normalized.includes("cannot be fully determined") ||
-    normalized.includes("cannot be determined") ||
-    normalized.includes("does not contain enough information") ||
-    normalized.includes("insufficient")
   );
 }
 

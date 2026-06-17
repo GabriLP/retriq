@@ -15,7 +15,7 @@ export async function answerQuestion(question: string, topK = ragConfig.defaultT
   const retrievalMs = Math.round(performance.now() - retrievalStartedAt);
 
   const generationStartedAt = performance.now();
-  const answer = await generateGroundedAnswer(question, retrievedChunks);
+  const generatedAnswer = await generateGroundedAnswer(question, retrievedChunks);
   const generationMs = Math.round(performance.now() - generationStartedAt);
 
   const citations: Citation[] = retrievedChunks.map((chunk) => ({
@@ -27,7 +27,8 @@ export async function answerQuestion(question: string, topK = ragConfig.defaultT
 
   const response: QueryResponse = {
     question,
-    answer,
+    answer: generatedAnswer.answer,
+    answerStatus: generatedAnswer.answerStatus,
     citations,
     retrievedChunks,
     timings: {
