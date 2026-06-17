@@ -1,0 +1,7 @@
+{
+  "name": "React Learn Demo Corpus",
+  "description": "Small reproducible corpus used by the Retriq prototype during early retrieval and UX development.",
+  "sources": [
+    "https://react.dev/learn/thinking-in-react"
+  ]
+}

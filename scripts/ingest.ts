@@ -7,7 +7,15 @@ import type { EmbeddedChunk } from "../src/lib/rag/types";
 
 type CliOptions = {
   sources: string[];
+  manifests: string[];
   baseUrl?: string;
+};
+
+type CorpusManifest = {
+  name?: string;
+  description?: string;
+  baseUrl?: string;
+  sources: string[];
 };
 
 async function main() {
@@ -23,9 +31,13 @@ async function main() {
     ]);
 
   const options = parseArgs(process.argv.slice(2));
-  if (!options.sources.length) printUsageAndExit();
+  const manifestOptions = await loadManifestOptions(options.manifests);
+  const sources = [...manifestOptions.sources, ...options.sources];
+  const baseUrl = options.baseUrl ?? manifestOptions.baseUrl;
 
-  const documents = await loadSources(options.sources, { baseUrl: options.baseUrl });
+  if (!sources.length) printUsageAndExit();
+
+  const documents = await loadSources(sources, { baseUrl });
   const chunks = createChunksFromDocuments(documents);
 
   if (!chunks.length) {
@@ -51,7 +63,7 @@ async function main() {
 }
 
 function parseArgs(args: string[]): CliOptions {
-  const options: CliOptions = { sources: [] };
+  const options: CliOptions = { sources: [], manifests: [] };
 
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -59,6 +71,14 @@ function parseArgs(args: string[]): CliOptions {
       const source = args[index + 1];
       if (!source) throw new Error("--source requires a path or URL.");
       options.sources.push(source);
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--manifest" || arg === "-m") {
+      const manifestPath = args[index + 1];
+      if (!manifestPath) throw new Error("--manifest requires a JSON manifest path.");
+      options.manifests.push(manifestPath);
       index += 1;
       continue;
     }
@@ -72,10 +92,40 @@ function parseArgs(args: string[]): CliOptions {
   return options;
 }
 
+async function loadManifestOptions(manifestPaths: string[]) {
+  const sources: string[] = [];
+  let baseUrl: string | undefined;
+
+  for (const manifestPath of manifestPaths) {
+    const absolutePath = path.resolve(manifestPath);
+    const manifestDirectory = path.dirname(absolutePath);
+    const manifest = JSON.parse(await fs.readFile(absolutePath, "utf8")) as CorpusManifest;
+
+    if (!Array.isArray(manifest.sources)) {
+      throw new Error(`Corpus manifest ${manifestPath} must include a sources array.`);
+    }
+
+    sources.push(...manifest.sources.map((source) => resolveManifestSource(source, manifestDirectory)));
+    baseUrl ??= manifest.baseUrl;
+  }
+
+  return { sources, baseUrl };
+}
+
+function resolveManifestSource(source: string, manifestDirectory: string) {
+  if (isUrl(source) || path.isAbsolute(source)) return source;
+  return path.resolve(manifestDirectory, source);
+}
+
+function isUrl(value: string) {
+  return /^https?:\/\//i.test(value);
+}
+
 function printUsageAndExit(): never {
   console.log(`Usage:
   npm run ingest -- --source ./data/source
   npm run ingest -- --source https://react.dev/learn/thinking-in-react
+  npm run ingest -- --manifest ./docs/corpus/react-learn.json
   npm run ingest -- --source ./docs/react --base-url https://react.dev/reference`);
   process.exit(1);
 }
