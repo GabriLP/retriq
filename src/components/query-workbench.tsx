@@ -354,16 +354,10 @@ export function QueryWorkbench() {
 }
 
 function linkCitationReferences(answer: string, citationsByLabel: Map<string, Citation>) {
-  const linkedBracketReferences = answer.replace(/\[((?:S\d+)(?:,\s*S\d+)*)\]/g, (match, labelsText: string) => {
+  return answer.replace(/\[((?:S\d+)(?:,\s*S\d+)*)\]/g, (match, labelsText: string) => {
     const labels = labelsText.split(",").map((label) => label.trim());
     if (!labels.every((label) => citationsByLabel.has(label))) return match;
     return labels.map((label) => `[${label}](#chunk-${label})`).join(", ");
-  });
-
-  return linkedBracketReferences.replace(/(^|[\s(,;:])S(\d+)(?=$|[\s).,;:])/g, (match, prefix: string, number: string) => {
-    const label = `S${number}`;
-    if (!citationsByLabel.has(label)) return match;
-    return `${prefix}[${label}](#chunk-${label})`;
   });
 }
 
@@ -382,7 +376,6 @@ function extractCitationClaims(answer: string, citationsByLabel: Map<string, Cit
 
       const cleaned = unit
         .replace(/\[((?:S\d+)(?:,\s*S\d+)*)\]/g, "")
-        .replace(/(^|[\s(,;:])S\d+(?=$|[\s).,;:])/g, "$1")
         .replace(/[*_`]/g, "")
         .replace(/\s+/g, " ")
         .trim();
@@ -395,7 +388,7 @@ function extractCitationClaims(answer: string, citationsByLabel: Map<string, Cit
 }
 
 function containsCitationLabel(value: string, label: string) {
-  return new RegExp(`(^|[\\s\\[(,;:])${label}(?=$|[\\s\\]).,;:])`).test(value);
+  return new RegExp(`\\[(?:S\\d+,\\s*)*${label}(?:,\\s*S\\d+)*\\]`).test(value);
 }
 
 function AnswerTextBlock({ children }: { children: React.ReactNode }) {
