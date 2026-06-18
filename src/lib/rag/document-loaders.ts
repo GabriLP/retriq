@@ -94,7 +94,7 @@ function parseHtml(html: string, sourceUrl: string): SourceDocument {
   const title = normalizeSourceText($("h1").first().text() || $("title").first().text() || sourceUrl);
   const main = $("main, article").first();
   const root = main.length ? main : $("body");
-  const section = normalizeSourceText(root.find("h2, h3").first().text() || title);
+  const section = findPrimaryHtmlSection(root, title);
   const content = extractReadableHtmlText($, root);
 
   return {
@@ -103,6 +103,13 @@ function parseHtml(html: string, sourceUrl: string): SourceDocument {
     content,
     sourceUrl,
   };
+}
+
+function findPrimaryHtmlSection(root: cheerio.Cheerio<AnyNode>, fallback: string) {
+  // A level-two heading normally identifies the page's first substantive
+  // section, while earlier level-three headings often belong to callout boxes.
+  const heading = root.find("h2").first().text() || root.find("h3").first().text();
+  return normalizeSourceText(heading || fallback);
 }
 
 function extractReadableHtmlText($: cheerio.CheerioAPI, root: cheerio.Cheerio<AnyNode>) {

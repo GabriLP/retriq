@@ -31,6 +31,7 @@ export function createChunksFromDocuments(documents: SourceDocument[]) {
     }
 
     let blockIndex = 0;
+    let part = 1;
     while (blockIndex < blocks.length) {
       const chunkBlocks: string[] = [];
       let chunkWords = 0;
@@ -48,7 +49,10 @@ export function createChunksFromDocuments(documents: SourceDocument[]) {
       // Very small chunks often retrieve well by accident but provide weak
       // evidence. The minimum size keeps enough context for grounded answers.
       if (countWords(chunkContent) >= MIN_WORDS || blockIndex === 0) {
-        chunks.push(toChunk(document, chunkContent, chunks.length + 1));
+        // Part numbers are local to the source section so citation labels remain
+        // meaningful regardless of the manifest order or total corpus size.
+        chunks.push(toChunk(document, chunkContent, part));
+        part += 1;
       }
 
       if (nextIndex === blocks.length) break;
