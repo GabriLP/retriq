@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { ragConfig } from "./config";
-import type { EmbeddedChunk } from "./types";
+import type { CorpusSummary, EmbeddedChunk } from "./types";
 
 export async function readVectorStore(filePath = ragConfig.vectorStorePath) {
   const raw = await fs.readFile(filePath, "utf8");
@@ -33,6 +33,19 @@ export async function writeVectorStore(chunks: EmbeddedChunk[], filePath = ragCo
       2,
     ),
   );
+}
+
+export async function readCorpusSummary(filePath = ragConfig.vectorStorePath): Promise<CorpusSummary> {
+  const store = await readVectorStore(filePath);
+
+  // Sources are counted by canonical URL because one document can produce
+  // several overlapping chunks while remaining a single navigable source.
+  return {
+    sourceCount: new Set(store.chunks.map((chunk) => chunk.sourceUrl)).size,
+    chunkCount: store.chunks.length,
+    wordCount: store.chunks.reduce((total, chunk) => total + chunk.wordCount, 0),
+    indexedAt: store.createdAt,
+  };
 }
 
 export function cosineSimilarity(left: number[], right: number[]) {

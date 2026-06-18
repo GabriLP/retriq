@@ -13,6 +13,15 @@ export type EmbeddedChunk = DocumentationChunk & {
   embedding: number[];
 };
 
+// Corpus-level metadata makes the retrieval scope explicit without exposing
+// embedding vectors or duplicating the indexed documentation in the client.
+export type CorpusSummary = {
+  sourceCount: number;
+  chunkCount: number;
+  wordCount: number;
+  indexedAt: string;
+};
+
 // Retrieval results preserve ranking and score so the UI can expose why a
 // specific documentation section was used by the model.
 export type RetrievalResult = DocumentationChunk & {

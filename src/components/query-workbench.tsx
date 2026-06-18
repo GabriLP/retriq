@@ -2,7 +2,19 @@
 
 import { useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { BookOpen, ExternalLink, FileSearch, Hash, Loader2, MessageSquareText, ShieldCheck } from "lucide-react";
+import {
+  BookOpen,
+  CalendarClock,
+  ExternalLink,
+  FileSearch,
+  Files,
+  Hash,
+  Layers3,
+  Loader2,
+  MessageSquareText,
+  ShieldCheck,
+  WholeWord,
+} from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -11,11 +23,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import type { Citation, QueryResponse, RetrievalResult } from "@/lib/rag/types";
+import type { Citation, CorpusSummary, QueryResponse, RetrievalResult } from "@/lib/rag/types";
 
 const starterQuestion = "How should I break a React UI into a component hierarchy?";
 
-export function QueryWorkbench() {
+export function QueryWorkbench({ corpusSummary }: { corpusSummary: CorpusSummary }) {
   const [question, setQuestion] = useState(starterQuestion);
   const [result, setResult] = useState<QueryResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -123,6 +135,29 @@ export function QueryWorkbench() {
             </Badge>
           </div>
         </header>
+
+        <section
+          aria-label="Indexed corpus"
+          className="grid grid-cols-2 border-y border-zinc-200 bg-white lg:grid-cols-[1.35fr_repeat(4,1fr)]"
+        >
+          <div className="col-span-2 flex items-center gap-3 border-b border-zinc-200 px-4 py-3 lg:col-span-1 lg:border-r lg:border-b-0">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
+              <Layers3 className="size-4" />
+            </span>
+            <div>
+              <h2 className="text-sm font-semibold text-zinc-950">Indexed corpus</h2>
+              <p className="text-xs text-zinc-500">Current retrieval scope</p>
+            </div>
+          </div>
+          <CorpusMetric icon={Files} label="Sources" value={formatCount(corpusSummary.sourceCount)} />
+          <CorpusMetric icon={BookOpen} label="Chunks" value={formatCount(corpusSummary.chunkCount)} />
+          <CorpusMetric icon={WholeWord} label="Words" value={formatCount(corpusSummary.wordCount)} />
+          <CorpusMetric
+            icon={CalendarClock}
+            label="Indexed"
+            value={formatIndexedDate(corpusSummary.indexedAt)}
+          />
+        </section>
 
         <section className="grid gap-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(420px,1.08fr)]">
           <Card className="rounded-md border-zinc-200 shadow-none">
@@ -521,6 +556,39 @@ function DocumentationMarkdown({ content }: { content: string }) {
 
 function formatScorePercent(score: number) {
   return `${Math.round(score * 100)}%`;
+}
+
+function CorpusMetric({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex min-w-0 items-center gap-3 border-b border-zinc-200 px-4 py-3 even:border-r lg:border-r lg:border-b-0 lg:last:border-r-0">
+      <Icon className="size-4 shrink-0 text-zinc-400" />
+      <div className="min-w-0">
+        <span className="block font-mono text-[10px] uppercase text-zinc-400">{label}</span>
+        <span className="block truncate text-sm font-medium text-zinc-800">{value}</span>
+      </div>
+    </div>
+  );
+}
+
+function formatCount(value: number) {
+  return new Intl.NumberFormat("en-US").format(value);
+}
+
+function formatIndexedDate(value: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(value));
 }
 
 function formatSourceHost(sourceUrl: string) {
