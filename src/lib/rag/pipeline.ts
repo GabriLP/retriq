@@ -43,6 +43,9 @@ export async function answerQuestion(question: string, topK = ragConfig.defaultT
     promptPreview: buildGroundedPrompt(question, retrievedChunks).slice(0, 4000),
   };
 
-  await appendEvaluationLog(response);
+  if (ragConfig.evaluationLoggingEnabled) {
+    await appendEvaluationLog(response);
+  }
+
   return response;
 }
