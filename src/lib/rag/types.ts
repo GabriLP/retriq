@@ -54,10 +54,12 @@ export type QueryResponse = {
   timings: {
     retrievalMs: number;
     generationMs: number;
+    judgeMs: number;
     totalMs: number;
   };
   model: string;
   embeddingModel: string;
+  judge: JudgeAssessment;
   promptPreview: string;
 };
 
@@ -73,4 +75,21 @@ export type SourceDocument = {
   section: string;
   content: string;
   sourceUrl: string;
+};
+
+export type JudgeVerdict = "pass" | "needs_review" | "fail" | "disabled" | "unavailable";
+
+// The judge is deliberately a separate measurement layer. It never changes the
+// answer returned to the user, because an LLM judgement is an experimental
+// signal rather than an authoritative correctness guarantee.
+export type JudgeAssessment = {
+  enabled: boolean;
+  verdict: JudgeVerdict;
+  groundedness: number | null;
+  citationCorrectness: number | null;
+  completeness: number | null;
+  rationale: string;
+  unsupportedClaims: string[];
+  missingInformation: string[];
+  model?: string;
 };
