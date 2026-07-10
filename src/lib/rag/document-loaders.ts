@@ -1,3 +1,4 @@
+import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -7,14 +8,16 @@ import matter from "gray-matter";
 
 import type { SourceDocument } from "./types";
 
-const SUPPORTED_EXTENSIONS = new Set([".md", ".mdx", ".html", ".htm"]);
+const SUPPORTED_EXTENSIONS = new Set([".md", ".mdx", ".html", ".htm", ".pdf"]);
+const DOCLING_SCRIPT_PATH = path.join(process.cwd(), "scripts", "parse_pdf.py");
+const MAX_DOCLING_OUTPUT_BYTES = 25 * 1024 * 1024;
 
 export async function loadSources(inputs: string[], options: { baseUrl?: string } = {}) {
   const sources: SourceDocument[] = [];
 
   for (const input of inputs) {
     if (isUrl(input)) {
-      sources.push(await loadHtmlFromUrl(input));
+      sources.push(isPdfUrl(input) ? await loadPdf(input, input) : await loadHtmlFromUrl(input));
       continue;
     }
 
@@ -22,6 +25,7 @@ export async function loadSources(inputs: string[], options: { baseUrl?: string 
     // Accept either one file or a documentation folder so the same controlled
     // corpus can be ingested repeatedly across local runs.
     const stat = await fs.stat(absolutePath);
+    const rootPath = stat.isDirectory() ? absolutePath : path.dirname(absolutePath);
     const files = stat.isDirectory() ? await collectFiles(absolutePath) : [absolutePath];
 
     for (const file of files) {
@@ -29,9 +33,11 @@ export async function loadSources(inputs: string[], options: { baseUrl?: string 
       if (!SUPPORTED_EXTENSIONS.has(extension)) continue;
 
       if (extension === ".md" || extension === ".mdx") {
-        sources.push(...(await loadMarkdownFile(file, absolutePath, options.baseUrl)));
+        sources.push(...(await loadMarkdownFile(file, rootPath, options.baseUrl)));
+      } else if (extension === ".pdf") {
+        sources.push(await loadPdf(file, buildSourceUrl(file, rootPath, options.baseUrl)));
       } else {
-        sources.push(await loadHtmlFile(file, absolutePath, options.baseUrl));
+        sources.push(await loadHtmlFile(file, rootPath, options.baseUrl));
       }
     }
   }
@@ -51,7 +57,7 @@ async function collectFiles(directory: string): Promise<string[]> {
   return files.flat();
 }
 
-async function loadMarkdownFile(filePath: string, rootPath: string, baseUrl?: string) {
+async function loadMarkdownFile(filePath: string, rootPath: string, baseUrl?: string): Promise<SourceDocument[]> {
   const raw = await fs.readFile(filePath, "utf8");
   const parsed = matter(raw);
   // Frontmatter is useful for canonical titles/URLs, but it should not pollute
@@ -103,6 +109,70 @@ function parseHtml(html: string, sourceUrl: string): SourceDocument {
     content,
     sourceUrl,
   };
+}
+
+async function loadPdf(input: string, sourceUrl: string): Promise<SourceDocument> {
+  const markdown = await convertPdfWithDocling(input);
+  const title = findFirstHeading(markdown) ?? path.basename(sourceUrl.split("?")[0], ".pdf") ?? sourceUrl;
+
+  return {
+    title: normalizeSourceText(title),
+    section: normalizeSourceText(findFirstHeading(markdown) ?? "Document"),
+    content: markdown,
+    sourceUrl,
+  };
+}
+
+async function convertPdfWithDocling(input: string) {
+  const python = process.env.RETRIQ_DOCLING_PYTHON ?? "python";
+  const output = await runProcess(python, [DOCLING_SCRIPT_PATH, input]);
+
+  let parsed: { markdown?: unknown };
+  try {
+    parsed = JSON.parse(output) as { markdown?: unknown };
+  } catch {
+    throw new Error("Docling did not return valid JSON while parsing the PDF.");
+  }
+
+  if (typeof parsed.markdown !== "string" || !parsed.markdown.trim()) {
+    throw new Error("Docling did not extract readable text from the PDF.");
+  }
+
+  return normalizeSourceText(parsed.markdown);
+}
+
+function runProcess(command: string, args: string[]) {
+  return new Promise<string>((resolve, reject) => {
+    const child = spawn(command, args, { stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
+    let stdout = "";
+    let stderr = "";
+
+    child.stdout.setEncoding("utf8");
+    child.stderr.setEncoding("utf8");
+    child.stdout.on("data", (data: string) => {
+      stdout += data;
+      if (Buffer.byteLength(stdout, "utf8") > MAX_DOCLING_OUTPUT_BYTES) child.kill();
+    });
+    child.stderr.on("data", (data: string) => {
+      stderr += data;
+    });
+    child.on("error", (error) => {
+      reject(
+        new Error(
+          `Could not start Docling with '${command}'. Install it with 'python -m pip install -r scripts/requirements-docling.txt' or set RETRIQ_DOCLING_PYTHON. ${error.message}`,
+        ),
+      );
+    });
+    child.on("close", (code) => {
+      if (code === 0) {
+        resolve(stdout);
+        return;
+      }
+
+      const details = stderr.trim() || "No diagnostic output was returned.";
+      reject(new Error(`Docling failed to parse PDF (exit code ${code ?? "unknown"}): ${details}`));
+    });
+  });
 }
 
 function findPrimaryHtmlSection(root: cheerio.Cheerio<AnyNode>, fallback: string) {
@@ -196,4 +266,12 @@ function buildSourceUrl(filePath: string, rootPath: string, baseUrl?: string) {
 
 function isUrl(value: string) {
   return /^https?:\/\//i.test(value);
+}
+
+function isPdfUrl(value: string) {
+  try {
+    return new URL(value).pathname.toLowerCase().endsWith(".pdf");
+  } catch {
+    return false;
+  }
 }
