@@ -32,7 +32,7 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const manifestOptions = await loadManifestOptions(options.manifests);
-  const sources = [...manifestOptions.sources, ...options.sources];
+  const sources = [...new Set([...manifestOptions.sources, ...options.sources])];
   const baseUrl = options.baseUrl ?? manifestOptions.baseUrl;
 
   if (!sources.length) printUsageAndExit();
