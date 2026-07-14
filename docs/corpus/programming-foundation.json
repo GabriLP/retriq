@@ -1,0 +1,119 @@
+{
+  "name": "Programming Languages Foundation Corpus",
+  "description": "Curated, reproducible multi-language corpus. Prefer publisher PDFs where they exist; retain official HTML where a current PDF is unavailable.",
+  "parsedBasePath": "../../data/parsed/programming-foundation",
+  "qualityPolicy": "fail",
+  "sources": [
+    {
+      "id": "postgresql-18-manual",
+      "type": "pdf",
+      "title": "PostgreSQL 18 Documentation",
+      "language": "PostgreSQL / SQL",
+      "license": "PostgreSQL documentation copyright; retain source attribution",
+      "url": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+      "path": "../../data/source/programming-foundation/postgresql-18-manual.pdf"
+    },
+    {
+      "id": "java-se-26-language-specification",
+      "type": "pdf",
+      "title": "The Java Language Specification, Java SE 26 Edition",
+      "language": "Java",
+      "license": "Oracle limited license; retain locally and do not redistribute through Git",
+      "url": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+      "path": "../../data/source/programming-foundation/java-se-26-language-specification.pdf"
+    },
+    {
+      "id": "java-se-26-vm-specification",
+      "type": "pdf",
+      "title": "The Java Virtual Machine Specification, Java SE 26 Edition",
+      "language": "Java",
+      "license": "Oracle limited license; retain locally and do not redistribute through Git",
+      "url": "https://docs.oracle.com/javase/specs/jvms/se26/jvms26.pdf",
+      "path": "../../data/source/programming-foundation/java-se-26-vm-specification.pdf"
+    },
+    {
+      "id": "c11-working-draft-n1570",
+      "type": "pdf",
+      "title": "ISO/IEC 9899:201x — WG14 N1570 working draft",
+      "language": "C",
+      "license": "WG14 public working paper; not the final purchased ISO standard",
+      "url": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+      "path": "../../data/source/programming-foundation/c11-working-draft-n1570.pdf"
+    },
+    {
+      "id": "beej-c-tutorial",
+      "type": "pdf",
+      "title": "Beej’s Guide to C Programming",
+      "language": "C",
+      "license": "CC BY-NC-ND 3.0 for text; source code is public domain",
+      "url": "https://beej.us/guide/bgc/pdf/bgc_usl_bw_1.pdf",
+      "path": "../../data/source/programming-foundation/beej-c-tutorial.pdf"
+    },
+    {
+      "id": "beej-c-library-reference",
+      "type": "pdf",
+      "title": "Beej’s Guide to C Programming — Library Reference",
+      "language": "C",
+      "license": "CC BY-NC-ND 3.0 for text; source code is public domain; source labels this guide beta-quality",
+      "url": "https://beej.us/guide/bgclr/pdf/bgclr_a4_c_1.pdf",
+      "path": "../../data/source/programming-foundation/beej-c-library-reference.pdf"
+    },
+    {
+      "id": "open-data-structures-java",
+      "type": "pdf",
+      "title": "Open Data Structures (Java Edition)",
+      "language": "Java",
+      "license": "Creative Commons Attribution",
+      "url": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+      "path": "../../data/source/programming-foundation/open-data-structures-java.pdf"
+    },
+    {
+      "id": "python-tutorial",
+      "type": "html",
+      "title": "The Python Tutorial",
+      "language": "Python",
+      "license": "Python Software Foundation License 2.0",
+      "url": "https://docs.python.org/3/tutorial/index.html"
+    },
+    {
+      "id": "python-language-reference",
+      "type": "html",
+      "title": "Python Language Reference",
+      "language": "Python",
+      "license": "Python Software Foundation License 2.0",
+      "url": "https://docs.python.org/3/reference/index.html"
+    },
+    {
+      "id": "typescript-handbook",
+      "type": "html",
+      "title": "The TypeScript Handbook",
+      "language": "TypeScript",
+      "license": "TypeScript documentation open-source project; verify repository license before redistribution",
+      "url": "https://www.typescriptlang.org/docs/handbook/intro.html"
+    },
+    {
+      "id": "typescript-everyday-types",
+      "type": "html",
+      "title": "TypeScript Handbook — Everyday Types",
+      "language": "TypeScript",
+      "license": "TypeScript documentation open-source project; verify repository license before redistribution",
+      "url": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html"
+    },
+    {
+      "id": "rust-book",
+      "type": "html",
+      "title": "The Rust Programming Language",
+      "language": "Rust",
+      "license": "Rust book source is available from the Rust project; retain source attribution",
+      "url": "https://doc.rust-lang.org/stable/book/"
+    },
+    {
+      "id": "rust-reference",
+      "type": "html",
+      "title": "The Rust Reference",
+      "language": "Rust",
+      "license": "Rust project documentation; retain source attribution",
+      "url": "https://doc.rust-lang.org/stable/reference/"
+    }
+  ]
+}
