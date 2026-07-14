@@ -7,6 +7,7 @@
     "build": "next build",
     "ingest": "tsx scripts/ingest.ts",
     "acquire": "tsx scripts/acquire-corpus.ts",
+    "corpus:audit": "tsx scripts/audit-corpus.ts",
     "parse:corpus": "tsx scripts/parse-corpus.ts",
     "experiment:prepare": "tsx scripts/prepare-experiment.ts",
     "experiment:compare": "tsx scripts/compare-experiments.ts",

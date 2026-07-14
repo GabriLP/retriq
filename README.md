@@ -44,6 +44,7 @@ ingestion; originals and acquisition metadata remain outside Git:
 
 ```bash
 npm run acquire -- --manifest docs/corpus/programming-foundation.json
+npm run corpus:audit
 npm run parse:corpus -- --manifest docs/corpus/programming-foundation.json
 npm run ingest -- --manifest docs/corpus/programming-foundation.json
 ```
