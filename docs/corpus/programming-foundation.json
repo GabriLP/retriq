@@ -233,6 +233,50 @@
       "authority": "official",
       "stability": "versioned",
       "snapshotPolicy": "versioned-url",
+      "qualityExceptions": [
+        {
+          "code": "empty_text",
+          "pageNumber": 84,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 368,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 412,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 476,
+          "reason": "Visually verified sparse instruction-set continuation page; its NaN comparison paragraph is retained in the Markdown artifact and attributed by Docling to the surrounding multi-page item.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 614,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 624,
+          "reason": "Visually verified intentionally blank final page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ],
       "license": "Oracle limited license; retain locally and do not redistribute through Git",
       "url": "https://docs.oracle.com/javase/specs/jvms/se26/jvms26.pdf",
       "path": "../../data/source/programming-foundation/java-se-26-vm-specification.pdf"

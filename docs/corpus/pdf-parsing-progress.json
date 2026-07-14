@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T14:45:25.993Z",
+  "generatedAt": "2026-07-14T14:51:25.504Z",
   "rows": [
     {
       "id": "postgresql-18-manual",
@@ -413,19 +413,109 @@
     {
       "id": "java-se-26-vm-specification",
       "title": "The Java Virtual Machine Specification, Java SE 26 Edition",
-      "rawStatus": "pass",
+      "rawStatus": "review",
       "effectiveStatus": "pass",
-      "pageRange": [
-        1,
-        3
+      "pageRange": null,
+      "pageCount": 624,
+      "wordCount": 129670,
+      "elapsedMs": 259312,
+      "issues": [
+        {
+          "pageNumber": 84,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 368,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 412,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 476,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 614,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 624,
+          "code": "empty_text"
+        }
       ],
-      "pageCount": 3,
-      "wordCount": 312,
-      "elapsedMs": 1312,
-      "issues": [],
-      "acceptedExceptions": [],
+      "acceptedExceptions": [
+        {
+          "pageNumber": 84,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 368,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 412,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 476,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 614,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 624,
+          "code": "empty_text"
+        }
+      ],
       "unresolvedIssues": [],
-      "exceptionRecords": []
+      "exceptionRecords": [
+        {
+          "code": "empty_text",
+          "pageNumber": 84,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 368,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 412,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 476,
+          "reason": "Visually verified sparse instruction-set continuation page; its NaN comparison paragraph is retained in the Markdown artifact and attributed by Docling to the surrounding multi-page item.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 614,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 624,
+          "reason": "Visually verified intentionally blank final page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ]
     },
     {
       "id": "c11-working-draft-n1570",
