@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "react-word-450",
+  "title": "React candidate — 450 word chunks",
+  "hypothesis": "Smaller 450-word chunks improve retrieval precision while retaining enough local context through overlap.",
+  "tags": ["candidate", "chunking", "react"],
+  "corpus": {
+    "manifests": ["docs/corpus/react-learn.json"]
+  },
+  "chunking": {
+    "strategy": "word-window",
+    "minWords": 200,
+    "targetWords": 450,
+    "overlapWords": 60
+  },
+  "embedding": {
+    "provider": "google",
+    "model": "gemini-embedding-2"
+  },
+  "retrieval": {
+    "strategy": "dense-cosine",
+    "topK": 4,
+    "minScore": 0.18
+  },
+  "generation": {
+    "provider": "google",
+    "model": "gemini-3.5-flash"
+  },
+  "evaluation": {
+    "judgeEnabled": false,
+    "judgeModel": "gemini-3.5-flash"
+  }
+}

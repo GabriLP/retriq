@@ -37,6 +37,40 @@ The generated `data/vector-store.json` is versioned because both the production
 build and the query API need it. Intermediate chunks and local evaluation logs
 remain ignored by Git.
 
+The initial multi-language registry is `docs/corpus/programming-foundation.json`.
+It declares publisher PDFs for C, Java, and PostgreSQL, and official HTML
+sources where a maintained PDF is not available. Acquire its PDFs locally before
+ingestion; originals and acquisition metadata remain outside Git:
+
+```bash
+npm run acquire -- --manifest docs/corpus/programming-foundation.json
+npm run parse:corpus -- --manifest docs/corpus/programming-foundation.json
+npm run ingest -- --manifest docs/corpus/programming-foundation.json
+```
+
+`parse:corpus` persists each PDF as `document.md`, `document.docling.json`,
+`normalized.json`, and `quality.json` under `data/parsed/<corpus>/<document>/`. Use
+`--page-range 1-3` for a fast quality smoke test before converting full manuals.
+Partial artifacts are rejected by ingestion. The corpus manifest also declares a
+quality policy (`fail`, `skip`, or `allow`); `fail` is the safe default for
+documents whose parser report requires review.
+
+### Reproducible experiments
+
+Version experiment definitions under `docs/experiments/`. Preparing a run does
+not call an embedding or generation API: it snapshots configuration and corpus
+hashes, records the Git/environment state, creates chunks, and writes an
+append-only run under `data/experiments/`.
+
+```bash
+npm run experiment:prepare -- --config docs/experiments/react-baseline-word-850.json
+npm run experiment:prepare -- --config docs/experiments/react-word-450.json
+npm run experiment:compare
+```
+
+Raw run artifacts stay outside Git. `experiment:compare` exports Markdown and
+CSV tables to `docs/experiment-results/` for later inclusion in the thesis.
+
 ### PDFs with IBM Docling
 
 PDFs are accepted as local sources and as direct `.pdf` URLs. They are converted

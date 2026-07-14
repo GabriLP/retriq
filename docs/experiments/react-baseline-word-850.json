@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "react-baseline-word-850",
+  "title": "React baseline — 850 word chunks",
+  "hypothesis": "The existing 850-word window provides a strong-context baseline with a relatively small number of chunks.",
+  "tags": ["baseline", "chunking", "react"],
+  "corpus": {
+    "manifests": ["docs/corpus/react-learn.json"]
+  },
+  "chunking": {
+    "strategy": "word-window",
+    "minWords": 500,
+    "targetWords": 850,
+    "overlapWords": 80
+  },
+  "embedding": {
+    "provider": "google",
+    "model": "gemini-embedding-2"
+  },
+  "retrieval": {
+    "strategy": "dense-cosine",
+    "topK": 4,
+    "minScore": 0.18
+  },
+  "generation": {
+    "provider": "google",
+    "model": "gemini-3.5-flash"
+  },
+  "evaluation": {
+    "judgeEnabled": false,
+    "judgeModel": "gemini-3.5-flash"
+  }
+}

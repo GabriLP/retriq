@@ -2,9 +2,19 @@ import crypto from "node:crypto";
 
 import type { DocumentationChunk, SourceDocument } from "./types";
 
-const MIN_WORDS = 500;
-const TARGET_WORDS = 850;
-const OVERLAP_WORDS = 80;
+export type ChunkingConfig = {
+  strategy: "word-window";
+  minWords: number;
+  targetWords: number;
+  overlapWords: number;
+};
+
+export const defaultChunkingConfig: ChunkingConfig = {
+  strategy: "word-window",
+  minWords: 500,
+  targetWords: 850,
+  overlapWords: 80,
+};
 
 export function normalizeWhitespace(value: string) {
   return value.replace(/\r\n/g, "\n").replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
@@ -14,7 +24,11 @@ export function countWords(value: string) {
   return normalizeWhitespace(value).split(/\s+/).filter(Boolean).length;
 }
 
-export function createChunksFromDocuments(documents: SourceDocument[]) {
+export function createChunksFromDocuments(
+  documents: SourceDocument[],
+  config: ChunkingConfig = defaultChunkingConfig,
+) {
+  validateChunkingConfig(config);
   const chunks: DocumentationChunk[] = [];
 
   for (const document of documents) {
@@ -25,7 +39,7 @@ export function createChunksFromDocuments(documents: SourceDocument[]) {
     // to inspect before introducing more advanced NLP-based segmentation.
     const blocks = splitIntoBlocks(content);
     const totalWords = countWords(content);
-    if (totalWords <= TARGET_WORDS) {
+    if (totalWords <= config.targetWords) {
       chunks.push(toChunk(document, content));
       continue;
     }
@@ -37,7 +51,7 @@ export function createChunksFromDocuments(documents: SourceDocument[]) {
       let chunkWords = 0;
       let nextIndex = blockIndex;
 
-      while (nextIndex < blocks.length && (chunkWords < TARGET_WORDS || !chunkBlocks.length)) {
+      while (nextIndex < blocks.length && (chunkWords < config.targetWords || !chunkBlocks.length)) {
         const block = blocks[nextIndex];
         chunkBlocks.push(block);
         chunkWords += countWords(block);
@@ -48,7 +62,7 @@ export function createChunksFromDocuments(documents: SourceDocument[]) {
 
       // Very small chunks often retrieve well by accident but provide weak
       // evidence. The minimum size keeps enough context for grounded answers.
-      if (countWords(chunkContent) >= MIN_WORDS || blockIndex === 0) {
+      if (countWords(chunkContent) >= config.minWords || blockIndex === 0) {
         // Part numbers are local to the source section so citation labels remain
         // meaningful regardless of the manifest order or total corpus size.
         chunks.push(toChunk(document, chunkContent, part));
@@ -59,7 +73,7 @@ export function createChunksFromDocuments(documents: SourceDocument[]) {
 
       // Overlap reduces boundary loss: a concept split across two chunks still
       // has enough local context to be retrieved and cited coherently.
-      blockIndex = findOverlapStart(blocks, blockIndex, nextIndex);
+      blockIndex = findOverlapStart(blocks, blockIndex, nextIndex, config.overlapWords);
     }
   }
 
@@ -73,16 +87,27 @@ function splitIntoBlocks(content: string) {
     .filter(Boolean);
 }
 
-function findOverlapStart(blocks: string[], currentIndex: number, nextIndex: number) {
+function findOverlapStart(blocks: string[], currentIndex: number, nextIndex: number, overlapTarget: number) {
   let overlapWords = 0;
   let overlapIndex = nextIndex;
 
-  while (overlapIndex > 0 && overlapWords < OVERLAP_WORDS) {
+  while (overlapIndex > 0 && overlapWords < overlapTarget) {
     overlapIndex -= 1;
     overlapWords += countWords(blocks[overlapIndex]);
   }
 
   return Math.max(overlapIndex, currentIndex + 1);
+}
+
+function validateChunkingConfig(config: ChunkingConfig) {
+  if (config.strategy !== "word-window") throw new Error(`Unsupported chunking strategy: ${config.strategy}`);
+  if (!Number.isInteger(config.minWords) || config.minWords < 1) throw new Error("chunking.minWords must be positive.");
+  if (!Number.isInteger(config.targetWords) || config.targetWords < config.minWords) {
+    throw new Error("chunking.targetWords must be an integer greater than or equal to minWords.");
+  }
+  if (!Number.isInteger(config.overlapWords) || config.overlapWords < 0 || config.overlapWords >= config.targetWords) {
+    throw new Error("chunking.overlapWords must be between 0 and targetWords - 1.");
+  }
 }
 
 function toChunk(document: SourceDocument, content: string, part?: number): DocumentationChunk {
@@ -95,6 +120,11 @@ function toChunk(document: SourceDocument, content: string, part?: number): Docu
     section: part ? `${document.section} (part ${part})` : document.section,
     content,
     sourceUrl: document.sourceUrl,
+    sourceId: document.sourceId,
+    sourceType: document.sourceType,
+    language: document.language,
+    pageStart: document.pageStart,
+    pageEnd: document.pageEnd,
     wordCount: countWords(content),
   };
 }
