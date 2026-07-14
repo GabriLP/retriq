@@ -1,20 +1,20 @@
 # PDF parsing progress report
 
-Generated: 2026-07-14T09:11:29.550Z
+Generated: 2026-07-14T13:30:02.840Z
 
 > Partial rows are page-range smoke tests, not approval of complete documents. Full rows have processed every page but still require all reported issues to be resolved or explicitly verified.
 
 - PDF documents: **12**
-- Complete documents: **1**
-- Partial smoke tests: **11**
-- Raw pass: **9**
-- Raw review: **3**
+- Complete documents: **2**
+- Partial smoke tests: **10**
+- Raw pass: **8**
+- Raw review: **4**
 - Effective pass after verified exceptions: **12**
 - Unresolved review: **0**
 
 | Source | Scope | Pages | Words | Raw | Effective | Issues | Accepted exceptions | Time ms |
 |---|---|---:|---:|---|---|---|---|---:|
-| postgresql-18-manual | partial | 1-3 | 647 | pass | pass | — | — | 9500 |
+| postgresql-18-manual | full | 3130 | 1178340 | review | pass | p380:empty_text; p1555:empty_text; p2827:empty_text; p2828:empty_text; p2829:empty_text; p2830:empty_text; p2831:empty_text; p2832:empty_text; p2833:empty_text; p3025:empty_text | p380:empty_text; p1555:empty_text; p2827:empty_text; p2828:empty_text; p2829:empty_text; p2830:empty_text; p2831:empty_text; p2832:empty_text; p2833:empty_text; p3025:empty_text | 2378000 |
 | java-se-26-language-specification | partial | 1-3 | 265 | pass | pass | — | — | 1422 |
 | java-se-26-vm-specification | partial | 1-3 | 312 | pass | pass | — | — | 1312 |
 | c11-working-draft-n1570 | partial | 1-3 | 4291 | pass | pass | — | — | 40219 |

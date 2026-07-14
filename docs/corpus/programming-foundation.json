@@ -13,15 +13,87 @@
     {
       "id": "postgresql-18-manual",
       "type": "pdf",
-      "title": "PostgreSQL 18 Documentation",
+      "title": "PostgreSQL 18.4 Documentation",
       "language": "PostgreSQL / SQL",
       "publisher": "PostgreSQL Global Development Group",
       "family": "postgresql-official-manual",
-      "version": "18",
+      "version": "18.4 snapshot",
       "documentRole": "official-reference",
       "authority": "official",
       "stability": "versioned",
-      "snapshotPolicy": "versioned-url",
+      "snapshotPolicy": "mutable-url-hash-required",
+      "qualityExceptions": [
+        {
+          "code": "empty_text",
+          "pageNumber": 380,
+          "reason": "Visually verified continuation of a multi-page JSON functions table; the table content is retained in the Markdown artifact and attributed by Docling to the first page of the table item.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 1555,
+          "reason": "Visually verified sparse continuation page containing one SPI result sentence; the sentence is retained in the Markdown artifact and attributed by Docling to the surrounding multi-page item.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2827,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2828,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2829,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2830,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2831,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2832,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2833,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 3025,
+          "reason": "Visually verified appendix divider page containing only the running appendix title and page number; the appendix heading and following content are retained in the Markdown artifact.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        }
+      ],
       "license": "PostgreSQL documentation copyright; retain source attribution",
       "url": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
       "path": "../../data/source/programming-foundation/postgresql-18-manual.pdf"

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T08:58:54.029Z",
+  "generatedAt": "2026-07-14T13:30:03.214Z",
   "manifests": [
     "docs/corpus/react-learn.json",
     "docs/corpus/programming-foundation.json"
@@ -1128,15 +1128,87 @@
     {
       "id": "postgresql-18-manual",
       "type": "pdf",
-      "title": "PostgreSQL 18 Documentation",
+      "title": "PostgreSQL 18.4 Documentation",
       "language": "PostgreSQL / SQL",
       "publisher": "PostgreSQL Global Development Group",
       "family": "postgresql-official-manual",
-      "version": "18",
+      "version": "18.4 snapshot",
       "documentRole": "official-reference",
       "authority": "official",
       "stability": "versioned",
-      "snapshotPolicy": "versioned-url",
+      "snapshotPolicy": "mutable-url-hash-required",
+      "qualityExceptions": [
+        {
+          "code": "empty_text",
+          "pageNumber": 380,
+          "reason": "Visually verified continuation of a multi-page JSON functions table; the table content is retained in the Markdown artifact and attributed by Docling to the first page of the table item.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 1555,
+          "reason": "Visually verified sparse continuation page containing one SPI result sentence; the sentence is retained in the Markdown artifact and attributed by Docling to the surrounding multi-page item.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2827,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2828,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2829,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2830,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2831,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2832,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2833,
+          "reason": "Visually verified contributor-list continuation; the names are retained in the Markdown artifact as a multi-page block attributed by Docling to its first page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 3025,
+          "reason": "Visually verified appendix divider page containing only the running appendix title and page number; the appendix heading and following content are retained in the Markdown artifact.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        }
+      ],
       "license": "PostgreSQL documentation copyright; retain source attribution",
       "url": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
       "path": "../../data/source/programming-foundation/postgresql-18-manual.pdf",
@@ -1245,6 +1317,78 @@
       "authority": "academic-secondary",
       "stability": "versioned",
       "snapshotPolicy": "versioned-url",
+      "qualityExceptions": [
+        {
+          "code": "high_symbol_ratio",
+          "pageNumber": 1,
+          "reason": "Visually verified cover page dominated by the data-structure illustration; title text remains readable.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2,
+          "reason": "Visually verified intentionally blank verso page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 4,
+          "reason": "Visually verified intentionally blank front-matter page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 26,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 72,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 88,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 110,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 124,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 140,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 150,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ],
       "license": "Creative Commons Attribution",
       "url": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
       "path": "../../data/source/programming-foundation/open-data-structures-java.pdf",
@@ -1299,6 +1443,15 @@
       "authority": "official-experimental-specification",
       "stability": "experimental",
       "snapshotPolicy": "mutable-url-hash-required",
+      "qualityExceptions": [
+        {
+          "code": "empty_text",
+          "pageNumber": 2,
+          "reason": "Visually verified front-matter page containing only the roman page number ii.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ],
       "license": "Kotlin documentation is licensed under Apache 2.0; verify specification-specific notices in the acquired snapshot",
       "url": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
       "path": "../../data/source/programming-foundation/kotlin-language-specification.pdf",
@@ -1335,6 +1488,15 @@
       "authority": "official-implementation-reference",
       "stability": "versioned",
       "snapshotPolicy": "versioned-url",
+      "qualityExceptions": [
+        {
+          "code": "empty_text",
+          "pageNumber": 2,
+          "reason": "Visually verified intentionally blank front-matter page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ],
       "license": "GNU Free Documentation License 1.3 or later with invariant sections and cover texts",
       "url": "https://sourceware.org/glibc/manual/2.42/pdf/libc.pdf",
       "path": "../../data/source/programming-foundation/gnu-c-library-2-42-manual.pdf",
