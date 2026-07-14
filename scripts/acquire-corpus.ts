@@ -51,6 +51,11 @@ async function main() {
 
     const content = Buffer.from(await response.arrayBuffer());
     if (!content.length) throw new Error(`Downloaded PDF '${source.id}' is empty.`);
+    if (content.subarray(0, 5).toString("ascii") !== "%PDF-") {
+      throw new Error(
+        `Downloaded source '${source.id}' is not a PDF (content-type: ${response.headers.get("content-type") ?? "unknown"}).`,
+      );
+    }
 
     await fs.mkdir(path.dirname(targetPath), { recursive: true });
     await fs.writeFile(targetPath, content);

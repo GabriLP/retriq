@@ -1,6 +1,17 @@
 {
   "name": "React Documentation Corpus",
   "description": "Expanded, reproducible React corpus covering Learn guides, state and effects, escape hatches, and the most-used React and React DOM API references.",
+  "defaults": {
+    "type": "html",
+    "language": "React",
+    "publisher": "Meta / React project",
+    "family": "react-official-documentation",
+    "documentRole": "official-guide-and-reference",
+    "authority": "official",
+    "stability": "living",
+    "snapshotPolicy": "remote-html-hashed-at-experiment-time",
+    "license": "CC BY 4.0 for documentation; examples may have separate terms"
+  },
   "sources": [
     "https://react.dev/learn",
     "https://react.dev/learn/installation",
