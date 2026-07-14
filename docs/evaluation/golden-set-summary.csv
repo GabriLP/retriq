@@ -6,6 +6,11 @@ react-refs-001,source-verified,React,refs,easy,factual,answerable,Why is a ref u
 react-out-of-scope-001,source-verified,React,scope-control,easy,unanswerable,unanswerable,How do I configure dependency injection providers in an Angular NgModule?,0
 c-standard-purpose-001,source-verified,C,language-standard,easy,factual,answerable,What purpose does the C11 N1570 draft state for the C language standard?,1
 java-spec-release-001,source-verified,Java,language-specification,easy,factual,answerable,Which Java release and specification status are identified by the Java Language Specification in this corpus?,1
+java-ods-arraystack-amortized-001,source-verified,Java,array-based-data-structures,hard,multi-hop,answerable,Why can ArrayStack resizing take linear time for one operation while still adding only constant amortized cost per update?,1
+java-ods-dual-array-deque-001,source-verified,Java,deques,hard,multi-hop,answerable,"What balance invariant does DualArrayDeque maintain, and why does its occasional O(n) rebalancing remain O(1) amortized per update?",1
+java-ods-skiplist-analysis-001,source-verified,Java,skiplists,medium,factual,answerable,What expected space and search-path bounds are established for a skiplist containing n elements?,1
+java-ods-linear-probing-001,source-verified,Java,hash-tables,hard,factual,answerable,Under which assumptions does the LinearHashTable analysis obtain O(1) expected operation time?,1
+java-ods-red-black-tree-001,source-verified,Java,balanced-search-trees,hard,multi-hop,answerable,How does the correspondence with a 2-4 tree establish the height bound for a red-black tree?,1
 postgresql-license-001,source-verified,PostgreSQL,documentation-license,medium,factual,answerable,Under which condition does the PostgreSQL 18 manual grant permission to copy and distribute the software and documentation?,1
 c-array-decay-001,draft,C,arrays-and-pointers,hard,factual,answerable,In which expression contexts does a C array expression not get converted to a pointer to its first element?,0
 java-overload-resolution-001,draft,Java,method-invocation,hard,procedural,answerable,What are the main phases used by Java to determine whether a method is applicable during overload resolution?,0

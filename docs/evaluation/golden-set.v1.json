@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "retriq-programming-qa",
-  "version": "1.0.0-seed",
+  "version": "1.1.0-seed",
   "title": "Retriq programming documentation golden set",
   "description": "Versioned seed benchmark for retrieval and grounded-answer experiments. Draft cases are tracked but excluded from scored runs.",
   "createdAt": "2026-07-14T00:00:00.000Z",
@@ -201,6 +201,158 @@
       "tags": ["java", "specification"],
       "authoredBy": "codex-assisted-curation",
       "verifiedBy": "local-pdf-extraction-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "java-ods-arraystack-amortized-001",
+      "status": "source-verified",
+      "language": "Java",
+      "domain": "array-based-data-structures",
+      "question": "Why can ArrayStack resizing take linear time for one operation while still adding only constant amortized cost per update?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "expected": {
+        "answer": "One resize copies n elements and costs O(n), but enough add or remove operations must occur between resizes. Across any sequence of m updates, the total resizing work is O(m), so the amortized resize cost per update is O(1).",
+        "keyFacts": [
+          "A single resize allocates a new array and copies n elements, costing O(n).",
+          "At least roughly n/2 updates occur between consecutive resizes.",
+          "The total resizing time over m add/remove operations is O(m), giving O(1) amortized resizing cost."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "open-data-structures-java",
+          "pageStart": 30,
+          "pageEnd": 31,
+          "section": "2.1.2 Growing and Shrinking"
+        }
+      ],
+      "tags": ["java", "arrays", "amortized-analysis"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "complete-local-pdf-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "java-ods-dual-array-deque-001",
+      "status": "source-verified",
+      "language": "Java",
+      "domain": "deques",
+      "question": "What balance invariant does DualArrayDeque maintain, and why does its occasional O(n) rebalancing remain O(1) amortized per update?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "expected": {
+        "answer": "Unless there are fewer than two elements, both front and back contain at least n/4 elements. Rebalancing moves Θ(n) elements, but at least roughly n/2 updates are required before another rebalance, so total balancing work over m updates is O(m).",
+        "keyFacts": [
+          "Each side contains at least n/4 elements except for the very small case.",
+          "Rebalancing restores the two sides to floor(n/2) and ceil(n/2) elements.",
+          "A rebalance costs O(n), but sufficiently many updates separate rebalances, producing O(1) amortized balancing cost."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "open-data-structures-java",
+          "pageStart": 42,
+          "pageEnd": 44,
+          "section": "2.5.1 Balancing"
+        }
+      ],
+      "tags": ["java", "deque", "amortized-analysis"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "complete-local-pdf-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "java-ods-skiplist-analysis-001",
+      "status": "source-verified",
+      "language": "Java",
+      "domain": "skiplists",
+      "question": "What expected space and search-path bounds are established for a skiplist containing n elements?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The skiplist has expected size O(n), and the expected search path for a particular element is at most 2 log n plus a constant term.",
+        "keyFacts": [
+          "Expected skiplist size is O(n).",
+          "Expected height is at most log n + 2.",
+          "Expected search-path length is at most 2 log n + O(1)."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "open-data-structures-java",
+          "pageStart": 83,
+          "pageEnd": 86,
+          "section": "4.4 Analysis of Skiplists"
+        }
+      ],
+      "tags": ["java", "skiplist", "probabilistic-analysis"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "complete-local-pdf-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "java-ods-linear-probing-001",
+      "status": "source-verified",
+      "language": "Java",
+      "domain": "hash-tables",
+      "question": "Under which assumptions does the LinearHashTable analysis obtain O(1) expected operation time?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The analysis assumes independent uniform hash values and maintains a load condition with at most half the table entries non-null. Under those assumptions, run lengths decrease exponentially and find, add, and remove take O(1) expected time before amortized resizing is included.",
+        "keyFacts": [
+          "Hash values are assumed independent and uniformly distributed.",
+          "The table maintains q no greater than half the table length.",
+          "Run-length probability decreases exponentially, yielding O(1) expected find/add/remove time apart from resizing.",
+          "Resizing is handled separately with amortized analysis."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "open-data-structures-java",
+          "pageStart": 98,
+          "pageEnd": 100,
+          "section": "5.2.1 Analysis of Linear Probing"
+        }
+      ],
+      "tags": ["java", "hashing", "linear-probing"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "complete-local-pdf-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "java-ods-red-black-tree-001",
+      "status": "source-verified",
+      "language": "Java",
+      "domain": "balanced-search-trees",
+      "question": "How does the correspondence with a 2-4 tree establish the height bound for a red-black tree?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "expected": {
+        "answer": "Removing each red node and attaching its children to the black parent produces a 2-4 tree whose root-to-leaf paths have equal black height. A red-black path contains at most one red node between black nodes, so its length is at most twice the corresponding 2-4-tree height, giving height at most 2 log n.",
+        "keyFacts": [
+          "Collapsing red nodes transforms the red-black tree into a 2-4 tree.",
+          "The black-height property gives equal root-to-leaf length in the transformed tree.",
+          "At most one of every two internal nodes on a red-black path is red.",
+          "The resulting red-black-tree height is at most 2 log n."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "open-data-structures-java",
+          "pageStart": 156,
+          "pageEnd": 159,
+          "section": "9.2.1 Red-Black Trees and 2-4 Trees"
+        }
+      ],
+      "tags": ["java", "red-black-tree", "2-4-tree"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "complete-local-pdf-inspection",
       "verifiedAt": "2026-07-14T00:00:00.000Z"
     },
     {
