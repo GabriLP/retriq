@@ -11,6 +11,7 @@
     "experiment:prepare": "tsx scripts/prepare-experiment.ts",
     "experiment:compare": "tsx scripts/compare-experiments.ts",
     "experiment:retrieval": "tsx scripts/evaluate-retrieval.ts",
+    "experiment:retrieval:compare": "tsx scripts/compare-retrieval-attempts.ts",
     "golden:validate": "tsx scripts/validate-golden-set.ts --dataset docs/evaluation/golden-set.v1.json",
     "golden:report": "tsx scripts/report-golden-set.ts",
     "start": "next start",

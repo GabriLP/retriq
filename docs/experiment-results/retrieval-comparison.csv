@@ -1,0 +1,3 @@
+experiment_id,attempt_id,parent_run_id,git_commit,git_dirty,chunks,embedding_model,top_k,min_score,cases,recall_at_k,precision_at_k,mrr,ndcg_at_k,no_answer_false_positive_rate,embedding_ms,total_ms
+react-baseline-word-850,20260714084418-gemini-embedding-2,20260714084231-4ab94e7b,bf3b4401231894768df920eb898dfa96322aff09,false,230,gemini-embedding-2,4,0.18,5,1,0.4375,1,0.9799301972870469,1,22594,22831
+react-word-450,20260714084503-gemini-embedding-2,20260714084457-bc02b97f,bf3b4401231894768df920eb898dfa96322aff09,false,461,gemini-embedding-2,4,0.18,5,1,0.75,0.875,0.8876626356799113,1,42635,42875

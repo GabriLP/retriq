@@ -72,6 +72,7 @@ Evaluate retrieval from an immutable prepared run (the attempt and per-case outp
 
 ```bash
 npm run experiment:retrieval -- --run data/experiments/<experiment>/<run>
+npm run experiment:retrieval:compare
 ```
 
 Validate the versioned evaluation cases and regenerate their thesis-friendly coverage report:
