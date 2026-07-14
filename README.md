@@ -68,6 +68,12 @@ npm run experiment:prepare -- --config docs/experiments/react-word-450.json
 npm run experiment:compare
 ```
 
+Evaluate retrieval from an immutable prepared run (the attempt and per-case outputs are stored beside that run):
+
+```bash
+npm run experiment:retrieval -- --run data/experiments/<experiment>/<run>
+```
+
 Validate the versioned evaluation cases and regenerate their thesis-friendly coverage report:
 
 ```bash
