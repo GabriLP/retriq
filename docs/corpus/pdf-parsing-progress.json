@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T13:30:02.839Z",
+  "generatedAt": "2026-07-14T14:45:25.993Z",
   "rows": [
     {
       "id": "postgresql-18-manual",
@@ -171,19 +171,244 @@
     {
       "id": "java-se-26-language-specification",
       "title": "The Java Language Specification, Java SE 26 Edition",
-      "rawStatus": "pass",
+      "rawStatus": "review",
       "effectiveStatus": "pass",
-      "pageRange": [
-        1,
-        3
+      "pageRange": null,
+      "pageCount": 892,
+      "wordCount": 272755,
+      "elapsedMs": 413391,
+      "issues": [
+        {
+          "pageNumber": 28,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 34,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 71,
+          "code": "high_symbol_ratio"
+        },
+        {
+          "pageNumber": 72,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 126,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 157,
+          "code": "high_symbol_ratio"
+        },
+        {
+          "pageNumber": 226,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 260,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 438,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 452,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 660,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 790,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 856,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 886,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 892,
+          "code": "empty_text"
+        }
       ],
-      "pageCount": 3,
-      "wordCount": 265,
-      "elapsedMs": 1422,
-      "issues": [],
-      "acceptedExceptions": [],
+      "acceptedExceptions": [
+        {
+          "pageNumber": 28,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 34,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 71,
+          "code": "high_symbol_ratio"
+        },
+        {
+          "pageNumber": 72,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 126,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 157,
+          "code": "high_symbol_ratio"
+        },
+        {
+          "pageNumber": 226,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 260,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 438,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 452,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 660,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 790,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 856,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 886,
+          "code": "empty_text"
+        },
+        {
+          "pageNumber": 892,
+          "code": "empty_text"
+        }
+      ],
       "unresolvedIssues": [],
-      "exceptionRecords": []
+      "exceptionRecords": [
+        {
+          "code": "empty_text",
+          "pageNumber": 28,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 34,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "high_symbol_ratio",
+          "pageNumber": 71,
+          "reason": "Visually verified Java operator reference page; the high symbol ratio is expected and all 38 operators are retained in the Markdown artifact.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 72,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 126,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "high_symbol_ratio",
+          "pageNumber": 157,
+          "reason": "Visually verified casting-conversion matrix whose notation legitimately dominates the page; the table is retained as structured Markdown.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 226,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 260,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 438,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 452,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 660,
+          "reason": "Visually verified sparse continuation of the method-invocation section; its paragraph is retained in the Markdown artifact and attributed by Docling to the surrounding multi-page item.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 790,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 856,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 886,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 892,
+          "reason": "Visually verified intentionally blank final page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ]
     },
     {
       "id": "java-se-26-vm-specification",

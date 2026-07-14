@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T13:30:03.214Z",
+  "generatedAt": "2026-07-14T14:45:26.380Z",
   "manifests": [
     "docs/corpus/react-learn.json",
     "docs/corpus/programming-foundation.json"
@@ -1227,6 +1227,113 @@
       "authority": "official",
       "stability": "versioned",
       "snapshotPolicy": "versioned-url",
+      "qualityExceptions": [
+        {
+          "code": "empty_text",
+          "pageNumber": 28,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 34,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "high_symbol_ratio",
+          "pageNumber": 71,
+          "reason": "Visually verified Java operator reference page; the high symbol ratio is expected and all 38 operators are retained in the Markdown artifact.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 72,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 126,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "high_symbol_ratio",
+          "pageNumber": 157,
+          "reason": "Visually verified casting-conversion matrix whose notation legitimately dominates the page; the table is retained as structured Markdown.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 226,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 260,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 438,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 452,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 660,
+          "reason": "Visually verified sparse continuation of the method-invocation section; its paragraph is retained in the Markdown artifact and attributed by Docling to the surrounding multi-page item.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-and-artifact-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 790,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 856,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 886,
+          "reason": "Visually verified intentionally blank page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 892,
+          "reason": "Visually verified intentionally blank final page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ],
       "license": "Oracle limited license; retain locally and do not redistribute through Git",
       "url": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
       "path": "../../data/source/programming-foundation/java-se-26-language-specification.pdf",
