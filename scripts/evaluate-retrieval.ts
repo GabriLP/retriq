@@ -76,8 +76,17 @@ async function main() {
   const createdAt = new Date().toISOString();
   const attemptId = `${createdAt.replace(/[-:.TZ]/g, "").slice(0, 14)}-${slug(config.embedding.model)}`;
   const attemptDirectory = path.join(runDirectory, "retrieval-attempts", attemptId);
-  const gitStatus = runCommand("git", ["status", "--porcelain"]);
-  const gitDiff = runCommand("git", ["diff", "--binary"]);
+  const provenancePaths = [
+    "src",
+    "scripts",
+    "package.json",
+    "package-lock.json",
+    "docs/corpus",
+    "docs/experiments",
+    "docs/evaluation",
+  ];
+  const gitStatus = runCommand("git", ["status", "--porcelain", "--", ...provenancePaths]);
+  const gitDiff = runCommand("git", ["diff", "--binary", "--", ...provenancePaths]);
   const attempt: Attempt = {
     schemaVersion: 1,
     attemptId,

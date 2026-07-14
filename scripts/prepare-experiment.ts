@@ -36,8 +36,17 @@ async function main() {
       ]
     : [];
 
-  const gitStatus = runCommand("git", ["status", "--porcelain"]);
-  const gitDiff = runCommand("git", ["diff", "--binary"]);
+  const provenancePaths = [
+    "src",
+    "scripts",
+    "package.json",
+    "package-lock.json",
+    "docs/corpus",
+    "docs/experiments",
+    "docs/evaluation",
+  ];
+  const gitStatus = runCommand("git", ["status", "--porcelain", "--", ...provenancePaths]);
+  const gitDiff = runCommand("git", ["diff", "--binary", "--", ...provenancePaths]);
   const sourceFiles = await fingerprintSourceTree();
   const run: ExperimentRun = {
     schemaVersion: 1,
