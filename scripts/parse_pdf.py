@@ -29,10 +29,17 @@ def main() -> int:
     parser.add_argument("sources", nargs="+", help="Local PDF paths or PDF URLs")
     parser.add_argument("--page-range", help="Optional inclusive page range, for example 1-3")
     parser.add_argument("--output-dir", help="Persist Markdown, Docling JSON, and quality reports under this directory")
+    parser.add_argument(
+        "--low-memory",
+        action="store_true",
+        help="Use single-page model batches and a bounded queue for PDFs that exhaust memory in the default pipeline.",
+    )
     arguments = parser.parse_args()
 
     try:
-        from docling.document_converter import DocumentConverter
+        from docling.datamodel.base_models import InputFormat
+        from docling.datamodel.pipeline_options import PdfPipelineOptions
+        from docling.document_converter import DocumentConverter, PdfFormatOption
     except ImportError:
         print(
             "Docling is not installed. Run: python -m pip install -r scripts/requirements-docling.txt",
@@ -44,7 +51,23 @@ def main() -> int:
     # pipeline/model initialization is expensive, so spawning a new converter
     # for every file makes a corpus ingestion unnecessarily slow and opaque.
     print(f"[docling] initializing converter for {len(arguments.sources)} PDF(s)", file=sys.stderr, flush=True)
-    converter = DocumentConverter()
+    pipeline_options = PdfPipelineOptions()
+    if arguments.low_memory:
+        pipeline_options.ocr_batch_size = 1
+        pipeline_options.layout_batch_size = 1
+        pipeline_options.table_batch_size = 1
+        pipeline_options.queue_max_size = 4
+    parser_config = {
+        "mode": "low-memory" if arguments.low_memory else "default",
+        "ocrBatchSize": pipeline_options.ocr_batch_size,
+        "layoutBatchSize": pipeline_options.layout_batch_size,
+        "tableBatchSize": pipeline_options.table_batch_size,
+        "queueMaxSize": pipeline_options.queue_max_size,
+    }
+    print(f"[docling] parser config: {json.dumps(parser_config)}", file=sys.stderr, flush=True)
+    converter = DocumentConverter(
+        format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
+    )
     documents = []
     page_range = parse_page_range(arguments.page_range)
 
@@ -57,7 +80,9 @@ def main() -> int:
             document = result.document
             markdown = document.export_to_markdown()
             elapsed_ms = round((time.monotonic() - started_at) * 1000)
-            quality = build_quality_report(document, markdown, source, elapsed_ms, page_range, source_sha256)
+            quality = build_quality_report(
+                document, markdown, source, elapsed_ms, page_range, source_sha256, parser_config
+            )
             normalized = build_normalized_document(document, source, quality)
             summary = {
                 "source": source,
@@ -102,7 +127,9 @@ def persist_artifacts(
     return str(artifact_directory.resolve())
 
 
-def build_quality_report(document, markdown: str, source: str, elapsed_ms: int, page_range, source_sha256) -> dict:
+def build_quality_report(
+    document, markdown: str, source: str, elapsed_ms: int, page_range, source_sha256, parser_config: dict
+) -> dict:
     page_metrics = {
         int(page_number): {
             "pageNumber": int(page_number),
@@ -173,6 +200,7 @@ def build_quality_report(document, markdown: str, source: str, elapsed_ms: int, 
         "source": source,
         "sourceSha256": source_sha256,
         "generatedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "parserConfig": parser_config,
         "elapsedMs": elapsed_ms,
         "partial": page_range is not None,
         "pageRange": list(page_range) if page_range else None,

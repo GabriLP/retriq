@@ -63,6 +63,7 @@ async function main() {
   const python = process.env.RETRIQ_DOCLING_PYTHON ?? "python";
   const args = [path.resolve("scripts", "parse_pdf.py"), "--output-dir", outputDirectory];
   if (options.pageRange) args.push("--page-range", options.pageRange);
+  if (options.lowMemory) args.push("--low-memory");
   args.push(...pdfSources.map((source) => source.path));
 
   const output = await run(python, args);
@@ -123,7 +124,7 @@ function parseArgs(args: string[]) {
   const manifest = manifestIndex >= 0 ? args[manifestIndex + 1] : undefined;
   if (!manifest) {
     throw new Error(
-      "Usage: tsx scripts/parse-corpus.ts --manifest <manifest.json> [--source-id id] [--skip-complete] [--page-range 1-3] [--output-dir path]",
+      "Usage: tsx scripts/parse-corpus.ts --manifest <manifest.json> [--source-id id] [--skip-complete] [--low-memory] [--page-range 1-3] [--output-dir path]",
     );
   }
   return {
@@ -132,6 +133,7 @@ function parseArgs(args: string[]) {
     pageRange: pageRangeIndex >= 0 ? args[pageRangeIndex + 1] : undefined,
     sourceIds,
     skipComplete: args.includes("--skip-complete"),
+    lowMemory: args.includes("--low-memory"),
   };
 }
 
