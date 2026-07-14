@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T16:47:14.156Z",
+  "generatedAt": "2026-07-14T23:46:45.573Z",
   "manifests": [
     "docs/corpus/react-learn.json",
     "docs/corpus/programming-foundation.json"
@@ -1427,7 +1427,7 @@
       "language": "C",
       "publisher": "Brian Hall / Beej",
       "family": "beej-c-guides",
-      "version": "upstream-current-at-download",
+      "version": "0.10.5 (2026-04-18 snapshot)",
       "documentRole": "tutorial",
       "authority": "expert-secondary",
       "stability": "living",
