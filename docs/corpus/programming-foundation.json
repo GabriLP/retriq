@@ -132,6 +132,62 @@
           "reason": "Visually verified intentionally blank verso page with no text, drawings, or images.",
           "verifiedAt": "2026-07-14",
           "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 4,
+          "reason": "Visually verified intentionally blank front-matter page.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 26,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 72,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 88,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 110,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 124,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 140,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 150,
+          "reason": "Visually verified chapter separator containing only running headers and page number.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
         }
       ],
       "license": "Creative Commons Attribution",

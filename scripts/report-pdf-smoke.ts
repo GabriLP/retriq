@@ -61,21 +61,23 @@ function renderMarkdown(rows: Array<{
   acceptedExceptions: Array<{ code: string; pageNumber: number }>;
   unresolvedIssues: Array<{ code: string; pageNumber: number }>;
 }>) {
-  return `# PDF parsing smoke report
+  return `# PDF parsing progress report
 
 Generated: ${new Date().toISOString()}
 
-> This is a page-range smoke test, not approval of the complete documents. Full parsing must be checked separately before thesis experiments.
+> Partial rows are page-range smoke tests, not approval of complete documents. Full rows have processed every page but still require all reported issues to be resolved or explicitly verified.
 
 - PDF documents: **${rows.length}**
+- Complete documents: **${rows.filter((row) => !row.pageRange).length}**
+- Partial smoke tests: **${rows.filter((row) => row.pageRange).length}**
 - Raw pass: **${rows.filter((row) => row.rawStatus === "pass").length}**
 - Raw review: **${rows.filter((row) => row.rawStatus === "review").length}**
 - Effective pass after verified exceptions: **${rows.filter((row) => row.effectiveStatus === "pass").length}**
 - Unresolved review: **${rows.filter((row) => row.effectiveStatus === "review").length}**
 
-| Source | Pages | Words | Raw | Effective | Issues | Accepted exceptions | Time ms |
-|---|---:|---:|---|---|---|---|---:|
-${rows.map((row) => `| ${row.id} | ${row.pageRange?.join("-") ?? row.pageCount} | ${row.wordCount} | ${row.rawStatus} | ${row.effectiveStatus} | ${formatIssues(row.issues)} | ${formatIssues(row.acceptedExceptions)} | ${row.elapsedMs} |`).join("\n")}
+| Source | Scope | Pages | Words | Raw | Effective | Issues | Accepted exceptions | Time ms |
+|---|---|---:|---:|---|---|---|---|---:|
+${rows.map((row) => `| ${row.id} | ${row.pageRange ? "partial" : "full"} | ${row.pageRange?.join("-") ?? row.pageCount} | ${row.wordCount} | ${row.rawStatus} | ${row.effectiveStatus} | ${formatIssues(row.issues)} | ${formatIssues(row.acceptedExceptions)} | ${row.elapsedMs} |`).join("\n")}
 
 ## Decision rule
 
@@ -94,7 +96,7 @@ function parseArgs(args: string[]) {
   const outputIndex = args.findIndex((arg) => arg === "--output");
   return {
     manifest: manifestIndex >= 0 ? args[manifestIndex + 1] : "docs/corpus/programming-foundation.json",
-    output: outputIndex >= 0 ? args[outputIndex + 1] : "docs/corpus/pdf-smoke-report",
+    output: outputIndex >= 0 ? args[outputIndex + 1] : "docs/corpus/pdf-parsing-progress",
   };
 }
 
