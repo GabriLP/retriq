@@ -27,6 +27,14 @@ async function main() {
       return { path: absolutePath, sha256: sha256(await fs.readFile(absolutePath)) };
     }),
   );
+  const evaluationDatasetHashes = config.evaluation.goldenSet
+    ? [
+        {
+          path: path.resolve(config.evaluation.goldenSet),
+          sha256: sha256(await fs.readFile(path.resolve(config.evaluation.goldenSet))),
+        },
+      ]
+    : [];
 
   const gitStatus = runCommand("git", ["status", "--porcelain"]);
   const gitDiff = runCommand("git", ["diff", "--binary"]);
@@ -41,6 +49,7 @@ async function main() {
     configHash,
     configPath,
     corpusManifestHashes,
+    evaluationDatasetHashes,
     code: {
       gitCommit: runCommand("git", ["rev-parse", "HEAD"]) || "unknown",
       dirty: Boolean(gitStatus),
@@ -152,6 +161,8 @@ function renderSummary(run: ExperimentRun) {
 | Embedding | ${run.configuration.embedding.provider} / ${run.configuration.embedding.model} |
 | Retrieval | ${run.configuration.retrieval.strategy}, top-k ${run.configuration.retrieval.topK}, min score ${run.configuration.retrieval.minScore} |
 | Generator | ${run.configuration.generation.provider} / ${run.configuration.generation.model} |
+| Golden set | ${run.configuration.evaluation.goldenSet ?? "Not configured"} |
+| Included review states | ${run.configuration.evaluation.caseStatuses?.join(", ") ?? "Not configured"} |
 
 ## Preparation results
 

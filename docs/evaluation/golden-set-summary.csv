@@ -1,0 +1,12 @@
+id,status,language,domain,difficulty,question_type,answerability,question,evidence_count
+react-state-snapshot-001,source-verified,React,state,medium,factual,answerable,Why does reading a state variable immediately after calling its setter still return the value from the current render?,1
+react-state-queue-001,source-verified,React,state,medium,procedural,answerable,How should a component increment the same state value three times in one event handler?,1
+react-effects-001,source-verified,React,effects,medium,comparative,answerable,When is an Effect appropriate instead of deriving a value during rendering?,2
+react-refs-001,source-verified,React,refs,easy,factual,answerable,Why is a ref unsuitable for a value that must update what the component displays?,1
+react-out-of-scope-001,source-verified,React,scope-control,easy,unanswerable,unanswerable,How do I configure dependency injection providers in an Angular NgModule?,0
+c-standard-purpose-001,source-verified,C,language-standard,easy,factual,answerable,What purpose does the C11 N1570 draft state for the C language standard?,1
+java-spec-release-001,source-verified,Java,language-specification,easy,factual,answerable,Which Java release and specification status are identified by the Java Language Specification in this corpus?,1
+postgresql-license-001,source-verified,PostgreSQL,documentation-license,medium,factual,answerable,Under which condition does the PostgreSQL 18 manual grant permission to copy and distribute the software and documentation?,1
+c-array-decay-001,draft,C,arrays-and-pointers,hard,factual,answerable,In which expression contexts does a C array expression not get converted to a pointer to its first element?,0
+java-overload-resolution-001,draft,Java,method-invocation,hard,procedural,answerable,What are the main phases used by Java to determine whether a method is applicable during overload resolution?,0
+postgresql-transaction-001,draft,PostgreSQL,transactions,medium,factual,answerable,What atomicity guarantee does PostgreSQL provide for the statements enclosed by BEGIN and COMMIT?,0

@@ -28,6 +28,8 @@
   },
   "evaluation": {
     "judgeEnabled": false,
-    "judgeModel": "gemini-3.5-flash"
+    "judgeModel": "gemini-3.5-flash",
+    "goldenSet": "docs/evaluation/golden-set.v1.json",
+    "caseStatuses": ["source-verified"]
   }
 }

@@ -68,6 +68,15 @@ npm run experiment:prepare -- --config docs/experiments/react-word-450.json
 npm run experiment:compare
 ```
 
+Validate the versioned evaluation cases and regenerate their thesis-friendly coverage report:
+
+```bash
+npm run golden:validate
+npm run golden:report
+```
+
+Draft cases are tracked but excluded from scored benchmarks. Final thesis runs should use human-approved cases; exploratory runs may explicitly include source-verified cases.
+
 Raw run artifacts stay outside Git. `experiment:compare` exports Markdown and
 CSV tables to `docs/experiment-results/` for later inclusion in the thesis.
 

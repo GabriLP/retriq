@@ -26,6 +26,8 @@ export type ExperimentConfig = {
   evaluation: {
     judgeEnabled: boolean;
     judgeModel?: string;
+    goldenSet?: string;
+    caseStatuses?: Array<"source-verified" | "human-approved">;
   };
 };
 
@@ -39,6 +41,7 @@ export type ExperimentRun = {
   configHash: string;
   configPath: string;
   corpusManifestHashes: Array<{ path: string; sha256: string }>;
+  evaluationDatasetHashes: Array<{ path: string; sha256: string }>;
   code: {
     gitCommit: string;
     dirty: boolean;

@@ -1,0 +1,293 @@
+{
+  "schemaVersion": 1,
+  "id": "retriq-programming-qa",
+  "version": "1.0.0-seed",
+  "title": "Retriq programming documentation golden set",
+  "description": "Versioned seed benchmark for retrieval and grounded-answer experiments. Draft cases are tracked but excluded from scored runs.",
+  "createdAt": "2026-07-14T00:00:00.000Z",
+  "corpusManifests": [
+    "docs/corpus/react-learn.json",
+    "docs/corpus/programming-foundation.json"
+  ],
+  "cases": [
+    {
+      "id": "react-state-snapshot-001",
+      "status": "source-verified",
+      "language": "React",
+      "domain": "state",
+      "question": "Why does reading a state variable immediately after calling its setter still return the value from the current render?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Setting state requests another render; it does not mutate the state snapshot already captured by the running render or event handler.",
+        "keyFacts": [
+          "A state setter requests a new render.",
+          "Each render receives a snapshot of state.",
+          "The current handler continues to observe the snapshot for its render."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://react.dev/learn/state-as-a-snapshot",
+          "section": "State as a Snapshot"
+        }
+      ],
+      "tags": ["state", "rendering"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "react-state-queue-001",
+      "status": "source-verified",
+      "language": "React",
+      "domain": "state",
+      "question": "How should a component increment the same state value three times in one event handler?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "procedural",
+      "expected": {
+        "answer": "Pass an updater function to the setter three times, for example setNumber(n => n + 1), so React processes the queued updates in sequence.",
+        "keyFacts": [
+          "Use the functional updater form.",
+          "React queues updater functions.",
+          "Each updater receives the result of the preceding queued updater."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates",
+          "section": "Updating the same state multiple times before the next render"
+        }
+      ],
+      "tags": ["state", "batching"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "react-effects-001",
+      "status": "source-verified",
+      "language": "React",
+      "domain": "effects",
+      "question": "When is an Effect appropriate instead of deriving a value during rendering?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "comparative",
+      "expected": {
+        "answer": "Use an Effect to synchronize with an external system. If no external system is involved and a value can be derived from props or state, calculate it during rendering.",
+        "keyFacts": [
+          "Effects synchronize React components with external systems.",
+          "Derived values generally do not require an Effect.",
+          "Unnecessary Effects add extra render work and complexity."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://react.dev/learn/you-might-not-need-an-effect",
+          "section": "How to remove unnecessary Effects"
+        },
+        {
+          "sourceUrl": "https://react.dev/learn/synchronizing-with-effects",
+          "section": "What are Effects and how are they different from events?"
+        }
+      ],
+      "tags": ["effects", "derived-state"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "react-refs-001",
+      "status": "source-verified",
+      "language": "React",
+      "domain": "refs",
+      "question": "Why is a ref unsuitable for a value that must update what the component displays?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Changing ref.current does not trigger a re-render, so React will not update the displayed output from that change alone.",
+        "keyFacts": [
+          "Mutating a ref does not trigger a re-render.",
+          "State should be used for values that affect rendered output."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://react.dev/learn/referencing-values-with-refs",
+          "section": "Differences between refs and state"
+        }
+      ],
+      "tags": ["refs", "rendering"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "react-out-of-scope-001",
+      "status": "source-verified",
+      "language": "React",
+      "domain": "scope-control",
+      "question": "How do I configure dependency injection providers in an Angular NgModule?",
+      "answerability": "unanswerable",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The selected corpus contains React and programming-language documentation, not Angular NgModule documentation."
+      },
+      "evidence": [],
+      "tags": ["negative", "out-of-domain"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "c-standard-purpose-001",
+      "status": "source-verified",
+      "language": "C",
+      "domain": "language-standard",
+      "question": "What purpose does the C11 N1570 draft state for the C language standard?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "It specifies the form and interpretation of C programs to promote portability, reliability, maintainability, and efficient execution across computing systems.",
+        "keyFacts": [
+          "It specifies the form and interpretation of C programs.",
+          "Its goals include portability, reliability, maintainability, and efficient execution."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "c11-working-draft-n1570",
+          "pageStart": 1,
+          "pageEnd": 1,
+          "section": "Abstract"
+        }
+      ],
+      "tags": ["c11", "standard"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-pdf-extraction-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "java-spec-release-001",
+      "status": "source-verified",
+      "language": "Java",
+      "domain": "language-specification",
+      "question": "Which Java release and specification status are identified by the Java Language Specification in this corpus?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The document is the Java SE 26 edition, version 26, marked Final Release and released in March 2026.",
+        "keyFacts": [
+          "Java SE 26 edition and version 26.",
+          "Status is Final Release.",
+          "Release date is March 2026."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "java-se-26-language-specification",
+          "pageStart": 1,
+          "pageEnd": 2,
+          "section": "Java SE 26 Edition"
+        }
+      ],
+      "tags": ["java", "specification"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-pdf-extraction-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "postgresql-license-001",
+      "status": "source-verified",
+      "language": "PostgreSQL",
+      "domain": "documentation-license",
+      "question": "Under which condition does the PostgreSQL 18 manual grant permission to copy and distribute the software and documentation?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The permission is granted without fee or written agreement provided the copyright notice and the specified accompanying paragraphs appear in all copies.",
+        "keyFacts": [
+          "Permission is granted without fee and without a written agreement.",
+          "The required copyright notice and accompanying paragraphs must appear in all copies."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "postgresql-18-manual",
+          "pageStart": 2,
+          "pageEnd": 2,
+          "section": "Legal Notice"
+        }
+      ],
+      "tags": ["postgresql", "license"],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-pdf-extraction-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "c-array-decay-001",
+      "status": "draft",
+      "language": "C",
+      "domain": "arrays-and-pointers",
+      "question": "In which expression contexts does a C array expression not get converted to a pointer to its first element?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "factual",
+      "expected": {
+        "keyFacts": [
+          "The final answer must enumerate the standard-defined exceptions and distinguish array-to-pointer conversion from the array object itself."
+        ]
+      },
+      "evidence": [],
+      "tags": ["candidate", "c11", "arrays"],
+      "notes": "Candidate for targeted PDF verification before scoring.",
+      "authoredBy": "codex-assisted-curation"
+    },
+    {
+      "id": "java-overload-resolution-001",
+      "status": "draft",
+      "language": "Java",
+      "domain": "method-invocation",
+      "question": "What are the main phases used by Java to determine whether a method is applicable during overload resolution?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "procedural",
+      "expected": {
+        "keyFacts": [
+          "The final answer must preserve the order of the applicability phases and explain why later phases are considered only if earlier ones find no applicable method."
+        ]
+      },
+      "evidence": [],
+      "tags": ["candidate", "java", "overloading"],
+      "notes": "Candidate for targeted JLS page verification before scoring.",
+      "authoredBy": "codex-assisted-curation"
+    },
+    {
+      "id": "postgresql-transaction-001",
+      "status": "draft",
+      "language": "PostgreSQL",
+      "domain": "transactions",
+      "question": "What atomicity guarantee does PostgreSQL provide for the statements enclosed by BEGIN and COMMIT?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "keyFacts": [
+          "The final answer must describe the all-or-nothing behavior of a transaction and the visibility of intermediate states."
+        ]
+      },
+      "evidence": [],
+      "tags": ["candidate", "postgresql", "transactions"],
+      "notes": "Candidate for targeted PostgreSQL PDF verification before scoring.",
+      "authoredBy": "codex-assisted-curation"
+    }
+  ]
+}
