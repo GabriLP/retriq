@@ -1,0 +1,278 @@
+{
+  "generatedAt": "2026-07-14T09:05:05.273Z",
+  "rows": [
+    {
+      "id": "postgresql-18-manual",
+      "title": "PostgreSQL 18 Documentation",
+      "rawStatus": "pass",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 647,
+      "elapsedMs": 9500,
+      "issues": [],
+      "acceptedExceptions": [],
+      "unresolvedIssues": [],
+      "exceptionRecords": []
+    },
+    {
+      "id": "java-se-26-language-specification",
+      "title": "The Java Language Specification, Java SE 26 Edition",
+      "rawStatus": "pass",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 265,
+      "elapsedMs": 1422,
+      "issues": [],
+      "acceptedExceptions": [],
+      "unresolvedIssues": [],
+      "exceptionRecords": []
+    },
+    {
+      "id": "java-se-26-vm-specification",
+      "title": "The Java Virtual Machine Specification, Java SE 26 Edition",
+      "rawStatus": "pass",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 312,
+      "elapsedMs": 1312,
+      "issues": [],
+      "acceptedExceptions": [],
+      "unresolvedIssues": [],
+      "exceptionRecords": []
+    },
+    {
+      "id": "c11-working-draft-n1570",
+      "title": "ISO/IEC 9899:201x — WG14 N1570 working draft",
+      "rawStatus": "pass",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 4291,
+      "elapsedMs": 40219,
+      "issues": [],
+      "acceptedExceptions": [],
+      "unresolvedIssues": [],
+      "exceptionRecords": []
+    },
+    {
+      "id": "beej-c-tutorial",
+      "title": "Beej’s Guide to C Programming",
+      "rawStatus": "pass",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 2464,
+      "elapsedMs": 14812,
+      "issues": [],
+      "acceptedExceptions": [],
+      "unresolvedIssues": [],
+      "exceptionRecords": []
+    },
+    {
+      "id": "beej-c-library-reference",
+      "title": "Beej’s Guide to C Programming — Library Reference",
+      "rawStatus": "pass",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 1873,
+      "elapsedMs": 14015,
+      "issues": [],
+      "acceptedExceptions": [],
+      "unresolvedIssues": [],
+      "exceptionRecords": []
+    },
+    {
+      "id": "open-data-structures-java",
+      "title": "Open Data Structures (Java Edition)",
+      "rawStatus": "review",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 72,
+      "elapsedMs": 2829,
+      "issues": [
+        {
+          "pageNumber": 1,
+          "code": "high_symbol_ratio"
+        },
+        {
+          "pageNumber": 2,
+          "code": "empty_text"
+        }
+      ],
+      "acceptedExceptions": [
+        {
+          "pageNumber": 1,
+          "code": "high_symbol_ratio"
+        },
+        {
+          "pageNumber": 2,
+          "code": "empty_text"
+        }
+      ],
+      "unresolvedIssues": [],
+      "exceptionRecords": [
+        {
+          "code": "high_symbol_ratio",
+          "pageNumber": 1,
+          "reason": "Visually verified cover page dominated by the data-structure illustration; title text remains readable.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2,
+          "reason": "Visually verified intentionally blank verso page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ]
+    },
+    {
+      "id": "cpp26-working-draft-n5046",
+      "title": "Working Draft, Programming Languages — C++ (N5046)",
+      "rawStatus": "pass",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 1285,
+      "elapsedMs": 14437,
+      "issues": [],
+      "acceptedExceptions": [],
+      "unresolvedIssues": [],
+      "exceptionRecords": []
+    },
+    {
+      "id": "ecmascript-2026-ecma-262",
+      "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+      "rawStatus": "pass",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 4040,
+      "elapsedMs": 3375,
+      "issues": [],
+      "acceptedExceptions": [],
+      "unresolvedIssues": [],
+      "exceptionRecords": []
+    },
+    {
+      "id": "kotlin-language-specification",
+      "title": "Kotlin Language Specification",
+      "rawStatus": "review",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 2137,
+      "elapsedMs": 14438,
+      "issues": [
+        {
+          "pageNumber": 2,
+          "code": "empty_text"
+        }
+      ],
+      "acceptedExceptions": [
+        {
+          "pageNumber": 2,
+          "code": "empty_text"
+        }
+      ],
+      "unresolvedIssues": [],
+      "exceptionRecords": [
+        {
+          "code": "empty_text",
+          "pageNumber": 2,
+          "reason": "Visually verified front-matter page containing only the roman page number ii.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ]
+    },
+    {
+      "id": "gnu-bash-5-3-reference-manual",
+      "title": "GNU Bash Reference Manual",
+      "rawStatus": "pass",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 1233,
+      "elapsedMs": 7187,
+      "issues": [],
+      "acceptedExceptions": [],
+      "unresolvedIssues": [],
+      "exceptionRecords": []
+    },
+    {
+      "id": "gnu-c-library-2-42-manual",
+      "title": "The GNU C Library Reference Manual",
+      "rawStatus": "review",
+      "effectiveStatus": "pass",
+      "pageRange": [
+        1,
+        3
+      ],
+      "pageCount": 3,
+      "wordCount": 30,
+      "elapsedMs": 937,
+      "issues": [
+        {
+          "pageNumber": 2,
+          "code": "empty_text"
+        }
+      ],
+      "acceptedExceptions": [
+        {
+          "pageNumber": 2,
+          "code": "empty_text"
+        }
+      ],
+      "unresolvedIssues": [],
+      "exceptionRecords": [
+        {
+          "code": "empty_text",
+          "pageNumber": 2,
+          "reason": "Visually verified intentionally blank front-matter page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ]
+    }
+  ]
+}

@@ -8,6 +8,7 @@
     "ingest": "tsx scripts/ingest.ts",
     "acquire": "tsx scripts/acquire-corpus.ts",
     "corpus:audit": "tsx scripts/audit-corpus.ts",
+    "corpus:pdf:report": "tsx scripts/report-pdf-smoke.ts",
     "parse:corpus": "tsx scripts/parse-corpus.ts",
     "experiment:prepare": "tsx scripts/prepare-experiment.ts",
     "experiment:compare": "tsx scripts/compare-experiments.ts",
