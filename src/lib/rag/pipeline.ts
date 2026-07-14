@@ -28,6 +28,8 @@ export async function answerQuestion(question: string, topK = ragConfig.defaultT
     title: chunk.title,
     section: chunk.section,
     sourceUrl: chunk.sourceUrl,
+    pageStart: chunk.pageStart,
+    pageEnd: chunk.pageEnd,
   }));
 
   const response: QueryResponse = {

@@ -6,18 +6,40 @@ import * as cheerio from "cheerio";
 import type { AnyNode } from "domhandler";
 import matter from "gray-matter";
 
-import type { SourceDocument } from "./types";
+import type { SourceDocument, SourceType } from "./types";
 
-const SUPPORTED_EXTENSIONS = new Set([".md", ".mdx", ".html", ".htm", ".pdf"]);
+const SUPPORTED_EXTENSIONS = new Set([".md", ".mdx", ".html", ".htm", ".pdf", ".json"]);
 const DOCLING_SCRIPT_PATH = path.join(process.cwd(), "scripts", "parse_pdf.py");
-const MAX_DOCLING_OUTPUT_BYTES = 25 * 1024 * 1024;
+const MAX_DOCLING_OUTPUT_BYTES = Number(process.env.RETRIQ_DOCLING_MAX_OUTPUT_BYTES ?? 100 * 1024 * 1024);
+const DOCLING_TIMEOUT_MS = Number(process.env.RETRIQ_DOCLING_TIMEOUT_MS ?? 15 * 60 * 1000);
+const DOCLING_PAGE_RANGE = process.env.RETRIQ_DOCLING_PAGE_RANGE;
 
-export async function loadSources(inputs: string[], options: { baseUrl?: string } = {}) {
+type ArtifactQualityPolicy = "fail" | "skip" | "allow";
+
+type SourceMetadata = {
+  sourceId?: string;
+  sourceUrl?: string;
+  title?: string;
+  sourceType?: SourceType;
+  language?: string;
+  qualityPolicy?: ArtifactQualityPolicy;
+};
+
+export async function loadSources(
+  inputs: string[],
+  options: { baseUrl?: string; sourceMetadataByInput?: Record<string, SourceMetadata> } = {},
+) {
   const sources: SourceDocument[] = [];
+  const pdfInputs: Array<{ input: string; sourceUrl: string; metadata?: SourceMetadata }> = [];
 
   for (const input of inputs) {
+    const inputMetadata = options.sourceMetadataByInput?.[input];
     if (isUrl(input)) {
-      sources.push(isPdfUrl(input) ? await loadPdf(input, input) : await loadHtmlFromUrl(input));
+      if (isPdfUrl(input)) {
+        pdfInputs.push({ input, sourceUrl: inputMetadata?.sourceUrl ?? input, metadata: inputMetadata });
+      } else {
+        sources.push(applySourceMetadata(await loadHtmlFromUrl(input), inputMetadata, "html"));
+      }
       continue;
     }
 
@@ -31,14 +53,32 @@ export async function loadSources(inputs: string[], options: { baseUrl?: string 
     for (const file of files) {
       const extension = path.extname(file).toLowerCase();
       if (!SUPPORTED_EXTENSIONS.has(extension)) continue;
+      const metadata = options.sourceMetadataByInput?.[path.resolve(file)];
 
       if (extension === ".md" || extension === ".mdx") {
-        sources.push(...(await loadMarkdownFile(file, rootPath, options.baseUrl)));
+        sources.push(...(await loadMarkdownFile(file, rootPath, options.baseUrl, metadata)));
       } else if (extension === ".pdf") {
-        sources.push(await loadPdf(file, buildSourceUrl(file, rootPath, options.baseUrl)));
+        pdfInputs.push({
+          input: file,
+          sourceUrl: metadata?.sourceUrl ?? buildSourceUrl(file, rootPath, options.baseUrl),
+          metadata,
+        });
+      } else if (extension === ".json") {
+        if (path.basename(file) === "normalized.json") {
+          sources.push(...(await loadNormalizedArtifact(file, metadata)));
+        }
       } else {
-        sources.push(await loadHtmlFile(file, rootPath, options.baseUrl));
+        sources.push(await loadHtmlFile(file, rootPath, options.baseUrl, metadata));
       }
+    }
+  }
+
+  if (pdfInputs.length) {
+    const markdownByInput = await convertPdfsWithDocling(pdfInputs.map((pdf) => pdf.input));
+    for (const pdf of pdfInputs) {
+      const markdown = markdownByInput.get(pdf.input);
+      if (!markdown) throw new Error(`Docling did not return content for ${pdf.input}.`);
+      sources.push(createPdfDocument(markdown, pdf.sourceUrl, pdf.metadata));
     }
   }
 
@@ -57,29 +97,39 @@ async function collectFiles(directory: string): Promise<string[]> {
   return files.flat();
 }
 
-async function loadMarkdownFile(filePath: string, rootPath: string, baseUrl?: string): Promise<SourceDocument[]> {
+async function loadMarkdownFile(
+  filePath: string,
+  rootPath: string,
+  baseUrl?: string,
+  metadata?: SourceMetadata,
+): Promise<SourceDocument[]> {
   const raw = await fs.readFile(filePath, "utf8");
   const parsed = matter(raw);
   // Frontmatter is useful for canonical titles/URLs, but it should not pollute
   // the text that later gets embedded and retrieved.
   const body = stripMdxSyntax(parsed.content);
-  const title = String(parsed.data.title ?? findFirstHeading(body) ?? path.basename(filePath));
-  const sourceUrl = String(parsed.data.url ?? buildSourceUrl(filePath, rootPath, baseUrl));
+  const title = String(parsed.data.title ?? metadata?.title ?? findFirstHeading(body) ?? path.basename(filePath));
+  const sourceUrl = String(parsed.data.url ?? metadata?.sourceUrl ?? buildSourceUrl(filePath, rootPath, baseUrl));
   const sections = splitMarkdownIntoSections(body, title);
 
   // Section-level metadata is preserved before chunking so later retrieval can
   // cite a meaningful documentation location rather than an opaque text block.
-  return sections.map((section) => ({
-    title,
-    section: section.heading,
-    content: section.content,
-    sourceUrl,
-  }));
+  return sections.map((section) =>
+    applySourceMetadata(
+      { title, section: section.heading, content: section.content, sourceUrl },
+      metadata,
+      "markdown",
+    ),
+  );
 }
 
-async function loadHtmlFile(filePath: string, rootPath: string, baseUrl?: string) {
+async function loadHtmlFile(filePath: string, rootPath: string, baseUrl?: string, metadata?: SourceMetadata) {
   const html = await fs.readFile(filePath, "utf8");
-  return parseHtml(html, buildSourceUrl(filePath, rootPath, baseUrl));
+  return applySourceMetadata(
+    parseHtml(html, metadata?.sourceUrl ?? buildSourceUrl(filePath, rootPath, baseUrl)),
+    metadata,
+    "html",
+  );
 }
 
 async function loadHtmlFromUrl(url: string) {
@@ -111,34 +161,115 @@ function parseHtml(html: string, sourceUrl: string): SourceDocument {
   };
 }
 
-async function loadPdf(input: string, sourceUrl: string): Promise<SourceDocument> {
-  const markdown = await convertPdfWithDocling(input);
-  const title = findFirstHeading(markdown) ?? path.basename(sourceUrl.split("?")[0], ".pdf") ?? sourceUrl;
+function createPdfDocument(markdown: string, sourceUrl: string, metadata?: SourceMetadata): SourceDocument {
+  const title = metadata?.title ?? findFirstHeading(markdown) ?? path.basename(sourceUrl.split("?")[0], ".pdf") ?? sourceUrl;
 
+  return applySourceMetadata(
+    {
+      title: normalizeSourceText(title),
+      section: normalizeSourceText(findFirstHeading(markdown) ?? "Document"),
+      content: markdown,
+      sourceUrl,
+    },
+    metadata,
+    "pdf",
+  );
+}
+
+async function loadNormalizedArtifact(filePath: string, metadata?: SourceMetadata): Promise<SourceDocument[]> {
+  const artifact = JSON.parse(await fs.readFile(filePath, "utf8")) as {
+    schemaVersion?: unknown;
+    source?: unknown;
+    sourceType?: unknown;
+    qualityStatus?: unknown;
+    partial?: unknown;
+    pageRange?: unknown;
+    sections?: Array<{
+      heading?: unknown;
+      pageStart?: unknown;
+      pageEnd?: unknown;
+      content?: unknown;
+    }>;
+  };
+
+  if (artifact.schemaVersion !== 1 || !Array.isArray(artifact.sections)) {
+    throw new Error(`Unsupported normalized artifact schema: ${filePath}`);
+  }
+  if (artifact.partial === true) {
+    throw new Error(
+      `Refusing partial PDF artifact ${filePath}. Re-run npm run parse:corpus without --page-range before ingestion.`,
+    );
+  }
+
+  const qualityStatus = artifact.qualityStatus === "review" ? "review" : "pass";
+  const qualityPolicy = metadata?.qualityPolicy ?? "fail";
+  if (qualityStatus === "review" && qualityPolicy === "fail") {
+    throw new Error(`PDF artifact requires review and corpus qualityPolicy is 'fail': ${filePath}`);
+  }
+  if (qualityStatus === "review" && qualityPolicy === "skip") {
+    console.warn(`Skipped PDF artifact requiring review: ${filePath}`);
+    return [];
+  }
+
+  const sourceUrl = metadata?.sourceUrl ?? (typeof artifact.source === "string" ? artifact.source : `file://${filePath}`);
+  const title = metadata?.title ?? path.basename(path.dirname(filePath));
+  return artifact.sections.flatMap((section) => {
+    if (typeof section.content !== "string" || !section.content.trim()) return [];
+    return [
+      applySourceMetadata(
+        {
+          title,
+          section: typeof section.heading === "string" && section.heading.trim() ? section.heading.trim() : "Document",
+          content: normalizeSourceText(section.content),
+          sourceUrl,
+          pageStart: typeof section.pageStart === "number" ? section.pageStart : undefined,
+          pageEnd: typeof section.pageEnd === "number" ? section.pageEnd : undefined,
+        },
+        metadata,
+        "pdf",
+      ),
+    ];
+  });
+}
+
+function applySourceMetadata(
+  document: SourceDocument,
+  metadata: SourceMetadata | undefined,
+  fallbackType: SourceType,
+): SourceDocument {
   return {
-    title: normalizeSourceText(title),
-    section: normalizeSourceText(findFirstHeading(markdown) ?? "Document"),
-    content: markdown,
-    sourceUrl,
+    ...document,
+    title: metadata?.title ?? document.title,
+    sourceUrl: metadata?.sourceUrl ?? document.sourceUrl,
+    sourceId: metadata?.sourceId,
+    sourceType: metadata?.sourceType ?? fallbackType,
+    language: metadata?.language,
   };
 }
 
-async function convertPdfWithDocling(input: string) {
+async function convertPdfsWithDocling(inputs: string[]) {
   const python = process.env.RETRIQ_DOCLING_PYTHON ?? "python";
-  const output = await runProcess(python, [DOCLING_SCRIPT_PATH, input]);
+  const args = [DOCLING_SCRIPT_PATH];
+  if (DOCLING_PAGE_RANGE) {
+    args.push("--page-range", DOCLING_PAGE_RANGE);
+  }
+  args.push(...inputs);
+  const output = await runProcess(python, args);
 
-  let parsed: { markdown?: unknown };
+  let parsed: { documents?: Array<{ source?: unknown; markdown?: unknown }> };
   try {
-    parsed = JSON.parse(output) as { markdown?: unknown };
+    parsed = JSON.parse(output) as { documents?: Array<{ source?: unknown; markdown?: unknown }> };
   } catch {
     throw new Error("Docling did not return valid JSON while parsing the PDF.");
   }
 
-  if (typeof parsed.markdown !== "string" || !parsed.markdown.trim()) {
-    throw new Error("Docling did not extract readable text from the PDF.");
+  const markdownByInput = new Map<string, string>();
+  for (const document of parsed.documents ?? []) {
+    if (typeof document.source !== "string" || typeof document.markdown !== "string" || !document.markdown.trim()) continue;
+    markdownByInput.set(document.source, normalizeSourceText(document.markdown));
   }
 
-  return normalizeSourceText(parsed.markdown);
+  return markdownByInput;
 }
 
 function runProcess(command: string, args: string[]) {
@@ -146,6 +277,11 @@ function runProcess(command: string, args: string[]) {
     const child = spawn(command, args, { stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
     let stdout = "";
     let stderr = "";
+    let timedOut = false;
+    const timeout = setTimeout(() => {
+      timedOut = true;
+      child.kill();
+    }, DOCLING_TIMEOUT_MS);
 
     child.stdout.setEncoding("utf8");
     child.stderr.setEncoding("utf8");
@@ -157,6 +293,7 @@ function runProcess(command: string, args: string[]) {
       stderr += data;
     });
     child.on("error", (error) => {
+      clearTimeout(timeout);
       reject(
         new Error(
           `Could not start Docling with '${command}'. Install it with 'python -m pip install -r scripts/requirements-docling.txt' or set RETRIQ_DOCLING_PYTHON. ${error.message}`,
@@ -164,13 +301,17 @@ function runProcess(command: string, args: string[]) {
       );
     });
     child.on("close", (code) => {
+      clearTimeout(timeout);
       if (code === 0) {
         resolve(stdout);
         return;
       }
 
       const details = stderr.trim() || "No diagnostic output was returned.";
-      reject(new Error(`Docling failed to parse PDF (exit code ${code ?? "unknown"}): ${details}`));
+      const reason = timedOut
+        ? `Docling exceeded the ${Math.round(DOCLING_TIMEOUT_MS / 1000)}s timeout`
+        : `Docling failed to parse PDF (exit code ${code ?? "unknown"})`;
+      reject(new Error(`${reason}: ${details}`));
     });
   });
 }
@@ -248,7 +389,7 @@ function stripMdxSyntax(content: string) {
 }
 
 function findFirstHeading(content: string) {
-  return /^#\s+(.+)$/m.exec(content)?.[1]?.trim();
+  return /^#{1,4}\s+(.+)$/m.exec(content)?.[1]?.trim();
 }
 
 function normalizeSourceText(value: string) {

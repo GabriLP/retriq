@@ -6,6 +6,11 @@ export type DocumentationChunk = {
   section: string;
   content: string;
   sourceUrl: string;
+  sourceId?: string;
+  sourceType?: SourceType;
+  language?: string;
+  pageStart?: number;
+  pageEnd?: number;
   wordCount: number;
 };
 
@@ -39,6 +44,8 @@ export type Citation = {
   title: string;
   section: string;
   sourceUrl: string;
+  pageStart?: number;
+  pageEnd?: number;
 };
 
 export type AnswerStatus = "grounded" | "insufficient_context";
@@ -75,7 +82,14 @@ export type SourceDocument = {
   section: string;
   content: string;
   sourceUrl: string;
+  sourceId?: string;
+  sourceType?: SourceType;
+  language?: string;
+  pageStart?: number;
+  pageEnd?: number;
 };
+
+export type SourceType = "html" | "markdown" | "pdf";
 
 export type JudgeVerdict = "pass" | "needs_review" | "fail" | "disabled" | "unavailable";
 

@@ -3,19 +3,13 @@ import path from "node:path";
 
 import * as nextEnv from "@next/env";
 
+import { loadCorpusManifests } from "../src/lib/rag/corpus-manifest";
 import type { EmbeddedChunk } from "../src/lib/rag/types";
 
 type CliOptions = {
   sources: string[];
   manifests: string[];
   baseUrl?: string;
-};
-
-type CorpusManifest = {
-  name?: string;
-  description?: string;
-  baseUrl?: string;
-  sources: string[];
 };
 
 async function main() {
@@ -31,13 +25,13 @@ async function main() {
     ]);
 
   const options = parseArgs(process.argv.slice(2));
-  const manifestOptions = await loadManifestOptions(options.manifests);
+  const manifestOptions = await loadCorpusManifests(options.manifests);
   const sources = [...new Set([...manifestOptions.sources, ...options.sources])];
   const baseUrl = options.baseUrl ?? manifestOptions.baseUrl;
 
   if (!sources.length) printUsageAndExit();
 
-  const documents = await loadSources(sources, { baseUrl });
+  const documents = await loadSources(sources, { baseUrl, sourceMetadataByInput: manifestOptions.sourceMetadataByInput });
   const chunks = createChunksFromDocuments(documents);
 
   if (!chunks.length) {
@@ -90,35 +84,6 @@ function parseArgs(args: string[]): CliOptions {
   }
 
   return options;
-}
-
-async function loadManifestOptions(manifestPaths: string[]) {
-  const sources: string[] = [];
-  let baseUrl: string | undefined;
-
-  for (const manifestPath of manifestPaths) {
-    const absolutePath = path.resolve(manifestPath);
-    const manifestDirectory = path.dirname(absolutePath);
-    const manifest = JSON.parse(await fs.readFile(absolutePath, "utf8")) as CorpusManifest;
-
-    if (!Array.isArray(manifest.sources)) {
-      throw new Error(`Corpus manifest ${manifestPath} must include a sources array.`);
-    }
-
-    sources.push(...manifest.sources.map((source) => resolveManifestSource(source, manifestDirectory)));
-    baseUrl ??= manifest.baseUrl;
-  }
-
-  return { sources, baseUrl };
-}
-
-function resolveManifestSource(source: string, manifestDirectory: string) {
-  if (isUrl(source) || path.isAbsolute(source)) return source;
-  return path.resolve(manifestDirectory, source);
-}
-
-function isUrl(value: string) {
-  return /^https?:\/\//i.test(value);
 }
 
 function printUsageAndExit(): never {
