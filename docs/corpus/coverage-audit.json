@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T14:51:25.895Z",
+  "generatedAt": "2026-07-14T16:47:14.156Z",
   "manifests": [
     "docs/corpus/react-learn.json",
     "docs/corpus/programming-foundation.json"
@@ -1405,7 +1405,7 @@
     {
       "id": "c11-working-draft-n1570",
       "type": "pdf",
-      "title": "ISO/IEC 9899:201x — WG14 N1570 working draft",
+      "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
       "language": "C",
       "publisher": "ISO/IEC JTC1/SC22/WG14",
       "family": "wg14-c-working-drafts",

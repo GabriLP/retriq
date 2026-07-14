@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T14:51:25.504Z",
+  "generatedAt": "2026-07-14T16:47:13.788Z",
   "rows": [
     {
       "id": "postgresql-18-manual",
@@ -519,16 +519,13 @@
     },
     {
       "id": "c11-working-draft-n1570",
-      "title": "ISO/IEC 9899:201x — WG14 N1570 working draft",
+      "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
       "rawStatus": "pass",
       "effectiveStatus": "pass",
-      "pageRange": [
-        1,
-        3
-      ],
-      "pageCount": 3,
-      "wordCount": 4291,
-      "elapsedMs": 40219,
+      "pageRange": null,
+      "pageCount": 701,
+      "wordCount": 219496,
+      "elapsedMs": 556390,
       "issues": [],
       "acceptedExceptions": [],
       "unresolvedIssues": [],
