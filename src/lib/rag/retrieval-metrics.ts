@@ -56,7 +56,15 @@ export function evaluateRetrievalCase(testCase: GoldenCase, rankedChunks: Ranked
   const distinctTargetsHit = testCase.evidence.filter((evidence) =>
     rankedChunks.some((chunk) => matchesEvidence(chunk, evidence)),
   ).length;
-  const dcg = ranked.reduce((total, chunk) => total + (chunk.relevant ? 1 / Math.log2(chunk.rank + 1) : 0), 0);
+  const creditedEvidence = new Set<number>();
+  const dcg = rankedChunks.reduce((total, chunk) => {
+    const evidenceIndex = testCase.evidence.findIndex(
+      (evidence, index) => !creditedEvidence.has(index) && matchesEvidence(chunk, evidence),
+    );
+    if (evidenceIndex < 0) return total;
+    creditedEvidence.add(evidenceIndex);
+    return total + 1 / Math.log2(chunk.rank + 1);
+  }, 0);
   const idealCount = Math.min(testCase.evidence.length, ranked.length);
   const idealDcg = Array.from({ length: idealCount }, (_, index) => 1 / Math.log2(index + 2)).reduce(
     (total, value) => total + value,
@@ -89,7 +97,7 @@ export function matchesEvidence(chunk: DocumentationChunk, evidence: GoldenEvide
 export function aggregateRetrievalMetrics(results: RetrievalCaseResult[]) {
   const answerable = results.filter((result) => result.answerability === "answerable");
   const unanswerable = results.filter((result) => result.answerability === "unanswerable");
-  return {
+  const metrics = {
     evaluatedCases: results.length,
     answerableCases: answerable.length,
     unanswerableCases: unanswerable.length,
@@ -99,6 +107,12 @@ export function aggregateRetrievalMetrics(results: RetrievalCaseResult[]) {
     ndcgAtK: average(answerable.map((result) => result.ndcgAtK)),
     noAnswerFalsePositiveRate: average(unanswerable.map((result) => (result.falsePositive ? 1 : 0))),
   };
+  for (const [name, value] of Object.entries(metrics)) {
+    if (typeof value === "number" && !name.endsWith("Cases") && (value < 0 || value > 1)) {
+      throw new Error(`Invalid retrieval metric ${name}=${value}; expected a value between 0 and 1.`);
+    }
+  }
+  return metrics;
 }
 
 function average(values: Array<number | null>) {

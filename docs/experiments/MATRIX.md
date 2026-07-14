@@ -18,3 +18,9 @@ Each row is a candidate configuration, including alternatives that fail or are r
 ## Reporting rule
 
 For every run, retain the hypothesis, complete configuration, source and dataset hashes, code fingerprint, environment, raw per-case outputs, aggregate metrics, failures, latency, and—where available—token/cost usage. Rejected alternatives remain in the registry with a reason; they are not deleted from the narrative.
+
+## Measurement corrections
+
+| Date | Attempt | Finding | Disposition |
+|---|---|---|---|
+| 2026-07-14 | `20260714084248-gemini-embedding-2` | The initial nDCG implementation credited multiple chunks for the same single evidence target, producing the impossible value 1.2627. | Attempt retained but invalidated for comparison; evidence targets are now credited once and all rate/ranking metrics are checked to remain in [0, 1]. |
