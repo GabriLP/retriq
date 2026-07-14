@@ -11,6 +11,15 @@ export type ManifestSource = {
   language?: string;
   license?: string;
   title?: string;
+  qualityExceptions?: QualityException[];
+};
+
+export type QualityException = {
+  code: string;
+  pageNumber: number;
+  reason: string;
+  verifiedAt: string;
+  verificationMethod: string;
 };
 
 export type SourceMetadata = {
@@ -20,6 +29,7 @@ export type SourceMetadata = {
   sourceType?: "pdf" | "html" | "markdown";
   language?: string;
   qualityPolicy?: ArtifactQualityPolicy;
+  qualityExceptions?: QualityException[];
 };
 
 type CorpusManifest = {
@@ -78,6 +88,7 @@ function resolveManifestSource(
     sourceType: source.type,
     language: source.language,
     qualityPolicy,
+    qualityExceptions: source.qualityExceptions,
   };
   if (source.type === "pdf" && parsedBasePath) {
     return {

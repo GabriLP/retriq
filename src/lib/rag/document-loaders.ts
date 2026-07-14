@@ -16,6 +16,14 @@ const DOCLING_PAGE_RANGE = process.env.RETRIQ_DOCLING_PAGE_RANGE;
 
 type ArtifactQualityPolicy = "fail" | "skip" | "allow";
 
+type QualityException = {
+  code: string;
+  pageNumber: number;
+  reason: string;
+  verifiedAt: string;
+  verificationMethod: string;
+};
+
 type SourceMetadata = {
   sourceId?: string;
   sourceUrl?: string;
@@ -23,6 +31,7 @@ type SourceMetadata = {
   sourceType?: SourceType;
   language?: string;
   qualityPolicy?: ArtifactQualityPolicy;
+  qualityExceptions?: QualityException[];
 };
 
 export async function loadSources(
@@ -183,6 +192,7 @@ async function loadNormalizedArtifact(filePath: string, metadata?: SourceMetadat
     sourceType?: unknown;
     qualityStatus?: unknown;
     partial?: unknown;
+    qualityIssues?: unknown;
     pageRange?: unknown;
     sections?: Array<{
       heading?: unknown;
@@ -201,7 +211,15 @@ async function loadNormalizedArtifact(filePath: string, metadata?: SourceMetadat
     );
   }
 
-  const qualityStatus = artifact.qualityStatus === "review" ? "review" : "pass";
+  const qualityIssues = normalizeQualityIssues(artifact.qualityIssues);
+  const unresolvedQualityIssues = qualityIssues.filter(
+    (issue) =>
+      !metadata?.qualityExceptions?.some(
+        (exception) => exception.code === issue.code && exception.pageNumber === issue.pageNumber,
+      ),
+  );
+  const qualityStatus =
+    artifact.qualityStatus === "review" && (!qualityIssues.length || unresolvedQualityIssues.length) ? "review" : "pass";
   const qualityPolicy = metadata?.qualityPolicy ?? "fail";
   if (qualityStatus === "review" && qualityPolicy === "fail") {
     throw new Error(`PDF artifact requires review and corpus qualityPolicy is 'fail': ${filePath}`);
@@ -229,6 +247,16 @@ async function loadNormalizedArtifact(filePath: string, metadata?: SourceMetadat
         "pdf",
       ),
     ];
+  });
+}
+
+function normalizeQualityIssues(value: unknown) {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((issue) => {
+    if (!issue || typeof issue !== "object") return [];
+    const candidate = issue as { code?: unknown; pageNumber?: unknown };
+    if (typeof candidate.code !== "string" || typeof candidate.pageNumber !== "number") return [];
+    return [{ code: candidate.code, pageNumber: candidate.pageNumber }];
   });
 }
 

@@ -118,6 +118,22 @@
       "authority": "academic-secondary",
       "stability": "versioned",
       "snapshotPolicy": "versioned-url",
+      "qualityExceptions": [
+        {
+          "code": "high_symbol_ratio",
+          "pageNumber": 1,
+          "reason": "Visually verified cover page dominated by the data-structure illustration; title text remains readable.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 2,
+          "reason": "Visually verified intentionally blank verso page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ],
       "license": "Creative Commons Attribution",
       "url": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
       "path": "../../data/source/programming-foundation/open-data-structures-java.pdf"
@@ -166,6 +182,15 @@
       "authority": "official-experimental-specification",
       "stability": "experimental",
       "snapshotPolicy": "mutable-url-hash-required",
+      "qualityExceptions": [
+        {
+          "code": "empty_text",
+          "pageNumber": 2,
+          "reason": "Visually verified front-matter page containing only the roman page number ii.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ],
       "license": "Kotlin documentation is licensed under Apache 2.0; verify specification-specific notices in the acquired snapshot",
       "url": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
       "path": "../../data/source/programming-foundation/kotlin-language-specification.pdf"
@@ -198,6 +223,15 @@
       "authority": "official-implementation-reference",
       "stability": "versioned",
       "snapshotPolicy": "versioned-url",
+      "qualityExceptions": [
+        {
+          "code": "empty_text",
+          "pageNumber": 2,
+          "reason": "Visually verified intentionally blank front-matter page with no text, drawings, or images.",
+          "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        }
+      ],
       "license": "GNU Free Documentation License 1.3 or later with invariant sections and cover texts",
       "url": "https://sourceware.org/glibc/manual/2.42/pdf/libc.pdf",
       "path": "../../data/source/programming-foundation/gnu-c-library-2-42-manual.pdf"

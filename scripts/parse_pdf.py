@@ -245,6 +245,7 @@ def build_normalized_document(document, source: str, quality: dict) -> dict:
         "sourceType": "pdf",
         "generatedAt": quality["generatedAt"],
         "qualityStatus": quality["status"],
+        "qualityIssues": quality["issues"],
         "partial": quality["partial"],
         "pageRange": quality["pageRange"],
         "pageCount": quality["pageCount"],
