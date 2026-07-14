@@ -49,6 +49,13 @@ npm run parse:corpus -- --manifest docs/corpus/programming-foundation.json
 npm run ingest -- --manifest docs/corpus/programming-foundation.json
 ```
 
+Large PDF conversions can be resumed safely. Completed artifacts are skipped only when their stored source hash still matches the acquired PDF:
+
+```bash
+npm run parse:corpus -- --manifest docs/corpus/programming-foundation.json --skip-complete
+npm run parse:corpus -- --manifest docs/corpus/programming-foundation.json --source-id gnu-bash-5-3-reference-manual
+```
+
 `parse:corpus` persists each PDF as `document.md`, `document.docling.json`,
 `normalized.json`, and `quality.json` under `data/parsed/<corpus>/<document>/`. Use
 `--page-range 1-3` for a fast quality smoke test before converting full manuals.

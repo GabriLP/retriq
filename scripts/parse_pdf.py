@@ -50,13 +50,14 @@ def main() -> int:
 
     for source in arguments.sources:
         started_at = time.monotonic()
+        source_sha256 = hash_local_source(source)
         print(f"[docling] converting {source}", file=sys.stderr, flush=True)
         try:
             result = converter.convert(source, **({"page_range": page_range} if page_range else {}))
             document = result.document
             markdown = document.export_to_markdown()
             elapsed_ms = round((time.monotonic() - started_at) * 1000)
-            quality = build_quality_report(document, markdown, source, elapsed_ms, page_range)
+            quality = build_quality_report(document, markdown, source, elapsed_ms, page_range, source_sha256)
             normalized = build_normalized_document(document, source, quality)
             summary = {
                 "source": source,
@@ -101,7 +102,7 @@ def persist_artifacts(
     return str(artifact_directory.resolve())
 
 
-def build_quality_report(document, markdown: str, source: str, elapsed_ms: int, page_range) -> dict:
+def build_quality_report(document, markdown: str, source: str, elapsed_ms: int, page_range, source_sha256) -> dict:
     page_metrics = {
         int(page_number): {
             "pageNumber": int(page_number),
@@ -170,6 +171,7 @@ def build_quality_report(document, markdown: str, source: str, elapsed_ms: int, 
     return {
         "schemaVersion": 1,
         "source": source,
+        "sourceSha256": source_sha256,
         "generatedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "elapsedMs": elapsed_ms,
         "partial": page_range is not None,
@@ -242,6 +244,7 @@ def build_normalized_document(document, source: str, quality: dict) -> dict:
     return {
         "schemaVersion": 1,
         "source": source,
+        "sourceSha256": quality["sourceSha256"],
         "sourceType": "pdf",
         "generatedAt": quality["generatedAt"],
         "qualityStatus": quality["status"],
@@ -266,6 +269,17 @@ def extract_item_text(item, document) -> str:
         except Exception:
             return ""
     return ""
+
+
+def hash_local_source(source: str):
+    source_path = Path(source)
+    if not source_path.is_file():
+        return None
+    digest = hashlib.sha256()
+    with source_path.open("rb") as source_file:
+        for block in iter(lambda: source_file.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def artifact_id(source: str) -> str:
