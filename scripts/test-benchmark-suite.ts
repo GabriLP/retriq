@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 
 import { diffExperimentConfigs, findUncontrolledExperimentPaths } from "../src/lib/rag/benchmark-suite";
+import { summarizeChunkWords } from "../src/lib/rag/chunk-statistics";
 import type { ExperimentConfig } from "../src/lib/rag/experiment-types";
 
 const baseline = createConfig();
@@ -14,6 +15,15 @@ assert.deepEqual(findUncontrolledExperimentPaths(baseline, targetVariant, ["chun
 assert.deepEqual(findUncontrolledExperimentPaths(baseline, uncontrolledVariant, ["chunking.targetWords"]), [
   "embedding.model",
 ]);
+assert.deepEqual(summarizeChunkWords([10, 20, 30, 40, 100], 25, 40), {
+  minimum: 10,
+  p50: 30,
+  p90: 100,
+  p95: 100,
+  maximum: 100,
+  belowConfiguredMinimum: 2,
+  atOrAboveTarget: 2,
+});
 
 console.log("Benchmark suite comparison tests passed.");
 

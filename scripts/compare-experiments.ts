@@ -51,15 +51,15 @@ function renderMarkdown(runs: ExperimentRun[]) {
   const preliminary = warnings.length ? `\n> **Preliminary comparison:** ${warnings.join(" ")}\n` : "";
   const rows = runs.map((run) => {
     const stats = run.statistics;
-    return `| ${run.experimentId} | ${run.runId} | ${run.status} | ${run.configuration.chunking.targetWords} | ${run.configuration.chunking.overlapWords} | ${stats?.chunkCount ?? "-"} | ${stats?.averageChunkWords ?? "-"} | ${run.timingsMs?.total ?? "-"} | ${run.corpusSnapshot?.sha256.slice(0, 8) ?? "-"} | ${run.configHash.slice(0, 8)} |`;
+    return `| ${run.experimentId} | ${run.runId} | ${run.status} | ${run.configuration.chunking.targetWords} | ${run.configuration.chunking.overlapWords} | ${stats?.chunkCount ?? "-"} | ${stats?.averageChunkWords ?? "-"} | ${stats?.chunkWordDistribution?.p50 ?? "-"} | ${stats?.chunkWordDistribution?.p90 ?? "-"} | ${stats?.chunkWordDistribution?.belowConfiguredMinimum ?? "-"} | ${run.timingsMs?.total ?? "-"} | ${run.corpusSnapshot?.sha256.slice(0, 8) ?? "-"} | ${run.configHash.slice(0, 8)} |`;
   });
   return `# Experiment comparison
 
 Generated: ${new Date().toISOString()}
 ${preliminary}
 
-| Experiment | Run | Status | Target words | Overlap | Chunks | Avg. chunk words | Preparation ms | Corpus hash | Config hash |
-|---|---|---|---:|---:|---:|---:|---:|---|---|
+| Experiment | Run | Status | Target words | Overlap | Chunks | Average words | P50 | P90 | Below minimum | Preparation ms | Corpus hash | Config hash |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---|
 ${rows.join("\n")}
 
 ## Interpretation notes
@@ -67,6 +67,7 @@ ${rows.join("\n")}
 - Compare retrieval/generation metrics only after runs use the same corpus snapshot and golden set.
 - A dirty workspace is recorded in each run and should be avoided for final thesis measurements.
 - Preparation metrics describe corpus segmentation; they do not measure retrieval quality by themselves.
+- Chunk percentiles and below-minimum counts expose when source-section boundaries dominate the configured target size.
 `;
 }
 
@@ -87,6 +88,13 @@ function renderCsv(runs: ExperimentRun[]) {
     "chunk_count",
     "word_count",
     "average_chunk_words",
+    "chunk_words_minimum",
+    "chunk_words_p50",
+    "chunk_words_p90",
+    "chunk_words_p95",
+    "chunk_words_maximum",
+    "chunks_below_configured_minimum",
+    "chunks_at_or_above_target",
     "load_ms",
     "chunking_ms",
     "total_ms",
@@ -107,6 +115,13 @@ function renderCsv(runs: ExperimentRun[]) {
     run.statistics?.chunkCount ?? "",
     run.statistics?.wordCount ?? "",
     run.statistics?.averageChunkWords ?? "",
+    run.statistics?.chunkWordDistribution?.minimum ?? "",
+    run.statistics?.chunkWordDistribution?.p50 ?? "",
+    run.statistics?.chunkWordDistribution?.p90 ?? "",
+    run.statistics?.chunkWordDistribution?.p95 ?? "",
+    run.statistics?.chunkWordDistribution?.maximum ?? "",
+    run.statistics?.chunkWordDistribution?.belowConfiguredMinimum ?? "",
+    run.statistics?.chunkWordDistribution?.atOrAboveTarget ?? "",
     run.timingsMs?.loadDocuments ?? "",
     run.timingsMs?.chunking ?? "",
     run.timingsMs?.total ?? "",

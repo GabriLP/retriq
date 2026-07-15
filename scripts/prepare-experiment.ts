@@ -6,6 +6,7 @@ import path from "node:path";
 import { performance } from "node:perf_hooks";
 
 import { createChunksFromDocuments } from "../src/lib/rag/chunking";
+import { summarizeChunkWords } from "../src/lib/rag/chunk-statistics";
 import { loadCorpusManifests } from "../src/lib/rag/corpus-manifest";
 import { loadSources } from "../src/lib/rag/document-loaders";
 import type { ExperimentConfig, ExperimentRun } from "../src/lib/rag/experiment-types";
@@ -110,6 +111,11 @@ async function main() {
       chunkCount: chunks.length,
       wordCount,
       averageChunkWords: Number((wordCount / Math.max(chunks.length, 1)).toFixed(2)),
+      chunkWordDistribution: summarizeChunkWords(
+        chunks.map((chunk) => chunk.wordCount),
+        config.chunking.minWords,
+        config.chunking.targetWords,
+      ),
       languages: countValues(documents.map((document) => document.language ?? "unspecified")),
       sourceTypes: countValues(documents.map((document) => document.sourceType ?? "unspecified")),
     };
@@ -223,9 +229,9 @@ function renderSummary(run: ExperimentRun) {
 
 ## Preparation results
 
-| Documents | Sources | Chunks | Indexed words | Average chunk words | Load ms | Chunking ms |
-|---:|---:|---:|---:|---:|---:|---:|
-| ${stats?.documentCount ?? "—"} | ${stats?.sourceCount ?? "—"} | ${stats?.chunkCount ?? "—"} | ${stats?.wordCount ?? "—"} | ${stats?.averageChunkWords ?? "—"} | ${run.timingsMs?.loadDocuments ?? "—"} | ${run.timingsMs?.chunking ?? "—"} |
+| Documents | Sources | Chunks | Indexed words | Average words | P50 | P90 | Maximum | Below configured minimum | Load ms | Chunking ms |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| ${stats?.documentCount ?? "—"} | ${stats?.sourceCount ?? "—"} | ${stats?.chunkCount ?? "—"} | ${stats?.wordCount ?? "—"} | ${stats?.averageChunkWords ?? "—"} | ${stats?.chunkWordDistribution?.p50 ?? "—"} | ${stats?.chunkWordDistribution?.p90 ?? "—"} | ${stats?.chunkWordDistribution?.maximum ?? "—"} | ${stats?.chunkWordDistribution?.belowConfiguredMinimum ?? "—"} | ${run.timingsMs?.loadDocuments ?? "—"} | ${run.timingsMs?.chunking ?? "—"} |
 
 ${run.error ? `## Error\n\n${run.error}\n` : ""}`;
 }

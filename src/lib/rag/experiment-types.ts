@@ -68,6 +68,15 @@ export type ExperimentRun = {
     chunkCount: number;
     wordCount: number;
     averageChunkWords: number;
+    chunkWordDistribution?: {
+      minimum: number;
+      p50: number;
+      p90: number;
+      p95: number;
+      maximum: number;
+      belowConfiguredMinimum: number;
+      atOrAboveTarget: number;
+    };
     languages: Record<string, number>;
     sourceTypes: Record<string, number>;
   };
