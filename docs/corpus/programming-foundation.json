@@ -316,11 +316,11 @@
     {
       "id": "beej-c-library-reference",
       "type": "pdf",
-      "title": "Beej’s Guide to C Programming — Library Reference",
+      "title": "Beej’s Guide to C Programming - Library Reference",
       "language": "C",
       "publisher": "Brian Hall / Beej",
       "family": "beej-c-guides",
-      "version": "upstream-current-at-download",
+      "version": "0.9.11 (2025-04-16 snapshot)",
       "documentRole": "library-reference",
       "authority": "expert-secondary",
       "stability": "beta-living",

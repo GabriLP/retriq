@@ -1,12 +1,12 @@
 # PDF parsing progress report
 
-Generated: 2026-07-14T23:46:45.147Z
+Generated: 2026-07-15T07:15:21.036Z
 
 > Partial rows are page-range smoke tests, not approval of complete documents. Full rows have processed every page but still require all reported issues to be resolved or explicitly verified.
 
 - PDF documents: **12**
-- Complete documents: **6**
-- Partial smoke tests: **6**
+- Complete documents: **7**
+- Partial smoke tests: **5**
 - Raw pass: **6**
 - Raw review: **6**
 - Effective pass after verified exceptions: **12**
@@ -19,7 +19,7 @@ Generated: 2026-07-14T23:46:45.147Z
 | java-se-26-vm-specification | full | 624 | 129670 | review | pass | p84:empty_text; p368:empty_text; p412:empty_text; p476:empty_text; p614:empty_text; p624:empty_text | p84:empty_text; p368:empty_text; p412:empty_text; p476:empty_text; p614:empty_text; p624:empty_text | 259312 |
 | c11-working-draft-n1570 | full | 701 | 219496 | pass | pass | — | — | 556390 |
 | beej-c-tutorial | full | 352 | 115310 | pass | pass | — | — | 228000 |
-| beej-c-library-reference | partial | 1-3 | 1873 | pass | pass | — | — | 14015 |
+| beej-c-library-reference | full | 461 | 133001 | pass | pass | — | — | 238781 |
 | open-data-structures-java | full | 204 | 61036 | review | pass | p1:high_symbol_ratio; p2:empty_text; p4:empty_text; p26:empty_text; p72:empty_text; p88:empty_text; p110:empty_text; p124:empty_text; p140:empty_text; p150:empty_text | p1:high_symbol_ratio; p2:empty_text; p4:empty_text; p26:empty_text; p72:empty_text; p88:empty_text; p110:empty_text; p124:empty_text; p140:empty_text; p150:empty_text | 79859 |
 | cpp26-working-draft-n5046 | partial | 1-3 | 1285 | pass | pass | — | — | 14437 |
 | ecmascript-2026-ecma-262 | partial | 1-3 | 4040 | pass | pass | — | — | 3375 |

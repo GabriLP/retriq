@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T23:46:45.573Z",
+  "generatedAt": "2026-07-15T07:15:21.401Z",
   "manifests": [
     "docs/corpus/react-learn.json",
     "docs/corpus/programming-foundation.json"
@@ -1441,11 +1441,11 @@
     {
       "id": "beej-c-library-reference",
       "type": "pdf",
-      "title": "Beej’s Guide to C Programming — Library Reference",
+      "title": "Beej’s Guide to C Programming - Library Reference",
       "language": "C",
       "publisher": "Brian Hall / Beej",
       "family": "beej-c-guides",
-      "version": "upstream-current-at-download",
+      "version": "0.9.11 (2025-04-16 snapshot)",
       "documentRole": "library-reference",
       "authority": "expert-secondary",
       "stability": "beta-living",
