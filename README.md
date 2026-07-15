@@ -86,6 +86,7 @@ versus thesis readiness.
 npm run benchmark:validate
 npm run benchmark:report
 npm run benchmark:prepare
+npm run benchmark:compare
 ```
 
 `benchmark:prepare` does not call embedding or generation APIs. Run it from a

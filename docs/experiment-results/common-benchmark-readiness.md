@@ -1,7 +1,7 @@
 # Common benchmark readiness
 
 - Suite: `common-programming-chunk-size-v1`
-- Protocol hash: `f10e641a9137287792eceb1d2d0e1c478a820e595bb504f4492b5c6ffc63b6c2`
+- Protocol hash: `290c3c632dbcf824101f0e184bf18ffec13d7233e3ed2eefaeb6aa412d2fb280`
 - Valid configuration: **yes**
 - Baseline: `common-programming-word-850`
 - Allowed experimental variable: `chunking.targetWords`

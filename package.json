@@ -17,6 +17,7 @@
     "benchmark:validate": "tsx scripts/validate-benchmark-suite.ts",
     "benchmark:report": "tsx scripts/validate-benchmark-suite.ts --write",
     "benchmark:prepare": "tsx scripts/prepare-benchmark-suite.ts",
+    "benchmark:compare": "tsx scripts/report-benchmark-preparation.ts",
     "benchmark:test": "tsx scripts/test-benchmark-suite.ts",
     "golden:validate": "tsx scripts/validate-golden-set.ts --dataset docs/evaluation/golden-set.v1.json",
     "golden:report": "tsx scripts/report-golden-set.ts",

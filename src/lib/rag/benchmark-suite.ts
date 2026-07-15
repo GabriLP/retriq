@@ -32,6 +32,7 @@ export type BenchmarkSuite = {
     thesis: BenchmarkReadinessRule;
   };
   reportOutput: string;
+  preparationReportOutput: string;
 };
 
 export type BenchmarkInspection = {

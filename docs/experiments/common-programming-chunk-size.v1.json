@@ -81,5 +81,6 @@
       ]
     }
   },
-  "reportOutput": "docs/experiment-results/common-benchmark-readiness"
+  "reportOutput": "docs/experiment-results/common-benchmark-readiness",
+  "preparationReportOutput": "docs/experiment-results/common-chunk-size-preparation"
 }
