@@ -12,6 +12,14 @@ type Attempt = {
   corpus: { chunks: number };
   caseSelection: { selected: number };
   timingsMs?: { embedding: number; total: number };
+  embeddings?: {
+    total: {
+      cacheHits: number;
+      apiRequests: number;
+      estimatedApiTokens: number;
+      estimatedApiCostUsd: number | null;
+    };
+  };
   metrics?: {
     recallAtK: number | null;
     precisionAtK: number | null;
@@ -33,7 +41,9 @@ async function main() {
     .sort((left, right) => left.createdAt.localeCompare(right.createdAt));
   const latestByExperiment = new Map<string, Attempt>();
   for (const attempt of attempts) latestByExperiment.set(attempt.experimentId, attempt);
-  const selected = [...latestByExperiment.values()].sort((left, right) => left.experimentId.localeCompare(right.experimentId));
+  const selected = [...latestByExperiment.values()].sort((left, right) =>
+    left.experimentId.localeCompare(right.experimentId),
+  );
   if (!selected.length) throw new Error(`No valid completed retrieval attempts found under ${root}.`);
 
   const outputBase = path.resolve(options.output);
@@ -72,7 +82,7 @@ async function loadInvalidatedAttempts(root: string) {
 function renderMarkdown(attempts: Attempt[], invalidatedCount: number) {
   const rows = attempts.map((attempt) => {
     const metric = attempt.metrics;
-    return `| ${attempt.experimentId} | ${attempt.corpus.chunks} | ${attempt.configuration.embeddingModel} | ${attempt.configuration.topK} | ${format(metric?.recallAtK)} | ${format(metric?.precisionAtK)} | ${format(metric?.mrr)} | ${format(metric?.ndcgAtK)} | ${format(metric?.noAnswerFalsePositiveRate)} | ${attempt.timingsMs?.embedding ?? "—"} |`;
+    return `| ${attempt.experimentId} | ${attempt.corpus.chunks} | ${attempt.configuration.embeddingModel} | ${attempt.configuration.topK} | ${format(metric?.recallAtK)} | ${format(metric?.precisionAtK)} | ${format(metric?.mrr)} | ${format(metric?.ndcgAtK)} | ${format(metric?.noAnswerFalsePositiveRate)} | ${attempt.embeddings?.total.cacheHits ?? "—"} | ${attempt.embeddings?.total.apiRequests ?? "—"} | ${attempt.embeddings?.total.estimatedApiTokens ?? "—"} | ${formatCost(attempt.embeddings?.total.estimatedApiCostUsd)} | ${attempt.timingsMs?.embedding ?? "—"} |`;
   });
   return `# Retrieval comparison
 
@@ -80,16 +90,15 @@ Generated: ${new Date().toISOString()}
 
 > **Preliminary:** only source-verified seed cases are included. Final thesis tables require a larger human-approved set. ${invalidatedCount} invalidated attempt(s) were retained locally and excluded here.
 
-| Experiment | Chunks | Embedding | k | Recall@k | Precision@k | MRR | nDCG@k | No-answer FPR | Embedding ms |
-|---|---:|---|---:|---:|---:|---:|---:|---:|---:|
+| Experiment | Chunks | Embedding | k | Recall@k | Precision@k | MRR | nDCG@k | No-answer FPR | Cache hits | API requests | Est. API tokens | Est. cost USD | Embedding ms |
+|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 ${rows.join("\n")}
 
-## Current interpretation
+## Interpretation guardrails
 
-- Both word-window variants retrieve at least one expected source for every answerable seed case.
-- The 450-word variant has higher chunk-level precision, while the 850-word baseline has higher MRR and nDCG on this small sample.
-- Both variants retrieve unrelated context for the negative case at threshold 0.18, so threshold calibration and stronger abstention logic are required.
-- No chunking choice is accepted yet: the sample is too small, does not yet cover the full PDF corpus, and has no human-approved cases.
+- Cache state may change embedding latency and cost, but it must not change vectors or retrieval quality.
+- Cost values are estimates and remain unavailable when no explicit provider price assumption was recorded.
+- No chunking or model choice is accepted until the benchmark has sufficient human-approved language coverage.
 `;
 }
 
@@ -97,20 +106,28 @@ function renderCsv(attempts: Attempt[]) {
   const header = [
     "experiment_id", "attempt_id", "parent_run_id", "git_commit", "git_dirty", "chunks", "embedding_model",
     "top_k", "min_score", "cases", "recall_at_k", "precision_at_k", "mrr", "ndcg_at_k",
-    "no_answer_false_positive_rate", "embedding_ms", "total_ms",
+    "no_answer_false_positive_rate", "embedding_cache_hits", "embedding_api_requests",
+    "estimated_embedding_api_tokens", "estimated_embedding_cost_usd", "embedding_ms", "total_ms",
   ];
   const rows = attempts.map((attempt) => [
     attempt.experimentId, attempt.attemptId, attempt.parentRunId, attempt.code.gitCommit, attempt.code.dirty,
     attempt.corpus.chunks, attempt.configuration.embeddingModel, attempt.configuration.topK,
     attempt.configuration.minScore, attempt.caseSelection.selected, attempt.metrics?.recallAtK ?? "",
     attempt.metrics?.precisionAtK ?? "", attempt.metrics?.mrr ?? "", attempt.metrics?.ndcgAtK ?? "",
-    attempt.metrics?.noAnswerFalsePositiveRate ?? "", attempt.timingsMs?.embedding ?? "", attempt.timingsMs?.total ?? "",
+    attempt.metrics?.noAnswerFalsePositiveRate ?? "", attempt.embeddings?.total.cacheHits ?? "",
+    attempt.embeddings?.total.apiRequests ?? "", attempt.embeddings?.total.estimatedApiTokens ?? "",
+    attempt.embeddings?.total.estimatedApiCostUsd ?? "", attempt.timingsMs?.embedding ?? "",
+    attempt.timingsMs?.total ?? "",
   ]);
   return [header, ...rows].map((row) => row.map(csvCell).join(",")).join("\n") + "\n";
 }
 
 function format(value: number | null | undefined) {
   return value === null || value === undefined ? "—" : value.toFixed(4);
+}
+
+function formatCost(value: number | null | undefined) {
+  return value === null || value === undefined ? "—" : value.toFixed(6);
 }
 
 function csvCell(value: unknown) {

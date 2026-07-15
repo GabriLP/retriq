@@ -13,6 +13,8 @@
     "experiment:prepare": "tsx scripts/prepare-experiment.ts",
     "experiment:compare": "tsx scripts/compare-experiments.ts",
     "experiment:retrieval": "tsx scripts/evaluate-retrieval.ts",
+    "experiment:embedding:estimate": "tsx scripts/estimate-embedding-cost.ts",
+    "embedding:cache:test": "tsx scripts/test-embedding-cache.ts",
     "experiment:retrieval:compare": "tsx scripts/compare-retrieval-attempts.ts",
     "benchmark:validate": "tsx scripts/validate-benchmark-suite.ts",
     "benchmark:report": "tsx scripts/validate-benchmark-suite.ts --write",

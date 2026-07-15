@@ -97,9 +97,26 @@ each run and marks the suite invalid if remote HTML changed between candidates.
 Evaluate retrieval from an immutable prepared run (the attempt and per-case outputs are stored beside that run):
 
 ```bash
+npm run experiment:embedding:estimate -- --run data/experiments/<experiment>/<run>
 npm run experiment:retrieval -- --run data/experiments/<experiment>/<run>
 npm run experiment:retrieval:compare
 ```
+
+The estimate command never calls the provider. It reports unique texts, cache
+hits and misses, avoided requests, and approximate input tokens before an
+experiment can incur API usage. Set
+`RETRIQ_EMBEDDING_PRICE_USD_PER_MILLION_TOKENS` to the documented provider
+price assumed for that experiment; if it is omitted, Retriq deliberately leaves
+the dollar estimate unavailable instead of inventing a price. Token estimates
+use `RETRIQ_EMBEDDING_CHARACTERS_PER_TOKEN` (default 4) and are labelled as
+approximations rather than billing data.
+
+Embedding vectors are cached under `data/embedding-cache/` and reused across
+ingestion and experiment runs. The cache identity includes provider, exact
+model, task type, output dimensionality, and input hash. Documents use
+`RETRIEVAL_DOCUMENT`; questions use `RETRIEVAL_QUERY`. Cache artifacts are local
+and ignored by Git, while every estimate and retrieval attempt records cache,
+request, token, and cost fields alongside the immutable run.
 
 Validate the versioned evaluation cases and regenerate their thesis-friendly coverage report:
 

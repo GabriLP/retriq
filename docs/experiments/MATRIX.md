@@ -4,10 +4,10 @@ Each row is a candidate configuration, including alternatives that fail or are r
 
 | Component | Alternatives to test | Controlled variables | Primary metrics | Current state |
 |---|---|---|---|---|
-| Chunking size | 300, 450, 850 target words | Same corpus/minimum words/absolute overlap/model/retrieval/evaluation | Recall@k, MRR, nDCG, chunk count, latency | Common full-corpus suite implemented; exploratory preparation pending from a clean commit |
+| Chunking size | 300, 450, 850 target words | Same corpus/minimum words/absolute overlap/model/retrieval/evaluation | Recall@k, MRR, nDCG, chunk count, latency | Common full-corpus suite prepared; embedding preflight completed, retrieval runs pending |
 | Chunk overlap | 0%, about 10%, about 20% | Same target size/model | Recall@k, duplicate-hit rate, indexed words, latency | Planned |
 | Chunk boundary | Word window, heading-aware, semantic | Same target budget/model | Evidence hit rate, MRR, context coherence | Word window baseline implemented; alternatives planned |
-| Embedding | Current Gemini baseline plus at least two supported alternatives | Same chunks/questions/top-k | Recall@k, MRR, nDCG, latency, cost | Runner parameterized; model shortlist must be verified before runs |
+| Embedding | Current Gemini baseline plus at least two supported alternatives | Same chunks/questions/task types/output dimensions/top-k | Recall@k, MRR, nDCG, latency, API requests, estimated tokens and cost | Persistent model-aware cache and dry-run estimator implemented; model shortlist must be verified before runs |
 | Retrieval | Dense cosine, BM25, hybrid fusion | Same chunks/golden set/top-k | Recall@k, Precision@k, MRR, nDCG | Dense cosine implemented |
 | Reranking | None, cross-encoder, LLM reranker | Same candidate pool and final k | nDCG, MRR, latency, cost | Planned |
 | Threshold | Fixed score grid and validation-set tuning | Same model/top-k | No-answer false positives/negatives, recall | Baseline 0.18; sweep planned |
@@ -30,9 +30,12 @@ For every run, retain the hypothesis, complete configuration, source and dataset
 | 2026-07-15 | `20260715133756586` | All three candidates loaded corpus hash `e44495f8`; chunk count rose from 25,553 at target 850 to 30,455 at target 300, while indexed words rose from 4,789,743 to 5,288,888 because fixed overlap is repeated more often. | The preparation is comparable; index size and later embedding cost must be reported with retrieval quality. |
 | 2026-07-15 | `20260715133756586` | Every candidate retained 17,861 chunks below the configured 200-word minimum because already-short source sections are emitted intact. Median chunk size ranged from 83 to 126 words. | Target size alone does not determine actual granularity; section-boundary behavior requires its own controlled alternative. |
 | 2026-07-15 | `20260715133756586` | Maximum chunk size remained 5,952 words because a single oversized source block is not split by the current word-window implementation. | Keep this behavior as the measured baseline and add an oversized-block splitting strategy before accepting a chunking design. |
+| 2026-07-15 | embedding preflight | With an empty cache, the 850/450/300 candidates require an estimated 25,119 / 27,061 / 30,018 API requests and 7,941,865 / 8,290,132 / 8,795,322 approximate input tokens. Exact duplicate texts already avoid 447 / 448 / 450 requests respectively. | Run the cheapest 850-word baseline first, retain its cache, then repeat the preflight before each subsequent candidate so cross-run reuse and marginal cost are measured rather than assumed. |
+| 2026-07-15 | embedding preflight | No provider price was configured, so dollar costs remain explicitly unavailable in the artifacts. | Record the dated provider price assumption in `RETRIQ_EMBEDDING_PRICE_USD_PER_MILLION_TOKENS` before paid runs; never mix estimated token cost with provider billing data. |
 
 ## Measurement corrections
 
 | Date | Attempt | Finding | Disposition |
 |---|---|---|---|
 | 2026-07-14 | `20260714084248-gemini-embedding-2` | The initial nDCG implementation credited multiple chunks for the same single evidence target, producing the impossible value 1.2627. | Attempt retained but invalidated for comparison; evidence targets are now credited once and all rate/ranking metrics are checked to remain in [0, 1]. |
+| 2026-07-15 | embedding task separation | Earlier embedding calls did not declare whether an input was a document or a query, and one evaluator request mixed both input roles. | Documents now use `RETRIEVAL_DOCUMENT` and questions use `RETRIEVAL_QUERY`; cache keys include the task type. Earlier attempts are retained but are not directly comparable with the corrected protocol. |

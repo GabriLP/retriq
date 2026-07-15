@@ -7,6 +7,7 @@ import { performance } from "node:perf_hooks";
 import * as nextEnv from "@next/env";
 
 import type { ExperimentConfig, ExperimentRun } from "../src/lib/rag/experiment-types";
+import type { EmbeddingCachePlan } from "../src/lib/rag/embedding-cache";
 import { loadGoldenSet, validateGoldenSet, type GoldenCaseStatus } from "../src/lib/rag/golden-set";
 import {
   aggregateRetrievalMetrics,
@@ -18,7 +19,7 @@ import type { DocumentationChunk } from "../src/lib/rag/types";
 import { cosineSimilarity } from "../src/lib/rag/vector-store";
 
 type Attempt = {
-  schemaVersion: 1;
+  schemaVersion: 2;
   attemptId: string;
   status: "running" | "completed" | "failed";
   createdAt: string;
@@ -35,10 +36,28 @@ type Attempt = {
     caseStatuses: GoldenCaseStatus[];
   };
   corpus: { chunks: number; embeddedTexts: number; embeddingDimension?: number };
+  embeddings?: {
+    documents: EmbeddingCachePlan & { apiRequests: number; cacheWrites: number };
+    queries: EmbeddingCachePlan & { apiRequests: number; cacheWrites: number };
+    total: EmbeddingTotals;
+  };
   caseSelection: { selected: number; excludedDraftOrStatus: number; excludedOutsideCorpus: number };
   timingsMs?: { embedding: number; retrieval: number; total: number };
   metrics?: ReturnType<typeof aggregateRetrievalMetrics>;
   error?: string;
+};
+
+type EmbeddingTotals = {
+  requestedTexts: number;
+  uniqueTexts: number;
+  cacheHits: number;
+  cacheMisses: number;
+  apiRequests: number;
+  cacheWrites: number;
+  estimatedApiTokens: number;
+  estimatedAvoidedTokens: number;
+  estimatedApiCostUsd: number | null;
+  estimatedAvoidedCostUsd: number | null;
 };
 
 async function main() {
@@ -74,7 +93,7 @@ async function main() {
   );
 
   const createdAt = new Date().toISOString();
-  const attemptId = `${createdAt.replace(/[-:.TZ]/g, "").slice(0, 14)}-${slug(config.embedding.model)}`;
+  const attemptId = `${createdAt.replace(/[-:.TZ]/g, "").slice(0, 17)}-${slug(config.embedding.model)}`;
   const attemptDirectory = path.join(runDirectory, "retrieval-attempts", attemptId);
   const provenancePaths = [
     "src",
@@ -88,7 +107,7 @@ async function main() {
   const gitStatus = runCommand("git", ["status", "--porcelain", "--", ...provenancePaths]);
   const gitDiff = runCommand("git", ["diff", "--binary", "--", ...provenancePaths]);
   const attempt: Attempt = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     attemptId,
     status: "running",
     createdAt,
@@ -123,17 +142,30 @@ async function main() {
 
   try {
     if (!selectedCases.length) throw new Error("No golden-set cases apply to the parent run corpus.");
-    const { embedTexts } = await import("../src/lib/rag/embeddings");
+    const { embedTextsWithCache } = await import("../src/lib/rag/embeddings");
     const embeddingStartedAt = performance.now();
     const chunkTexts = chunks.map((chunk) => `${chunk.title}\n${chunk.section}\n${chunk.content}`);
-    const vectors = await embedTexts([...chunkTexts, ...selectedCases.map((item) => item.question)], {
+    const documentResult = await embedTextsWithCache(chunkTexts, {
       model: config.embedding.model,
       concurrency: 4,
+      taskType: "RETRIEVAL_DOCUMENT",
+      outputDimensionality: config.embedding.outputDimensionality,
+    });
+    const queryResult = await embedTextsWithCache(selectedCases.map((item) => item.question), {
+      model: config.embedding.model,
+      concurrency: 4,
+      taskType: "RETRIEVAL_QUERY",
+      outputDimensionality: config.embedding.outputDimensionality,
     });
     const embedding = Math.round(performance.now() - embeddingStartedAt);
-    const chunkVectors = vectors.slice(0, chunks.length);
-    const queryVectors = vectors.slice(chunks.length);
-    attempt.corpus.embeddingDimension = vectors[0]?.length;
+    const chunkVectors = documentResult.vectors;
+    const queryVectors = queryResult.vectors;
+    attempt.corpus.embeddingDimension = chunkVectors[0]?.length;
+    attempt.embeddings = {
+      documents: { ...documentResult.cache, apiRequests: documentResult.apiRequests, cacheWrites: documentResult.cacheWrites },
+      queries: { ...queryResult.cache, apiRequests: queryResult.apiRequests, cacheWrites: queryResult.cacheWrites },
+      total: combineEmbeddingReports(documentResult, queryResult),
+    };
 
     const retrievalStartedAt = performance.now();
     const results = selectedCases.map((testCase, caseIndex) => {
@@ -180,12 +212,50 @@ function renderSummary(attempt: Attempt) {
 - Cases: ${attempt.caseSelection.selected} selected, ${attempt.caseSelection.excludedOutsideCorpus} outside corpus, ${attempt.caseSelection.excludedDraftOrStatus} excluded by review state
 - Git: \`${attempt.code.gitCommit}\`${attempt.code.dirty ? " (dirty workspace)" : ""}
 
+## Embedding cache and estimated usage
+
+| Requested texts | Cache hits | API requests | Cache writes | Estimated API tokens | Estimated avoided tokens | Estimated API cost (USD) | Estimated avoided cost (USD) |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| ${attempt.embeddings?.total.requestedTexts ?? "—"} | ${attempt.embeddings?.total.cacheHits ?? "—"} | ${attempt.embeddings?.total.apiRequests ?? "—"} | ${attempt.embeddings?.total.cacheWrites ?? "—"} | ${attempt.embeddings?.total.estimatedApiTokens ?? "—"} | ${attempt.embeddings?.total.estimatedAvoidedTokens ?? "—"} | ${formatCost(attempt.embeddings?.total.estimatedApiCostUsd)} | ${formatCost(attempt.embeddings?.total.estimatedAvoidedCostUsd)} |
+
+Token and cost figures are estimates. Cost remains unavailable until a provider price is explicitly recorded in the environment.
+
 | Recall@k | Precision@k | MRR | nDCG@k | No-answer false-positive rate |
 |---:|---:|---:|---:|---:|
 | ${formatMetric(metrics?.recallAtK)} | ${formatMetric(metrics?.precisionAtK)} | ${formatMetric(metrics?.mrr)} | ${formatMetric(metrics?.ndcgAtK)} | ${formatMetric(metrics?.noAnswerFalsePositiveRate)} |
 
 These metrics evaluate source/page evidence retrieval. They do not measure final answer quality.
 `;
+}
+
+function combineEmbeddingReports(
+  ...reports: Array<{ cache: EmbeddingCachePlan; apiRequests: number; cacheWrites: number }>
+): EmbeddingTotals {
+  const pricesKnown = reports.every((report) => report.cache.estimatedApiCostUsd !== null);
+  return {
+    requestedTexts: sum(reports, (report) => report.cache.requestedTexts),
+    uniqueTexts: sum(reports, (report) => report.cache.uniqueTexts),
+    cacheHits: sum(reports, (report) => report.cache.cacheHits),
+    cacheMisses: sum(reports, (report) => report.cache.cacheMisses),
+    apiRequests: sum(reports, (report) => report.apiRequests),
+    cacheWrites: sum(reports, (report) => report.cacheWrites),
+    estimatedApiTokens: sum(reports, (report) => report.cache.estimatedApiTokens),
+    estimatedAvoidedTokens: sum(reports, (report) => report.cache.estimatedAvoidedTokens),
+    estimatedApiCostUsd: pricesKnown
+      ? sum(reports, (report) => report.cache.estimatedApiCostUsd ?? 0)
+      : null,
+    estimatedAvoidedCostUsd: pricesKnown
+      ? sum(reports, (report) => report.cache.estimatedAvoidedCostUsd ?? 0)
+      : null,
+  };
+}
+
+function sum<T>(items: T[], select: (item: T) => number) {
+  return items.reduce((total, item) => total + select(item), 0);
+}
+
+function formatCost(value: number | null | undefined) {
+  return value === null || value === undefined ? "—" : value.toFixed(6);
 }
 
 function formatMetric(value: number | null | undefined) {
