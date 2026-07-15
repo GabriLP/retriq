@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T07:15:21.035Z",
+  "generatedAt": "2026-07-15T08:20:01.390Z",
   "rows": [
     {
       "id": "postgresql-18-manual",
@@ -728,16 +728,13 @@
     },
     {
       "id": "cpp26-working-draft-n5046",
-      "title": "Working Draft, Programming Languages — C++ (N5046)",
+      "title": "Working Draft, Programming Languages - C++ (N5046)",
       "rawStatus": "pass",
       "effectiveStatus": "pass",
-      "pageRange": [
-        1,
-        3
-      ],
-      "pageCount": 3,
-      "wordCount": 1285,
-      "elapsedMs": 14437,
+      "pageRange": null,
+      "pageCount": 2679,
+      "wordCount": 1061395,
+      "elapsedMs": 1831125,
       "issues": [],
       "acceptedExceptions": [],
       "unresolvedIssues": [],

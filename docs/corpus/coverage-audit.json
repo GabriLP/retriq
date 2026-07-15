@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T07:15:21.401Z",
+  "generatedAt": "2026-07-15T08:20:01.897Z",
   "manifests": [
     "docs/corpus/react-learn.json",
     "docs/corpus/programming-foundation.json"
@@ -1549,7 +1549,7 @@
     {
       "id": "cpp26-working-draft-n5046",
       "type": "pdf",
-      "title": "Working Draft, Programming Languages — C++ (N5046)",
+      "title": "Working Draft, Programming Languages - C++ (N5046)",
       "language": "C++",
       "publisher": "ISO/IEC JTC1/SC22/WG21",
       "family": "wg21-cpp-working-drafts",
