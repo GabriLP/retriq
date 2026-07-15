@@ -1,0 +1,72 @@
+import assert from "node:assert/strict";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+
+import {
+  cacheRecordForText,
+  inspectEmbeddingCache,
+  readEmbeddingCache,
+  writeEmbeddingCacheEntry,
+  type EmbeddingCacheOptions,
+} from "../src/lib/rag/embedding-cache";
+
+async function main() {
+  const cachePath = await fs.mkdtemp(path.join(os.tmpdir(), "retriq-embedding-cache-"));
+  const options: EmbeddingCacheOptions = {
+    cachePath,
+    provider: "google",
+    model: "test-model",
+    taskType: "RETRIEVAL_DOCUMENT",
+    charactersPerToken: 4,
+    priceUsdPerMillionTokens: 2,
+  };
+
+  try {
+    const empty = await inspectEmbeddingCache(["abcdefgh", "abcdefgh", "second"], options);
+    assert.equal(empty.requestedTexts, 3);
+    assert.equal(empty.uniqueTexts, 2);
+    assert.equal(empty.deduplicatedTexts, 1);
+    assert.equal(empty.cacheHits, 0);
+    assert.equal(empty.cacheMisses, 2);
+    assert.equal(empty.avoidedApiRequests, 1);
+
+    const first = cacheRecordForText("abcdefgh", options);
+    const expectedVector = [0.125, -0.5, Math.PI];
+    await writeEmbeddingCacheEntry(first.filePath, expectedVector);
+
+    const cached = await inspectEmbeddingCache(["abcdefgh", "abcdefgh", "second"], options);
+    assert.equal(cached.cacheHits, 1);
+    assert.equal(cached.cacheMisses, 1);
+    assert.equal(cached.avoidedApiRequests, 2);
+    assert.equal(cached.estimatedApiTokens, 2);
+    assert.equal(cached.estimatedApiCostUsd, 0.000004);
+
+    const loaded = await readEmbeddingCache(["abcdefgh"], options);
+    assert.deepEqual(loaded.vectorsByKey.get(first.key), expectedVector);
+
+    const queryPlan = await inspectEmbeddingCache(["abcdefgh"], { ...options, taskType: "RETRIEVAL_QUERY" });
+    assert.equal(queryPlan.cacheHits, 0, "task type must be part of the cache identity");
+    const modelPlan = await inspectEmbeddingCache(["abcdefgh"], { ...options, model: "other-model" });
+    assert.equal(modelPlan.cacheHits, 0, "model must be part of the cache identity");
+    const dimensionPlan = await inspectEmbeddingCache(["abcdefgh"], { ...options, outputDimensionality: 768 });
+    assert.equal(dimensionPlan.cacheHits, 0, "output dimensionality must be part of the cache identity");
+
+    await fs.writeFile(first.filePath, "corrupted");
+    const corrupted = await inspectEmbeddingCache(["abcdefgh"], options);
+    assert.equal(corrupted.cacheHits, 0, "corrupted entries must be regenerated");
+    assert.equal(corrupted.cacheMisses, 1);
+    await writeEmbeddingCacheEntry(first.filePath, expectedVector);
+    const repaired = await readEmbeddingCache(["abcdefgh"], options);
+    assert.deepEqual(repaired.vectorsByKey.get(first.key), expectedVector, "corrupted entries must be replaceable");
+
+    console.log("Embedding cache tests passed.");
+  } finally {
+    await fs.rm(cachePath, { recursive: true, force: true });
+  }
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

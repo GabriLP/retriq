@@ -13,6 +13,7 @@ export type ExperimentConfig = {
   embedding: {
     provider: string;
     model: string;
+    outputDimensionality?: number;
   };
   retrieval: {
     strategy: string;
