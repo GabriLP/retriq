@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "common-programming-word-850",
+  "title": "Common programming corpus - 850 target words",
+  "hypothesis": "An 850-word target window maximizes ranking quality by preserving broad technical context.",
+  "tags": ["baseline", "chunk-size", "common-corpus"],
+  "corpus": {
+    "manifests": [
+      "docs/corpus/react-learn.json",
+      "docs/corpus/programming-foundation.json"
+    ]
+  },
+  "chunking": {
+    "strategy": "word-window",
+    "minWords": 200,
+    "targetWords": 850,
+    "overlapWords": 80
+  },
+  "embedding": {
+    "provider": "google",
+    "model": "gemini-embedding-2"
+  },
+  "retrieval": {
+    "strategy": "dense-cosine",
+    "topK": 4,
+    "minScore": 0.18
+  },
+  "generation": {
+    "provider": "google",
+    "model": "gemini-3.5-flash"
+  },
+  "evaluation": {
+    "judgeEnabled": false,
+    "judgeModel": "gemini-3.5-flash",
+    "goldenSet": "docs/evaluation/golden-set.v1.json",
+    "caseStatuses": ["source-verified"]
+  }
+}

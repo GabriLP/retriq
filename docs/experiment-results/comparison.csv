@@ -1,3 +1,3 @@
-experiment_id,run_id,status,config_hash,git_commit,git_dirty,target_words,min_words,overlap_words,document_count,source_count,chunk_count,word_count,average_chunk_words,load_ms,chunking_ms,total_ms
-react-baseline-word-850,20260710200958-2faf2d74,prepared,2faf2d7468411751ae853371c190916fd9df4067246af37de67245309d06581e,ebc2f1d0bf8bc2b703d0da03d07a96b8c8359aa4,true,850,500,80,80,80,230,189778,825.12,6228,84,6540
-react-word-450,20260710201006-2269faf6,prepared,2269faf6facd7918fa715b574959f4b0b9213b0d3866c914f691d97f3bf4ce3e,ebc2f1d0bf8bc2b703d0da03d07a96b8c8359aa4,true,450,200,60,80,80,461,209808,455.11,5341,94,5666
+experiment_id,run_id,status,config_hash,corpus_snapshot_hash,git_commit,git_dirty,target_words,min_words,overlap_words,document_count,source_count,chunk_count,word_count,average_chunk_words,load_ms,chunking_ms,total_ms
+react-baseline-word-850,20260714084231-4ab94e7b,prepared,4ab94e7b2b245d699347965bb3b015a42c2232bf3d3c96aa620417a4ef6934c3,,63366222893ed65d5a45ac11db13b9e34f5d359b,false,850,500,80,80,80,230,189778,825.12,5788,78,6095
+react-word-450,20260714084457-bc02b97f,prepared,bc02b97fded6931c304fdc5e323bb9b068dc5bf91fe99eaf154d3d64d5eeca78,,bf3b4401231894768df920eb898dfa96322aff09,false,450,200,60,80,80,461,209808,455.11,5461,90,5777

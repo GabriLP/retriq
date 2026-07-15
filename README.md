@@ -76,6 +76,23 @@ npm run experiment:prepare -- --config docs/experiments/react-word-450.json
 npm run experiment:compare
 ```
 
+The common benchmark suite validates that every candidate uses the same corpus,
+golden set, models, retrieval settings, and review-state filter. Its first axis
+changes only `chunking.targetWords` across 850, 450, and 300 words. Validation
+also writes a protocol hash over all controlled inputs and reports exploratory
+versus thesis readiness.
+
+```bash
+npm run benchmark:validate
+npm run benchmark:report
+npm run benchmark:prepare
+```
+
+`benchmark:prepare` does not call embedding or generation APIs. Run it from a
+clean commit before thesis measurements so each prepared experiment records an
+unambiguous code fingerprint. It also hashes the documents actually loaded by
+each run and marks the suite invalid if remote HTML changed between candidates.
+
 Evaluate retrieval from an immutable prepared run (the attempt and per-case outputs are stored beside that run):
 
 ```bash

@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "common-programming-chunk-size-v1",
+  "valid": true,
+  "protocolHash": "f10e641a9137287792eceb1d2d0e1c478a820e595bb504f4492b5c6ffc63b6c2",
+  "suitePath": "docs/experiments/common-programming-chunk-size.v1.json",
+  "baselineExperiment": "common-programming-word-850",
+  "allowedVariablePaths": [
+    "chunking.targetWords"
+  ],
+  "errors": [],
+  "warnings": [
+    "Golden set: Case c-array-decay-001: draft cases are excluded from scored benchmarks.",
+    "Golden set: Case java-overload-resolution-001: draft cases are excluded from scored benchmarks.",
+    "Golden set: Case postgresql-transaction-001: draft cases are excluded from scored benchmarks.",
+    "Thesis dataset is not ready: 0/36 required cases. Missing languages: Bash, C, C++, Go, Java, JavaScript, Kotlin, PostgreSQL, Python, React, Rust, TypeScript."
+  ],
+  "inputs": [
+    {
+      "kind": "suite",
+      "path": "docs/experiments/common-programming-chunk-size.v1.json",
+      "sha256": "fc4d1c57b4550aaa6ea369524f8689029b811ebd38bd9f2101a89ebe735953f3"
+    },
+    {
+      "kind": "experiment",
+      "path": "docs/experiments/common-programming-word-850.json",
+      "sha256": "dcbd9035540005e82ac04205d2c14b3ae51c6593359137611d3f704f4987b46f"
+    },
+    {
+      "kind": "experiment",
+      "path": "docs/experiments/common-programming-word-450.json",
+      "sha256": "e05f02a67251a0e60e4bd9c63c66b32c3c9ada45ae452b9cdbae7aec365ae87a"
+    },
+    {
+      "kind": "experiment",
+      "path": "docs/experiments/common-programming-word-300.json",
+      "sha256": "e053ac362edaa31842f1ddaecb108f777c7541b42fbf26604a5eeead2067020d"
+    },
+    {
+      "kind": "manifest",
+      "path": "docs/corpus/react-learn.json",
+      "sha256": "8cb7334658855a94e0956ffad746c724dfaa1999572a66370a7f41c8ed3974d4"
+    },
+    {
+      "kind": "manifest",
+      "path": "docs/corpus/programming-foundation.json",
+      "sha256": "4e5cb3fe5fe9d63d5ef69159f790e3405df69c482b90c1ae0d10c739783ab5fa"
+    },
+    {
+      "kind": "golden-set",
+      "path": "docs/evaluation/golden-set.v1.json",
+      "sha256": "30ba16e45ff914d461a16f70c5d43003b21e4d24d5645bc6fd38ebbd2ea972de"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "common-programming-word-850",
+      "path": "docs/experiments/common-programming-word-850.json",
+      "configHash": "dcbd9035540005e82ac04205d2c14b3ae51c6593359137611d3f704f4987b46f",
+      "baseline": true,
+      "changedPaths": [],
+      "targetWords": 850,
+      "minWords": 200,
+      "overlapWords": 80
+    },
+    {
+      "id": "common-programming-word-450",
+      "path": "docs/experiments/common-programming-word-450.json",
+      "configHash": "e05f02a67251a0e60e4bd9c63c66b32c3c9ada45ae452b9cdbae7aec365ae87a",
+      "baseline": false,
+      "changedPaths": [
+        "chunking.targetWords"
+      ],
+      "targetWords": 450,
+      "minWords": 200,
+      "overlapWords": 80
+    },
+    {
+      "id": "common-programming-word-300",
+      "path": "docs/experiments/common-programming-word-300.json",
+      "configHash": "e053ac362edaa31842f1ddaecb108f777c7541b42fbf26604a5eeead2067020d",
+      "baseline": false,
+      "changedPaths": [
+        "chunking.targetWords"
+      ],
+      "targetWords": 300,
+      "minWords": 200,
+      "overlapWords": 80
+    }
+  ],
+  "metrics": [
+    {
+      "name": "ndcgAtK",
+      "role": "primary",
+      "direction": "higher",
+      "description": "Rewards relevant evidence appearing early while crediting each expected evidence target once."
+    },
+    {
+      "name": "recallAtK",
+      "role": "secondary",
+      "direction": "higher",
+      "description": "Measures how many expected evidence targets are retrieved."
+    },
+    {
+      "name": "precisionAtK",
+      "role": "secondary",
+      "direction": "higher",
+      "description": "Measures the share of retrieved chunks matching expected evidence."
+    },
+    {
+      "name": "mrr",
+      "role": "secondary",
+      "direction": "higher",
+      "description": "Measures how early the first relevant chunk appears."
+    },
+    {
+      "name": "chunkCount",
+      "role": "secondary",
+      "direction": "context",
+      "description": "Records index growth caused by the chunking choice."
+    },
+    {
+      "name": "embeddingLatencyMs",
+      "role": "secondary",
+      "direction": "lower",
+      "description": "Tracks the runtime cost of embedding the resulting index."
+    },
+    {
+      "name": "noAnswerFalsePositiveRate",
+      "role": "guardrail",
+      "direction": "lower",
+      "description": "Prevents a chunking improvement from hiding worse abstention behavior."
+    }
+  ],
+  "readiness": {
+    "exploratory": {
+      "ready": true,
+      "selectedCases": 13,
+      "minimumCases": 13,
+      "includedLanguages": [
+        "C",
+        "Java",
+        "PostgreSQL",
+        "React"
+      ],
+      "missingLanguages": [],
+      "caseStatuses": [
+        "source-verified"
+      ]
+    },
+    "thesis": {
+      "ready": false,
+      "selectedCases": 0,
+      "minimumCases": 36,
+      "includedLanguages": [],
+      "missingLanguages": [
+        "Bash",
+        "C",
+        "C++",
+        "Go",
+        "Java",
+        "JavaScript",
+        "Kotlin",
+        "PostgreSQL",
+        "Python",
+        "React",
+        "Rust",
+        "TypeScript"
+      ],
+      "caseStatuses": [
+        "human-approved"
+      ]
+    }
+  }
+}

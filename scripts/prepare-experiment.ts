@@ -19,7 +19,7 @@ async function main() {
 
   const configHash = sha256(configRaw);
   const createdAt = new Date().toISOString();
-  const runId = `${createdAt.replace(/[-:.TZ]/g, "").slice(0, 14)}-${configHash.slice(0, 8)}`;
+  const runId = `${createdAt.replace(/[-:.TZ]/g, "").slice(0, 17)}-${configHash.slice(0, 8)}`;
   const runDirectory = path.join(process.cwd(), "data", "experiments", config.id, runId);
   const corpusManifestHashes = await Promise.all(
     config.corpus.manifests.map(async (manifestPath) => {
@@ -96,6 +96,7 @@ async function main() {
       sourceMetadataByInput: manifestOptions.sourceMetadataByInput,
     });
     const loadDocuments = Math.round(performance.now() - loadStartedAt);
+    run.corpusSnapshot = createCorpusSnapshot(documents);
 
     const chunkStartedAt = performance.now();
     const chunks = createChunksFromDocuments(documents, config.chunking);
@@ -150,6 +151,52 @@ function countValues(values: string[]) {
   }, {});
 }
 
+function createCorpusSnapshot(
+  documents: Array<{
+    sourceId?: string;
+    sourceUrl: string;
+    title: string;
+    section: string;
+    content: string;
+    pageStart?: number;
+    pageEnd?: number;
+  }>,
+) {
+  const bySource = new Map<string, typeof documents>();
+  for (const document of documents) {
+    const key = `${document.sourceId ?? ""}\0${document.sourceUrl}`;
+    const group = bySource.get(key) ?? [];
+    group.push(document);
+    bySource.set(key, group);
+  }
+  const sources = [...bySource.values()]
+    .map((sourceDocuments) => {
+      const first = sourceDocuments[0];
+      const canonical = sourceDocuments
+        .map((document) => ({
+          title: document.title,
+          section: document.section,
+          content: document.content,
+          pageStart: document.pageStart,
+          pageEnd: document.pageEnd,
+        }))
+        .sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)));
+      return {
+        sourceId: first.sourceId,
+        sourceUrl: first.sourceUrl,
+        sha256: sha256(JSON.stringify(canonical)),
+      };
+    })
+    .sort((left, right) =>
+      `${left.sourceId ?? ""}\0${left.sourceUrl}`.localeCompare(`${right.sourceId ?? ""}\0${right.sourceUrl}`),
+    );
+  return {
+    sha256: sha256(sources.map((source) => `${source.sourceId ?? ""}\0${source.sourceUrl}\0${source.sha256}`).join("\n")),
+    documentCount: documents.length,
+    sources,
+  };
+}
+
 function renderSummary(run: ExperimentRun) {
   const stats = run.statistics;
   return `# ${run.configuration.title}
@@ -166,6 +213,7 @@ function renderSummary(run: ExperimentRun) {
 | Component | Value |
 |---|---|
 | Corpus | ${run.configuration.corpus.manifests.join(", ")} |
+| Loaded corpus snapshot | ${run.corpusSnapshot?.sha256 ?? "Not available"} |
 | Chunking | ${run.configuration.chunking.strategy}: target ${run.configuration.chunking.targetWords}, min ${run.configuration.chunking.minWords}, overlap ${run.configuration.chunking.overlapWords} |
 | Embedding | ${run.configuration.embedding.provider} / ${run.configuration.embedding.model} |
 | Retrieval | ${run.configuration.retrieval.strategy}, top-k ${run.configuration.retrieval.topK}, min score ${run.configuration.retrieval.minScore} |

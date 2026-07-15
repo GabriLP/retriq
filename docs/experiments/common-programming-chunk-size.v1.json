@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "common-programming-chunk-size-v1",
+  "title": "Common programming corpus chunk-size benchmark",
+  "objective": "Measure the effect of target chunk size on retrieval quality while holding corpus, minimum size, overlap, embedding, retrieval, generation, and evaluation inputs constant.",
+  "baselineExperiment": "common-programming-word-850",
+  "experimentConfigs": [
+    "common-programming-word-850.json",
+    "common-programming-word-450.json",
+    "common-programming-word-300.json"
+  ],
+  "allowedVariablePaths": [
+    "chunking.targetWords"
+  ],
+  "metrics": [
+    {
+      "name": "ndcgAtK",
+      "role": "primary",
+      "direction": "higher",
+      "description": "Rewards relevant evidence appearing early while crediting each expected evidence target once."
+    },
+    {
+      "name": "recallAtK",
+      "role": "secondary",
+      "direction": "higher",
+      "description": "Measures how many expected evidence targets are retrieved."
+    },
+    {
+      "name": "precisionAtK",
+      "role": "secondary",
+      "direction": "higher",
+      "description": "Measures the share of retrieved chunks matching expected evidence."
+    },
+    {
+      "name": "mrr",
+      "role": "secondary",
+      "direction": "higher",
+      "description": "Measures how early the first relevant chunk appears."
+    },
+    {
+      "name": "chunkCount",
+      "role": "secondary",
+      "direction": "context",
+      "description": "Records index growth caused by the chunking choice."
+    },
+    {
+      "name": "embeddingLatencyMs",
+      "role": "secondary",
+      "direction": "lower",
+      "description": "Tracks the runtime cost of embedding the resulting index."
+    },
+    {
+      "name": "noAnswerFalsePositiveRate",
+      "role": "guardrail",
+      "direction": "lower",
+      "description": "Prevents a chunking improvement from hiding worse abstention behavior."
+    }
+  ],
+  "readiness": {
+    "exploratory": {
+      "caseStatuses": ["source-verified"],
+      "minimumCases": 13,
+      "requiredLanguages": []
+    },
+    "thesis": {
+      "caseStatuses": ["human-approved"],
+      "minimumCases": 36,
+      "requiredLanguages": [
+        "Bash",
+        "C",
+        "C++",
+        "Go",
+        "Java",
+        "JavaScript",
+        "Kotlin",
+        "PostgreSQL",
+        "Python",
+        "React",
+        "Rust",
+        "TypeScript"
+      ]
+    }
+  },
+  "reportOutput": "docs/experiment-results/common-benchmark-readiness"
+}

@@ -36,20 +36,30 @@ async function findRunFiles(directory: string): Promise<string[]> {
 }
 
 function renderMarkdown(runs: ExperimentRun[]) {
-  const preliminary = runs.some((run) => run.code.dirty)
-    ? "\n> **Preliminary comparison:** at least one run used a dirty workspace. Re-run from a clean commit for thesis measurements.\n"
-    : "";
+  const corpusHashes = new Set(runs.map((run) => run.corpusSnapshot?.sha256).filter(Boolean));
+  const warnings = [
+    runs.some((run) => run.code.dirty)
+      ? "At least one run used a dirty workspace. Re-run from a clean commit for thesis measurements."
+      : undefined,
+    runs.some((run) => !run.corpusSnapshot?.sha256)
+      ? "At least one legacy run does not record the loaded corpus snapshot hash."
+      : undefined,
+    corpusHashes.size > 1
+      ? "Runs loaded different corpus snapshots and must not be compared as a controlled experiment."
+      : undefined,
+  ].filter(Boolean);
+  const preliminary = warnings.length ? `\n> **Preliminary comparison:** ${warnings.join(" ")}\n` : "";
   const rows = runs.map((run) => {
     const stats = run.statistics;
-    return `| ${run.experimentId} | ${run.runId} | ${run.status} | ${run.configuration.chunking.targetWords} | ${run.configuration.chunking.overlapWords} | ${stats?.chunkCount ?? "—"} | ${stats?.averageChunkWords ?? "—"} | ${run.timingsMs?.total ?? "—"} | ${run.configHash.slice(0, 8)} |`;
+    return `| ${run.experimentId} | ${run.runId} | ${run.status} | ${run.configuration.chunking.targetWords} | ${run.configuration.chunking.overlapWords} | ${stats?.chunkCount ?? "-"} | ${stats?.averageChunkWords ?? "-"} | ${run.timingsMs?.total ?? "-"} | ${run.corpusSnapshot?.sha256.slice(0, 8) ?? "-"} | ${run.configHash.slice(0, 8)} |`;
   });
   return `# Experiment comparison
 
 Generated: ${new Date().toISOString()}
 ${preliminary}
 
-| Experiment | Run | Status | Target words | Overlap | Chunks | Avg. chunk words | Preparation ms | Config hash |
-|---|---|---|---:|---:|---:|---:|---:|---|
+| Experiment | Run | Status | Target words | Overlap | Chunks | Avg. chunk words | Preparation ms | Corpus hash | Config hash |
+|---|---|---|---:|---:|---:|---:|---:|---|---|
 ${rows.join("\n")}
 
 ## Interpretation notes
@@ -66,6 +76,7 @@ function renderCsv(runs: ExperimentRun[]) {
     "run_id",
     "status",
     "config_hash",
+    "corpus_snapshot_hash",
     "git_commit",
     "git_dirty",
     "target_words",
@@ -85,6 +96,7 @@ function renderCsv(runs: ExperimentRun[]) {
     run.runId,
     run.status,
     run.configHash,
+    run.corpusSnapshot?.sha256 ?? "",
     run.code.gitCommit,
     run.code.dirty,
     run.configuration.chunking.targetWords,

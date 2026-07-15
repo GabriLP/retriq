@@ -24,6 +24,8 @@ An LLM must never promote its own generated case directly to `human-approved`. T
 
 Every scored experiment must store the golden-set path, SHA-256 hash, included review states, corpus manifest hashes, configuration hash, code fingerprint, model identifiers, metrics, timings, and failures. Changing any of these creates a new run; previous attempts remain immutable.
 
+Before preparing a comparison suite, the common benchmark validator must confirm that candidates differ only on the declared experimental path. The protocol hash covers the suite definition, each experiment configuration, all corpus manifests, and the golden set. Preparation additionally hashes the documents actually loaded; candidates with different content snapshots are retained but rejected as a controlled comparison. Exploratory readiness and thesis readiness are separate gates: source-verified seed cases may support engineering iteration, while thesis conclusions require human-approved cases and the declared language coverage.
+
 ## Planned metric families
 
 - Retrieval: Recall@k, Precision@k, MRR, nDCG, evidence page/source hit rate, and no-answer false-positive rate.

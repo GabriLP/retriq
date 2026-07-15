@@ -4,7 +4,7 @@ Each row is a candidate configuration, including alternatives that fail or are r
 
 | Component | Alternatives to test | Controlled variables | Primary metrics | Current state |
 |---|---|---|---|---|
-| Chunking size | 300, 450, 850 words | Same overlap ratio/model/retrieval | Recall@k, MRR, nDCG, chunk count, latency | 450 and 850 preparation runs exist; retrieval metrics pending |
+| Chunking size | 300, 450, 850 target words | Same corpus/minimum words/absolute overlap/model/retrieval/evaluation | Recall@k, MRR, nDCG, chunk count, latency | Common full-corpus suite implemented; exploratory preparation pending from a clean commit |
 | Chunk overlap | 0%, about 10%, about 20% | Same target size/model | Recall@k, duplicate-hit rate, indexed words, latency | Planned |
 | Chunk boundary | Word window, heading-aware, semantic | Same target budget/model | Evidence hit rate, MRR, context coherence | Word window baseline implemented; alternatives planned |
 | Embedding | Current Gemini baseline plus at least two supported alternatives | Same chunks/questions/top-k | Recall@k, MRR, nDCG, latency, cost | Runner parameterized; model shortlist must be verified before runs |
@@ -18,6 +18,10 @@ Each row is a candidate configuration, including alternatives that fail or are r
 ## Reporting rule
 
 For every run, retain the hypothesis, complete configuration, source and dataset hashes, code fingerprint, environment, raw per-case outputs, aggregate metrics, failures, latency, and—where available—token/cost usage. Rejected alternatives remain in the registry with a reason; they are not deleted from the narrative.
+
+## Common benchmark gate
+
+`common-programming-chunk-size.v1.json` is the first shared protocol. Its validator rejects candidates that change any path other than `chunking.targetWords`, computes a protocol hash over the suite, experiment definitions, corpus manifests, and golden set, and records dataset readiness separately for exploratory and thesis use. Preparation also hashes the loaded document content so mutable HTML cannot silently differ across candidates. A valid configuration is not automatically thesis-ready: the current seed set has source-verified cases for only four language/domain groups and no human-approved cases.
 
 ## Measurement corrections
 

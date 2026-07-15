@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "common-programming-word-300",
+  "title": "Common programming corpus - 300 target words",
+  "hypothesis": "A 300-word target window improves exact evidence ranking but may reduce context and multi-page recall.",
+  "tags": ["candidate", "chunk-size", "common-corpus"],
+  "corpus": {
+    "manifests": [
+      "docs/corpus/react-learn.json",
+      "docs/corpus/programming-foundation.json"
+    ]
+  },
+  "chunking": {
+    "strategy": "word-window",
+    "minWords": 200,
+    "targetWords": 300,
+    "overlapWords": 80
+  },
+  "embedding": {
+    "provider": "google",
+    "model": "gemini-embedding-2"
+  },
+  "retrieval": {
+    "strategy": "dense-cosine",
+    "topK": 4,
+    "minScore": 0.18
+  },
+  "generation": {
+    "provider": "google",
+    "model": "gemini-3.5-flash"
+  },
+  "evaluation": {
+    "judgeEnabled": false,
+    "judgeModel": "gemini-3.5-flash",
+    "goldenSet": "docs/evaluation/golden-set.v1.json",
+    "caseStatuses": ["source-verified"]
+  }
+}

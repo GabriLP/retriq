@@ -42,6 +42,11 @@ export type ExperimentRun = {
   configPath: string;
   corpusManifestHashes: Array<{ path: string; sha256: string }>;
   evaluationDatasetHashes: Array<{ path: string; sha256: string }>;
+  corpusSnapshot?: {
+    sha256: string;
+    documentCount: number;
+    sources: Array<{ sourceId?: string; sourceUrl: string; sha256: string }>;
+  };
   code: {
     gitCommit: string;
     dirty: boolean;
