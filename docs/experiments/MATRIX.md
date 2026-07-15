@@ -23,6 +23,14 @@ For every run, retain the hypothesis, complete configuration, source and dataset
 
 `common-programming-chunk-size.v1.json` is the first shared protocol. Its validator rejects candidates that change any path other than `chunking.targetWords`, computes a protocol hash over the suite, experiment definitions, corpus manifests, and golden set, and records dataset readiness separately for exploratory and thesis use. Preparation also hashes the loaded document content so mutable HTML cannot silently differ across candidates. A valid configuration is not automatically thesis-ready: the current seed set has source-verified cases for only four language/domain groups and no human-approved cases.
 
+## Preparation findings
+
+| Date | Suite attempt | Observation | Consequence |
+|---|---|---|---|
+| 2026-07-15 | `20260715133756586` | All three candidates loaded corpus hash `e44495f8`; chunk count rose from 25,553 at target 850 to 30,455 at target 300, while indexed words rose from 4,789,743 to 5,288,888 because fixed overlap is repeated more often. | The preparation is comparable; index size and later embedding cost must be reported with retrieval quality. |
+| 2026-07-15 | `20260715133756586` | Every candidate retained 17,861 chunks below the configured 200-word minimum because already-short source sections are emitted intact. Median chunk size ranged from 83 to 126 words. | Target size alone does not determine actual granularity; section-boundary behavior requires its own controlled alternative. |
+| 2026-07-15 | `20260715133756586` | Maximum chunk size remained 5,952 words because a single oversized source block is not split by the current word-window implementation. | Keep this behavior as the measured baseline and add an oversized-block splitting strategy before accepting a chunking design. |
+
 ## Measurement corrections
 
 | Date | Attempt | Finding | Disposition |
