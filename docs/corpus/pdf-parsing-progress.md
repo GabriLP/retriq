@@ -1,12 +1,12 @@
 # PDF parsing progress report
 
-Generated: 2026-07-15T10:03:23.930Z
+Generated: 2026-07-15T11:10:14.453Z
 
 > Partial rows are page-range smoke tests, not approval of complete documents. Full rows have processed every page but still require all reported issues to be resolved or explicitly verified.
 
 - PDF documents: **12**
-- Complete documents: **11**
-- Partial smoke tests: **1**
+- Complete documents: **12**
+- Partial smoke tests: **0**
 - Raw pass: **6**
 - Raw review: **6**
 - Effective pass after verified exceptions: **12**
@@ -25,7 +25,7 @@ Generated: 2026-07-15T10:03:23.930Z
 | ecmascript-2026-ecma-262 | full | 876 | 375950 | pass | pass | — | — | 538485 |
 | kotlin-language-specification | full | 310 | 89947 | review | pass | p2:empty_text; p14:empty_text; p33:high_symbol_ratio | p2:empty_text; p14:empty_text; p33:high_symbol_ratio | 323813 |
 | gnu-bash-5-3-reference-manual | full | 214 | 99693 | pass | pass | — | — | 158656 |
-| gnu-c-library-2-42-manual | partial | 1-3 | 30 | review | pass | p2:empty_text | p2:empty_text | 937 |
+| gnu-c-library-2-42-manual | full | 1272 | 609475 | review | pass | p2:empty_text | p2:empty_text | 1040750 |
 
 ## Decision rule
 
