@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T09:15:11.235Z",
+  "generatedAt": "2026-07-15T09:44:47.850Z",
   "manifests": [
     "docs/corpus/react-learn.json",
     "docs/corpus/programming-foundation.json"
@@ -1600,6 +1600,20 @@
           "pageNumber": 2,
           "reason": "Visually verified front-matter page containing only the roman page number ii.",
           "verifiedAt": "2026-07-14",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 14,
+          "reason": "Visually verified intentionally blank separator page between the Kotlin/Core part title and the introduction.",
+          "verifiedAt": "2026-07-15",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "high_symbol_ratio",
+          "pageNumber": 33,
+          "reason": "Visually verified lexical grammar page whose dense Kotlin token list legitimately contains many underscores and other symbols.",
+          "verifiedAt": "2026-07-15",
           "verificationMethod": "rendered-page-review"
         }
       ],

@@ -1,12 +1,12 @@
 # PDF parsing progress report
 
-Generated: 2026-07-15T09:15:03.816Z
+Generated: 2026-07-15T09:44:47.495Z
 
 > Partial rows are page-range smoke tests, not approval of complete documents. Full rows have processed every page but still require all reported issues to be resolved or explicitly verified.
 
 - PDF documents: **12**
-- Complete documents: **9**
-- Partial smoke tests: **3**
+- Complete documents: **10**
+- Partial smoke tests: **2**
 - Raw pass: **6**
 - Raw review: **6**
 - Effective pass after verified exceptions: **12**
@@ -23,7 +23,7 @@ Generated: 2026-07-15T09:15:03.816Z
 | open-data-structures-java | full | 204 | 61036 | review | pass | p1:high_symbol_ratio; p2:empty_text; p4:empty_text; p26:empty_text; p72:empty_text; p88:empty_text; p110:empty_text; p124:empty_text; p140:empty_text; p150:empty_text | p1:high_symbol_ratio; p2:empty_text; p4:empty_text; p26:empty_text; p72:empty_text; p88:empty_text; p110:empty_text; p124:empty_text; p140:empty_text; p150:empty_text | 79859 |
 | cpp26-working-draft-n5046 | full | 2679 | 1061395 | pass | pass | — | — | 1831125 |
 | ecmascript-2026-ecma-262 | full | 876 | 375950 | pass | pass | — | — | 538485 |
-| kotlin-language-specification | partial | 1-3 | 2137 | review | pass | p2:empty_text | p2:empty_text | 14438 |
+| kotlin-language-specification | full | 310 | 89947 | review | pass | p2:empty_text; p14:empty_text; p33:high_symbol_ratio | p2:empty_text; p14:empty_text; p33:high_symbol_ratio | 323813 |
 | gnu-bash-5-3-reference-manual | partial | 1-3 | 1233 | pass | pass | — | — | 7187 |
 | gnu-c-library-2-42-manual | partial | 1-3 | 30 | review | pass | p2:empty_text | p2:empty_text | 937 |
 

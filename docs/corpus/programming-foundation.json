@@ -468,6 +468,20 @@
           "reason": "Visually verified front-matter page containing only the roman page number ii.",
           "verifiedAt": "2026-07-14",
           "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "empty_text",
+          "pageNumber": 14,
+          "reason": "Visually verified intentionally blank separator page between the Kotlin/Core part title and the introduction.",
+          "verifiedAt": "2026-07-15",
+          "verificationMethod": "rendered-page-review"
+        },
+        {
+          "code": "high_symbol_ratio",
+          "pageNumber": 33,
+          "reason": "Visually verified lexical grammar page whose dense Kotlin token list legitimately contains many underscores and other symbols.",
+          "verifiedAt": "2026-07-15",
+          "verificationMethod": "rendered-page-review"
         }
       ],
       "license": "Kotlin documentation is licensed under Apache 2.0; verify specification-specific notices in the acquired snapshot",
