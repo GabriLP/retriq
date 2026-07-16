@@ -10,7 +10,7 @@ Each row is a candidate configuration, including alternatives that fail or are r
 | Embedding | Current Gemini baseline plus at least two supported alternatives | Same chunks/questions/task types/output dimensions/top-k | Recall@k, MRR, nDCG, latency, API requests, estimated tokens and cost | Persistent model-aware cache and dry-run estimator implemented; model shortlist must be verified before runs |
 | Retrieval | Dense cosine, BM25, hybrid fusion | Same chunks/golden set/top-k | Recall@k, Precision@k, MRR, nDCG | Dense cosine implemented |
 | Reranking | None, cross-encoder, LLM reranker | Same candidate pool and final k | nDCG, MRR, latency, cost | Planned |
-| Threshold | Fixed score grid and validation-set tuning | Same model/top-k | No-answer false positives/negatives, recall | Baseline 0.18; sweep planned |
+| Threshold | Fixed grid 0.18–0.80, then validation-set tuning | Same 300-word chunks/model/task format/top-k/cases | No-answer false positives, recall, MRR, nDCG, returned chunks | Cache-only exploratory sweep implemented; held-out calibration pending dataset expansion |
 | Generator | Existing baseline plus two models | Frozen retrieved evidence | Key-fact coverage, groundedness, citations, latency, cost | Planned after retrieval benchmark |
 | Judge | Disabled, judge model A/B, prompt variants | Human-labelled calibration subset | Agreement, confusion matrix, rank correlation | Foundation exists; calibration planned |
 | Agent loop | Single pass, query rewrite, retrieve-check-retry | Same maximum budget and corpus | Success lift, iterations, latency, cost | Deferred until single-pass baselines are stable |

@@ -1,5 +1,5 @@
 import { ragConfig } from "./config";
-import { embedQuery } from "./embeddings";
+import { embedQuery } from "./runtime-embeddings";
 import { cosineSimilarity, readVectorStore } from "./vector-store";
 
 export async function retrieveRelevantChunks(question: string, topK = ragConfig.defaultTopK) {

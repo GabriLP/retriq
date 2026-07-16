@@ -10,7 +10,7 @@ import {
   writeEmbeddingCacheEntry,
   type EmbeddingCacheOptions,
 } from "../src/lib/rag/embedding-cache";
-import { formatEmbeddingInput } from "../src/lib/rag/embeddings";
+import { embedTextsWithCache, formatEmbeddingInput } from "../src/lib/rag/embeddings";
 
 async function main() {
   const cachePath = await fs.mkdtemp(path.join(os.tmpdir(), "retriq-embedding-cache-"));
@@ -64,6 +64,24 @@ async function main() {
     assert.equal(modelPlan.cacheHits, 0, "model must be part of the cache identity");
     const dimensionPlan = await inspectEmbeddingCache(["abcdefgh"], { ...options, outputDimensionality: 768 });
     assert.equal(dimensionPlan.cacheHits, 0, "output dimensionality must be part of the cache identity");
+
+    const cacheOnly = await embedTextsWithCache(["abcdefgh"], {
+      model: options.model,
+      taskType: options.taskType,
+      cachePath,
+      allowProviderRequests: false,
+    });
+    assert.deepEqual(cacheOnly.vectors[0], expectedVector);
+    assert.equal(cacheOnly.apiInputs, 0);
+    await assert.rejects(
+      embedTextsWithCache(["not-cached"], {
+        model: options.model,
+        taskType: options.taskType,
+        cachePath,
+        allowProviderRequests: false,
+      }),
+      /cache-only mode found 1 missing input/,
+    );
 
     await fs.writeFile(first.filePath, "corrupted");
     const corrupted = await inspectEmbeddingCache(["abcdefgh"], options);

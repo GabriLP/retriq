@@ -45,6 +45,7 @@ async function main() {
     taskType: "RETRIEVAL_DOCUMENT",
     concurrency: 4,
     titles: chunks.map((chunk) => chunk.title),
+    outputDimensionality: ragConfig.embeddingOutputDimensionality,
   });
   const embeddedChunks: EmbeddedChunk[] = chunks.map((chunk, index) => ({
     ...chunk,

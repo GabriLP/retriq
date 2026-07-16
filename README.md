@@ -102,6 +102,14 @@ npm run experiment:retrieval -- --run data/experiments/<experiment>/<run>
 npm run experiment:retrieval:compare
 ```
 
+Run a cache-only threshold diagnostic from the prepared 300-word candidate. The
+command aborts instead of calling the provider if any required embedding is
+missing:
+
+```bash
+npm run experiment:threshold:sweep -- --run data/experiments/common-programming-word-300/<run> --write-report
+```
+
 The estimate command never calls the provider. It reports unique texts, cache
 hits and misses, avoided requests, and approximate input tokens before an
 experiment can incur API usage. Set

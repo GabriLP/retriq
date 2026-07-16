@@ -44,6 +44,21 @@ cost and latency, candidate execution order and the pre-run cache report are
 part of the experimental record; retrieval quality metrics remain the basis for
 technical comparison.
 
+Threshold calibration varies only `retrieval.minScore` and reuses one frozen
+set of document/query vectors. The sweep must run in cache-only mode so cost and
+provider availability cannot differ across threshold candidates. The primary
+objective is lower no-answer false-positive rate; answerable-case Recall@k and
+MRR are guardrails. When candidates tie, prefer nDCG and then the lowest
+threshold, preserving the largest safety margin for answerable questions.
+Precision is reported but is not allowed to win merely because a high threshold
+returns fewer chunks.
+
+A threshold selected on the current seed set is diagnostic only. Final
+calibration requires more answerable and unanswerable cases, a validation split
+for selecting the threshold, and a held-out test split for reporting unbiased
+performance. The threshold grid, selection rule, failures, and rejected values
+remain versioned even when no candidate satisfies the guardrails.
+
 The common chunk-size protocol records the Gemini Developer API standard text
 price of USD 0.20 per million input tokens, observed on 2026-07-16 from Google's
 official pricing page. It also fixes 768 output dimensions and synchronous

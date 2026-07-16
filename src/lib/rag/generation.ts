@@ -1,5 +1,5 @@
 import { ragConfig } from "./config";
-import { getGeminiClient } from "./embeddings";
+import { getGeminiClient } from "./gemini-client";
 import { answerInstructions, buildGroundedPrompt } from "./prompt";
 import type { AnswerStatus, RetrievalResult } from "./types";
 

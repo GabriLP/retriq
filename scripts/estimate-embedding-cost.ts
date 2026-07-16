@@ -5,7 +5,11 @@ import path from "node:path";
 import * as nextEnv from "@next/env";
 
 import { ragConfig } from "../src/lib/rag/config";
-import { inspectEmbeddingCache, type EmbeddingCachePlan } from "../src/lib/rag/embedding-cache";
+import {
+  defaultEmbeddingCachePath,
+  inspectEmbeddingCache,
+  type EmbeddingCachePlan,
+} from "../src/lib/rag/embedding-cache";
 import { formatEmbeddingInput } from "../src/lib/rag/embeddings";
 import type { ExperimentConfig, ExperimentRun } from "../src/lib/rag/experiment-types";
 import { loadGoldenSet, validateGoldenSet, type GoldenCaseStatus } from "../src/lib/rag/golden-set";
@@ -74,7 +78,7 @@ async function main() {
       testCase.evidence.some((evidence) => chunks.some((chunk) => matchesEvidence(chunk, evidence))),
   );
   const sharedOptions = {
-    cachePath: ragConfig.embeddingCachePath,
+    cachePath: defaultEmbeddingCachePath,
     provider: config.embedding.provider,
     model: config.embedding.model,
     charactersPerToken: ragConfig.embeddingCharactersPerToken,
@@ -107,7 +111,7 @@ async function main() {
     configuration: {
       provider: config.embedding.provider,
       model: config.embedding.model,
-      cachePath: path.resolve(ragConfig.embeddingCachePath),
+      cachePath: path.resolve(defaultEmbeddingCachePath),
       priceUsdPerMillionTokens: sharedOptions.priceUsdPerMillionTokens ?? null,
       priceObservedAt: config.embedding.pricing?.observedAt ?? null,
       priceSourceUrl: config.embedding.pricing?.sourceUrl ?? null,

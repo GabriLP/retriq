@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "common-programming-threshold-sweep-v1",
+  "title": "Dense-cosine abstention threshold diagnostic",
+  "hypothesis": "A threshold above the observed unrelated-query score range will eliminate no-answer false positives without reducing answerable-case Recall@4.",
+  "baseExperimentConfig": "common-programming-word-300.json",
+  "variedPath": "retrieval.minScore",
+  "thresholds": [0.18, 0.4, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8],
+  "selectionRule": {
+    "primary": "noAnswerFalsePositiveRate",
+    "primaryDirection": "lower",
+    "guardrails": [
+      {
+        "metric": "recallAtK",
+        "minimum": 1.0
+      },
+      {
+        "metric": "mrr",
+        "minimum": 1.0
+      }
+    ],
+    "tieBreakers": [
+      {
+        "metric": "ndcgAtK",
+        "direction": "higher"
+      },
+      {
+        "metric": "threshold",
+        "direction": "lower"
+      },
+      {
+        "metric": "precisionAtK",
+        "direction": "higher"
+      }
+    ]
+  },
+  "readiness": {
+    "status": "exploratory",
+    "reason": "The dataset contains only one source-verified unanswerable case and has no held-out calibration/test split."
+  },
+  "reportOutput": "docs/experiment-results/common-threshold-sweep"
+}

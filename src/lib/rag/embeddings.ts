@@ -1,27 +1,17 @@
-import { GoogleGenAI } from "@google/genai";
+import { defaultEmbeddingCachePath } from "./embedding-cache";
 
 import { ragConfig } from "./config";
+import { formatEmbeddingInput, usesPromptTaskInstructions, type EmbeddingTaskType } from "./embedding-input";
+import { getGeminiClient } from "./gemini-client";
 import {
   cacheRecordForText,
   createEmbeddingCachePlan,
   readEmbeddingCache,
   writeEmbeddingCacheEntry,
   type EmbeddingCachePlan,
-  type EmbeddingTaskType,
 } from "./embedding-cache";
 
-let client: GoogleGenAI | null = null;
-
-export function getGeminiClient() {
-  if (!process.env.GEMINI_API_KEY) {
-    // Failing early prevents silently producing incomplete local artifacts when
-    // the embedding provider has not been configured.
-    throw new Error("GEMINI_API_KEY is required to run retrieval generation or ingestion.");
-  }
-
-  client ??= new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-  return client;
-}
+export { formatEmbeddingInput } from "./embedding-input";
 
 export async function embedTexts(
   texts: string[],
@@ -41,6 +31,7 @@ export type EmbedTextsOptions = {
   priceUsdPerMillionTokens?: number;
   titles?: Array<string | undefined>;
   batchSize?: number;
+  allowProviderRequests?: boolean;
   onProgress?: (progress: { completedInputs: number; totalInputs: number; apiRequests: number }) => void;
 };
 
@@ -67,7 +58,7 @@ export async function embedTextsWithCache(
   const taskType = options.taskType ?? "SEMANTIC_SIMILARITY";
   const cacheEnabled = options.cache ?? ragConfig.embeddingCacheEnabled;
   const cacheOptions = {
-    cachePath: options.cachePath ?? ragConfig.embeddingCachePath,
+    cachePath: options.cachePath ?? defaultEmbeddingCachePath,
     provider: "google",
     model,
     taskType,
@@ -86,6 +77,11 @@ export async function embedTextsWithCache(
   const concurrency = Math.max(1, Math.min(options.concurrency ?? 1, 8));
   const batchSize = Math.max(1, Math.min(options.batchSize ?? 32, 100));
   const batches = chunk(missingRecords, batchSize);
+  if (missingRecords.length && options.allowProviderRequests === false) {
+    throw new Error(
+      `Embedding cache-only mode found ${missingRecords.length} missing input(s); provider calls were not made.`,
+    );
+  }
   let nextIndex = 0;
   let cacheWrites = 0;
   let apiRequests = 0;
@@ -154,39 +150,6 @@ async function embedBatch(
   return vectors;
 }
 
-export async function embedQuery(query: string, model?: string) {
-  const [embedding] = await embedTexts([query], { model, taskType: "QUESTION_ANSWERING" });
-  if (!embedding?.length) {
-    throw new Error("Gemini did not return a valid embedding for the query.");
-  }
-
-  return embedding;
-}
-
-export function formatEmbeddingInput(
-  text: string,
-  model: string,
-  taskType: EmbeddingTaskType,
-  title?: string,
-) {
-  if (!usesPromptTaskInstructions(model)) return text;
-  if (taskType === "RETRIEVAL_DOCUMENT") {
-    return `title: ${title?.trim() || "none"} | text: ${text}`;
-  }
-  const task =
-    taskType === "QUESTION_ANSWERING"
-      ? "question answering"
-      : taskType === "CODE_RETRIEVAL_QUERY"
-        ? "code retrieval"
-        : taskType === "SEMANTIC_SIMILARITY"
-          ? "sentence similarity"
-          : "search result";
-  return `task: ${task} | query: ${text}`;
-}
-
-function usesPromptTaskInstructions(model: string) {
-  return model.replace(/^models\//, "").startsWith("gemini-embedding-2");
-}
 
 async function withRetry<T>(operation: () => Promise<T>, maximumAttempts = 7): Promise<T> {
   for (let attempt = 1; ; attempt += 1) {

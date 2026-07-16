@@ -1,5 +1,5 @@
 import { ragConfig } from "./config";
-import { getGeminiClient } from "./embeddings";
+import { getGeminiClient } from "./gemini-client";
 import { buildJudgePrompt, judgeInstructions } from "./prompt";
 import type { JudgeAssessment, RetrievalResult } from "./types";
 

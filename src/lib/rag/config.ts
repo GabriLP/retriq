@@ -9,7 +9,6 @@ export const ragConfig = {
   // without requiring database tooling during early development.
   chunksPath: path.join(root, "data", "chunks.json"),
   vectorStorePath: path.join(root, "data", "vector-store.json"),
-  embeddingCachePath: path.join(root, "data", "embedding-cache"),
   evaluationLogPath: path.join(root, "data", "evaluation-log.jsonl"),
   // Local evaluation logs are enabled during development. Production defaults
   // to disabled because serverless filesystems do not provide durable storage.
@@ -21,6 +20,7 @@ export const ragConfig = {
   minScore: Number(process.env.RETRIQ_MIN_SCORE ?? 0.18),
   model: process.env.GEMINI_MODEL ?? "gemini-3.5-flash",
   embeddingModel: process.env.GEMINI_EMBEDDING_MODEL ?? "gemini-embedding-2",
+  embeddingOutputDimensionality: Number(process.env.GEMINI_EMBEDDING_OUTPUT_DIMENSIONALITY ?? 768),
   embeddingCacheEnabled:
     process.env.RETRIQ_EMBEDDING_CACHE_ENABLED === undefined
       ? process.env.NODE_ENV !== "production"

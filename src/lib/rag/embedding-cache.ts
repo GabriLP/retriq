@@ -2,16 +2,15 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import type { EmbeddingTaskType } from "./embedding-input";
+
 const CACHE_SCHEMA_VERSION = 2;
 const CACHE_MAGIC = Buffer.from("RTRQEMB1", "ascii");
 const CACHE_HEADER_BYTES = CACHE_MAGIC.length + 4;
 
-export type EmbeddingTaskType =
-  | "RETRIEVAL_DOCUMENT"
-  | "RETRIEVAL_QUERY"
-  | "QUESTION_ANSWERING"
-  | "CODE_RETRIEVAL_QUERY"
-  | "SEMANTIC_SIMILARITY";
+export type { EmbeddingTaskType } from "./embedding-input";
+
+export const defaultEmbeddingCachePath = path.join(process.cwd(), "data", "embedding-cache");
 
 export type EmbeddingCacheOptions = {
   cachePath: string;
