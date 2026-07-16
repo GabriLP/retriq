@@ -25,13 +25,15 @@ function renderMarkdown(id: string, version: string, cases: GoldenCase[], split?
   const language = count(cases, (item) => item.language);
   const difficulty = count(cases, (item) => item.difficulty);
   const answerability = count(cases, (item) => item.answerability);
+  const approval = count(cases.filter((item) => item.status === "human-approved"), (item) => item.approval?.state ?? "provenance-missing");
   const negativeCategories = count(cases.filter((item) => item.answerability === "unanswerable"), (item) => item.negativeVerification?.category ?? "unclassified");
   const splitSection = split ? `\n## Validation/test split\n\n| Split | Cases | Answerable | Unanswerable | Locked |\n|---|---:|---:|---:|---|\n${(["validation", "test"] as const).map((name) => { const selected = selectGoldenSplit({ cases }, split, name); const answerable = selected.filter((item) => item.answerability === "answerable").length; return `| ${name} | ${selected.length} | ${answerable} | ${selected.length - answerable} | ${name === "test" ? (split.testLocked ? "yes" : "no") : "n/a"} |`; }).join("\n")}\n\nThe validation split is used for threshold and configuration selection. The locked test split is used once for the final unbiased estimate.\n` : "";
   return `# Golden set summary
 
 - Dataset: \`${id}@${version}\`
 - Cases: **${cases.length}**
-- Scorable now: **${cases.filter((item) => item.status !== "draft" && item.status !== "retired").length}**
+- Operationally scorable: **${cases.filter((item) => item.status !== "draft" && item.status !== "retired").length}**
+- Independently confirmed human approvals: **${cases.filter((item) => item.approval?.state === "confirmed").length}**
 
 ## Coverage
 
@@ -41,6 +43,7 @@ function renderMarkdown(id: string, version: string, cases: GoldenCase[], split?
 | Language/domain | ${formatCounts(language)} |
 | Difficulty | ${formatCounts(difficulty)} |
 | Answerability | ${formatCounts(answerability)} |
+| Approval state | ${formatCounts(approval)} |
 | Negative category | ${formatCounts(negativeCategories)} |
 
 ${splitSection}
@@ -51,7 +54,7 @@ ${splitSection}
 |---|---|---|---|---|---|
 ${cases.map((item) => `| ${item.id} | ${item.status} | ${item.language} | ${item.difficulty} | ${item.questionType} | ${item.answerability} |`).join("\n")}
 
-Draft cases are candidates only. A model or script may propose them, but they enter scored thesis measurements only after source verification and, for the final benchmark, human approval.
+Draft cases are candidates only. Provisional approvals may be used for engineering runs, but final thesis measurements require \`approval.state=confirmed\` after independent review.
 `;
 }
 

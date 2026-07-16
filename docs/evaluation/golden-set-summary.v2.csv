@@ -1,0 +1,31 @@
+id,status,language,domain,difficulty,question_type,answerability,question,evidence_count
+react-state-snapshot-001,human-approved,React,state,medium,factual,answerable,Why does reading a state variable immediately after calling its setter still return the value from the current render?,1
+react-state-queue-001,human-approved,React,state,medium,procedural,answerable,How should a component increment the same state value three times in one event handler?,1
+react-effects-001,human-approved,React,effects,medium,comparative,answerable,When is an Effect appropriate instead of deriving a value during rendering?,2
+react-refs-001,human-approved,React,refs,easy,factual,answerable,Why is a ref unsuitable for a value that must update what the component displays?,1
+react-out-of-scope-001,human-approved,React,scope-control,easy,unanswerable,unanswerable,How do I configure dependency injection providers in an Angular NgModule?,0
+c-standard-purpose-001,human-approved,C,language-standard,easy,factual,answerable,What purpose does the C11 N1570 draft state for the C language standard?,1
+java-spec-release-001,human-approved,Java,language-specification,easy,factual,answerable,Which Java release and specification status are identified by the Java Language Specification in this corpus?,1
+java-ods-arraystack-amortized-001,human-approved,Java,array-based-data-structures,hard,multi-hop,answerable,Why can ArrayStack resizing take linear time for one operation while still adding only constant amortized cost per update?,1
+java-ods-dual-array-deque-001,human-approved,Java,deques,hard,multi-hop,answerable,"What balance invariant does DualArrayDeque maintain, and why does its occasional O(n) rebalancing remain O(1) amortized per update?",1
+java-ods-skiplist-analysis-001,human-approved,Java,skiplists,medium,factual,answerable,What expected space and search-path bounds are established for a skiplist containing n elements?,1
+java-ods-linear-probing-001,human-approved,Java,hash-tables,hard,factual,answerable,Under which assumptions does the LinearHashTable analysis obtain O(1) expected operation time?,1
+java-ods-red-black-tree-001,human-approved,Java,balanced-search-trees,hard,multi-hop,answerable,How does the correspondence with a 2-4 tree establish the height bound for a red-black tree?,1
+postgresql-license-001,human-approved,PostgreSQL,documentation-license,medium,factual,answerable,Under which condition does the PostgreSQL 18 manual grant permission to copy and distribute the software and documentation?,1
+csharp-linq-iqueryable-001,human-approved,C#,scope-control,easy,unanswerable,unanswerable,How does C# IQueryable defer a LINQ query and translate its expression tree when ToList is called?,0
+swift-sendable-actors-001,human-approved,Swift,scope-control,easy,unanswerable,unanswerable,When must a value conform to Swift Sendable to cross an actor isolation boundary?,0
+ruby-activerecord-callbacks-001,human-approved,Ruby,scope-control,easy,unanswerable,unanswerable,"In Ruby on Rails, in what order do Active Record validation and save callbacks run?",0
+haskell-stm-retry-001,human-approved,Haskell,scope-control,easy,unanswerable,unanswerable,How do retry and orElse compose transactions in Haskell Software Transactional Memory?,0
+java-android-activity-lifecycle-001,human-approved,Java,adjacent-framework,hard,unanswerable,unanswerable,Which Android Activity lifecycle callbacks run when an Activity moves from the foreground to the stopped state?,0
+react-native-flatlist-001,human-approved,React,adjacent-framework,hard,unanswerable,unanswerable,How should React Native FlatList getItemLayout be implemented for fixed-height rows?,0
+python-django-atomic-001,human-approved,Python,adjacent-framework,hard,unanswerable,unanswerable,How do nested Django transaction.atomic blocks use savepoints and propagate rollback state?,0
+postgresql-rds-parameter-groups-001,human-approved,PostgreSQL,vendor-service,hard,unanswerable,unanswerable,Which AWS RDS PostgreSQL parameters require a reboot after changing a DB parameter group?,0
+c-msvc-sal-annotations-001,human-approved,C,vendor-extension,hard,unanswerable,unanswerable,How do Microsoft SAL annotations _In_reads_ and _Out_writes_ affect MSVC static analysis of a C function?,0
+java-se-27-value-classes-001,human-approved,Java,unsupported-version,hard,unanswerable,unanswerable,What final syntax and binary compatibility rules does Java SE 27 define for value classes?,0
+postgresql-19-release-001,human-approved,PostgreSQL,unsupported-version,hard,unanswerable,unanswerable,Which features are listed as final additions in the PostgreSQL 19 release notes?,0
+c-array-decay-001,human-approved,C,arrays-and-pointers,hard,factual,answerable,In which expression contexts does a C array expression not get converted to a pointer to its first element?,1
+java-overload-resolution-001,human-approved,Java,method-invocation,hard,procedural,answerable,What are the main phases used by Java to determine whether a method is applicable during overload resolution?,1
+postgresql-transaction-001,human-approved,PostgreSQL,transactions,medium,factual,answerable,What atomicity guarantee does PostgreSQL provide for the statements enclosed by BEGIN and COMMIT?,1
+c-cuda-unified-memory-001,human-approved,C,adjacent-technology,hard,unanswerable,unanswerable,How do cudaMemPrefetchAsync and cudaMemAdvise control placement of CUDA Unified Memory allocated with cudaMallocManaged?,0
+java-hibernate-lazyinit-001,human-approved,Java,adjacent-technology,hard,unanswerable,unanswerable,When does Hibernate throw LazyInitializationException while traversing a lazily loaded association?,0
+postgresql-pg-partman-retention-001,human-approved,PostgreSQL,adjacent-technology,hard,unanswerable,unanswerable,How does pg_partman create_parent configure retention and automatically detach old PostgreSQL partitions?,0

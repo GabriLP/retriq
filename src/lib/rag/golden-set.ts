@@ -42,6 +42,12 @@ export type GoldenCase = {
   authoredBy: string;
   verifiedBy?: string;
   verifiedAt?: string;
+  approval?: {
+    state: "pending-confirmation" | "confirmed";
+    approvedBy: string;
+    approvedAt: string;
+    basis: string;
+  };
 };
 
 export type GoldenSetSplit = {
@@ -155,6 +161,14 @@ export async function validateGoldenSet(dataset: GoldenSet) {
     if (["source-verified", "human-approved"].includes(testCase.status)) {
       if (!testCase.verifiedBy || !testCase.verifiedAt) {
         errors.push(`${prefix}: ${testCase.status} cases require verifiedBy and verifiedAt.`);
+      }
+    }
+    if (testCase.status === "human-approved") {
+      if (!testCase.approval?.approvedBy || !testCase.approval?.approvedAt || !testCase.approval?.basis) {
+        errors.push(`${prefix}: human-approved cases require approval provenance.`);
+      }
+      if (testCase.approval?.state === "pending-confirmation") {
+        warnings.push(`${prefix}: human approval is provisional and still requires independent confirmation.`);
       }
     }
 
