@@ -18,7 +18,17 @@
   },
   "embedding": {
     "provider": "google",
-    "model": "gemini-embedding-2"
+    "model": "gemini-embedding-2",
+    "outputDimensionality": 768,
+    "documentTask": "RETRIEVAL_DOCUMENT",
+    "queryTask": "QUESTION_ANSWERING",
+    "batchSize": 32,
+    "pricing": {
+      "requestMode": "standard",
+      "usdPerMillionInputTokens": 0.2,
+      "observedAt": "2026-07-16",
+      "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+    }
   },
   "retrieval": {
     "strategy": "dense-cosine",

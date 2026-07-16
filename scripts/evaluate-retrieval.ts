@@ -34,11 +34,16 @@ type Attempt = {
     topK: number;
     minScore: number;
     caseStatuses: GoldenCaseStatus[];
+    outputDimensionality: number | null;
+    documentTask: string;
+    queryTask: string;
+    batchSize: number;
+    pricing: ExperimentConfig["embedding"]["pricing"] | null;
   };
   corpus: { chunks: number; embeddedTexts: number; embeddingDimension?: number };
   embeddings?: {
-    documents: EmbeddingCachePlan & { apiRequests: number; cacheWrites: number };
-    queries: EmbeddingCachePlan & { apiRequests: number; cacheWrites: number };
+    documents: EmbeddingCachePlan & { apiInputs: number; apiRequests: number; cacheWrites: number };
+    queries: EmbeddingCachePlan & { apiInputs: number; apiRequests: number; cacheWrites: number };
     total: EmbeddingTotals;
   };
   caseSelection: { selected: number; excludedDraftOrStatus: number; excludedOutsideCorpus: number };
@@ -53,6 +58,7 @@ type EmbeddingTotals = {
   cacheHits: number;
   cacheMisses: number;
   apiRequests: number;
+  apiInputs: number;
   cacheWrites: number;
   estimatedApiTokens: number;
   estimatedAvoidedTokens: number;
@@ -129,6 +135,11 @@ async function main() {
       topK: config.retrieval.topK,
       minScore: config.retrieval.minScore,
       caseStatuses: allowedStatuses,
+      outputDimensionality: config.embedding.outputDimensionality ?? null,
+      documentTask: config.embedding.documentTask ?? "RETRIEVAL_DOCUMENT",
+      queryTask: config.embedding.queryTask ?? "QUESTION_ANSWERING",
+      batchSize: config.embedding.batchSize ?? 32,
+      pricing: config.embedding.pricing ?? null,
     },
     corpus: { chunks: chunks.length, embeddedTexts: chunks.length + selectedCases.length },
     caseSelection: {
@@ -144,26 +155,40 @@ async function main() {
     if (!selectedCases.length) throw new Error("No golden-set cases apply to the parent run corpus.");
     const { embedTextsWithCache } = await import("../src/lib/rag/embeddings");
     const embeddingStartedAt = performance.now();
-    const chunkTexts = chunks.map((chunk) => `${chunk.title}\n${chunk.section}\n${chunk.content}`);
+    const chunkTexts = chunks.map((chunk) => `${chunk.section}\n${chunk.content}`);
+    let lastReportedInputs = 0;
+    const reportProgress = (label: string) => (progress: { completedInputs: number; totalInputs: number; apiRequests: number }) => {
+      if (progress.completedInputs < progress.totalInputs && progress.completedInputs - lastReportedInputs < 1_000) return;
+      lastReportedInputs = progress.completedInputs;
+      console.log(`${label}: ${progress.completedInputs}/${progress.totalInputs} inputs, ${progress.apiRequests} provider requests`);
+    };
     const documentResult = await embedTextsWithCache(chunkTexts, {
       model: config.embedding.model,
       concurrency: 4,
-      taskType: "RETRIEVAL_DOCUMENT",
+      taskType: config.embedding.documentTask ?? "RETRIEVAL_DOCUMENT",
       outputDimensionality: config.embedding.outputDimensionality,
+      titles: chunks.map((chunk) => chunk.title),
+      batchSize: config.embedding.batchSize,
+      priceUsdPerMillionTokens: config.embedding.pricing?.usdPerMillionInputTokens,
+      onProgress: reportProgress("Documents"),
     });
+    lastReportedInputs = 0;
     const queryResult = await embedTextsWithCache(selectedCases.map((item) => item.question), {
       model: config.embedding.model,
       concurrency: 4,
-      taskType: "RETRIEVAL_QUERY",
+      taskType: config.embedding.queryTask ?? "QUESTION_ANSWERING",
       outputDimensionality: config.embedding.outputDimensionality,
+      batchSize: config.embedding.batchSize,
+      priceUsdPerMillionTokens: config.embedding.pricing?.usdPerMillionInputTokens,
+      onProgress: reportProgress("Queries"),
     });
     const embedding = Math.round(performance.now() - embeddingStartedAt);
     const chunkVectors = documentResult.vectors;
     const queryVectors = queryResult.vectors;
     attempt.corpus.embeddingDimension = chunkVectors[0]?.length;
     attempt.embeddings = {
-      documents: { ...documentResult.cache, apiRequests: documentResult.apiRequests, cacheWrites: documentResult.cacheWrites },
-      queries: { ...queryResult.cache, apiRequests: queryResult.apiRequests, cacheWrites: queryResult.cacheWrites },
+      documents: { ...documentResult.cache, apiInputs: documentResult.apiInputs, apiRequests: documentResult.apiRequests, cacheWrites: documentResult.cacheWrites },
+      queries: { ...queryResult.cache, apiInputs: queryResult.apiInputs, apiRequests: queryResult.apiRequests, cacheWrites: queryResult.cacheWrites },
       total: combineEmbeddingReports(documentResult, queryResult),
     };
 
@@ -214,9 +239,9 @@ function renderSummary(attempt: Attempt) {
 
 ## Embedding cache and estimated usage
 
-| Requested texts | Cache hits | API requests | Cache writes | Estimated API tokens | Estimated avoided tokens | Estimated API cost (USD) | Estimated avoided cost (USD) |
-|---:|---:|---:|---:|---:|---:|---:|---:|
-| ${attempt.embeddings?.total.requestedTexts ?? "—"} | ${attempt.embeddings?.total.cacheHits ?? "—"} | ${attempt.embeddings?.total.apiRequests ?? "—"} | ${attempt.embeddings?.total.cacheWrites ?? "—"} | ${attempt.embeddings?.total.estimatedApiTokens ?? "—"} | ${attempt.embeddings?.total.estimatedAvoidedTokens ?? "—"} | ${formatCost(attempt.embeddings?.total.estimatedApiCostUsd)} | ${formatCost(attempt.embeddings?.total.estimatedAvoidedCostUsd)} |
+| Requested texts | Cache hits | API inputs | Provider requests | Cache writes | Estimated API tokens | Estimated avoided tokens | Estimated API cost (USD) | Estimated avoided cost (USD) |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| ${attempt.embeddings?.total.requestedTexts ?? "—"} | ${attempt.embeddings?.total.cacheHits ?? "—"} | ${attempt.embeddings?.total.apiInputs ?? "—"} | ${attempt.embeddings?.total.apiRequests ?? "—"} | ${attempt.embeddings?.total.cacheWrites ?? "—"} | ${attempt.embeddings?.total.estimatedApiTokens ?? "—"} | ${attempt.embeddings?.total.estimatedAvoidedTokens ?? "—"} | ${formatCost(attempt.embeddings?.total.estimatedApiCostUsd)} | ${formatCost(attempt.embeddings?.total.estimatedAvoidedCostUsd)} |
 
 Token and cost figures are estimates. Cost remains unavailable until a provider price is explicitly recorded in the environment.
 
@@ -229,7 +254,7 @@ These metrics evaluate source/page evidence retrieval. They do not measure final
 }
 
 function combineEmbeddingReports(
-  ...reports: Array<{ cache: EmbeddingCachePlan; apiRequests: number; cacheWrites: number }>
+  ...reports: Array<{ cache: EmbeddingCachePlan; apiInputs: number; apiRequests: number; cacheWrites: number }>
 ): EmbeddingTotals {
   const pricesKnown = reports.every((report) => report.cache.estimatedApiCostUsd !== null);
   return {
@@ -238,6 +263,7 @@ function combineEmbeddingReports(
     cacheHits: sum(reports, (report) => report.cache.cacheHits),
     cacheMisses: sum(reports, (report) => report.cache.cacheMisses),
     apiRequests: sum(reports, (report) => report.apiRequests),
+    apiInputs: sum(reports, (report) => report.apiInputs),
     cacheWrites: sum(reports, (report) => report.cacheWrites),
     estimatedApiTokens: sum(reports, (report) => report.cache.estimatedApiTokens),
     estimatedAvoidedTokens: sum(reports, (report) => report.cache.estimatedAvoidedTokens),

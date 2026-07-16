@@ -2,13 +2,15 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const CACHE_SCHEMA_VERSION = 1;
+const CACHE_SCHEMA_VERSION = 2;
 const CACHE_MAGIC = Buffer.from("RTRQEMB1", "ascii");
 const CACHE_HEADER_BYTES = CACHE_MAGIC.length + 4;
 
 export type EmbeddingTaskType =
   | "RETRIEVAL_DOCUMENT"
   | "RETRIEVAL_QUERY"
+  | "QUESTION_ANSWERING"
+  | "CODE_RETRIEVAL_QUERY"
   | "SEMANTIC_SIMILARITY";
 
 export type EmbeddingCacheOptions = {
@@ -22,7 +24,7 @@ export type EmbeddingCacheOptions = {
 };
 
 export type EmbeddingCachePlan = {
-  schemaVersion: 1;
+  schemaVersion: 2;
   provider: string;
   model: string;
   taskType: EmbeddingTaskType;
@@ -33,7 +35,7 @@ export type EmbeddingCachePlan = {
   deduplicatedTexts: number;
   cacheHits: number;
   cacheMisses: number;
-  avoidedApiRequests: number;
+  avoidedApiInputs: number;
   requestedCharacters: number;
   apiCharacters: number;
   estimatedRequestedTokens: number;
@@ -208,7 +210,7 @@ function buildPlan(
   const price = validNonNegative(options.priceUsdPerMillionTokens);
 
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     provider: options.provider,
     model: options.model,
     taskType: options.taskType,
@@ -219,7 +221,7 @@ function buildPlan(
     deduplicatedTexts: texts.length - records.length,
     cacheHits: hitKeys.size,
     cacheMisses: misses.length,
-    avoidedApiRequests: texts.length - misses.length,
+    avoidedApiInputs: texts.length - misses.length,
     requestedCharacters,
     apiCharacters,
     estimatedRequestedTokens,

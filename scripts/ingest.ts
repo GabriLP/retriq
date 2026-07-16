@@ -41,9 +41,10 @@ async function main() {
   // Embeddings are generated from title, section, and content together. This
   // gives the vector a small amount of structural context without hiding the
   // raw source fields used later for citations.
-  const embeddings = await embedTexts(chunks.map((chunk) => `${chunk.title}\n${chunk.section}\n${chunk.content}`), {
+  const embeddings = await embedTexts(chunks.map((chunk) => `${chunk.section}\n${chunk.content}`), {
     taskType: "RETRIEVAL_DOCUMENT",
     concurrency: 4,
+    titles: chunks.map((chunk) => chunk.title),
   });
   const embeddedChunks: EmbeddedChunk[] = chunks.map((chunk, index) => ({
     ...chunk,

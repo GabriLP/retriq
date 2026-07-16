@@ -114,9 +114,14 @@ approximations rather than billing data.
 Embedding vectors are cached under `data/embedding-cache/` and reused across
 ingestion and experiment runs. The cache identity includes provider, exact
 model, task type, output dimensionality, and input hash. Documents use
-`RETRIEVAL_DOCUMENT`; questions use `RETRIEVAL_QUERY`. Cache artifacts are local
+`RETRIEVAL_DOCUMENT`; RAG questions use `QUESTION_ANSWERING`. For
+`gemini-embedding-2`, these roles are encoded with Google's documented prompt
+formats because that model does not accept the legacy `taskType` parameter.
+Standard requests group up to 32 independent `Content` inputs to reduce HTTP
+requests without changing the vectors or token price. Cache artifacts are local
 and ignored by Git, while every estimate and retrieval attempt records cache,
-request, token, and cost fields alongside the immutable run.
+input, provider-request, token, dimensionality, and cost fields alongside the
+immutable run.
 
 Validate the versioned evaluation cases and regenerate their thesis-friendly coverage report:
 

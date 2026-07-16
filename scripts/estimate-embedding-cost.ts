@@ -6,6 +6,7 @@ import * as nextEnv from "@next/env";
 
 import { ragConfig } from "../src/lib/rag/config";
 import { inspectEmbeddingCache, type EmbeddingCachePlan } from "../src/lib/rag/embedding-cache";
+import { formatEmbeddingInput } from "../src/lib/rag/embeddings";
 import type { ExperimentConfig, ExperimentRun } from "../src/lib/rag/experiment-types";
 import { loadGoldenSet, validateGoldenSet, type GoldenCaseStatus } from "../src/lib/rag/golden-set";
 import { matchesEvidence } from "../src/lib/rag/retrieval-metrics";
@@ -23,6 +24,11 @@ type Estimate = {
     model: string;
     cachePath: string;
     priceUsdPerMillionTokens: number | null;
+    priceObservedAt: string | null;
+    priceSourceUrl: string | null;
+    requestMode: "standard" | "batch";
+    batchSize: number;
+    outputDimensionality: number | null;
   };
   caseSelection: { selected: number; excludedDraftOrStatus: number; excludedOutsideCorpus: number };
   documents: EmbeddingCachePlan;
@@ -32,7 +38,8 @@ type Estimate = {
     uniqueTexts: number;
     cacheHits: number;
     cacheMisses: number;
-    avoidedApiRequests: number;
+    avoidedApiInputs: number;
+    estimatedProviderRequests: number;
     estimatedApiTokens: number;
     estimatedAvoidedTokens: number;
     estimatedApiCostUsd: number | null;
@@ -71,18 +78,21 @@ async function main() {
     provider: config.embedding.provider,
     model: config.embedding.model,
     charactersPerToken: ragConfig.embeddingCharactersPerToken,
-    priceUsdPerMillionTokens: ragConfig.embeddingPriceUsdPerMillionTokens,
+    priceUsdPerMillionTokens:
+      config.embedding.pricing?.usdPerMillionInputTokens ?? ragConfig.embeddingPriceUsdPerMillionTokens,
     outputDimensionality: config.embedding.outputDimensionality,
   };
+  const documentTask = config.embedding.documentTask ?? "RETRIEVAL_DOCUMENT";
+  const queryTask = config.embedding.queryTask ?? "QUESTION_ANSWERING";
+  const documentTexts = chunks.map((chunk) =>
+    formatEmbeddingInput(`${chunk.section}\n${chunk.content}`, config.embedding.model, documentTask, chunk.title),
+  );
+  const queryTexts = selectedCases.map((testCase) =>
+    formatEmbeddingInput(testCase.question, config.embedding.model, queryTask),
+  );
   const [documents, queries] = await Promise.all([
-    inspectEmbeddingCache(
-      chunks.map((chunk) => `${chunk.title}\n${chunk.section}\n${chunk.content}`),
-      { ...sharedOptions, taskType: "RETRIEVAL_DOCUMENT" },
-    ),
-    inspectEmbeddingCache(
-      selectedCases.map((testCase) => testCase.question),
-      { ...sharedOptions, taskType: "RETRIEVAL_QUERY" },
-    ),
+    inspectEmbeddingCache(documentTexts, { ...sharedOptions, taskType: documentTask }),
+    inspectEmbeddingCache(queryTexts, { ...sharedOptions, taskType: queryTask }),
   ]);
   const createdAt = new Date().toISOString();
   const estimateId = `${createdAt.replace(/[-:.TZ]/g, "").slice(0, 17)}-${slug(config.embedding.model)}`;
@@ -98,7 +108,12 @@ async function main() {
       provider: config.embedding.provider,
       model: config.embedding.model,
       cachePath: path.resolve(ragConfig.embeddingCachePath),
-      priceUsdPerMillionTokens: ragConfig.embeddingPriceUsdPerMillionTokens ?? null,
+      priceUsdPerMillionTokens: sharedOptions.priceUsdPerMillionTokens ?? null,
+      priceObservedAt: config.embedding.pricing?.observedAt ?? null,
+      priceSourceUrl: config.embedding.pricing?.sourceUrl ?? null,
+      requestMode: config.embedding.pricing?.requestMode ?? "standard",
+      batchSize: config.embedding.batchSize ?? 32,
+      outputDimensionality: config.embedding.outputDimensionality ?? null,
     },
     caseSelection: {
       selected: selectedCases.length,
@@ -112,7 +127,10 @@ async function main() {
       uniqueTexts: documents.uniqueTexts + queries.uniqueTexts,
       cacheHits: documents.cacheHits + queries.cacheHits,
       cacheMisses: documents.cacheMisses + queries.cacheMisses,
-      avoidedApiRequests: documents.avoidedApiRequests + queries.avoidedApiRequests,
+      avoidedApiInputs: documents.avoidedApiInputs + queries.avoidedApiInputs,
+      estimatedProviderRequests:
+        Math.ceil(documents.cacheMisses / (config.embedding.batchSize ?? 32)) +
+        Math.ceil(queries.cacheMisses / (config.embedding.batchSize ?? 32)),
       estimatedApiTokens: documents.estimatedApiTokens + queries.estimatedApiTokens,
       estimatedAvoidedTokens: documents.estimatedAvoidedTokens + queries.estimatedAvoidedTokens,
       estimatedApiCostUsd: pricesKnown
@@ -130,7 +148,8 @@ async function main() {
   await fs.writeFile(path.join(outputDirectory, "summary.md"), renderSummary(estimate));
   await fs.appendFile(path.join(runDirectory, "embedding-estimates", "index.jsonl"), `${JSON.stringify(estimate)}\n`);
   console.log(`ESTIMATED ${run.experimentId}/${run.runId}/${estimateId}`);
-  console.log(`API requests after cache: ${estimate.total.cacheMisses}`);
+  console.log(`Embedding inputs after cache: ${estimate.total.cacheMisses}`);
+  console.log(`Estimated provider requests: ${estimate.total.estimatedProviderRequests}`);
   console.log(`Estimated API tokens: ${estimate.total.estimatedApiTokens}`);
   console.log(`Estimated API cost (USD): ${formatCost(estimate.total.estimatedApiCostUsd)}`);
   console.log(`Wrote ${outputDirectory}`);
@@ -144,12 +163,17 @@ function renderSummary(estimate: Estimate) {
 - Provider/model: ${estimate.configuration.provider} / ${estimate.configuration.model}
 - Cache: \`${estimate.configuration.cachePath}\`
 - Price assumption: ${estimate.configuration.priceUsdPerMillionTokens === null ? "not configured" : `$${estimate.configuration.priceUsdPerMillionTokens} per million input tokens`}
+- Price source/date: ${estimate.configuration.priceSourceUrl ?? "not recorded"} (${estimate.configuration.priceObservedAt ?? "date not recorded"})
+- Output dimensions: ${estimate.configuration.outputDimensionality ?? "provider default"}
+- Request mode/batch size: ${estimate.configuration.requestMode} / ${estimate.configuration.batchSize} inputs
 
-| Input group | Requested | Unique | Cache hits | API requests | Avoided requests | Estimated API tokens | Estimated cost (USD) |
+| Input group | Requested | Unique | Cache hits | API inputs | Avoided inputs | Estimated API tokens | Estimated cost (USD) |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Documents | ${estimate.documents.requestedTexts} | ${estimate.documents.uniqueTexts} | ${estimate.documents.cacheHits} | ${estimate.documents.cacheMisses} | ${estimate.documents.avoidedApiRequests} | ${estimate.documents.estimatedApiTokens} | ${formatCost(estimate.documents.estimatedApiCostUsd)} |
-| Queries | ${estimate.queries.requestedTexts} | ${estimate.queries.uniqueTexts} | ${estimate.queries.cacheHits} | ${estimate.queries.cacheMisses} | ${estimate.queries.avoidedApiRequests} | ${estimate.queries.estimatedApiTokens} | ${formatCost(estimate.queries.estimatedApiCostUsd)} |
-| **Total** | **${estimate.total.requestedTexts}** | **${estimate.total.uniqueTexts}** | **${estimate.total.cacheHits}** | **${estimate.total.cacheMisses}** | **${estimate.total.avoidedApiRequests}** | **${estimate.total.estimatedApiTokens}** | **${formatCost(estimate.total.estimatedApiCostUsd)}** |
+| Documents | ${estimate.documents.requestedTexts} | ${estimate.documents.uniqueTexts} | ${estimate.documents.cacheHits} | ${estimate.documents.cacheMisses} | ${estimate.documents.avoidedApiInputs} | ${estimate.documents.estimatedApiTokens} | ${formatCost(estimate.documents.estimatedApiCostUsd)} |
+| Queries | ${estimate.queries.requestedTexts} | ${estimate.queries.uniqueTexts} | ${estimate.queries.cacheHits} | ${estimate.queries.cacheMisses} | ${estimate.queries.avoidedApiInputs} | ${estimate.queries.estimatedApiTokens} | ${formatCost(estimate.queries.estimatedApiCostUsd)} |
+| **Total** | **${estimate.total.requestedTexts}** | **${estimate.total.uniqueTexts}** | **${estimate.total.cacheHits}** | **${estimate.total.cacheMisses}** | **${estimate.total.avoidedApiInputs}** | **${estimate.total.estimatedApiTokens}** | **${formatCost(estimate.total.estimatedApiCostUsd)}** |
+
+Estimated provider requests after synchronous batching: **${estimate.total.estimatedProviderRequests}**.
 
 Token counts use the declared character-to-token ratio and are planning estimates, not provider billing data. No embedding API was called by this command.
 `;

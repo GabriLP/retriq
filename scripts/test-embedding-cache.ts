@@ -10,6 +10,7 @@ import {
   writeEmbeddingCacheEntry,
   type EmbeddingCacheOptions,
 } from "../src/lib/rag/embedding-cache";
+import { formatEmbeddingInput } from "../src/lib/rag/embeddings";
 
 async function main() {
   const cachePath = await fs.mkdtemp(path.join(os.tmpdir(), "retriq-embedding-cache-"));
@@ -23,13 +24,25 @@ async function main() {
   };
 
   try {
+    assert.equal(
+      formatEmbeddingInput("How do caches work?", "gemini-embedding-2", "QUESTION_ANSWERING"),
+      "task: question answering | query: How do caches work?",
+    );
+    assert.equal(
+      formatEmbeddingInput("Cache content", "gemini-embedding-2", "RETRIEVAL_DOCUMENT", "Caching"),
+      "title: Caching | text: Cache content",
+    );
+    assert.equal(
+      formatEmbeddingInput("unchanged", "gemini-embedding-001", "RETRIEVAL_DOCUMENT", "Ignored"),
+      "unchanged",
+    );
     const empty = await inspectEmbeddingCache(["abcdefgh", "abcdefgh", "second"], options);
     assert.equal(empty.requestedTexts, 3);
     assert.equal(empty.uniqueTexts, 2);
     assert.equal(empty.deduplicatedTexts, 1);
     assert.equal(empty.cacheHits, 0);
     assert.equal(empty.cacheMisses, 2);
-    assert.equal(empty.avoidedApiRequests, 1);
+    assert.equal(empty.avoidedApiInputs, 1);
 
     const first = cacheRecordForText("abcdefgh", options);
     const expectedVector = [0.125, -0.5, Math.PI];
@@ -38,7 +51,7 @@ async function main() {
     const cached = await inspectEmbeddingCache(["abcdefgh", "abcdefgh", "second"], options);
     assert.equal(cached.cacheHits, 1);
     assert.equal(cached.cacheMisses, 1);
-    assert.equal(cached.avoidedApiRequests, 2);
+    assert.equal(cached.avoidedApiInputs, 2);
     assert.equal(cached.estimatedApiTokens, 2);
     assert.equal(cached.estimatedApiCostUsd, 0.000004);
 

@@ -14,6 +14,15 @@ export type ExperimentConfig = {
     provider: string;
     model: string;
     outputDimensionality?: number;
+    documentTask?: "RETRIEVAL_DOCUMENT";
+    queryTask?: "RETRIEVAL_QUERY" | "QUESTION_ANSWERING" | "CODE_RETRIEVAL_QUERY";
+    batchSize?: number;
+    pricing?: {
+      requestMode: "standard" | "batch";
+      usdPerMillionInputTokens: number;
+      observedAt: string;
+      sourceUrl: string;
+    };
   };
   retrieval: {
     strategy: string;

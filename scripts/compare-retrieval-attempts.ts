@@ -15,6 +15,7 @@ type Attempt = {
   embeddings?: {
     total: {
       cacheHits: number;
+      apiInputs: number;
       apiRequests: number;
       estimatedApiTokens: number;
       estimatedApiCostUsd: number | null;
@@ -82,7 +83,7 @@ async function loadInvalidatedAttempts(root: string) {
 function renderMarkdown(attempts: Attempt[], invalidatedCount: number) {
   const rows = attempts.map((attempt) => {
     const metric = attempt.metrics;
-    return `| ${attempt.experimentId} | ${attempt.corpus.chunks} | ${attempt.configuration.embeddingModel} | ${attempt.configuration.topK} | ${format(metric?.recallAtK)} | ${format(metric?.precisionAtK)} | ${format(metric?.mrr)} | ${format(metric?.ndcgAtK)} | ${format(metric?.noAnswerFalsePositiveRate)} | ${attempt.embeddings?.total.cacheHits ?? "—"} | ${attempt.embeddings?.total.apiRequests ?? "—"} | ${attempt.embeddings?.total.estimatedApiTokens ?? "—"} | ${formatCost(attempt.embeddings?.total.estimatedApiCostUsd)} | ${attempt.timingsMs?.embedding ?? "—"} |`;
+    return `| ${attempt.experimentId} | ${attempt.corpus.chunks} | ${attempt.configuration.embeddingModel} | ${attempt.configuration.topK} | ${format(metric?.recallAtK)} | ${format(metric?.precisionAtK)} | ${format(metric?.mrr)} | ${format(metric?.ndcgAtK)} | ${format(metric?.noAnswerFalsePositiveRate)} | ${attempt.embeddings?.total.cacheHits ?? "—"} | ${attempt.embeddings?.total.apiInputs ?? "—"} | ${attempt.embeddings?.total.apiRequests ?? "—"} | ${attempt.embeddings?.total.estimatedApiTokens ?? "—"} | ${formatCost(attempt.embeddings?.total.estimatedApiCostUsd)} | ${attempt.timingsMs?.embedding ?? "—"} |`;
   });
   return `# Retrieval comparison
 
@@ -90,8 +91,8 @@ Generated: ${new Date().toISOString()}
 
 > **Preliminary:** only source-verified seed cases are included. Final thesis tables require a larger human-approved set. ${invalidatedCount} invalidated attempt(s) were retained locally and excluded here.
 
-| Experiment | Chunks | Embedding | k | Recall@k | Precision@k | MRR | nDCG@k | No-answer FPR | Cache hits | API requests | Est. API tokens | Est. cost USD | Embedding ms |
-|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Experiment | Chunks | Embedding | k | Recall@k | Precision@k | MRR | nDCG@k | No-answer FPR | Cache hits | API inputs | Provider requests | Est. API tokens | Est. cost USD | Embedding ms |
+|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 ${rows.join("\n")}
 
 ## Interpretation guardrails
@@ -106,7 +107,7 @@ function renderCsv(attempts: Attempt[]) {
   const header = [
     "experiment_id", "attempt_id", "parent_run_id", "git_commit", "git_dirty", "chunks", "embedding_model",
     "top_k", "min_score", "cases", "recall_at_k", "precision_at_k", "mrr", "ndcg_at_k",
-    "no_answer_false_positive_rate", "embedding_cache_hits", "embedding_api_requests",
+    "no_answer_false_positive_rate", "embedding_cache_hits", "embedding_api_inputs", "embedding_provider_requests",
     "estimated_embedding_api_tokens", "estimated_embedding_cost_usd", "embedding_ms", "total_ms",
   ];
   const rows = attempts.map((attempt) => [
@@ -115,7 +116,8 @@ function renderCsv(attempts: Attempt[]) {
     attempt.configuration.minScore, attempt.caseSelection.selected, attempt.metrics?.recallAtK ?? "",
     attempt.metrics?.precisionAtK ?? "", attempt.metrics?.mrr ?? "", attempt.metrics?.ndcgAtK ?? "",
     attempt.metrics?.noAnswerFalsePositiveRate ?? "", attempt.embeddings?.total.cacheHits ?? "",
-    attempt.embeddings?.total.apiRequests ?? "", attempt.embeddings?.total.estimatedApiTokens ?? "",
+    attempt.embeddings?.total.apiInputs ?? "", attempt.embeddings?.total.apiRequests ?? "",
+    attempt.embeddings?.total.estimatedApiTokens ?? "",
     attempt.embeddings?.total.estimatedApiCostUsd ?? "", attempt.timingsMs?.embedding ?? "",
     attempt.timingsMs?.total ?? "",
   ]);

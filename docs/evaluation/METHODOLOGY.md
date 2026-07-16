@@ -25,7 +25,10 @@ An LLM must never promote its own generated case directly to `human-approved`. T
 Every scored experiment must store the golden-set path, SHA-256 hash, included review states, corpus manifest hashes, configuration hash, code fingerprint, model identifiers, metrics, timings, and failures. Changing any of these creates a new run; previous attempts remain immutable.
 
 Embedding inputs are role-specific: corpus chunks use `RETRIEVAL_DOCUMENT` and
-questions use `RETRIEVAL_QUERY`. Provider, exact model identifier, task type,
+RAG questions use `QUESTION_ANSWERING`. With `gemini-embedding-2`, the provider
+role is expressed using the documented `title: ... | text: ...` and
+`task: question answering | query: ...` prompt formats; the legacy `taskType`
+request field is not supported by this model. Provider, exact model identifier, task type,
 output dimensionality, and the exact input hash form the persistent cache key.
 Consequently, a cache hit may reduce latency and cost but must return the same
 stored vector and cannot silently cross model or task boundaries.
@@ -40,6 +43,14 @@ million tokens is explicitly configured. Because shared cache state affects
 cost and latency, candidate execution order and the pre-run cache report are
 part of the experimental record; retrieval quality metrics remain the basis for
 technical comparison.
+
+The common chunk-size protocol records the Gemini Developer API standard text
+price of USD 0.20 per million input tokens, observed on 2026-07-16 from Google's
+official pricing page. It also fixes 768 output dimensions and synchronous
+groups of 32 independent inputs. The output dimension does not affect token
+price, but it affects cache size and cosine-comparison cost, so 768/1536/3072
+must later be tested as a separate controlled axis. Provider prices are dated
+assumptions and must be rechecked before final thesis runs.
 
 Before preparing a comparison suite, the common benchmark validator must confirm that candidates differ only on the declared experimental path. The protocol hash covers the suite definition, each experiment configuration, all corpus manifests, and the golden set. Preparation additionally hashes the documents actually loaded; candidates with different content snapshots are retained but rejected as a controlled comparison. Exploratory readiness and thesis readiness are separate gates: source-verified seed cases may support engineering iteration, while thesis conclusions require human-approved cases and the declared language coverage.
 
