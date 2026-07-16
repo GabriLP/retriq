@@ -15,5 +15,6 @@
   "primaryMetrics": ["Recall@4", "MRR", "nDCG@4"],
   "secondaryMetrics": ["Precision@4", "no-answer FPR", "embedding latency", "estimated cost", "cache size"],
   "selectionPolicy": "Do not select a winner until every model has its threshold calibrated on validation. Do not reuse the consumed v1 test split for final model selection.",
-  "status": "implementation-ready"
+  "status": "validation-completed",
+  "resultArtifact": "../experiment-results/embedding-model-comparison-validation.json"
 }

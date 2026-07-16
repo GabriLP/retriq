@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-google-gemini-2-threshold-v1",
+  "title": "Gemini Embedding 2 validation threshold calibration",
+  "hypothesis": "A model-specific cosine threshold can remove validation false positives without reducing Gemini's low-threshold retrieval quality.",
+  "baseExperimentConfig": "embedding-google-gemini-2-1024.json",
+  "variedPath": "retrieval.minScore",
+  "thresholds": [0.18, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9],
+  "selectionRule": {
+    "primary": "noAnswerFalsePositiveRate",
+    "primaryDirection": "lower",
+    "guardrails": [{ "metric": "recallAtK", "minimum": 1.0 }, { "metric": "mrr", "minimum": 1.0 }],
+    "tieBreakers": [{ "metric": "ndcgAtK", "direction": "higher" }, { "metric": "threshold", "direction": "lower" }, { "metric": "precisionAtK", "direction": "higher" }]
+  },
+  "readiness": { "status": "exploratory", "reason": "Model selection uses the validation split only; the previously observed test split is excluded." },
+  "reportOutput": "docs/experiment-results/embedding-google-gemini-2-threshold-validation"
+}

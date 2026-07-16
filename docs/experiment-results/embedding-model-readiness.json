@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "suiteId": "embedding-models-v1",
-  "generatedAt": "2026-07-16T14:00:47.098Z",
-  "suiteHash": "aa89ee24c53d8b3d2f506a34d05bc7471cccb3f2cf3e144ba77fc784225f9fa1",
+  "generatedAt": "2026-07-16T15:00:06.892Z",
+  "suiteHash": "bd5c73cbc2d1e7e9bc711239f360571e2617377868ff669c5d6ea784f4ac77e4",
   "valid": true,
   "errors": [],
   "controls": {
@@ -45,7 +45,7 @@
       "priceObservedAt": "2026-07-16",
       "priceSourceUrl": "https://developers.openai.com/api/docs/models/text-embedding-3-large",
       "credentialEnvironmentVariable": "OPENAI_API_KEY",
-      "credentialConfigured": false,
+      "credentialConfigured": true,
       "configHash": "aee6c695361a8b800f78de5420b5ff0fc5316459b2a50d006683048c69c49d6f"
     },
     {
@@ -58,7 +58,7 @@
       "priceObservedAt": "2026-07-16",
       "priceSourceUrl": "https://developers.openai.com/api/docs/models/text-embedding-3-small",
       "credentialEnvironmentVariable": "OPENAI_API_KEY",
-      "credentialConfigured": false,
+      "credentialConfigured": true,
       "configHash": "70a2d6044ec5d6ebe4180064b270d256d8063ff4c3f8be47419b387abaf6702b"
     },
     {
@@ -71,7 +71,7 @@
       "priceObservedAt": "2026-07-16",
       "priceSourceUrl": "https://docs.voyageai.com/docs/pricing",
       "credentialEnvironmentVariable": "VOYAGE_API_KEY",
-      "credentialConfigured": false,
+      "credentialConfigured": true,
       "configHash": "e17adeebe1ea5887d6e6bf3f28a76a462d787959ec18a19fdcaf64698750229a"
     }
   ]

@@ -93,14 +93,14 @@
       "id": "embedding-models-v1",
       "thesisSection": "Embedding model comparison",
       "researchQuestion": "Which embedding model and dimensionality provide the best quality-cost trade-off?",
-      "status": "in-progress",
+      "status": "completed",
       "variable": "Embedding provider/model at a fixed 1024-dimensional output",
       "controls": ["Frozen chunks", "queries", "retrieval strategy", "topK"],
       "metrics": ["Recall@4", "MRR", "nDCG@4", "latency", "index size", "cost"],
-      "artifacts": ["docs/experiments/embedding-models.v1.json", "docs/experiment-results/embedding-model-readiness.md"],
-      "decision": "Gemini Embedding 2, OpenAI text-embedding-3-large, OpenAI text-embedding-3-small, and Voyage Code 3 form the first controlled 1024-dimensional shortlist; no quality winner has been selected.",
-      "limitations": ["Provider availability and prices may change", "OpenAI and Voyage runs require credentials", "The existing test split has already been observed and cannot support final model selection"],
-      "nextStep": "Calibrate a separate validation threshold for every model, then compare quality, latency, cache size, and dated estimated cost."
+      "artifacts": ["docs/experiments/embedding-models.v1.json", "docs/experiment-results/embedding-model-readiness.md", "docs/experiment-results/embedding-model-comparison-validation.md"],
+      "decision": "On validation, retain Gemini Embedding 2 as the baseline and Voyage Code 3 as the strongest alternative. Only these models separate answerable and unanswerable top-score ranges while preserving their own low-threshold retrieval quality.",
+      "limitations": ["Provider availability and prices may change", "Only twelve validation cases are available", "The existing test split has already been observed and cannot support final model selection", "Indexing latency is not comparable because cache resumptions and provider rate limits differed"],
+      "nextStep": "Expand and human-approve the benchmark, create a fresh untouched test split, freeze the selection rule, and evaluate it once."
     },
     {
       "order": 8,

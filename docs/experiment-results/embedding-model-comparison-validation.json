@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-model-comparison-validation-v1",
+  "createdAt": "2026-07-16T15:00:00.000Z",
+  "status": "exploratory",
+  "split": "validation",
+  "caseSelection": { "total": 12, "answerable": 6, "unanswerable": 6 },
+  "controls": {
+    "outputDimensionality": 1024,
+    "chunking": { "strategy": "word-window", "minWords": 200, "targetWords": 300, "overlapWords": 80 },
+    "retrieval": { "strategy": "dense-cosine", "topK": 4 },
+    "thresholdPolicy": "Calibrate each model independently while preserving its low-threshold Recall@4 and MRR."
+  },
+  "results": [
+    {
+      "provider": "google", "model": "gemini-embedding-2", "runId": "20260716141006970-dfb3ae75", "sweepAttemptId": "20260716144023506",
+      "selectedThreshold": 0.75, "recallAtK": 1.0, "precisionAtK": 0.7083333333333334, "mrr": 1.0, "ndcgAtK": 1.0, "noAnswerFalsePositiveRate": 0.0,
+      "scoreSeparation": { "maximumUnanswerableTopScore": 0.7183920777859255, "minimumAnswerableTopScore": 0.7818965653960707, "margin": 0.0635044876101452 },
+      "listPriceUsdPerMillionInputTokens": 0.2, "estimatedFullIndexListPriceUsd": 1.781575
+    },
+    {
+      "provider": "voyage", "model": "voyage-code-3", "runId": "20260716141035921-e17adeeb", "sweepAttemptId": "20260716145801676",
+      "selectedThreshold": 0.6, "recallAtK": 0.9166666666666666, "precisionAtK": 0.4305555555555555, "mrr": 0.7222222222222222, "ndcgAtK": 0.7291677833180623, "noAnswerFalsePositiveRate": 0.0,
+      "scoreSeparation": { "maximumUnanswerableTopScore": 0.5884368494305798, "minimumAnswerableTopScore": 0.6157740244376574, "margin": 0.0273371750070776 },
+      "listPriceUsdPerMillionInputTokens": 0.18, "estimatedFullIndexListPriceUsd": 1.524796, "expectedIncrementalCharge": "Covered by the provider's free-token allowance if unused; not verified from billing data."
+    },
+    {
+      "provider": "openai", "model": "text-embedding-3-large", "runId": "20260716141016626-aee6c695", "sweepAttemptId": "20260716144029996",
+      "selectedThreshold": 0.18, "recallAtK": 1.0, "precisionAtK": 0.625, "mrr": 0.8333333333333334, "ndcgAtK": 0.8635967160485172, "noAnswerFalsePositiveRate": 1.0,
+      "scoreSeparation": { "maximumUnanswerableTopScore": 0.6040514679862065, "minimumAnswerableTopScore": 0.5943355399145185, "margin": -0.009715928071688 },
+      "listPriceUsdPerMillionInputTokens": 0.13, "estimatedFullIndexListPriceUsd": 1.101242
+    },
+    {
+      "provider": "openai", "model": "text-embedding-3-small", "runId": "20260716141026073-70a2d604", "sweepAttemptId": "20260716144026745",
+      "selectedThreshold": 0.18, "recallAtK": 0.8333333333333334, "precisionAtK": 0.2916666666666667, "mrr": 0.6388888888888888, "ndcgAtK": 0.7002619120877963, "noAnswerFalsePositiveRate": 1.0,
+      "scoreSeparation": { "maximumUnanswerableTopScore": 0.6307657785979189, "minimumAnswerableTopScore": 0.5526545488775653, "margin": -0.0781112297203536 },
+      "listPriceUsdPerMillionInputTokens": 0.02, "estimatedFullIndexListPriceUsd": 0.169422
+    }
+  ],
+  "decision": "Retain Gemini Embedding 2 as the validation baseline. Voyage Code 3 is the only alternative that also permits zero false positives without reducing its own ranking quality. OpenAI Large and Small show overlapping answerable and unanswerable score ranges on this validation set.",
+  "limitations": [
+    "Only twelve validation cases are included, so the ordering is preliminary.",
+    "The existing test split was previously observed and is not used for final model selection.",
+    "Full-index latency is not comparable because some providers required cache resumptions or rate-limit retries.",
+    "Costs are character-based planning estimates at dated list prices, not provider billing records."
+  ]
+}
