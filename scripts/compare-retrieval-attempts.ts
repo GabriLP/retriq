@@ -44,6 +44,7 @@ async function main() {
   for (const attempt of attempts) latestByExperiment.set(attempt.experimentId, attempt);
   const selected = [...latestByExperiment.values()]
     .filter((attempt) => !options.experimentPrefix || attempt.experimentId.startsWith(options.experimentPrefix))
+    .filter((attempt) => !options.experimentIds || options.experimentIds.has(attempt.experimentId))
     .sort((left, right) => left.experimentId.localeCompare(right.experimentId));
   if (!selected.length) throw new Error(`No valid completed retrieval attempts found under ${root}.`);
 
@@ -141,10 +142,13 @@ function parseArgs(args: string[]) {
   const rootIndex = args.findIndex((arg) => arg === "--root");
   const outputIndex = args.findIndex((arg) => arg === "--output");
   const prefixIndex = args.findIndex((arg) => arg === "--experiment-prefix");
+  const idsIndex = args.findIndex((arg) => arg === "--experiment-ids");
   return {
     root: rootIndex >= 0 ? args[rootIndex + 1] : "data/experiments",
     output: outputIndex >= 0 ? args[outputIndex + 1] : "docs/experiment-results/retrieval-comparison",
     experimentPrefix: prefixIndex >= 0 ? args[prefixIndex + 1] : undefined,
+    experimentIds:
+      idsIndex >= 0 ? new Set(args[idsIndex + 1].split(",").map((value) => value.trim()).filter(Boolean)) : undefined,
   };
 }
 

@@ -1,6 +1,6 @@
 # Retrieval comparison
 
-Generated: 2026-07-16T08:22:16.179Z
+Generated: 2026-07-16T09:04:25.001Z
 
 > **Preliminary:** only source-verified seed cases are included. Final thesis tables require a larger human-approved set. 1 invalidated attempt(s) were retained locally and excluded here.
 
