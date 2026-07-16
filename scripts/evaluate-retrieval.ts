@@ -37,6 +37,7 @@ type Attempt = {
   inputHashes: { config: string; chunks: string; goldenSet: string; splitManifest?: string };
   code: { gitCommit: string; dirty: boolean; gitDiffHash: string };
   configuration: {
+    embeddingProvider: string;
     embeddingModel: string;
     retrievalStrategy: string;
     topK: number;
@@ -87,9 +88,7 @@ async function main() {
   const chunksRaw = await fs.readFile(path.join(runDirectory, "chunks.json"), "utf8");
   const config = JSON.parse(configRaw) as ExperimentConfig;
   const chunks = JSON.parse(chunksRaw) as DocumentationChunk[];
-  if (config.embedding.provider !== "google") {
-    throw new Error(`Embedding provider '${config.embedding.provider}' is not implemented.`);
-  }
+  if (!["google", "openai", "voyage"].includes(config.embedding.provider)) throw new Error(`Embedding provider '${config.embedding.provider}' is not implemented.`);
   if (config.retrieval.strategy !== "dense-cosine") {
     throw new Error(`Retrieval strategy '${config.retrieval.strategy}' is not implemented.`);
   }
@@ -152,6 +151,7 @@ async function main() {
       gitDiffHash: sha256(gitDiff),
     },
     configuration: {
+      embeddingProvider: config.embedding.provider,
       embeddingModel: config.embedding.model,
       retrievalStrategy: config.retrieval.strategy,
       topK: config.retrieval.topK,
@@ -186,6 +186,7 @@ async function main() {
       console.log(`${label}: ${progress.completedInputs}/${progress.totalInputs} inputs, ${progress.apiRequests} provider requests`);
     };
     const documentResult = await embedTextsWithCache(chunkTexts, {
+      provider: config.embedding.provider as "google" | "openai" | "voyage",
       model: config.embedding.model,
       concurrency: 4,
       taskType: config.embedding.documentTask ?? "RETRIEVAL_DOCUMENT",
@@ -197,6 +198,7 @@ async function main() {
     });
     lastReportedInputs = 0;
     const queryResult = await embedTextsWithCache(selectedCases.map((item) => item.question), {
+      provider: config.embedding.provider as "google" | "openai" | "voyage",
       model: config.embedding.model,
       concurrency: 4,
       taskType: config.embedding.queryTask ?? "QUESTION_ANSWERING",
@@ -255,7 +257,7 @@ function renderSummary(attempt: Attempt) {
 - Experiment: \`${attempt.experimentId}\`
 - Parent run: \`${attempt.parentRunId}\`
 - Status: **${attempt.status}**
-- Embedding: ${attempt.configuration.embeddingModel}
+- Embedding: ${attempt.configuration.embeddingProvider} / ${attempt.configuration.embeddingModel}
 - Retrieval: ${attempt.configuration.retrievalStrategy}, top-k ${attempt.configuration.topK}, threshold ${attempt.configuration.minScore}
 - Dataset split: ${attempt.configuration.split ?? "all eligible cases"}
 - Cases: ${attempt.caseSelection.selected} selected, ${attempt.caseSelection.excludedOutsideCorpus} outside corpus, ${attempt.caseSelection.excludedDraftOrStatus} excluded by review state

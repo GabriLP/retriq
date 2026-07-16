@@ -10,7 +10,7 @@ import {
   inspectEmbeddingCache,
   type EmbeddingCachePlan,
 } from "../src/lib/rag/embedding-cache";
-import { formatEmbeddingInput } from "../src/lib/rag/embeddings";
+import { formatProviderEmbeddingInput, type EmbeddingProvider } from "../src/lib/rag/embedding-providers";
 import type { ExperimentConfig, ExperimentRun } from "../src/lib/rag/experiment-types";
 import { loadGoldenSet, loadGoldenSetSplit, selectGoldenSplit, validateGoldenSet, validateGoldenSetSplit, type GoldenCaseStatus, type GoldenSplitName } from "../src/lib/rag/golden-set";
 import { matchesEvidence } from "../src/lib/rag/retrieval-metrics";
@@ -62,9 +62,7 @@ async function main() {
   const config = JSON.parse(configRaw) as ExperimentConfig;
   const chunks = JSON.parse(chunksRaw) as DocumentationChunk[];
   if (run.status !== "prepared") throw new Error(`Parent run ${run.runId} is not prepared.`);
-  if (config.embedding.provider !== "google") {
-    throw new Error(`Embedding provider '${config.embedding.provider}' is not implemented.`);
-  }
+  if (!["google", "openai", "voyage"].includes(config.embedding.provider)) throw new Error(`Embedding provider '${config.embedding.provider}' is not implemented.`);
   if (!config.evaluation.goldenSet) throw new Error("Experiment config must define evaluation.goldenSet.");
 
   const goldenRaw = await fs.readFile(path.resolve(config.evaluation.goldenSet), "utf8");
@@ -100,10 +98,19 @@ async function main() {
   const documentTask = config.embedding.documentTask ?? "RETRIEVAL_DOCUMENT";
   const queryTask = config.embedding.queryTask ?? "QUESTION_ANSWERING";
   const documentTexts = chunks.map((chunk) =>
-    formatEmbeddingInput(`${chunk.section}\n${chunk.content}`, config.embedding.model, documentTask, chunk.title),
+    formatProviderEmbeddingInput(`${chunk.section}\n${chunk.content}`, {
+      provider: config.embedding.provider as EmbeddingProvider,
+      model: config.embedding.model,
+      taskType: documentTask,
+      title: chunk.title,
+    }),
   );
   const queryTexts = selectedCases.map((testCase) =>
-    formatEmbeddingInput(testCase.question, config.embedding.model, queryTask),
+    formatProviderEmbeddingInput(testCase.question, {
+      provider: config.embedding.provider as EmbeddingProvider,
+      model: config.embedding.model,
+      taskType: queryTask,
+    }),
   );
   const [documents, queries] = await Promise.all([
     inspectEmbeddingCache(documentTexts, { ...sharedOptions, taskType: documentTask }),

@@ -15,6 +15,7 @@
     "experiment:retrieval": "tsx scripts/evaluate-retrieval.ts",
     "experiment:embedding:estimate": "tsx scripts/estimate-embedding-cost.ts",
     "embedding:cache:test": "tsx scripts/test-embedding-cache.ts",
+    "embedding:providers:test": "tsx scripts/test-embedding-providers.ts",
     "experiment:retrieval:compare": "tsx scripts/compare-retrieval-attempts.ts",
     "benchmark:retrieval:compare": "tsx scripts/compare-retrieval-attempts.ts --experiment-ids common-programming-word-850,common-programming-word-450,common-programming-word-300 --output docs/experiment-results/common-chunk-size-retrieval",
     "experiment:threshold:sweep": "tsx scripts/evaluate-threshold-sweep.ts",

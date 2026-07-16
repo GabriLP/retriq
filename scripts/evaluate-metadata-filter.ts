@@ -65,8 +65,8 @@ async function main() {
   const { embedTextsWithCache } = await import("../src/lib/rag/embeddings");
   const started = performance.now();
   const [documents, queries] = await Promise.all([
-    embedTextsWithCache(chunks.map((chunk) => `${chunk.section}\n${chunk.content}`), { model: config.embedding.model, taskType: config.embedding.documentTask ?? "RETRIEVAL_DOCUMENT", outputDimensionality: config.embedding.outputDimensionality, titles: chunks.map((chunk) => chunk.title), batchSize: config.embedding.batchSize, allowProviderRequests: false }),
-    embedTextsWithCache(cases.map((item) => item.question), { model: config.embedding.model, taskType: config.embedding.queryTask ?? "QUESTION_ANSWERING", outputDimensionality: config.embedding.outputDimensionality, batchSize: config.embedding.batchSize, allowProviderRequests: false }),
+    embedTextsWithCache(chunks.map((chunk) => `${chunk.section}\n${chunk.content}`), { provider: config.embedding.provider as "google" | "openai" | "voyage", model: config.embedding.model, taskType: config.embedding.documentTask ?? "RETRIEVAL_DOCUMENT", outputDimensionality: config.embedding.outputDimensionality, titles: chunks.map((chunk) => chunk.title), batchSize: config.embedding.batchSize, allowProviderRequests: false }),
+    embedTextsWithCache(cases.map((item) => item.question), { provider: config.embedding.provider as "google" | "openai" | "voyage", model: config.embedding.model, taskType: config.embedding.queryTask ?? "QUESTION_ANSWERING", outputDimensionality: config.embedding.outputDimensionality, batchSize: config.embedding.batchSize, allowProviderRequests: false }),
   ]);
   const rankings = cases.map((_, caseIndex) => chunks.map((chunk, chunkIndex) => ({ ...chunk, score: cosineSimilarity(queries.vectors[caseIndex], documents.vectors[chunkIndex]) })).sort((left, right) => right.score - left.score || left.id.localeCompare(right.id)));
   const compatibility = cases.map((item) => filterChunksByQueryMetadata(item.question, chunks));

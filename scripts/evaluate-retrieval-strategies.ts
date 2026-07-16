@@ -84,6 +84,7 @@ async function main() {
   const embeddingStarted = performance.now();
   const [documents, queries] = await Promise.all([
     embedTextsWithCache(chunks.map((chunk) => `${chunk.section}\n${chunk.content}`), {
+      provider: config.embedding.provider as "google" | "openai" | "voyage",
       model: config.embedding.model,
       taskType: config.embedding.documentTask ?? "RETRIEVAL_DOCUMENT",
       outputDimensionality: config.embedding.outputDimensionality,
@@ -92,6 +93,7 @@ async function main() {
       allowProviderRequests: false,
     }),
     embedTextsWithCache(cases.map((item) => item.question), {
+      provider: config.embedding.provider as "google" | "openai" | "voyage",
       model: config.embedding.model,
       taskType: config.embedding.queryTask ?? "QUESTION_ANSWERING",
       outputDimensionality: config.embedding.outputDimensionality,

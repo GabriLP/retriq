@@ -11,6 +11,7 @@ import {
   type EmbeddingCacheOptions,
 } from "../src/lib/rag/embedding-cache";
 import { embedTextsWithCache, formatEmbeddingInput } from "../src/lib/rag/embeddings";
+import { formatProviderEmbeddingInput } from "../src/lib/rag/embedding-providers";
 
 async function main() {
   const cachePath = await fs.mkdtemp(path.join(os.tmpdir(), "retriq-embedding-cache-"));
@@ -27,6 +28,14 @@ async function main() {
     assert.equal(
       formatEmbeddingInput("How do caches work?", "gemini-embedding-2", "QUESTION_ANSWERING"),
       "task: question answering | query: How do caches work?",
+    );
+    assert.equal(
+      formatProviderEmbeddingInput("raw OpenAI input", { provider: "openai", model: "text-embedding-3-large", taskType: "RETRIEVAL_DOCUMENT", title: "Ignored" }),
+      "raw OpenAI input",
+    );
+    assert.equal(
+      formatProviderEmbeddingInput("raw Voyage input", { provider: "voyage", model: "voyage-code-3", taskType: "RETRIEVAL_QUERY" }),
+      "raw Voyage input",
     );
     assert.equal(
       formatEmbeddingInput("Cache content", "gemini-embedding-2", "RETRIEVAL_DOCUMENT", "Caching"),
@@ -62,6 +71,8 @@ async function main() {
     assert.equal(queryPlan.cacheHits, 0, "task type must be part of the cache identity");
     const modelPlan = await inspectEmbeddingCache(["abcdefgh"], { ...options, model: "other-model" });
     assert.equal(modelPlan.cacheHits, 0, "model must be part of the cache identity");
+    const providerPlan = await inspectEmbeddingCache(["abcdefgh"], { ...options, provider: "openai" });
+    assert.equal(providerPlan.cacheHits, 0, "provider must be part of the cache identity");
     const dimensionPlan = await inspectEmbeddingCache(["abcdefgh"], { ...options, outputDimensionality: 768 });
     assert.equal(dimensionPlan.cacheHits, 0, "output dimensionality must be part of the cache identity");
 

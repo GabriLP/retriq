@@ -1,8 +1,8 @@
 import { defaultEmbeddingCachePath } from "./embedding-cache";
 
 import { ragConfig } from "./config";
-import { formatEmbeddingInput, usesPromptTaskInstructions, type EmbeddingTaskType } from "./embedding-input";
-import { getGeminiClient } from "./gemini-client";
+import type { EmbeddingTaskType } from "./embedding-input";
+import { embedProviderBatch, formatProviderEmbeddingInput, type EmbeddingProvider } from "./embedding-providers";
 import {
   cacheRecordForText,
   createEmbeddingCachePlan,
@@ -22,6 +22,7 @@ export async function embedTexts(
 
 export type EmbedTextsOptions = {
   model?: string;
+  provider?: EmbeddingProvider;
   concurrency?: number;
   taskType?: EmbeddingTaskType;
   outputDimensionality?: number;
@@ -55,11 +56,12 @@ export async function embedTextsWithCache(
   }
 
   const model = options.model ?? ragConfig.embeddingModel;
+  const provider = options.provider ?? "google";
   const taskType = options.taskType ?? "SEMANTIC_SIMILARITY";
   const cacheEnabled = options.cache ?? ragConfig.embeddingCacheEnabled;
   const cacheOptions = {
     cachePath: options.cachePath ?? defaultEmbeddingCachePath,
-    provider: "google",
+    provider,
     model,
     taskType,
     outputDimensionality: options.outputDimensionality,
@@ -68,7 +70,7 @@ export async function embedTextsWithCache(
       options.priceUsdPerMillionTokens ?? ragConfig.embeddingPriceUsdPerMillionTokens,
   };
   const providerTexts = texts.map((text, index) =>
-    formatEmbeddingInput(text, model, taskType, options.titles?.[index]),
+    formatProviderEmbeddingInput(text, { provider, model, taskType, title: options.titles?.[index] }),
   );
   const cacheState = await readEmbeddingCache(cacheEnabled ? providerTexts : [], cacheOptions);
   const records = providerTexts.map((text) => cacheRecordForText(text, cacheOptions));
@@ -92,6 +94,7 @@ export async function embedTextsWithCache(
       const batch = batches[nextIndex];
       nextIndex += 1;
       const vectors = await embedBatch(batch.map((record) => record.text), {
+        provider,
         model,
         taskType,
         outputDimensionality: options.outputDimensionality,
@@ -127,46 +130,9 @@ export async function embedTextsWithCache(
 
 async function embedBatch(
   texts: string[],
-  options: { model: string; taskType: EmbeddingTaskType; outputDimensionality?: number },
+  options: { provider: EmbeddingProvider; model: string; taskType: EmbeddingTaskType; outputDimensionality?: number },
 ) {
-  const gemini = getGeminiClient();
-  const response = await withRetry(() =>
-    gemini.models.embedContent({
-      model: options.model,
-      contents: texts.map((text) => ({ parts: [{ text }] })),
-      config: {
-        ...(usesPromptTaskInstructions(options.model) ? {} : { taskType: options.taskType }),
-        outputDimensionality: options.outputDimensionality,
-      },
-    }),
-  );
-  const vectors = (response.embeddings ?? []).map((embedding) => embedding.values ?? []);
-  if (
-    vectors.length !== texts.length ||
-    vectors.some((vector) => !vector.length || vector.some((value) => !Number.isFinite(value)))
-  ) {
-    throw new Error(`Gemini returned ${vectors.length} valid embeddings for ${texts.length} requested texts.`);
-  }
-  return vectors;
-}
-
-
-async function withRetry<T>(operation: () => Promise<T>, maximumAttempts = 7): Promise<T> {
-  for (let attempt = 1; ; attempt += 1) {
-    try {
-      return await operation();
-    } catch (error) {
-      if (attempt >= maximumAttempts || !isRetryableProviderError(error)) throw error;
-      const delayMs = Math.min(30_000, 750 * 2 ** (attempt - 1)) + Math.round(Math.random() * 250);
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
-    }
-  }
-}
-
-function isRetryableProviderError(error: unknown) {
-  if (!(error instanceof Error)) return false;
-  const status = "status" in error ? Number((error as Error & { status?: number }).status) : undefined;
-  return status === 429 || (status !== undefined && status >= 500) || /429|resource_exhausted|rate limit|temporar/i.test(error.message);
+  return embedProviderBatch(texts, options);
 }
 
 function chunk<T>(items: T[], size: number) {
