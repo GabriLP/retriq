@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-google-gemini-2-word-450-1024",
+  "title": "Gemini Embedding 2 with 450-word chunks at 1024 dimensions",
+  "hypothesis": "Larger 450-word chunks preserve more local context but may reduce Gemini's score separation relative to 300-word chunks.",
+  "tags": ["embedding-chunk-interaction", "validation", "google", "450-word", "1024-dim"],
+  "corpus": { "manifests": ["docs/corpus/react-learn.json", "docs/corpus/programming-foundation.json"] },
+  "chunking": { "strategy": "word-window", "minWords": 200, "targetWords": 450, "overlapWords": 80 },
+  "embedding": {
+    "provider": "google", "model": "gemini-embedding-2", "outputDimensionality": 1024,
+    "documentTask": "RETRIEVAL_DOCUMENT", "queryTask": "QUESTION_ANSWERING", "batchSize": 32,
+    "pricing": { "requestMode": "standard", "usdPerMillionInputTokens": 0.2, "observedAt": "2026-07-16", "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing" }
+  },
+  "retrieval": { "strategy": "dense-cosine", "topK": 4, "minScore": 0.18 },
+  "generation": { "provider": "google", "model": "gemini-3.5-flash" },
+  "evaluation": { "judgeEnabled": false, "goldenSet": "docs/evaluation/golden-set.v1.json", "caseStatuses": ["source-verified"], "splitManifest": "docs/evaluation/golden-set-splits.v1.json", "split": "validation" }
+}

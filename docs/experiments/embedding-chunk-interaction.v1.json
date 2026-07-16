@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-chunk-interaction-v1",
+  "title": "Embedding model and chunk-size interaction at 1024 dimensions",
+  "hypothesis": "Chunk size changes retrieval quality and score separation differently for a general-purpose embedding model and a code-specialized model.",
+  "design": "2x3 factorial validation experiment",
+  "factors": {
+    "embeddingModel": ["google/gemini-embedding-2", "voyage/voyage-code-3"],
+    "chunking.targetWords": [300, 450, 850]
+  },
+  "controlledPaths": ["corpus", "chunking.strategy", "chunking.minWords", "chunking.overlapWords", "embedding.outputDimensionality", "retrieval.strategy", "retrieval.topK", "evaluation"],
+  "candidates": [
+    "embedding-google-gemini-2-1024.json",
+    "embedding-google-gemini-2-word-450-1024.json",
+    "embedding-google-gemini-2-word-850-1024.json",
+    "embedding-voyage-code-3-1024.json",
+    "embedding-voyage-code-3-word-450-1024.json",
+    "embedding-voyage-code-3-word-850-1024.json"
+  ],
+  "split": "validation",
+  "thresholdPolicy": "Calibrate retrieval.minScore independently for every model-chunk pair while preserving its low-threshold Recall@4 and MRR.",
+  "primaryMetrics": ["Recall@4", "MRR", "nDCG@4", "no-answer FPR"],
+  "secondaryMetrics": ["Precision@4", "score-separation margin", "chunk count", "estimated list-price cost"],
+  "status": "prepared"
+}
