@@ -1,0 +1,13 @@
+case_id,answerability,retrieved_count,relevant_retrieved,reciprocal_rank,ndcg,top_score
+react-state-queue-001,answerable,4,3,1,1,0.816048
+react-refs-001,answerable,4,3,1,1,0.795068
+java-ods-dual-array-deque-001,answerable,4,4,1,1,0.791219
+java-ods-linear-probing-001,answerable,4,4,1,1,0.815022
+java-ods-red-black-tree-001,answerable,3,2,1,1,0.811053
+postgresql-license-001,answerable,1,1,1,1,0.765329
+csharp-linq-iqueryable-001,unanswerable,0,0,,,
+ruby-activerecord-callbacks-001,unanswerable,0,0,,,
+java-android-activity-lifecycle-001,unanswerable,0,0,,,
+python-django-atomic-001,unanswerable,0,0,,,
+c-msvc-sal-annotations-001,unanswerable,0,0,,,
+postgresql-19-release-001,unanswerable,4,0,,0,0.765694

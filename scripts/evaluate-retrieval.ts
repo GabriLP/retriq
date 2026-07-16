@@ -267,7 +267,7 @@ function renderSummary(attempt: Attempt) {
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | ${attempt.embeddings?.total.requestedTexts ?? "—"} | ${attempt.embeddings?.total.cacheHits ?? "—"} | ${attempt.embeddings?.total.apiInputs ?? "—"} | ${attempt.embeddings?.total.apiRequests ?? "—"} | ${attempt.embeddings?.total.cacheWrites ?? "—"} | ${attempt.embeddings?.total.estimatedApiTokens ?? "—"} | ${attempt.embeddings?.total.estimatedAvoidedTokens ?? "—"} | ${formatCost(attempt.embeddings?.total.estimatedApiCostUsd)} | ${formatCost(attempt.embeddings?.total.estimatedAvoidedCostUsd)} |
 
-Token and cost figures are estimates. Cost remains unavailable until a provider price is explicitly recorded in the environment.
+Token and cost figures are estimates based on the price recorded in the experiment configuration; they are not provider billing records.
 
 | Recall@k | Precision@k | MRR | nDCG@k | No-answer false-positive rate |
 |---:|---:|---:|---:|---:|
