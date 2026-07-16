@@ -17,6 +17,11 @@ export type ManifestSource = {
   publisher?: string;
   license?: string;
   title?: string;
+  crawl?: {
+    includePattern?: string;
+    excludePattern?: string;
+    maxPages?: number;
+  };
   qualityExceptions?: QualityException[];
 };
 
@@ -116,7 +121,9 @@ function resolveManifestSource(
 function toSourceMetadata(source: ManifestSource, qualityPolicy: ArtifactQualityPolicy): SourceMetadata {
   return {
     sourceId: source.id || undefined,
-    sourceUrl: source.url,
+    // Locally acquired HTML pages retain their individual canonical URLs.
+    // Applying the manifest root URL here would collapse every citation to the index page.
+    sourceUrl: source.type === "html" && source.path ? undefined : source.url,
     title: source.title,
     sourceType: source.type,
     language: source.language,

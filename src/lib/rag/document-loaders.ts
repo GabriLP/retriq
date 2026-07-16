@@ -68,7 +68,9 @@ export async function loadSources(
     for (const file of files) {
       const extension = path.extname(file).toLowerCase();
       if (!SUPPORTED_EXTENSIONS.has(extension)) continue;
-      const metadata = options.sourceMetadataByInput?.[path.resolve(file)];
+      // A manifest may point at a locally acquired HTML snapshot directory.
+      // Child files inherit the source-level metadata unless explicitly overridden.
+      const metadata = options.sourceMetadataByInput?.[path.resolve(file)] ?? inputMetadata;
 
       if (extension === ".md" || extension === ".mdx") {
         sources.push(...(await loadMarkdownFile(file, rootPath, options.baseUrl, metadata)));
@@ -158,12 +160,15 @@ async function loadHtmlFromUrl(url: string) {
 
 function parseHtml(html: string, sourceUrl: string): SourceDocument {
   const $ = cheerio.load(html);
+  const canonicalUrl = resolveCanonicalUrl($("link[rel='canonical']").first().attr("href"), sourceUrl);
   // Navigation and decorative page chrome would create noisy embeddings, so the
   // loader keeps the main documentation text and removes unrelated UI content.
-  $("script, style, nav, footer, svg, noscript, button").remove();
+  $(
+    "script, style, nav, footer, svg, noscript, button, [role='navigation'], .related, .sphinxsidebar, .sidebar, .mobile-nav",
+  ).remove();
 
   const title = normalizeSourceText($("h1").first().text() || $("title").first().text() || sourceUrl);
-  const main = $("main, article").first();
+  const main = $("[role='main'], main, article").first();
   const root = main.length ? main : $("body");
   const section = findPrimaryHtmlSection(root, title);
   const content = extractReadableHtmlText($, root);
@@ -172,8 +177,17 @@ function parseHtml(html: string, sourceUrl: string): SourceDocument {
     title,
     section,
     content,
-    sourceUrl,
+    sourceUrl: canonicalUrl,
   };
+}
+
+function resolveCanonicalUrl(canonical: string | undefined, fallback: string) {
+  if (!canonical) return fallback;
+  try {
+    return new URL(canonical, fallback).href;
+  } catch {
+    return fallback;
+  }
 }
 
 function createPdfDocument(markdown: string, sourceUrl: string, metadata?: SourceMetadata): SourceDocument {

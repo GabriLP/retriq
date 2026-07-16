@@ -540,9 +540,15 @@
       "documentRole": "tutorial",
       "authority": "official",
       "stability": "living",
-      "snapshotPolicy": "remote-html-hashed-at-experiment-time",
+      "snapshotPolicy": "mutable-html-local-snapshot-hash-required",
       "license": "Python Software Foundation License 2.0",
-      "url": "https://docs.python.org/3/tutorial/index.html"
+      "url": "https://docs.python.org/3/tutorial/index.html",
+      "path": "../../data/source/programming-foundation/html/python-tutorial",
+      "crawl": {
+        "includePattern": "^https://docs\\.python\\.org/3/tutorial/",
+        "excludePattern": "(genindex|search)\\.html$",
+        "maxPages": 32
+      }
     },
     {
       "id": "python-language-reference",
@@ -555,9 +561,15 @@
       "documentRole": "language-reference",
       "authority": "official",
       "stability": "living",
-      "snapshotPolicy": "remote-html-hashed-at-experiment-time",
+      "snapshotPolicy": "mutable-html-local-snapshot-hash-required",
       "license": "Python Software Foundation License 2.0",
-      "url": "https://docs.python.org/3/reference/index.html"
+      "url": "https://docs.python.org/3/reference/index.html",
+      "path": "../../data/source/programming-foundation/html/python-language-reference",
+      "crawl": {
+        "includePattern": "^https://docs\\.python\\.org/3/reference/",
+        "excludePattern": "(genindex|search)\\.html$",
+        "maxPages": 24
+      }
     },
     {
       "id": "typescript-handbook",
@@ -570,9 +582,14 @@
       "documentRole": "handbook",
       "authority": "official",
       "stability": "living",
-      "snapshotPolicy": "remote-html-hashed-at-experiment-time",
+      "snapshotPolicy": "mutable-html-local-snapshot-hash-required",
       "license": "TypeScript documentation open-source project; verify repository license before redistribution",
-      "url": "https://www.typescriptlang.org/docs/handbook/intro.html"
+      "url": "https://www.typescriptlang.org/docs/handbook/intro.html",
+      "path": "../../data/source/programming-foundation/html/typescript-handbook",
+      "crawl": {
+        "includePattern": "^https://www\\.typescriptlang\\.org/docs/handbook/",
+        "maxPages": 80
+      }
     },
     {
       "id": "typescript-everyday-types",
@@ -585,9 +602,14 @@
       "documentRole": "handbook-chapter",
       "authority": "official",
       "stability": "living",
-      "snapshotPolicy": "remote-html-hashed-at-experiment-time",
+      "snapshotPolicy": "mutable-html-local-snapshot-hash-required",
       "license": "TypeScript documentation open-source project; verify repository license before redistribution",
-      "url": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html"
+      "url": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html",
+      "path": "../../data/source/programming-foundation/html/typescript-everyday-types",
+      "crawl": {
+        "includePattern": "^https://www\\.typescriptlang\\.org/docs/handbook/2/everyday-types\\.html$",
+        "maxPages": 1
+      }
     },
     {
       "id": "rust-book",
@@ -600,9 +622,15 @@
       "documentRole": "official-book",
       "authority": "official",
       "stability": "living",
-      "snapshotPolicy": "remote-html-hashed-at-experiment-time",
+      "snapshotPolicy": "mutable-html-local-snapshot-hash-required",
       "license": "Rust book source is available from the Rust project; retain source attribution",
-      "url": "https://doc.rust-lang.org/stable/book/"
+      "url": "https://doc.rust-lang.org/stable/book/",
+      "path": "../../data/source/programming-foundation/html/rust-book",
+      "crawl": {
+        "includePattern": "^https://doc\\.rust-lang\\.org/stable/book/",
+        "excludePattern": "(print|search)\\.html$",
+        "maxPages": 120
+      }
     },
     {
       "id": "rust-reference",
@@ -615,9 +643,15 @@
       "documentRole": "language-reference",
       "authority": "official",
       "stability": "living",
-      "snapshotPolicy": "remote-html-hashed-at-experiment-time",
+      "snapshotPolicy": "mutable-html-local-snapshot-hash-required",
       "license": "Rust project documentation; retain source attribution",
-      "url": "https://doc.rust-lang.org/stable/reference/"
+      "url": "https://doc.rust-lang.org/stable/reference/",
+      "path": "../../data/source/programming-foundation/html/rust-reference",
+      "crawl": {
+        "includePattern": "^https://doc\\.rust-lang\\.org/stable/reference/",
+        "excludePattern": "(print|search)\\.html$",
+        "maxPages": 150
+      }
     },
     {
       "id": "go-language-specification",

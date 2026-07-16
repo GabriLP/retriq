@@ -4,7 +4,7 @@ All 60 cases are operationally marked `human-approved`, while `approval.state=pe
 
 ## Coverage note
 
-The 15 new answerable cases cover C++, ECMAScript, Kotlin, Bash, and Go because their extracted documents contain substantive technical text. The current Python, TypeScript, and Rust HTML acquisitions are mostly navigation/index content; they therefore receive hard-negative adjacent-technology coverage but no unsupported positive claims. This is a measured corpus-quality limitation, not a benchmark omission to hide.
+The 15 answerable cases added when v3 was frozen cover C++, ECMAScript, Kotlin, Bash, and Go. At that time the Python, TypeScript, and Rust acquisitions contained mostly index content, so v3 deliberately made no unsupported positive claims for them. Multipage HTML snapshots have since repaired that corpus limitation; positive cases for these languages belong in a separately versioned benchmark update so the locked v3 test is not silently changed.
 
 | Confirm | Case | Split | Answerability | Language | Evidence or negative basis |
 |---|---|---|---|---|---|
