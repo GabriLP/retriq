@@ -47,6 +47,7 @@ type Attempt = {
     documentTask: string;
     queryTask: string;
     batchSize: number;
+    providerConcurrency: number;
     pricing: ExperimentConfig["embedding"]["pricing"] | null;
     split: GoldenSplitName | null;
   };
@@ -161,6 +162,7 @@ async function main() {
       documentTask: config.embedding.documentTask ?? "RETRIEVAL_DOCUMENT",
       queryTask: config.embedding.queryTask ?? "QUESTION_ANSWERING",
       batchSize: config.embedding.batchSize ?? 32,
+      providerConcurrency: providerConcurrency(config.embedding.provider),
       pricing: config.embedding.pricing ?? null,
       split: config.evaluation.split ?? null,
     },
@@ -188,7 +190,7 @@ async function main() {
     const documentResult = await embedTextsWithCache(chunkTexts, {
       provider: config.embedding.provider as "google" | "openai" | "voyage",
       model: config.embedding.model,
-      concurrency: 4,
+      concurrency: attempt.configuration.providerConcurrency,
       taskType: config.embedding.documentTask ?? "RETRIEVAL_DOCUMENT",
       outputDimensionality: config.embedding.outputDimensionality,
       titles: chunks.map((chunk) => chunk.title),
@@ -200,7 +202,7 @@ async function main() {
     const queryResult = await embedTextsWithCache(selectedCases.map((item) => item.question), {
       provider: config.embedding.provider as "google" | "openai" | "voyage",
       model: config.embedding.model,
-      concurrency: 4,
+      concurrency: attempt.configuration.providerConcurrency,
       taskType: config.embedding.queryTask ?? "QUESTION_ANSWERING",
       outputDimensionality: config.embedding.outputDimensionality,
       batchSize: config.embedding.batchSize,
@@ -329,6 +331,10 @@ function sha256(value: string | Buffer) {
 
 function slug(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 32);
+}
+
+function providerConcurrency(provider: string) {
+  return provider === "google" ? 4 : 1;
 }
 
 function readRunPath(args: string[]) {
