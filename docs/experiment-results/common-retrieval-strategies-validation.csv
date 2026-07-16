@@ -1,0 +1,4 @@
+strategy,selected_threshold,recall_at_4,precision_at_4,mrr,ndcg_at_4,no_answer_fpr,query_scoring_ms,decision
+dense-cosine,0.75,1,0.7083333333333334,1,1,0,288,Selected by the predeclared validation rule.
+bm25,,,,,,,306,No candidate satisfied zero false positives and both quality guardrails.
+hybrid-rrf,,,,,,,1,No candidate satisfied zero false positives and both quality guardrails.

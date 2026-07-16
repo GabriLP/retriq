@@ -40,6 +40,7 @@ type StrategyResult = {
   parameters: Record<string, number>;
   scoringMs: number;
   rankingOnly: Metrics;
+  rankingOnlyCases: ReturnType<typeof evaluateRetrievalCase>[];
   thresholdResults: ThresholdResult[];
   selectedThreshold: number | null;
   selectedMetrics: Metrics | null;
@@ -104,10 +105,12 @@ async function main() {
     .sort(compareScores)
     .slice(0, protocol.candidateDepth)));
   const bm25Options = protocol.strategies.find((item) => item.id === "bm25")?.parameters ?? {};
-  const bm25Started = performance.now();
+  const bm25BuildStarted = performance.now();
   const bm25Index = new Bm25Index(chunks, bm25Options);
+  const bm25IndexBuildMs = Math.round(performance.now() - bm25BuildStarted);
+  const bm25SearchStarted = performance.now();
   const bm25Rankings = cases.map((item) => bm25Index.search(item.question, protocol.candidateDepth));
-  const bm25Ms = Math.round(performance.now() - bm25Started);
+  const bm25Ms = Math.round(performance.now() - bm25SearchStarted);
   const rrfParameters = protocol.strategies.find((item) => item.id === "hybrid-rrf")?.parameters ?? {};
   const rrfRankings = timeRankings(() => cases.map((_, index) => reciprocalRankFusion(
     [denseRankings.rankings[index], bm25Rankings[index]],
@@ -132,7 +135,7 @@ async function main() {
     caseSelection: { total: cases.length, answerable: cases.filter((item) => item.answerability === "answerable").length, unanswerable: cases.filter((item) => item.answerability === "unanswerable").length },
     inputHashes: { protocol: sha256(protocolRaw), config: sha256(configRaw), chunks: sha256(chunksRaw), goldenSet: sha256(goldenRaw), splitManifest: sha256(splitRaw) },
     cache: { documentHits: documents.cache.cacheHits, queryHits: queries.cache.cacheHits, apiInputs: documents.apiInputs + queries.apiInputs, apiRequests: documents.apiRequests + queries.apiRequests },
-    timingsMs: { cacheLoad: embeddingMs },
+    timingsMs: { cacheLoad: embeddingMs, bm25IndexBuild: bm25IndexBuildMs },
     controlledVariables: protocol.controlledVariables,
     results,
   };
@@ -146,7 +149,8 @@ async function main() {
 }
 
 function evaluateStrategy(strategy: Protocol["strategies"][number], source: { rankings: ScoredChunk[][]; scoringMs: number }, cases: GoldenCase[], protocol: Protocol): StrategyResult {
-  const rankingOnly = metricsAtThreshold(source.rankings, cases, protocol.topK, Number.NEGATIVE_INFINITY).metrics;
+  const rankingOnlyResult = metricsAtThreshold(source.rankings, cases, protocol.topK, Number.NEGATIVE_INFINITY);
+  const rankingOnly = rankingOnlyResult.metrics;
   const thresholdResults = strategy.thresholds.map((threshold) => ({ threshold, ...metricsAtThreshold(source.rankings, cases, protocol.topK, threshold) }));
   const eligible = thresholdResults.filter((item) => item.metrics.noAnswerFalsePositiveRate === protocol.selectionRule.primaryTarget && (item.metrics.recallAtK ?? -1) >= protocol.selectionRule.guardrails.recallAtK && (item.metrics.mrr ?? -1) >= protocol.selectionRule.guardrails.mrr);
   const selected = [...eligible].sort((left, right) => (right.metrics.ndcgAtK ?? -1) - (left.metrics.ndcgAtK ?? -1) || (right.metrics.precisionAtK ?? -1) - (left.metrics.precisionAtK ?? -1) || left.threshold - right.threshold)[0];
@@ -155,6 +159,7 @@ function evaluateStrategy(strategy: Protocol["strategies"][number], source: { ra
     parameters: strategy.parameters ?? {},
     scoringMs: source.scoringMs,
     rankingOnly,
+    rankingOnlyCases: rankingOnlyResult.cases,
     thresholdResults,
     selectedThreshold: selected?.threshold ?? null,
     selectedMetrics: selected?.metrics ?? null,
@@ -167,11 +172,16 @@ function metricsAtThreshold(rankings: ScoredChunk[][], cases: GoldenCase[], topK
     const ranked: RankedChunk[] = rankings[index].filter((chunk) => chunk.score >= threshold).slice(0, topK).map((chunk, rank) => ({ ...chunk, rank: rank + 1 }));
     return evaluateRetrievalCase(testCase, ranked);
   });
-  return { metrics: aggregateRetrievalMetrics(evaluated), returnedChunks: evaluated.reduce((total, item) => total + item.retrievedCount, 0) };
+  return { metrics: aggregateRetrievalMetrics(evaluated), returnedChunks: evaluated.reduce((total, item) => total + item.retrievedCount, 0), cases: evaluated };
 }
 
-function renderMarkdown(artifact: { id: string; attemptId: string; parentRunId: string; split: string; hypothesis: string; caseSelection: { total: number; answerable: number; unanswerable: number }; cache: { documentHits: number; queryHits: number; apiInputs: number; apiRequests: number }; timingsMs: { cacheLoad: number }; controlledVariables: string[]; results: StrategyResult[] }) {
-  return `# Retrieval strategy comparison\n\n- Protocol/attempt: \`${artifact.id}\` / \`${artifact.attemptId}\`\n- Parent run: \`${artifact.parentRunId}\`\n- Split: **${artifact.split}** (${artifact.caseSelection.answerable} answerable + ${artifact.caseSelection.unanswerable} unanswerable)\n- Hypothesis: ${artifact.hypothesis}\n- Cache-only: **${artifact.cache.apiInputs === 0 ? "yes" : "no"}**\n\n## Calibrated comparison\n\n| Strategy | Selected threshold | Recall@4 | Precision@4 | MRR | nDCG@4 | No-answer FPR | Scoring ms | Decision |\n|---|---:|---:|---:|---:|---:|---:|---:|---|\n${artifact.results.map((item) => `| ${item.strategy} | ${item.selectedThreshold ?? "n/a"} | ${format(item.selectedMetrics?.recallAtK)} | ${format(item.selectedMetrics?.precisionAtK)} | ${format(item.selectedMetrics?.mrr)} | ${format(item.selectedMetrics?.ndcgAtK)} | ${format(item.selectedMetrics?.noAnswerFalsePositiveRate)} | ${item.scoringMs} | ${item.decision} |`).join("\n")}\n\n## Ranking-only diagnostic\n\n| Strategy | Recall@4 | Precision@4 | MRR | nDCG@4 |\n|---|---:|---:|---:|---:|\n${artifact.results.map((item) => `| ${item.strategy} | ${format(item.rankingOnly.recallAtK)} | ${format(item.rankingOnly.precisionAtK)} | ${format(item.rankingOnly.mrr)} | ${format(item.rankingOnly.ndcgAtK)} |`).join("\n")}\n\nRanking-only metrics ignore abstention and expose ordering quality. Calibrated metrics apply a strategy-specific validation threshold; raw score thresholds are not comparable across cosine, BM25, and RRF. No held-out test cases are used for strategy selection.\n\n## Controlled variables\n\n${artifact.controlledVariables.map((item) => `- ${item}`).join("\n")}\n`;
+function renderMarkdown(artifact: { id: string; attemptId: string; parentRunId: string; split: string; hypothesis: string; caseSelection: { total: number; answerable: number; unanswerable: number }; cache: { documentHits: number; queryHits: number; apiInputs: number; apiRequests: number }; timingsMs: { cacheLoad: number; bm25IndexBuild: number }; controlledVariables: string[]; results: StrategyResult[] }) {
+  return `# Retrieval strategy comparison\n\n- Protocol/attempt: \`${artifact.id}\` / \`${artifact.attemptId}\`\n- Parent run: \`${artifact.parentRunId}\`\n- Split: **${artifact.split}** (${artifact.caseSelection.answerable} answerable + ${artifact.caseSelection.unanswerable} unanswerable)\n- Hypothesis: ${artifact.hypothesis}\n- Cache-only: **${artifact.cache.apiInputs === 0 ? "yes" : "no"}**\n\n## Calibrated comparison\n\n| Strategy | Selected threshold | Recall@4 | Precision@4 | MRR | nDCG@4 | No-answer FPR | Query scoring ms | Decision |\n|---|---:|---:|---:|---:|---:|---:|---:|---|\n${artifact.results.map((item) => `| ${item.strategy} | ${item.selectedThreshold ?? "n/a"} | ${format(item.selectedMetrics?.recallAtK)} | ${format(item.selectedMetrics?.precisionAtK)} | ${format(item.selectedMetrics?.mrr)} | ${format(item.selectedMetrics?.ndcgAtK)} | ${format(item.selectedMetrics?.noAnswerFalsePositiveRate)} | ${item.scoringMs} | ${item.decision} |`).join("\n")}\n\nBM25 index construction took ${artifact.timingsMs.bm25IndexBuild} ms and is reported separately from query scoring. Dense embedding generation is excluded because vectors were loaded from the shared cache.\n\n## Ranking-only diagnostic\n\n| Strategy | Recall@4 | Precision@4 | MRR | nDCG@4 |\n|---|---:|---:|---:|---:|\n${artifact.results.map((item) => `| ${item.strategy} | ${format(item.rankingOnly.recallAtK)} | ${format(item.rankingOnly.precisionAtK)} | ${format(item.rankingOnly.mrr)} | ${format(item.rankingOnly.ndcgAtK)} |`).join("\n")}\n\n### Answerable cases missed at ranking stage\n\n${artifact.results.map(renderMissedCases).join("\n")}\n\nRanking-only metrics ignore abstention and expose ordering quality. Calibrated metrics apply a strategy-specific validation threshold; raw score thresholds are not comparable across cosine, BM25, and RRF. No held-out test cases are used for strategy selection.\n\n## Controlled variables\n\n${artifact.controlledVariables.map((item) => `- ${item}`).join("\n")}\n`;
+}
+
+function renderMissedCases(result: StrategyResult) {
+  const missed = result.rankingOnlyCases.filter((item) => item.answerability === "answerable" && item.recallAtK !== 1).map((item) => item.caseId);
+  return `- ${result.strategy}: ${missed.length ? missed.map((id) => `\`${id}\``).join(", ") : "none"}`;
 }
 
 async function writeReport(output: string, artifact: Parameters<typeof renderMarkdown>[0]) {
@@ -179,7 +189,7 @@ async function writeReport(output: string, artifact: Parameters<typeof renderMar
   await fs.mkdir(path.dirname(base), { recursive: true });
   await fs.writeFile(`${base}.md`, renderMarkdown(artifact));
   const rows = artifact.results.map((item) => [item.strategy, item.selectedThreshold ?? "", item.selectedMetrics?.recallAtK ?? "", item.selectedMetrics?.precisionAtK ?? "", item.selectedMetrics?.mrr ?? "", item.selectedMetrics?.ndcgAtK ?? "", item.selectedMetrics?.noAnswerFalsePositiveRate ?? "", item.scoringMs, item.decision]);
-  await fs.writeFile(`${base}.csv`, [["strategy", "selected_threshold", "recall_at_4", "precision_at_4", "mrr", "ndcg_at_4", "no_answer_fpr", "scoring_ms", "decision"], ...rows].map((row) => row.join(",")).join("\n") + "\n");
+  await fs.writeFile(`${base}.csv`, [["strategy", "selected_threshold", "recall_at_4", "precision_at_4", "mrr", "ndcg_at_4", "no_answer_fpr", "query_scoring_ms", "decision"], ...rows].map((row) => row.join(",")).join("\n") + "\n");
 }
 
 function timeRankings(build: () => ScoredChunk[][]) {
