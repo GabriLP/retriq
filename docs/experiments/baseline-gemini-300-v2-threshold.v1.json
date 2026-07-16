@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "baseline-gemini-300-v2-threshold-v1",
+  "title": "Gemini 300-word threshold calibration on benchmark v2 validation",
+  "hypothesis": "A threshold can reject the twelve expanded-validation negatives while preserving perfect Recall@4 and MRR on the twelve answerable cases.",
+  "baseExperimentConfig": "baseline-gemini-300-v2-validation.json",
+  "variedPath": "retrieval.minScore",
+  "thresholds": [0.18, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.72, 0.74, 0.75, 0.76, 0.78, 0.8, 0.85, 0.9],
+  "selectionRule": {
+    "primary": "noAnswerFalsePositiveRate",
+    "primaryDirection": "lower",
+    "guardrails": [{ "metric": "recallAtK", "minimum": 1.0 }, { "metric": "mrr", "minimum": 1.0 }],
+    "tieBreakers": [{ "metric": "ndcgAtK", "direction": "higher" }, { "metric": "threshold", "direction": "lower" }, { "metric": "precisionAtK", "direction": "higher" }]
+  },
+  "readiness": { "status": "exploratory", "reason": "All 24 validation cases have provisional human approval; independent confirmation is pending. The six-case fresh test remains untouched." },
+  "reportOutput": "docs/experiment-results/baseline-gemini-300-v2-threshold-validation"
+}

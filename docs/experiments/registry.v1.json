@@ -20,6 +20,20 @@
     },
     {
       "order": 2,
+      "id": "benchmark-v2-provisional-review",
+      "thesisSection": "Benchmark construction and review",
+      "researchQuestion": "Can a balanced, source-grounded benchmark and a genuinely untouched test split support the next retrieval experiments?",
+      "status": "in-progress",
+      "variable": "Case coverage, answerability balance, approval provenance, and split membership",
+      "controls": ["Frozen corpus snapshot", "Evidence page ranges", "Reproducible absence probes", "Previously scored cases excluded from the fresh test"],
+      "metrics": ["Answerable/unanswerable balance", "language/domain coverage", "difficulty", "absence-probe conflicts", "approval confirmations"],
+      "artifacts": ["docs/evaluation/golden-set.v2.json", "docs/evaluation/golden-set-splits.v2.json", "docs/evaluation/golden-set-summary.v2.md", "docs/evaluation/negative-case-verification.v2.md", "docs/evaluation/HUMAN_REVIEW_CHECKLIST_V2.md"],
+      "decision": "Use the 30-case balanced v2 benchmark for engineering validation. Keep the six newly curated cases as a locked fresh test; all operational human approvals remain explicitly pending independent user confirmation.",
+      "limitations": ["Only six fresh test cases", "All approval records are provisional", "Coverage remains uneven across the full corpus language set"],
+      "nextStep": "Confirm every checklist item, freeze the retrieval selection rule, then execute the six-case test exactly once."
+    },
+    {
+      "order": 3,
       "id": "chunk-size-v1",
       "thesisSection": "Chunking experiments",
       "researchQuestion": "How does target chunk size affect retrieval quality, index size, latency, and embedding cost?",
@@ -33,7 +47,7 @@
       "nextStep": "Compare boundary and overlap strategies independently."
     },
     {
-      "order": 3,
+      "order": 4,
       "id": "threshold-seed-v1",
       "thesisSection": "Abstention calibration",
       "researchQuestion": "Which cosine threshold suppresses unrelated retrieval without reducing answerable recall?",
@@ -47,7 +61,7 @@
       "nextStep": "Use the balanced validation protocol."
     },
     {
-      "order": 4,
+      "order": 5,
       "id": "threshold-balanced-v2",
       "thesisSection": "Abstention calibration",
       "researchQuestion": "Does a threshold selected on balanced validation generalize to an untouched test split?",
@@ -61,7 +75,7 @@
       "nextStep": "Evaluate explicit version compatibility on validation and create a future test revision before final comparison."
     },
     {
-      "order": 5,
+      "order": 6,
       "id": "retrieval-strategies-v1",
       "thesisSection": "Retrieval strategy comparison",
       "researchQuestion": "Do lexical BM25 or unweighted hybrid RRF improve over dense cosine on the current benchmark?",
@@ -75,7 +89,7 @@
       "nextStep": "Prioritize metadata filtering and reranking; retain technical BM25 as an optional later variant."
     },
     {
-      "order": 6,
+      "order": 7,
       "id": "metadata-version-filter-v1",
       "thesisSection": "Metadata-aware retrieval",
       "researchQuestion": "Can query-corpus technology and version compatibility reduce false positives without harming answerable retrieval?",
@@ -83,13 +97,13 @@
       "variable": "Compatibility gate enabled or disabled",
       "controls": ["Dense cosine rankings", "validation split", "threshold grid", "topK=4"],
       "metrics": ["No-answer FPR", "Recall@4", "MRR", "compatibility rejections", "latency"],
-      "artifacts": ["docs/experiments/common-metadata-filter.v1.json", "docs/experiment-results/common-metadata-filter-validation.md"],
-      "decision": "On validation, metadata-aware dense reaches zero no-answer FPR at 0.18 while preserving Recall@4, MRR, and nDCG@4 at 1.0; retain it as a promising candidate, not a final winner.",
-      "limitations": ["Test split already consumed by the previous threshold experiment", "Rule-based query recognition may miss implicit technologies or aliases", "Metadata coverage and correctness become retrieval dependencies"],
-      "nextStep": "Expand compatibility-focused validation cases and create a fresh held-out split before claiming generalization."
+      "artifacts": ["docs/experiments/common-metadata-filter.v1.json", "docs/experiment-results/common-metadata-filter-validation.md", "docs/experiments/baseline-gemini-300-v2-metadata-filter.v1.json", "docs/experiment-results/baseline-gemini-300-v2-metadata-filter-validation.md"],
+      "decision": "On the expanded 24-case validation split, pure dense thresholds cannot satisfy all guardrails. Metadata-aware dense selects 0.65 and reaches Recall@4, MRR, and nDCG@4 of 1.0 with zero no-answer false positives.",
+      "limitations": ["Rule-based query recognition may miss implicit technologies or aliases", "Metadata coverage and correctness become retrieval dependencies", "Approvals are provisional", "The six-case fresh test remains intentionally untouched"],
+      "nextStep": "Freeze metadata-aware Gemini retrieval at threshold 0.65 for the next engineering stage; confirm the benchmark before the one-time test."
     },
     {
-      "order": 7,
+      "order": 8,
       "id": "embedding-models-v1",
       "thesisSection": "Embedding model comparison",
       "researchQuestion": "Which embedding model and dimensionality provide the best quality-cost trade-off?",
@@ -103,7 +117,7 @@
       "nextStep": "Expand and human-approve the benchmark, create a fresh untouched test split, freeze the selection rule, and evaluate it once."
     },
     {
-      "order": 8,
+      "order": 9,
       "id": "reranking-v1",
       "thesisSection": "Reranking",
       "researchQuestion": "Does reranking a fixed dense candidate pool improve ordering quality enough to justify added latency and cost?",
@@ -117,7 +131,7 @@
       "nextStep": "Run after metadata-aware retrieval."
     },
     {
-      "order": 9,
+      "order": 10,
       "id": "generation-and-judge-v1",
       "thesisSection": "Answer generation and LLM-as-a-judge",
       "researchQuestion": "How do generator choices affect grounded answer quality, and how reliably can an LLM judge reproduce human assessments?",
@@ -131,7 +145,7 @@
       "nextStep": "Build human-labelled calibration cases after retrieval stabilizes."
     },
     {
-      "order": 10,
+      "order": 11,
       "id": "rag-agent-loop-v1",
       "thesisSection": "Agentic RAG",
       "researchQuestion": "Does retrieve-check-rewrite improve success enough to justify extra iterations, latency, and cost?",
