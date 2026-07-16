@@ -177,7 +177,7 @@ export async function validateGoldenSet(dataset: GoldenSet) {
       if (evidence.sourceId && !catalog.ids.has(evidence.sourceId)) {
         errors.push(`${prefix}: unknown evidence sourceId '${evidence.sourceId}'.`);
       }
-      if (evidence.sourceUrl && !catalog.urls.has(evidence.sourceUrl)) {
+      if (evidence.sourceUrl && !catalog.urls.has(evidence.sourceUrl) && !evidence.sourceId) {
         errors.push(`${prefix}: evidence URL is not present in a corpus manifest: ${evidence.sourceUrl}`);
       }
       if ((evidence.pageStart === undefined) !== (evidence.pageEnd === undefined)) {

@@ -1,0 +1,79 @@
+id,status,language,domain,difficulty,question_type,answerability,question,evidence_count
+react-state-snapshot-001,human-approved,React,state,medium,factual,answerable,Why does reading a state variable immediately after calling its setter still return the value from the current render?,1
+react-state-queue-001,human-approved,React,state,medium,procedural,answerable,How should a component increment the same state value three times in one event handler?,1
+react-effects-001,human-approved,React,effects,medium,comparative,answerable,When is an Effect appropriate instead of deriving a value during rendering?,2
+react-refs-001,human-approved,React,refs,easy,factual,answerable,Why is a ref unsuitable for a value that must update what the component displays?,1
+react-out-of-scope-001,human-approved,React,scope-control,easy,unanswerable,unanswerable,How do I configure dependency injection providers in an Angular NgModule?,0
+c-standard-purpose-001,human-approved,C,language-standard,easy,factual,answerable,What purpose does the C11 N1570 draft state for the C language standard?,1
+java-spec-release-001,human-approved,Java,language-specification,easy,factual,answerable,Which Java release and specification status are identified by the Java Language Specification in this corpus?,1
+java-ods-arraystack-amortized-001,human-approved,Java,array-based-data-structures,hard,multi-hop,answerable,Why can ArrayStack resizing take linear time for one operation while still adding only constant amortized cost per update?,1
+java-ods-dual-array-deque-001,human-approved,Java,deques,hard,multi-hop,answerable,"What balance invariant does DualArrayDeque maintain, and why does its occasional O(n) rebalancing remain O(1) amortized per update?",1
+java-ods-skiplist-analysis-001,human-approved,Java,skiplists,medium,factual,answerable,What expected space and search-path bounds are established for a skiplist containing n elements?,1
+java-ods-linear-probing-001,human-approved,Java,hash-tables,hard,factual,answerable,Under which assumptions does the LinearHashTable analysis obtain O(1) expected operation time?,1
+java-ods-red-black-tree-001,human-approved,Java,balanced-search-trees,hard,multi-hop,answerable,How does the correspondence with a 2-4 tree establish the height bound for a red-black tree?,1
+postgresql-license-001,human-approved,PostgreSQL,documentation-license,medium,factual,answerable,Under which condition does the PostgreSQL 18 manual grant permission to copy and distribute the software and documentation?,1
+csharp-linq-iqueryable-001,human-approved,C#,scope-control,easy,unanswerable,unanswerable,How does C# IQueryable defer a LINQ query and translate its expression tree when ToList is called?,0
+swift-sendable-actors-001,human-approved,Swift,scope-control,easy,unanswerable,unanswerable,When must a value conform to Swift Sendable to cross an actor isolation boundary?,0
+ruby-activerecord-callbacks-001,human-approved,Ruby,scope-control,easy,unanswerable,unanswerable,"In Ruby on Rails, in what order do Active Record validation and save callbacks run?",0
+haskell-stm-retry-001,human-approved,Haskell,scope-control,easy,unanswerable,unanswerable,How do retry and orElse compose transactions in Haskell Software Transactional Memory?,0
+java-android-activity-lifecycle-001,human-approved,Java,adjacent-framework,hard,unanswerable,unanswerable,Which Android Activity lifecycle callbacks run when an Activity moves from the foreground to the stopped state?,0
+react-native-flatlist-001,human-approved,React,adjacent-framework,hard,unanswerable,unanswerable,How should React Native FlatList getItemLayout be implemented for fixed-height rows?,0
+python-django-atomic-001,human-approved,Python,adjacent-framework,hard,unanswerable,unanswerable,How do nested Django transaction.atomic blocks use savepoints and propagate rollback state?,0
+postgresql-rds-parameter-groups-001,human-approved,PostgreSQL,vendor-service,hard,unanswerable,unanswerable,Which AWS RDS PostgreSQL parameters require a reboot after changing a DB parameter group?,0
+c-msvc-sal-annotations-001,human-approved,C,vendor-extension,hard,unanswerable,unanswerable,How do Microsoft SAL annotations _In_reads_ and _Out_writes_ affect MSVC static analysis of a C function?,0
+java-se-27-value-classes-001,human-approved,Java,unsupported-version,hard,unanswerable,unanswerable,What final syntax and binary compatibility rules does Java SE 27 define for value classes?,0
+postgresql-19-release-001,human-approved,PostgreSQL,unsupported-version,hard,unanswerable,unanswerable,Which features are listed as final additions in the PostgreSQL 19 release notes?,0
+c-array-decay-001,human-approved,C,arrays-and-pointers,hard,factual,answerable,In which expression contexts does a C array expression not get converted to a pointer to its first element?,1
+java-overload-resolution-001,human-approved,Java,method-invocation,hard,procedural,answerable,What are the main phases used by Java to determine whether a method is applicable during overload resolution?,1
+postgresql-transaction-001,human-approved,PostgreSQL,transactions,medium,factual,answerable,What atomicity guarantee does PostgreSQL provide for the statements enclosed by BEGIN and COMMIT?,1
+c-cuda-unified-memory-001,human-approved,C,adjacent-technology,hard,unanswerable,unanswerable,How do cudaMemPrefetchAsync and cudaMemAdvise control placement of CUDA Unified Memory allocated with cudaMallocManaged?,0
+java-hibernate-lazyinit-001,human-approved,Java,adjacent-technology,hard,unanswerable,unanswerable,When does Hibernate throw LazyInitializationException while traversing a lazily loaded association?,0
+postgresql-pg-partman-retention-001,human-approved,PostgreSQL,adjacent-technology,hard,unanswerable,unanswerable,How does pg_partman create_parent configure retention and automatically detach old PostgreSQL partitions?,0
+cpp-range-for-lookup-001,human-approved,C++,iteration,hard,multi-hop,answerable,"How does a C++ range-based for loop determine its begin and end expressions for arrays, class types, and other ranges?",1
+cpp-move-constructor-001,human-approved,C++,object-lifetime,medium,factual,answerable,What parameter form makes a non-template C++ constructor a move constructor?,1
+cpp-structured-binding-size-001,human-approved,C++,declarations,medium,factual,answerable,"Without a structured binding pack, what constraint applies to the number of names in a C++ structured binding declaration?",1
+javascript-promise-all-001,human-approved,JavaScript,promises,medium,comparative,answerable,How do Promise.all and Promise.allSettled differ when one input promise rejects?,1
+javascript-promise-any-001,human-approved,JavaScript,promises,medium,factual,answerable,"When does Promise.any reject, and what does its rejection contain?",1
+javascript-array-filter-holes-001,human-approved,JavaScript,arrays,medium,factual,answerable,Does Array.prototype.filter call its callback for missing array elements or elements appended after filtering starts?,1
+kotlin-smart-cast-001,human-approved,Kotlin,type-system,medium,factual,answerable,What problem do Kotlin smart casts solve?,1
+kotlin-elvis-lazy-001,human-approved,Kotlin,null-safety,medium,factual,answerable,How does Kotlin's Elvis operator evaluate its two operands?,1
+kotlin-not-null-assertion-001,human-approved,Kotlin,null-safety,medium,factual,answerable,What happens when Kotlin's not-null assertion operator is applied to a nullable expression?,1
+bash-pipeline-stderr-001,human-approved,Bash,pipelines,medium,factual,answerable,"What does the Bash |& pipeline operator do, and when is its implicit redirection applied?",1
+bash-pipefail-status-001,human-approved,Bash,pipelines,medium,comparative,answerable,How does enabling pipefail change a Bash pipeline's exit status?,1
+bash-heredoc-quoted-delimiter-001,human-approved,Bash,redirection,medium,factual,answerable,How does quoting a Bash here-document delimiter affect expansion in the body?,1
+go-defer-order-001,human-approved,Go,control-flow,medium,multi-hop,answerable,"When are arguments to a deferred Go call evaluated, and in what order are multiple deferred calls invoked?",1
+go-method-set-pointer-001,human-approved,Go,type-system,medium,comparative,answerable,How do the method sets of a defined Go type T and a pointer *T differ?,1
+go-recover-conditions-001,human-approved,Go,panic-recovery,hard,multi-hop,answerable,"When does Go's recover stop a panicking sequence, and when does it return nil?",1
+cpp-qt-signals-001,human-approved,C++,adjacent-technology,hard,unanswerable,unanswerable,How do QObject::connect and Qt::QueuedConnection deliver a signal across threads?,0
+cpp-cmake-targets-001,human-approved,C++,adjacent-technology,hard,unanswerable,unanswerable,How should target_link_libraries and find_package be combined for imported CMake targets?,0
+javascript-node-fs-001,human-approved,JavaScript,adjacent-technology,hard,unanswerable,unanswerable,How do fs.promises.readFile and AbortSignal interact in Node.js?,0
+javascript-express-router-001,human-approved,JavaScript,adjacent-technology,hard,unanswerable,unanswerable,How does express.Router merge route parameters from a parent router?,0
+kotlin-compose-effects-001,human-approved,Kotlin,adjacent-technology,hard,unanswerable,unanswerable,When should Jetpack Compose use LaunchedEffect instead of rememberCoroutineScope?,0
+kotlin-gradle-plugin-001,human-approved,Kotlin,adjacent-technology,hard,unanswerable,unanswerable,How does the Kotlin Gradle plugin configure jvmToolchain and compilerOptions?,0
+bash-zsh-completion-001,human-approved,Bash,adjacent-technology,hard,unanswerable,unanswerable,How do zstyle and compinit configure completion matching in Zsh?,0
+bash-fish-argparse-001,human-approved,Bash,adjacent-technology,hard,unanswerable,unanswerable,How does Fish shell argparse expose parsed options to a function?,0
+python-numpy-broadcast-001,human-approved,Python,adjacent-technology,hard,unanswerable,unanswerable,How do numpy.broadcast_to and numpy.einsum apply NumPy broadcasting rules?,0
+python-fastapi-dependencies-001,human-approved,Python,adjacent-technology,hard,unanswerable,unanswerable,How does FastAPI cache nested Depends dependencies within one request?,0
+typescript-angular-onpush-001,human-approved,TypeScript,adjacent-technology,hard,unanswerable,unanswerable,When does Angular's ChangeDetectionStrategy.OnPush re-check a component?,0
+typescript-nestjs-guards-001,human-approved,TypeScript,adjacent-technology,hard,unanswerable,unanswerable,How does a NestJS guard use ExecutionContext to inspect route metadata?,0
+rust-tokio-tasks-001,human-approved,Rust,adjacent-technology,hard,unanswerable,unanswerable,How do tokio::spawn and JoinSet propagate task cancellation and panics?,0
+rust-serde-custom-001,human-approved,Rust,adjacent-technology,hard,unanswerable,unanswerable,How does Serde's deserialize_with attribute customize field deserialization?,0
+go-client-kubernetes-001,human-approved,Go,adjacent-technology,hard,unanswerable,unanswerable,How does client-go build a Kubernetes client with rest.InClusterConfig and a shared informer?,0
+python-list-comprehension-001,human-approved,Python,data-structures,medium,factual,answerable,"What are the main parts of a Python list comprehension, and what does it produce?",1
+python-default-argument-once-001,human-approved,Python,functions,medium,factual,answerable,Why can using a mutable object as a Python default argument cause values to persist across calls?,1
+python-parameter-kinds-001,human-approved,Python,functions,medium,factual,answerable,"How do / and * divide positional-only, positional-or-keyword, and keyword-only parameters in a Python function definition?",1
+typescript-discriminated-union-001,human-approved,TypeScript,type-system,medium,factual,answerable,How does a common literal discriminant let TypeScript narrow a union?,1
+typescript-conditional-distribution-001,human-approved,TypeScript,type-system,hard,comparative,answerable,"When does a TypeScript conditional type distribute over a union, and how can that behavior be prevented?",1
+typescript-keyof-001,human-approved,TypeScript,type-system,medium,factual,answerable,What type does TypeScript's keyof operator produce for an object type?,1
+rust-ownership-move-clone-001,human-approved,Rust,ownership,medium,comparative,answerable,What is the difference between moving and cloning a heap-owning Rust value such as String?,1
+rust-mutable-reference-rules-001,human-approved,Rust,borrowing,medium,factual,answerable,What restrictions apply while a mutable Rust reference to a value is active?,1
+rust-question-mark-result-001,human-approved,Rust,error-handling,medium,factual,answerable,What does Rust's ? operator do when applied to a Result?,1
+python-pandas-groupby-001,human-approved,Python,adjacent-technology,hard,unanswerable,unanswerable,How do pandas GroupBy.transform and named aggregation differ when returning grouped results?,0
+python-sqlalchemy-async-001,human-approved,Python,adjacent-technology,hard,unanswerable,unanswerable,How should SQLAlchemy AsyncSession combine selectinload with an asynchronous transaction?,0
+python-celery-retry-001,human-approved,Python,adjacent-technology,hard,unanswerable,unanswerable,How do Celery task acks_late and apply_async affect retries and delivery acknowledgement?,0
+typescript-deno-permissions-001,human-approved,TypeScript,adjacent-technology,hard,unanswerable,unanswerable,How does Deno.serve behave when network permission has not been granted?,0
+typescript-vite-glob-001,human-approved,TypeScript,adjacent-technology,hard,unanswerable,unanswerable,How does Vite transform import.meta.glob and configure its eager option?,0
+typescript-prisma-transaction-001,human-approved,TypeScript,adjacent-technology,hard,unanswerable,unanswerable,How does PrismaClient $transaction coordinate interactive transactions and relationLoadStrategy?,0
+rust-axum-state-001,human-approved,Rust,adjacent-technology,hard,unanswerable,unanswerable,How does axum::Router extract shared State and convert handler failures into IntoResponse?,0
+rust-bevy-query-001,human-approved,Rust,adjacent-technology,hard,unanswerable,unanswerable,How does Bevy ECS query mutable Transform components while filtering by Changed<T>?,0
+rust-diesel-querydsl-001,human-approved,Rust,adjacent-technology,hard,unanswerable,unanswerable,How do Diesel QueryDsl and RunQueryDsl construct and execute a typed SQL query?,0

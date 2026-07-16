@@ -85,9 +85,9 @@ export function evaluateRetrievalCase(testCase: GoldenCase, rankedChunks: Ranked
 }
 
 export function matchesEvidence(chunk: DocumentationChunk, evidence: GoldenEvidence) {
-  const sourceMatches = evidence.sourceId
-    ? chunk.sourceId === evidence.sourceId
-    : evidence.sourceUrl === chunk.sourceUrl;
+  const idMatches = !evidence.sourceId || chunk.sourceId === evidence.sourceId;
+  const urlMatches = !evidence.sourceUrl || evidence.sourceUrl === chunk.sourceUrl;
+  const sourceMatches = idMatches && urlMatches;
   if (!sourceMatches) return false;
   if (evidence.pageStart === undefined || evidence.pageEnd === undefined) return true;
   if (chunk.pageStart === undefined || chunk.pageEnd === undefined) return false;
