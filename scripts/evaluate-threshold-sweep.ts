@@ -311,7 +311,7 @@ function renderMarkdown(attempt: SweepAttempt) {
 
 - Status: **${attempt.status}**
 - Base experiment/run: \`${attempt.experimentId}\` / \`${attempt.parentRunId}\`
-- Readiness: **${attempt.readiness.status}** — ${attempt.readiness.reason}
+- Readiness: **${attempt.readiness.status}** - ${attempt.readiness.reason}
 - Selected exploratory threshold: **${attempt.selectedThreshold ?? "none"}**
 - Selection: ${attempt.selectionReason ?? "not available"}
 - Cache-only: ${attempt.cache?.documents.apiInputs === 0 && attempt.cache?.queries.apiInputs === 0 ? "yes" : "no"}
@@ -319,6 +319,10 @@ function renderMarkdown(attempt: SweepAttempt) {
 | Threshold | Recall@k | Precision@k | MRR | nDCG@k | No-answer FPR | Returned chunks |
 |---:|---:|---:|---:|---:|---:|---:|
 ${rows.join("\n")}
+
+Score diagnostics: maximum unanswerable top score ${format(attempt.scoreDiagnostics?.maximumUnanswerableTopScore ?? null)}, minimum answerable top score ${format(attempt.scoreDiagnostics?.minimumAnswerableTopScore ?? null)}, and minimum answerable fourth score ${format(attempt.scoreDiagnostics?.minimumAnswerableKthScore ?? null)}.
+
+The 0.75 candidate increases measured precision by returning fewer chunks, but 0.65 is preferred by the predeclared rule because it already eliminates the observed false positive while preserving more context. At 0.80, Recall@k and MRR fall to 0.50.
 
 This diagnostic uses one source-verified unanswerable case and no held-out test split. It can identify the next engineering baseline but cannot establish a thesis-grade calibrated threshold.
 `;

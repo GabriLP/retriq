@@ -36,6 +36,7 @@ For every run, retain the hypothesis, complete configuration, source and dataset
 | 2026-07-16 | `20260716080048773` | The 850/450/300 candidates all reached Recall@4 and MRR 1.0. Precision rose from 0.5208 to 0.6875 to 0.7083; nDCG was 1.0 / 0.9933 / 1.0. | The 300-word candidate is the exploratory precision leader, but no chunk size is accepted until the dataset is expanded and threshold failure is addressed. |
 | 2026-07-16 | `20260716080048773` | All three candidates produced no-answer false-positive rate 1.0 at threshold 0.18. | Threshold calibration is the next controlled retrieval experiment; the current fixed threshold is rejected as an abstention setting. |
 | 2026-07-16 | `20260716080048773` | Ordered cache reuse reduced API inputs by 51.66% and estimated standard cost from USD 5.067176 to USD 3.424167, saving USD 1.643009. | Preserve execution order and preflight artifacts in cost comparisons. Cache affects cost and latency, not quality metrics. |
+| 2026-07-16 | threshold sweep `20260716090040201` | Thresholds 0.65 and 0.70 reduced no-answer FPR from 1.0 to 0.0 while retaining Recall@4, MRR, and nDCG at 1.0. Threshold 0.75 raised precision to 0.7847 by returning fewer chunks; 0.80 reduced Recall and MRR to 0.5. | Select 0.65 as the next exploratory baseline because it is the lowest grid value that removes the observed false positive while satisfying all guardrails. Do not call it thesis-calibrated until more negative cases and a held-out split exist. |
 
 ## Measurement corrections
 

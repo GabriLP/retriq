@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "common-programming-word-300-threshold-065",
+  "title": "Common programming corpus - 300 target words, threshold 0.65",
+  "hypothesis": "The exploratory threshold 0.65 removes unrelated retrievals while preserving answerable-case ranking quality.",
+  "tags": ["candidate", "chunk-size", "threshold-calibrated", "exploratory", "common-corpus"],
+  "corpus": {
+    "manifests": [
+      "docs/corpus/react-learn.json",
+      "docs/corpus/programming-foundation.json"
+    ]
+  },
+  "chunking": {
+    "strategy": "word-window",
+    "minWords": 200,
+    "targetWords": 300,
+    "overlapWords": 80
+  },
+  "embedding": {
+    "provider": "google",
+    "model": "gemini-embedding-2",
+    "outputDimensionality": 768,
+    "documentTask": "RETRIEVAL_DOCUMENT",
+    "queryTask": "QUESTION_ANSWERING",
+    "batchSize": 32,
+    "pricing": {
+      "requestMode": "standard",
+      "usdPerMillionInputTokens": 0.2,
+      "observedAt": "2026-07-16",
+      "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+    }
+  },
+  "retrieval": {
+    "strategy": "dense-cosine",
+    "topK": 4,
+    "minScore": 0.65
+  },
+  "generation": {
+    "provider": "google",
+    "model": "gemini-3.5-flash"
+  },
+  "evaluation": {
+    "judgeEnabled": false,
+    "judgeModel": "gemini-3.5-flash",
+    "goldenSet": "docs/evaluation/golden-set.v1.json",
+    "caseStatuses": ["source-verified"]
+  }
+}
