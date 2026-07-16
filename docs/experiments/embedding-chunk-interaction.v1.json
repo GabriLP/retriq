@@ -21,5 +21,6 @@
   "thresholdPolicy": "Calibrate retrieval.minScore independently for every model-chunk pair while preserving its low-threshold Recall@4 and MRR.",
   "primaryMetrics": ["Recall@4", "MRR", "nDCG@4", "no-answer FPR"],
   "secondaryMetrics": ["Precision@4", "score-separation margin", "chunk count", "estimated list-price cost"],
-  "status": "prepared"
+  "status": "validation-completed",
+  "resultArtifact": "../experiment-results/embedding-chunk-interaction-validation.json"
 }

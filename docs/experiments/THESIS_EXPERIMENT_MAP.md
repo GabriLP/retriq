@@ -10,12 +10,12 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | Order | Thesis section | Experiment | Status | Variable | Decision |
 |---:|---|---|---|---|---|
 | 1 | Dataset and corpus construction | corpus-pdf-expansion | completed | Corpus source coverage and source format | Use the expanded PDF-first corpus as the common experimental corpus. |
-| 2 | Chunking experiments | chunk-size-v1 | completed | Target chunk size: 850, 450, or 300 words | Retain 300 target words as the exploratory baseline. |
+| 2 | Chunking experiments | chunk-size-v1 | completed | Target chunk size: 850, 450, or 300 words | Retain 300 target words as the exploratory baseline. The 2x3 interaction validation confirms higher Gemini precision at 300 words and no model-ranking reversal. |
 | 3 | Abstention calibration | threshold-seed-v1 | superseded | Dense cosine minimum score | The preliminary 0.65 threshold was superseded after expanding negative cases. |
 | 4 | Abstention calibration | threshold-balanced-v2 | completed | Dense cosine minimum score | Select 0.75 on validation; retain the 1/6 test version false positive without retuning. |
 | 5 | Retrieval strategy comparison | retrieval-strategies-v1 | completed | Retrieval strategy | Keep dense cosine; BM25 and simple RRF fail the declared guardrails. |
 | 6 | Metadata-aware retrieval | metadata-version-filter-v1 | completed | Compatibility gate enabled or disabled | On validation, metadata-aware dense reaches zero no-answer FPR at 0.18 while preserving Recall@4, MRR, and nDCG@4 at 1.0; retain it as a promising candidate, not a final winner. |
-| 7 | Embedding model comparison | embedding-models-v1 | completed | Embedding provider/model at a fixed 1024-dimensional output | On validation, retain Gemini Embedding 2 as the baseline and Voyage Code 3 as the strongest alternative. Only these models separate answerable and unanswerable top-score ranges while preserving their own low-threshold retrieval quality. |
+| 7 | Embedding model comparison | embedding-models-v1 | completed | Embedding provider/model at a fixed 1024-dimensional output | On validation, retain Gemini Embedding 2 as the baseline and Voyage Code 3 as the strongest alternative. Gemini remains ahead at 300, 450, and 850 target words; no model-ranking reversal is observed. |
 | 8 | Reranking | reranking-v1 | planned | No reranker, cross-encoder, or LLM reranker | Pending. |
 | 9 | Answer generation and LLM-as-a-judge | generation-and-judge-v1 | planned | Generator model, judge model, and judge prompt in separate experiments | Pending. |
 | 10 | Agentic RAG | rag-agent-loop-v1 | planned | Single pass versus bounded retrieve-check-rewrite loop | Pending. |
@@ -39,8 +39,8 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Changed variable:** Target chunk size: 850, 450, or 300 words
 - **Controls:** Corpus snapshot; overlap; embedding model; retrieval; evaluation cases
 - **Metrics:** Recall@4; Precision@4; MRR; nDCG@4; chunk count; estimated cost
-- **Artifacts:** `docs/experiments/common-programming-chunk-size.v1.json`; `docs/experiment-results/common-chunk-size-retrieval-analysis.md`
-- **Decision:** Retain 300 target words as the exploratory baseline.
+- **Artifacts:** `docs/experiments/common-programming-chunk-size.v1.json`; `docs/experiment-results/common-chunk-size-retrieval-analysis.md`; `docs/experiments/embedding-chunk-interaction.v1.json`; `docs/experiment-results/embedding-chunk-interaction-validation.md`
+- **Decision:** Retain 300 target words as the exploratory baseline. The 2x3 interaction validation confirms higher Gemini precision at 300 words and no model-ranking reversal.
 - **Limitations:** Many source sections remain shorter than the configured minimum; Oversized source blocks require a separate boundary experiment
 - **Next step:** Compare boundary and overlap strategies independently.
 
@@ -99,8 +99,8 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Changed variable:** Embedding provider/model at a fixed 1024-dimensional output
 - **Controls:** Frozen chunks; queries; retrieval strategy; topK
 - **Metrics:** Recall@4; MRR; nDCG@4; latency; index size; cost
-- **Artifacts:** `docs/experiments/embedding-models.v1.json`; `docs/experiment-results/embedding-model-readiness.md`; `docs/experiment-results/embedding-model-comparison-validation.md`
-- **Decision:** On validation, retain Gemini Embedding 2 as the baseline and Voyage Code 3 as the strongest alternative. Only these models separate answerable and unanswerable top-score ranges while preserving their own low-threshold retrieval quality.
+- **Artifacts:** `docs/experiments/embedding-models.v1.json`; `docs/experiment-results/embedding-model-readiness.md`; `docs/experiment-results/embedding-model-comparison-validation.md`; `docs/experiment-results/embedding-chunk-interaction-validation.md`
+- **Decision:** On validation, retain Gemini Embedding 2 as the baseline and Voyage Code 3 as the strongest alternative. Gemini remains ahead at 300, 450, and 850 target words; no model-ranking reversal is observed.
 - **Limitations:** Provider availability and prices may change; Only twelve validation cases are available; The existing test split has already been observed and cannot support final model selection; Indexing latency is not comparable because cache resumptions and provider rate limits differed
 - **Next step:** Expand and human-approve the benchmark, create a fresh untouched test split, freeze the selection rule, and evaluate it once.
 

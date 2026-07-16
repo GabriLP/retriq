@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-chunk-interaction-validation-v1",
+  "createdAt": "2026-07-16T15:47:00.000Z",
+  "status": "exploratory",
+  "design": "2x3 factorial validation experiment",
+  "caseSelection": { "total": 12, "answerable": 6, "unanswerable": 6 },
+  "controls": { "outputDimensionality": 1024, "overlapWords": 80, "retrievalStrategy": "dense-cosine", "topK": 4 },
+  "results": [
+    { "provider": "google", "model": "gemini-embedding-2", "targetWords": 300, "chunks": 30455, "runId": "20260716141006970-dfb3ae75", "sweepAttemptId": "20260716144023506", "threshold": 0.75, "recallAtK": 1.0, "precisionAtK": 0.7083333333333334, "mrr": 1.0, "ndcgAtK": 1.0, "noAnswerFalsePositiveRate": 0.0, "scoreMargin": 0.0635044876101452, "estimatedFreshIndexListPriceUsd": 1.7843602 },
+    { "provider": "google", "model": "gemini-embedding-2", "targetWords": 450, "chunks": 27496, "runId": "20260716152838041-5e1e0ade", "sweepAttemptId": "20260716154537864", "threshold": 0.75, "recallAtK": 1.0, "precisionAtK": 0.625, "mrr": 1.0, "ndcgAtK": 0.9795358858896749, "noAnswerFalsePositiveRate": 0.0, "scoreMargin": 0.0553991613547151, "estimatedFreshIndexListPriceUsd": 1.6810336 },
+    { "provider": "google", "model": "gemini-embedding-2", "targetWords": 850, "chunks": 25553, "runId": "20260716152847684-171617a6", "sweepAttemptId": "20260716154540701", "threshold": 0.75, "recallAtK": 1.0, "precisionAtK": 0.513888888888889, "mrr": 1.0, "ndcgAtK": 1.0, "noAnswerFalsePositiveRate": 0.0, "scoreMargin": 0.057482714265136, "estimatedFreshIndexListPriceUsd": 1.609913 },
+    { "provider": "voyage", "model": "voyage-code-3", "targetWords": 300, "chunks": 30455, "runId": "20260716141035921-e17adeeb", "sweepAttemptId": "20260716145801676", "threshold": 0.6, "recallAtK": 0.9166666666666666, "precisionAtK": 0.4305555555555555, "mrr": 0.7222222222222222, "ndcgAtK": 0.7291677833180623, "noAnswerFalsePositiveRate": 0.0, "scoreMargin": 0.0273371750070776, "estimatedFreshIndexListPriceUsd": 1.5277086 },
+    { "provider": "voyage", "model": "voyage-code-3", "targetWords": 450, "chunks": 27496, "runId": "20260716152856449-0446b427", "sweepAttemptId": "20260716154543384", "threshold": 0.6, "recallAtK": 0.9166666666666666, "precisionAtK": 0.4583333333333333, "mrr": 0.6944444444444443, "ndcgAtK": 0.7073461577228194, "noAnswerFalsePositiveRate": 0.0, "scoreMargin": 0.0397687034589791, "estimatedFreshIndexListPriceUsd": 1.44190368 },
+    { "provider": "voyage", "model": "voyage-code-3", "targetWords": 850, "chunks": 25553, "runId": "20260716152904972-9f0d304f", "sweepAttemptId": "20260716154546236", "threshold": 0.6, "recallAtK": 0.9166666666666666, "precisionAtK": 0.5138888888888888, "mrr": 0.611111111111111, "ndcgAtK": 0.6780721839209408, "noAnswerFalsePositiveRate": 0.0, "scoreMargin": 0.0306329382327586, "estimatedFreshIndexListPriceUsd": 1.38247362 }
+  ],
+  "decision": "Retain Gemini Embedding 2 with 300 target words and threshold 0.75. Chunk size changes precision and ranking metrics, but does not reverse the model ordering in this validation sample.",
+  "interactionConclusion": "No ranking reversal was observed: Gemini dominates Voyage at every tested chunk size. Voyage degrades in MRR and nDCG as target size grows, while Gemini remains stable in Recall and MRR but loses precision with larger chunks.",
+  "limitations": ["Only twelve validation cases are included.", "Many source sections are shorter than every configured target, reducing the effective contrast between factor levels.", "The average produced chunk remains below 200 words because source boundaries are preserved.", "A fresh untouched test split is required before a final claim."]
+}

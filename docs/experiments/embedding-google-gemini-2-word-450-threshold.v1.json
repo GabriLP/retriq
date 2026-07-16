@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1, "id": "embedding-google-gemini-2-word-450-threshold-v1", "title": "Gemini 450-word validation threshold calibration",
+  "hypothesis": "A model-and-chunk-specific threshold can remove false positives without reducing the low-threshold ranking quality.",
+  "baseExperimentConfig": "embedding-google-gemini-2-word-450-1024.json", "variedPath": "retrieval.minScore",
+  "thresholds": [0.18, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9],
+  "selectionRule": { "primary": "noAnswerFalsePositiveRate", "primaryDirection": "lower", "guardrails": [{ "metric": "recallAtK", "minimum": 1.0 }, { "metric": "mrr", "minimum": 1.0 }], "tieBreakers": [{ "metric": "ndcgAtK", "direction": "higher" }, { "metric": "threshold", "direction": "lower" }, { "metric": "precisionAtK", "direction": "higher" }] },
+  "readiness": { "status": "exploratory", "reason": "Interaction selection uses validation only; a fresh untouched test split is still required." },
+  "reportOutput": "docs/experiment-results/embedding-google-gemini-2-word-450-threshold-validation"
+}

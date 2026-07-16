@@ -27,8 +27,8 @@
       "variable": "Target chunk size: 850, 450, or 300 words",
       "controls": ["Corpus snapshot", "overlap", "embedding model", "retrieval", "evaluation cases"],
       "metrics": ["Recall@4", "Precision@4", "MRR", "nDCG@4", "chunk count", "estimated cost"],
-      "artifacts": ["docs/experiments/common-programming-chunk-size.v1.json", "docs/experiment-results/common-chunk-size-retrieval-analysis.md"],
-      "decision": "Retain 300 target words as the exploratory baseline.",
+      "artifacts": ["docs/experiments/common-programming-chunk-size.v1.json", "docs/experiment-results/common-chunk-size-retrieval-analysis.md", "docs/experiments/embedding-chunk-interaction.v1.json", "docs/experiment-results/embedding-chunk-interaction-validation.md"],
+      "decision": "Retain 300 target words as the exploratory baseline. The 2x3 interaction validation confirms higher Gemini precision at 300 words and no model-ranking reversal.",
       "limitations": ["Many source sections remain shorter than the configured minimum", "Oversized source blocks require a separate boundary experiment"],
       "nextStep": "Compare boundary and overlap strategies independently."
     },
@@ -97,8 +97,8 @@
       "variable": "Embedding provider/model at a fixed 1024-dimensional output",
       "controls": ["Frozen chunks", "queries", "retrieval strategy", "topK"],
       "metrics": ["Recall@4", "MRR", "nDCG@4", "latency", "index size", "cost"],
-      "artifacts": ["docs/experiments/embedding-models.v1.json", "docs/experiment-results/embedding-model-readiness.md", "docs/experiment-results/embedding-model-comparison-validation.md"],
-      "decision": "On validation, retain Gemini Embedding 2 as the baseline and Voyage Code 3 as the strongest alternative. Only these models separate answerable and unanswerable top-score ranges while preserving their own low-threshold retrieval quality.",
+      "artifacts": ["docs/experiments/embedding-models.v1.json", "docs/experiment-results/embedding-model-readiness.md", "docs/experiment-results/embedding-model-comparison-validation.md", "docs/experiment-results/embedding-chunk-interaction-validation.md"],
+      "decision": "On validation, retain Gemini Embedding 2 as the baseline and Voyage Code 3 as the strongest alternative. Gemini remains ahead at 300, 450, and 850 target words; no model-ranking reversal is observed.",
       "limitations": ["Provider availability and prices may change", "Only twelve validation cases are available", "The existing test split has already been observed and cannot support final model selection", "Indexing latency is not comparable because cache resumptions and provider rate limits differed"],
       "nextStep": "Expand and human-approve the benchmark, create a fresh untouched test split, freeze the selection rule, and evaluate it once."
     },
