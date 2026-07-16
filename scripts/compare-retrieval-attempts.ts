@@ -42,9 +42,9 @@ async function main() {
     .sort((left, right) => left.createdAt.localeCompare(right.createdAt));
   const latestByExperiment = new Map<string, Attempt>();
   for (const attempt of attempts) latestByExperiment.set(attempt.experimentId, attempt);
-  const selected = [...latestByExperiment.values()].sort((left, right) =>
-    left.experimentId.localeCompare(right.experimentId),
-  );
+  const selected = [...latestByExperiment.values()]
+    .filter((attempt) => !options.experimentPrefix || attempt.experimentId.startsWith(options.experimentPrefix))
+    .sort((left, right) => left.experimentId.localeCompare(right.experimentId));
   if (!selected.length) throw new Error(`No valid completed retrieval attempts found under ${root}.`);
 
   const outputBase = path.resolve(options.output);
@@ -83,7 +83,7 @@ async function loadInvalidatedAttempts(root: string) {
 function renderMarkdown(attempts: Attempt[], invalidatedCount: number) {
   const rows = attempts.map((attempt) => {
     const metric = attempt.metrics;
-    return `| ${attempt.experimentId} | ${attempt.corpus.chunks} | ${attempt.configuration.embeddingModel} | ${attempt.configuration.topK} | ${format(metric?.recallAtK)} | ${format(metric?.precisionAtK)} | ${format(metric?.mrr)} | ${format(metric?.ndcgAtK)} | ${format(metric?.noAnswerFalsePositiveRate)} | ${attempt.embeddings?.total.cacheHits ?? "—"} | ${attempt.embeddings?.total.apiInputs ?? "—"} | ${attempt.embeddings?.total.apiRequests ?? "—"} | ${attempt.embeddings?.total.estimatedApiTokens ?? "—"} | ${formatCost(attempt.embeddings?.total.estimatedApiCostUsd)} | ${attempt.timingsMs?.embedding ?? "—"} |`;
+    return `| ${attempt.experimentId} | ${attempt.corpus.chunks} | ${attempt.configuration.embeddingModel} | ${attempt.configuration.topK} | ${format(metric?.recallAtK)} | ${format(metric?.precisionAtK)} | ${format(metric?.mrr)} | ${format(metric?.ndcgAtK)} | ${format(metric?.noAnswerFalsePositiveRate)} | ${attempt.embeddings?.total.cacheHits ?? "n/a"} | ${attempt.embeddings?.total.apiInputs ?? "n/a"} | ${attempt.embeddings?.total.apiRequests ?? "n/a"} | ${attempt.embeddings?.total.estimatedApiTokens ?? "n/a"} | ${formatCost(attempt.embeddings?.total.estimatedApiCostUsd)} | ${attempt.timingsMs?.embedding ?? "n/a"} |`;
   });
   return `# Retrieval comparison
 
@@ -125,11 +125,11 @@ function renderCsv(attempts: Attempt[]) {
 }
 
 function format(value: number | null | undefined) {
-  return value === null || value === undefined ? "—" : value.toFixed(4);
+  return value === null || value === undefined ? "n/a" : value.toFixed(4);
 }
 
 function formatCost(value: number | null | undefined) {
-  return value === null || value === undefined ? "—" : value.toFixed(6);
+  return value === null || value === undefined ? "n/a" : value.toFixed(6);
 }
 
 function csvCell(value: unknown) {
@@ -140,9 +140,11 @@ function csvCell(value: unknown) {
 function parseArgs(args: string[]) {
   const rootIndex = args.findIndex((arg) => arg === "--root");
   const outputIndex = args.findIndex((arg) => arg === "--output");
+  const prefixIndex = args.findIndex((arg) => arg === "--experiment-prefix");
   return {
     root: rootIndex >= 0 ? args[rootIndex + 1] : "data/experiments",
     output: outputIndex >= 0 ? args[outputIndex + 1] : "docs/experiment-results/retrieval-comparison",
+    experimentPrefix: prefixIndex >= 0 ? args[prefixIndex + 1] : undefined,
   };
 }
 
