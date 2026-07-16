@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-openai-3-small-1024",
+  "title": "OpenAI text-embedding-3-small at 1024 dimensions",
+  "hypothesis": "OpenAI's small model may provide a competitive low-cost retrieval frontier at the same vector dimension.",
+  "tags": ["embedding-model", "validation", "openai", "low-cost", "1024-dim"],
+  "corpus": { "manifests": ["docs/corpus/react-learn.json", "docs/corpus/programming-foundation.json"] },
+  "chunking": { "strategy": "word-window", "minWords": 200, "targetWords": 300, "overlapWords": 80 },
+  "embedding": {
+    "provider": "openai", "model": "text-embedding-3-small", "outputDimensionality": 1024,
+    "documentTask": "RETRIEVAL_DOCUMENT", "queryTask": "QUESTION_ANSWERING", "batchSize": 32,
+    "pricing": { "requestMode": "standard", "usdPerMillionInputTokens": 0.02, "observedAt": "2026-07-16", "sourceUrl": "https://developers.openai.com/api/docs/models/text-embedding-3-small" }
+  },
+  "retrieval": { "strategy": "dense-cosine", "topK": 4, "minScore": 0.18 },
+  "generation": { "provider": "google", "model": "gemini-3.5-flash" },
+  "evaluation": { "judgeEnabled": false, "goldenSet": "docs/evaluation/golden-set.v1.json", "caseStatuses": ["source-verified"], "splitManifest": "docs/evaluation/golden-set-splits.v1.json", "split": "validation" }
+}

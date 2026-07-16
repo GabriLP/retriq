@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-models-v1",
+  "title": "Commercial embedding model comparison at 1024 dimensions",
+  "hypothesis": "General-purpose and code-specialized embedding models will occupy different retrieval quality, latency, and cost trade-offs on the frozen programming corpus.",
+  "variedPaths": ["embedding.provider", "embedding.model", "embedding.pricing"],
+  "commonDimension": 1024,
+  "candidates": [
+    "embedding-google-gemini-2-1024.json",
+    "embedding-openai-3-large-1024.json",
+    "embedding-openai-3-small-1024.json",
+    "embedding-voyage-code-3-1024.json"
+  ],
+  "split": "validation",
+  "primaryMetrics": ["Recall@4", "MRR", "nDCG@4"],
+  "secondaryMetrics": ["Precision@4", "no-answer FPR", "embedding latency", "estimated cost", "cache size"],
+  "selectionPolicy": "Do not select a winner until every model has its threshold calibrated on validation. Do not reuse the consumed v1 test split for final model selection.",
+  "status": "implementation-ready"
+}

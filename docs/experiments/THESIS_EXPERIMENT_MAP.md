@@ -15,7 +15,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 4 | Abstention calibration | threshold-balanced-v2 | completed | Dense cosine minimum score | Select 0.75 on validation; retain the 1/6 test version false positive without retuning. |
 | 5 | Retrieval strategy comparison | retrieval-strategies-v1 | completed | Retrieval strategy | Keep dense cosine; BM25 and simple RRF fail the declared guardrails. |
 | 6 | Metadata-aware retrieval | metadata-version-filter-v1 | completed | Compatibility gate enabled or disabled | On validation, metadata-aware dense reaches zero no-answer FPR at 0.18 while preserving Recall@4, MRR, and nDCG@4 at 1.0; retain it as a promising candidate, not a final winner. |
-| 7 | Embedding model comparison | embedding-models-v1 | planned | Embedding model and, separately, output dimensionality | Pending. |
+| 7 | Embedding model comparison | embedding-models-v1 | in-progress | Embedding provider/model at a fixed 1024-dimensional output | Gemini Embedding 2, OpenAI text-embedding-3-large, OpenAI text-embedding-3-small, and Voyage Code 3 form the first controlled 1024-dimensional shortlist; no quality winner has been selected. |
 | 8 | Reranking | reranking-v1 | planned | No reranker, cross-encoder, or LLM reranker | Pending. |
 | 9 | Answer generation and LLM-as-a-judge | generation-and-judge-v1 | planned | Generator model, judge model, and judge prompt in separate experiments | Pending. |
 | 10 | Agentic RAG | rag-agent-loop-v1 | planned | Single pass versus bounded retrieve-check-rewrite loop | Pending. |
@@ -95,14 +95,14 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 ## 7. Embedding model comparison: embedding-models-v1
 
 - **Research question:** Which embedding model and dimensionality provide the best quality-cost trade-off?
-- **Status:** planned
-- **Changed variable:** Embedding model and, separately, output dimensionality
+- **Status:** in-progress
+- **Changed variable:** Embedding provider/model at a fixed 1024-dimensional output
 - **Controls:** Frozen chunks; queries; retrieval strategy; topK
 - **Metrics:** Recall@4; MRR; nDCG@4; latency; index size; cost
-- **Artifacts:** not created yet
-- **Decision:** Pending.
-- **Limitations:** Provider availability and prices may change
-- **Next step:** Define a dated model shortlist.
+- **Artifacts:** `docs/experiments/embedding-models.v1.json`; `docs/experiment-results/embedding-model-readiness.md`
+- **Decision:** Gemini Embedding 2, OpenAI text-embedding-3-large, OpenAI text-embedding-3-small, and Voyage Code 3 form the first controlled 1024-dimensional shortlist; no quality winner has been selected.
+- **Limitations:** Provider availability and prices may change; OpenAI and Voyage runs require credentials; The existing test split has already been observed and cannot support final model selection
+- **Next step:** Calibrate a separate validation threshold for every model, then compare quality, latency, cache size, and dated estimated cost.
 
 ## 8. Reranking: reranking-v1
 

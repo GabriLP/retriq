@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "embedding-models-v1",
+  "generatedAt": "2026-07-16T14:00:47.098Z",
+  "suiteHash": "aa89ee24c53d8b3d2f506a34d05bc7471cccb3f2cf3e144ba77fc784225f9fa1",
+  "valid": true,
+  "errors": [],
+  "controls": {
+    "commonDimension": 1024,
+    "split": "validation",
+    "variedPaths": [
+      "embedding.provider",
+      "embedding.model",
+      "embedding.pricing"
+    ],
+    "frozenPaths": [
+      "corpus",
+      "chunking",
+      "retrieval",
+      "evaluation",
+      "generation"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "embedding-google-gemini-2-1024",
+      "file": "embedding-google-gemini-2-1024.json",
+      "provider": "google",
+      "model": "gemini-embedding-2",
+      "dimensions": 1024,
+      "priceUsdPerMillionInputTokens": 0.2,
+      "priceObservedAt": "2026-07-16",
+      "priceSourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
+      "credentialEnvironmentVariable": "GEMINI_API_KEY",
+      "credentialConfigured": true,
+      "configHash": "dfb3ae75a8224df84a85cd0c73d630e79154086972ef9655c28f8718b327fc90"
+    },
+    {
+      "id": "embedding-openai-3-large-1024",
+      "file": "embedding-openai-3-large-1024.json",
+      "provider": "openai",
+      "model": "text-embedding-3-large",
+      "dimensions": 1024,
+      "priceUsdPerMillionInputTokens": 0.13,
+      "priceObservedAt": "2026-07-16",
+      "priceSourceUrl": "https://developers.openai.com/api/docs/models/text-embedding-3-large",
+      "credentialEnvironmentVariable": "OPENAI_API_KEY",
+      "credentialConfigured": false,
+      "configHash": "aee6c695361a8b800f78de5420b5ff0fc5316459b2a50d006683048c69c49d6f"
+    },
+    {
+      "id": "embedding-openai-3-small-1024",
+      "file": "embedding-openai-3-small-1024.json",
+      "provider": "openai",
+      "model": "text-embedding-3-small",
+      "dimensions": 1024,
+      "priceUsdPerMillionInputTokens": 0.02,
+      "priceObservedAt": "2026-07-16",
+      "priceSourceUrl": "https://developers.openai.com/api/docs/models/text-embedding-3-small",
+      "credentialEnvironmentVariable": "OPENAI_API_KEY",
+      "credentialConfigured": false,
+      "configHash": "70a2d6044ec5d6ebe4180064b270d256d8063ff4c3f8be47419b387abaf6702b"
+    },
+    {
+      "id": "embedding-voyage-code-3-1024",
+      "file": "embedding-voyage-code-3-1024.json",
+      "provider": "voyage",
+      "model": "voyage-code-3",
+      "dimensions": 1024,
+      "priceUsdPerMillionInputTokens": 0.18,
+      "priceObservedAt": "2026-07-16",
+      "priceSourceUrl": "https://docs.voyageai.com/docs/pricing",
+      "credentialEnvironmentVariable": "VOYAGE_API_KEY",
+      "credentialConfigured": false,
+      "configHash": "e17adeebe1ea5887d6e6bf3f28a76a462d787959ec18a19fdcaf64698750229a"
+    }
+  ]
+}

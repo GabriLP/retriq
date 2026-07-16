@@ -14,6 +14,8 @@
     "experiment:compare": "tsx scripts/compare-experiments.ts",
     "experiment:retrieval": "tsx scripts/evaluate-retrieval.ts",
     "experiment:embedding:estimate": "tsx scripts/estimate-embedding-cost.ts",
+    "experiment:embedding:validate": "tsx scripts/validate-embedding-suite.ts",
+    "experiment:embedding:report": "tsx scripts/validate-embedding-suite.ts --write",
     "embedding:cache:test": "tsx scripts/test-embedding-cache.ts",
     "embedding:providers:test": "tsx scripts/test-embedding-providers.ts",
     "experiment:retrieval:compare": "tsx scripts/compare-retrieval-attempts.ts",
