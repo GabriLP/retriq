@@ -34,10 +34,13 @@
     "experiment:metadata:filter": "tsx scripts/evaluate-metadata-filter.ts",
     "golden:validate": "tsx scripts/validate-golden-set.ts --dataset docs/evaluation/golden-set.v1.json --split docs/evaluation/golden-set-splits.v1.json",
     "golden:validate:v2": "tsx scripts/validate-golden-set.ts --dataset docs/evaluation/golden-set.v2.json --split docs/evaluation/golden-set-splits.v2.json",
+    "golden:validate:v3": "tsx scripts/validate-golden-set.ts --dataset docs/evaluation/golden-set.v3.json --split docs/evaluation/golden-set-splits.v3.json",
     "golden:report": "tsx scripts/report-golden-set.ts --split docs/evaluation/golden-set-splits.v1.json",
     "golden:report:v2": "tsx scripts/report-golden-set.ts --dataset docs/evaluation/golden-set.v2.json --split docs/evaluation/golden-set-splits.v2.json --output docs/evaluation/golden-set-summary.v2",
+    "golden:report:v3": "tsx scripts/report-golden-set.ts --dataset docs/evaluation/golden-set.v3.json --split docs/evaluation/golden-set-splits.v3.json --output docs/evaluation/golden-set-summary.v3",
     "golden:verify:negatives": "tsx scripts/verify-negative-cases.ts",
     "golden:build:provisional-v2": "tsx scripts/build-provisional-human-benchmark.ts",
+    "golden:build:expanded-v3": "tsx scripts/build-expanded-human-benchmark.ts",
     "start": "next start",
     "lint": "eslint"
   },

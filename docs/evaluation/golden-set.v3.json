@@ -1,0 +1,2404 @@
+{
+  "schemaVersion": 1,
+  "id": "retriq-programming-qa",
+  "version": "3.0.0-expanded-provisional-review",
+  "title": "Retriq programming documentation golden set - expanded provisional review",
+  "description": "Sixty-case balanced retrieval benchmark expanded with source-grounded questions for previously untested corpus documents and hard negatives for adjacent technologies. Operational human approval remains pending independent confirmation.",
+  "createdAt": "2026-07-16T00:00:00.000Z",
+  "corpusManifests": [
+    "docs/corpus/react-learn.json",
+    "docs/corpus/programming-foundation.json"
+  ],
+  "cases": [
+    {
+      "id": "react-state-snapshot-001",
+      "status": "human-approved",
+      "language": "React",
+      "domain": "state",
+      "question": "Why does reading a state variable immediately after calling its setter still return the value from the current render?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Setting state requests another render; it does not mutate the state snapshot already captured by the running render or event handler.",
+        "keyFacts": [
+          "A state setter requests a new render.",
+          "Each render receives a snapshot of state.",
+          "The current handler continues to observe the snapshot for its render."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://react.dev/learn/state-as-a-snapshot",
+          "section": "State as a Snapshot"
+        }
+      ],
+      "tags": [
+        "state",
+        "rendering"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "react-state-queue-001",
+      "status": "human-approved",
+      "language": "React",
+      "domain": "state",
+      "question": "How should a component increment the same state value three times in one event handler?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "procedural",
+      "expected": {
+        "answer": "Pass an updater function to the setter three times, for example setNumber(n => n + 1), so React processes the queued updates in sequence.",
+        "keyFacts": [
+          "Use the functional updater form.",
+          "React queues updater functions.",
+          "Each updater receives the result of the preceding queued updater."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates",
+          "section": "Updating the same state multiple times before the next render"
+        }
+      ],
+      "tags": [
+        "state",
+        "batching"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "react-effects-001",
+      "status": "human-approved",
+      "language": "React",
+      "domain": "effects",
+      "question": "When is an Effect appropriate instead of deriving a value during rendering?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "comparative",
+      "expected": {
+        "answer": "Use an Effect to synchronize with an external system. If no external system is involved and a value can be derived from props or state, calculate it during rendering.",
+        "keyFacts": [
+          "Effects synchronize React components with external systems.",
+          "Derived values generally do not require an Effect.",
+          "Unnecessary Effects add extra render work and complexity."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://react.dev/learn/you-might-not-need-an-effect",
+          "section": "How to remove unnecessary Effects"
+        },
+        {
+          "sourceUrl": "https://react.dev/learn/synchronizing-with-effects",
+          "section": "What are Effects and how are they different from events?"
+        }
+      ],
+      "tags": [
+        "effects",
+        "derived-state"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "react-refs-001",
+      "status": "human-approved",
+      "language": "React",
+      "domain": "refs",
+      "question": "Why is a ref unsuitable for a value that must update what the component displays?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Changing ref.current does not trigger a re-render, so React will not update the displayed output from that change alone.",
+        "keyFacts": [
+          "Mutating a ref does not trigger a re-render.",
+          "State should be used for values that affect rendered output."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://react.dev/learn/referencing-values-with-refs",
+          "section": "Differences between refs and state"
+        }
+      ],
+      "tags": [
+        "refs",
+        "rendering"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "react-out-of-scope-001",
+      "status": "human-approved",
+      "language": "React",
+      "domain": "scope-control",
+      "question": "How do I configure dependency injection providers in an Angular NgModule?",
+      "answerability": "unanswerable",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The selected corpus contains React and programming-language documentation, not Angular NgModule documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "out-of-domain"
+      ],
+      "negativeVerification": {
+        "category": "out-of-corpus",
+        "scopeBasis": "Neither corpus manifest includes Angular documentation; incidental module terminology is not Angular API coverage.",
+        "absenceProbes": [
+          "@NgModule",
+          "providers: [",
+          "angular.io/guide/ngmodules"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "c-standard-purpose-001",
+      "status": "human-approved",
+      "language": "C",
+      "domain": "language-standard",
+      "question": "What purpose does the C11 N1570 draft state for the C language standard?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "It specifies the form and interpretation of C programs to promote portability, reliability, maintainability, and efficient execution across computing systems.",
+        "keyFacts": [
+          "It specifies the form and interpretation of C programs.",
+          "Its goals include portability, reliability, maintainability, and efficient execution."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "c11-working-draft-n1570",
+          "pageStart": 1,
+          "pageEnd": 1,
+          "section": "Abstract"
+        }
+      ],
+      "tags": [
+        "c11",
+        "standard"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-pdf-extraction-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "java-spec-release-001",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "language-specification",
+      "question": "Which Java release and specification status are identified by the Java Language Specification in this corpus?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The document is the Java SE 26 edition, version 26, marked Final Release and released in March 2026.",
+        "keyFacts": [
+          "Java SE 26 edition and version 26.",
+          "Status is Final Release.",
+          "Release date is March 2026."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "java-se-26-language-specification",
+          "pageStart": 1,
+          "pageEnd": 2,
+          "section": "Java SE 26 Edition"
+        }
+      ],
+      "tags": [
+        "java",
+        "specification"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-pdf-extraction-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "java-ods-arraystack-amortized-001",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "array-based-data-structures",
+      "question": "Why can ArrayStack resizing take linear time for one operation while still adding only constant amortized cost per update?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "expected": {
+        "answer": "One resize copies n elements and costs O(n), but enough add or remove operations must occur between resizes. Across any sequence of m updates, the total resizing work is O(m), so the amortized resize cost per update is O(1).",
+        "keyFacts": [
+          "A single resize allocates a new array and copies n elements, costing O(n).",
+          "At least roughly n/2 updates occur between consecutive resizes.",
+          "The total resizing time over m add/remove operations is O(m), giving O(1) amortized resizing cost."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "open-data-structures-java",
+          "pageStart": 30,
+          "pageEnd": 31,
+          "section": "2.1.2 Growing and Shrinking"
+        }
+      ],
+      "tags": [
+        "java",
+        "arrays",
+        "amortized-analysis"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "complete-local-pdf-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "java-ods-dual-array-deque-001",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "deques",
+      "question": "What balance invariant does DualArrayDeque maintain, and why does its occasional O(n) rebalancing remain O(1) amortized per update?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "expected": {
+        "answer": "Unless there are fewer than two elements, both front and back contain at least n/4 elements. Rebalancing moves Θ(n) elements, but at least roughly n/2 updates are required before another rebalance, so total balancing work over m updates is O(m).",
+        "keyFacts": [
+          "Each side contains at least n/4 elements except for the very small case.",
+          "Rebalancing restores the two sides to floor(n/2) and ceil(n/2) elements.",
+          "A rebalance costs O(n), but sufficiently many updates separate rebalances, producing O(1) amortized balancing cost."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "open-data-structures-java",
+          "pageStart": 42,
+          "pageEnd": 44,
+          "section": "2.5.1 Balancing"
+        }
+      ],
+      "tags": [
+        "java",
+        "deque",
+        "amortized-analysis"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "complete-local-pdf-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "java-ods-skiplist-analysis-001",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "skiplists",
+      "question": "What expected space and search-path bounds are established for a skiplist containing n elements?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The skiplist has expected size O(n), and the expected search path for a particular element is at most 2 log n plus a constant term.",
+        "keyFacts": [
+          "Expected skiplist size is O(n).",
+          "Expected height is at most log n + 2.",
+          "Expected search-path length is at most 2 log n + O(1)."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "open-data-structures-java",
+          "pageStart": 83,
+          "pageEnd": 86,
+          "section": "4.4 Analysis of Skiplists"
+        }
+      ],
+      "tags": [
+        "java",
+        "skiplist",
+        "probabilistic-analysis"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "complete-local-pdf-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "java-ods-linear-probing-001",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "hash-tables",
+      "question": "Under which assumptions does the LinearHashTable analysis obtain O(1) expected operation time?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The analysis assumes independent uniform hash values and maintains a load condition with at most half the table entries non-null. Under those assumptions, run lengths decrease exponentially and find, add, and remove take O(1) expected time before amortized resizing is included.",
+        "keyFacts": [
+          "Hash values are assumed independent and uniformly distributed.",
+          "The table maintains q no greater than half the table length.",
+          "Run-length probability decreases exponentially, yielding O(1) expected find/add/remove time apart from resizing.",
+          "Resizing is handled separately with amortized analysis."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "open-data-structures-java",
+          "pageStart": 98,
+          "pageEnd": 100,
+          "section": "5.2.1 Analysis of Linear Probing"
+        }
+      ],
+      "tags": [
+        "java",
+        "hashing",
+        "linear-probing"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "complete-local-pdf-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "java-ods-red-black-tree-001",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "balanced-search-trees",
+      "question": "How does the correspondence with a 2-4 tree establish the height bound for a red-black tree?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "expected": {
+        "answer": "Removing each red node and attaching its children to the black parent produces a 2-4 tree whose root-to-leaf paths have equal black height. A red-black path contains at most one red node between black nodes, so its length is at most twice the corresponding 2-4-tree height, giving height at most 2 log n.",
+        "keyFacts": [
+          "Collapsing red nodes transforms the red-black tree into a 2-4 tree.",
+          "The black-height property gives equal root-to-leaf length in the transformed tree.",
+          "At most one of every two internal nodes on a red-black path is red.",
+          "The resulting red-black-tree height is at most 2 log n."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "open-data-structures-java",
+          "pageStart": 156,
+          "pageEnd": 159,
+          "section": "9.2.1 Red-Black Trees and 2-4 Trees"
+        }
+      ],
+      "tags": [
+        "java",
+        "red-black-tree",
+        "2-4-tree"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "complete-local-pdf-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "postgresql-license-001",
+      "status": "human-approved",
+      "language": "PostgreSQL",
+      "domain": "documentation-license",
+      "question": "Under which condition does the PostgreSQL 18 manual grant permission to copy and distribute the software and documentation?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The permission is granted without fee or written agreement provided the copyright notice and the specified accompanying paragraphs appear in all copies.",
+        "keyFacts": [
+          "Permission is granted without fee and without a written agreement.",
+          "The required copyright notice and accompanying paragraphs must appear in all copies."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "postgresql-18-manual",
+          "pageStart": 2,
+          "pageEnd": 2,
+          "section": "Legal Notice"
+        }
+      ],
+      "tags": [
+        "postgresql",
+        "license"
+      ],
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-pdf-extraction-inspection",
+      "verifiedAt": "2026-07-14T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "csharp-linq-iqueryable-001",
+      "status": "human-approved",
+      "language": "C#",
+      "domain": "scope-control",
+      "question": "How does C# IQueryable defer a LINQ query and translate its expression tree when ToList is called?",
+      "answerability": "unanswerable",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain C#/.NET or LINQ provider documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "out-of-corpus",
+        "csharp",
+        "linq"
+      ],
+      "negativeVerification": {
+        "category": "out-of-corpus",
+        "scopeBasis": "C# and .NET are absent from both corpus manifests.",
+        "absenceProbes": [
+          "IQueryable",
+          "System.Linq",
+          "Expression<Func"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "swift-sendable-actors-001",
+      "status": "human-approved",
+      "language": "Swift",
+      "domain": "scope-control",
+      "question": "When must a value conform to Swift Sendable to cross an actor isolation boundary?",
+      "answerability": "unanswerable",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain Swift language or concurrency documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "out-of-corpus",
+        "swift",
+        "concurrency"
+      ],
+      "negativeVerification": {
+        "category": "out-of-corpus",
+        "scopeBasis": "Swift is absent from both corpus manifests.",
+        "absenceProbes": [
+          "Sendable",
+          "actor-isolated",
+          "nonisolated"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "ruby-activerecord-callbacks-001",
+      "status": "human-approved",
+      "language": "Ruby",
+      "domain": "scope-control",
+      "question": "In Ruby on Rails, in what order do Active Record validation and save callbacks run?",
+      "answerability": "unanswerable",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain Ruby on Rails or Active Record documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "out-of-corpus",
+        "ruby",
+        "rails"
+      ],
+      "negativeVerification": {
+        "category": "out-of-corpus",
+        "scopeBasis": "Ruby and Rails are absent from both corpus manifests.",
+        "absenceProbes": [
+          "ActiveRecord::Callbacks",
+          "before_validation",
+          "after_commit"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "haskell-stm-retry-001",
+      "status": "human-approved",
+      "language": "Haskell",
+      "domain": "scope-control",
+      "question": "How do retry and orElse compose transactions in Haskell Software Transactional Memory?",
+      "answerability": "unanswerable",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain Haskell or STM documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "out-of-corpus",
+        "haskell",
+        "stm"
+      ],
+      "negativeVerification": {
+        "category": "out-of-corpus",
+        "scopeBasis": "Haskell is absent from both corpus manifests.",
+        "absenceProbes": [
+          "Control.Concurrent.STM",
+          "retry :: STM",
+          "orElse :: STM"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "java-android-activity-lifecycle-001",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "adjacent-framework",
+      "question": "Which Android Activity lifecycle callbacks run when an Activity moves from the foreground to the stopped state?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "Java is covered, but the corpus has no Android framework or Activity lifecycle documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "java",
+        "android"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The Java sources cover the language and data structures, not Android APIs.",
+        "absenceProbes": [
+          "android.app.Activity",
+          "onPause()",
+          "onStop()"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "react-native-flatlist-001",
+      "status": "human-approved",
+      "language": "React",
+      "domain": "adjacent-framework",
+      "question": "How should React Native FlatList getItemLayout be implemented for fixed-height rows?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains React web learning material, not React Native component documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "react",
+        "react-native"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "React Native is not a source in either manifest.",
+        "absenceProbes": [
+          "FlatList",
+          "getItemLayout",
+          "VirtualizedList"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "python-django-atomic-001",
+      "status": "human-approved",
+      "language": "Python",
+      "domain": "adjacent-framework",
+      "question": "How do nested Django transaction.atomic blocks use savepoints and propagate rollback state?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains Python language documentation, not Django ORM transaction documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "python",
+        "django"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "Django is not a source in either manifest; an incidental Vite integration mention is not API coverage.",
+        "absenceProbes": [
+          "transaction.atomic",
+          "TransactionManagementError",
+          "ATOMIC_REQUESTS"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "postgresql-rds-parameter-groups-001",
+      "status": "human-approved",
+      "language": "PostgreSQL",
+      "domain": "vendor-service",
+      "question": "Which AWS RDS PostgreSQL parameters require a reboot after changing a DB parameter group?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains upstream PostgreSQL documentation, not AWS RDS service documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "vendor-specific",
+        "postgresql",
+        "aws-rds"
+      ],
+      "negativeVerification": {
+        "category": "vendor-specific",
+        "scopeBasis": "AWS RDS documentation is absent from both manifests.",
+        "absenceProbes": [
+          "DB parameter group",
+          "rds.force_ssl",
+          "pending-reboot"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "c-msvc-sal-annotations-001",
+      "status": "human-approved",
+      "language": "C",
+      "domain": "vendor-extension",
+      "question": "How do Microsoft SAL annotations _In_reads_ and _Out_writes_ affect MSVC static analysis of a C function?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the C standard, not Microsoft compiler-specific SAL documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "vendor-specific",
+        "c",
+        "msvc"
+      ],
+      "negativeVerification": {
+        "category": "vendor-specific",
+        "scopeBasis": "Microsoft MSVC and SAL documentation are absent from both manifests.",
+        "absenceProbes": [
+          "_In_reads_",
+          "_Out_writes_",
+          "sal.h"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "java-se-27-value-classes-001",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "unsupported-version",
+      "question": "What final syntax and binary compatibility rules does Java SE 27 define for value classes?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The frozen corpus contains an earlier Java specification and cannot establish final Java SE 27 rules."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "unsupported-version",
+        "java",
+        "future-version"
+      ],
+      "negativeVerification": {
+        "category": "unsupported-version",
+        "scopeBasis": "The Java source snapshot predates a final Java SE 27 specification.",
+        "absenceProbes": [
+          "Java SE 27",
+          "value record class",
+          "ACC_IDENTITY"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "postgresql-19-release-001",
+      "status": "human-approved",
+      "language": "PostgreSQL",
+      "domain": "unsupported-version",
+      "question": "Which features are listed as final additions in the PostgreSQL 19 release notes?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The frozen corpus is the PostgreSQL 18 manual and cannot contain final PostgreSQL 19 release notes."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "unsupported-version",
+        "postgresql",
+        "future-version"
+      ],
+      "negativeVerification": {
+        "category": "unsupported-version",
+        "scopeBasis": "The manifest pins postgresql-18-manual, so PostgreSQL 19 release notes are outside the snapshot.",
+        "absenceProbes": [
+          "PostgreSQL 19",
+          "Release 19",
+          "19.0"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "c-array-decay-001",
+      "status": "human-approved",
+      "language": "C",
+      "domain": "arrays-and-pointers",
+      "question": "In which expression contexts does a C array expression not get converted to a pointer to its first element?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "factual",
+      "expected": {
+        "answer": "An array expression is not converted to a pointer when it is the operand of sizeof, _Alignof, or unary &, or when it is a string literal used to initialize an array.",
+        "keyFacts": [
+          "The exceptions are sizeof, _Alignof, and unary &.",
+          "A string literal used to initialize an array is also exempt.",
+          "Otherwise the result points to the initial array element and is not an lvalue."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "c11-working-draft-n1570",
+          "pageStart": 72,
+          "pageEnd": 73,
+          "section": "6.3.2.1 Lvalues, arrays, and function designators"
+        }
+      ],
+      "tags": [
+        "candidate",
+        "c11",
+        "arrays"
+      ],
+      "notes": "Source-verified from C11 N1570 paragraph 6.3.2.1(3); independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-pdf-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "java-overload-resolution-001",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "method-invocation",
+      "question": "What are the main phases used by Java to determine whether a method is applicable during overload resolution?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "procedural",
+      "expected": {
+        "answer": "Java first searches matching-arity methods applicable by strict invocation, then matching-arity methods by loose invocation only if phase 1 finds none, and finally variable-arity methods only if phase 2 finds none. Once a phase succeeds, the most specific applicable method is selected and later phases are not considered.",
+        "keyFacts": [
+          "Phase 1 tests strict invocation.",
+          "Phase 2 tests loose invocation only if phase 1 finds no applicable method.",
+          "Phase 3 tests variable arity only if phase 2 finds none.",
+          "A successful phase selects the most specific method without proceeding to later phases."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "java-se-26-language-specification",
+          "pageStart": 656,
+          "pageEnd": 658,
+          "section": "15.12.2.2-15.12.2.4 Applicability phases"
+        }
+      ],
+      "tags": [
+        "candidate",
+        "java",
+        "overloading"
+      ],
+      "notes": "Source-verified from JLS 15.12.2.2 through 15.12.2.4; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-pdf-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "postgresql-transaction-001",
+      "status": "human-approved",
+      "language": "PostgreSQL",
+      "domain": "transactions",
+      "question": "What atomicity guarantee does PostgreSQL provide for the statements enclosed by BEGIN and COMMIT?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The statements between BEGIN and COMMIT form one atomic transaction: either all their effects occur or none do. Intermediate updates are invisible to other transactions; COMMIT makes the completed updates visible, while failure or ROLLBACK cancels them.",
+        "keyFacts": [
+          "The transaction is all-or-nothing.",
+          "Intermediate states are invisible to concurrent transactions.",
+          "COMMIT completes the transaction; ROLLBACK cancels updates made so far."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "postgresql-18-manual",
+          "pageStart": 57,
+          "pageEnd": 58,
+          "section": "3.4 Transactions"
+        }
+      ],
+      "tags": [
+        "candidate",
+        "postgresql",
+        "transactions"
+      ],
+      "notes": "Source-verified from PostgreSQL 18 manual section 3.4; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-pdf-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "c-cuda-unified-memory-001",
+      "status": "human-approved",
+      "language": "C",
+      "domain": "adjacent-technology",
+      "question": "How do cudaMemPrefetchAsync and cudaMemAdvise control placement of CUDA Unified Memory allocated with cudaMallocManaged?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains C and system-library documentation, not the NVIDIA CUDA Runtime API documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "c"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains C and system-library documentation, not the NVIDIA CUDA Runtime API documentation.",
+        "absenceProbes": [
+          "cudaMemPrefetchAsync",
+          "cudaMallocManaged",
+          "cudaMemAdvise"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "java-hibernate-lazyinit-001",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "adjacent-technology",
+      "question": "When does Hibernate throw LazyInitializationException while traversing a lazily loaded association?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the Java language specification and Java data-structure material, not Hibernate ORM documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "java"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains the Java language specification and Java data-structure material, not Hibernate ORM documentation.",
+        "absenceProbes": [
+          "LazyInitializationException",
+          "Hibernate.initialize",
+          "FetchType.LAZY"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "postgresql-pg-partman-retention-001",
+      "status": "human-approved",
+      "language": "PostgreSQL",
+      "domain": "adjacent-technology",
+      "question": "How does pg_partman create_parent configure retention and automatically detach old PostgreSQL partitions?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the upstream PostgreSQL manual, not the pg_partman extension documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "postgresql"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains the upstream PostgreSQL manual, not the pg_partman extension documentation.",
+        "absenceProbes": [
+          "pg_partman",
+          "create_parent",
+          "retention_keep_table"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "cpp-range-for-lookup-001",
+      "status": "human-approved",
+      "language": "C++",
+      "domain": "iteration",
+      "question": "How does a C++ range-based for loop determine its begin and end expressions for arrays, class types, and other ranges?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "expected": {
+        "answer": "For an array, begin and end are the array and array plus its bound. For a class range with both begin and end members found in class scope, the loop uses range.begin() and range.end(). Otherwise it calls begin(range) and end(range) using argument-dependent lookup only.",
+        "keyFacts": [
+          "Arrays use range and range plus the array bound.",
+          "A class with both member names uses range.begin() and range.end().",
+          "Other ranges use begin(range) and end(range) with argument-dependent lookup, not ordinary unqualified lookup."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "cpp26-working-draft-n5046",
+          "pageStart": 206,
+          "pageEnd": 207,
+          "section": "8.6.5 The range-based for statement"
+        }
+      ],
+      "tags": [
+        "c++",
+        "iteration",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "cpp-move-constructor-001",
+      "status": "human-approved",
+      "language": "C++",
+      "domain": "object-lifetime",
+      "question": "What parameter form makes a non-template C++ constructor a move constructor?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Its first parameter must be an rvalue reference to the class type, possibly cv-qualified (X&&, const X&&, volatile X&&, or const volatile X&&), and any remaining parameters must have default arguments.",
+        "keyFacts": [
+          "The first parameter is an rvalue reference to X.",
+          "The referenced X may be cv-qualified.",
+          "Any additional parameters require default arguments."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "cpp26-working-draft-n5046",
+          "pageStart": 331,
+          "pageEnd": 331,
+          "section": "11.4.5.3 Copy/move constructors"
+        }
+      ],
+      "tags": [
+        "c++",
+        "object-lifetime",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "cpp-structured-binding-size-001",
+      "status": "human-approved",
+      "language": "C++",
+      "domain": "declarations",
+      "question": "Without a structured binding pack, what constraint applies to the number of names in a C++ structured binding declaration?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The number of identifiers must equal the structured binding size of the initializer type.",
+        "keyFacts": [
+          "The identifier count must equal the structured binding size.",
+          "The different rule allowing fewer non-pack elements applies only when a structured binding pack exists."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "cpp26-working-draft-n5046",
+          "pageStart": 280,
+          "pageEnd": 280,
+          "section": "9.7 Structured binding declarations"
+        }
+      ],
+      "tags": [
+        "c++",
+        "declarations",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "javascript-promise-all-001",
+      "status": "human-approved",
+      "language": "JavaScript",
+      "domain": "promises",
+      "question": "How do Promise.all and Promise.allSettled differ when one input promise rejects?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "comparative",
+      "expected": {
+        "answer": "Promise.all rejects with the reason of the first input promise that rejects. Promise.allSettled instead waits until every input settles and fulfills with an array describing each outcome.",
+        "keyFacts": [
+          "Promise.all rejects on the first rejection.",
+          "Promise.allSettled waits for all inputs to settle.",
+          "Promise.allSettled fulfills with state snapshots for all inputs."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "ecmascript-2026-ecma-262",
+          "pageStart": 771,
+          "pageEnd": 773,
+          "section": "27.2.4.1-27.2.4.2 Promise combinators"
+        }
+      ],
+      "tags": [
+        "javascript",
+        "promises",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "javascript-promise-any-001",
+      "status": "human-approved",
+      "language": "JavaScript",
+      "domain": "promises",
+      "question": "When does Promise.any reject, and what does its rejection contain?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Promise.any rejects only if all input promises reject, and the rejection is an AggregateError containing their rejection reasons; otherwise it fulfills with the first fulfillment.",
+        "keyFacts": [
+          "It fulfills with the first fulfilled input.",
+          "It rejects only when every input rejects.",
+          "The rejection is an AggregateError holding the rejection reasons."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "ecmascript-2026-ecma-262",
+          "pageStart": 774,
+          "pageEnd": 775,
+          "section": "27.2.4.3 Promise.any"
+        }
+      ],
+      "tags": [
+        "javascript",
+        "promises",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "javascript-array-filter-holes-001",
+      "status": "human-approved",
+      "language": "JavaScript",
+      "domain": "arrays",
+      "question": "Does Array.prototype.filter call its callback for missing array elements or elements appended after filtering starts?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "No. filter calls the callback only for elements that exist, and the range it processes is fixed before the first callback, so later appended elements are not visited.",
+        "keyFacts": [
+          "Missing elements do not trigger the callback.",
+          "The processed range is fixed before the first callback.",
+          "Elements appended after filtering starts are not visited."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "ecmascript-2026-ecma-262",
+          "pageStart": 623,
+          "pageEnd": 624,
+          "section": "23.1.3.8 Array.prototype.filter"
+        }
+      ],
+      "tags": [
+        "javascript",
+        "arrays",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "kotlin-smart-cast-001",
+      "status": "human-approved",
+      "language": "Kotlin",
+      "domain": "type-system",
+      "question": "What problem do Kotlin smart casts solve?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Smart casts provide flow-sensitive typing: when data-flow analysis guarantees a runtime type, the compiler refines the expression's compile-time type so an explicit cast is unnecessary.",
+        "keyFacts": [
+          "Smart casts are a form of flow-sensitive typing.",
+          "They rely on data-flow information.",
+          "They avoid explicit casts when the runtime type is guaranteed."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "kotlin-language-specification",
+          "pageStart": 273,
+          "pageEnd": 274,
+          "section": "14.1 Smart casts"
+        }
+      ],
+      "tags": [
+        "kotlin",
+        "type-system",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "kotlin-elvis-lazy-001",
+      "status": "human-approved",
+      "language": "Kotlin",
+      "domain": "null-safety",
+      "question": "How does Kotlin's Elvis operator evaluate its two operands?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The Elvis operator returns the left operand when it is not null; otherwise it evaluates and returns the right operand. The right operand is lazy and is not evaluated when the left operand is non-null.",
+        "keyFacts": [
+          "The operator tests whether the left operand is null.",
+          "The right operand is evaluated only for a null left operand.",
+          "A non-null left operand is returned directly."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "kotlin-language-specification",
+          "pageStart": 186,
+          "pageEnd": 186,
+          "section": "8.12 Elvis operator expressions"
+        }
+      ],
+      "tags": [
+        "kotlin",
+        "null-safety",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "kotlin-not-null-assertion-001",
+      "status": "human-approved",
+      "language": "Kotlin",
+      "domain": "null-safety",
+      "question": "What happens when Kotlin's not-null assertion operator is applied to a nullable expression?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The expression is evaluated; if its result is null, a runtime exception is thrown. Otherwise that value is returned with a non-nullable type.",
+        "keyFacts": [
+          "A null result causes a runtime exception.",
+          "A non-null result is returned.",
+          "The resulting type is non-nullable."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "kotlin-language-specification",
+          "pageStart": 192,
+          "pageEnd": 192,
+          "section": "8.19 Not-null assertion expressions"
+        }
+      ],
+      "tags": [
+        "kotlin",
+        "null-safety",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "bash-pipeline-stderr-001",
+      "status": "human-approved",
+      "language": "Bash",
+      "domain": "pipelines",
+      "question": "What does the Bash |& pipeline operator do, and when is its implicit redirection applied?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "It connects both standard output and standard error of the left command to the next command's standard input. It is shorthand for 2>&1 |, and the implicit stderr redirection occurs after redirections explicitly written for the command.",
+        "keyFacts": [
+          "|& pipes both stdout and stderr.",
+          "It is shorthand for 2>&1 |.",
+          "Its implicit redirection is applied after explicit command redirections."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "pageStart": 16,
+          "pageEnd": 16,
+          "section": "3.2.3 Pipelines"
+        }
+      ],
+      "tags": [
+        "bash",
+        "pipelines",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "bash-pipefail-status-001",
+      "status": "human-approved",
+      "language": "Bash",
+      "domain": "pipelines",
+      "question": "How does enabling pipefail change a Bash pipeline's exit status?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "comparative",
+      "expected": {
+        "answer": "Normally a pipeline has the status of its last command. With pipefail enabled, it has the status of the rightmost command that exited non-zero, or zero if every command succeeded.",
+        "keyFacts": [
+          "Without pipefail, the last command determines status.",
+          "With pipefail, the rightmost non-zero status is used.",
+          "The status is zero if all commands succeed."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "pageStart": 16,
+          "pageEnd": 16,
+          "section": "3.2.3 Pipelines"
+        }
+      ],
+      "tags": [
+        "bash",
+        "pipelines",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "bash-heredoc-quoted-delimiter-001",
+      "status": "human-approved",
+      "language": "Bash",
+      "domain": "redirection",
+      "question": "How does quoting a Bash here-document delimiter affect expansion in the body?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "If any part of the delimiter word is quoted, the delimiter is formed after quote removal and the here-document lines are not subjected to parameter expansion, command substitution, or arithmetic expansion.",
+        "keyFacts": [
+          "Quote removal determines the delimiter.",
+          "A quoted delimiter disables parameter expansion in the body.",
+          "It also disables command substitution and arithmetic expansion."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "pageStart": 50,
+          "pageEnd": 50,
+          "section": "3.6.6 Here Documents"
+        }
+      ],
+      "tags": [
+        "bash",
+        "redirection",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "go-defer-order-001",
+      "status": "human-approved",
+      "language": "Go",
+      "domain": "control-flow",
+      "question": "When are arguments to a deferred Go call evaluated, and in what order are multiple deferred calls invoked?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "multi-hop",
+      "expected": {
+        "answer": "The function value and arguments are evaluated and saved when the defer statement executes. The calls themselves run immediately before the surrounding function returns, in reverse order.",
+        "keyFacts": [
+          "Function value and arguments are evaluated at the defer statement.",
+          "Execution is delayed until the surrounding function returns or panics.",
+          "Deferred calls run in reverse order."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "go-language-specification",
+          "section": "Defer statements"
+        }
+      ],
+      "tags": [
+        "go",
+        "control-flow",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "go-method-set-pointer-001",
+      "status": "human-approved",
+      "language": "Go",
+      "domain": "type-system",
+      "question": "How do the method sets of a defined Go type T and a pointer *T differ?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "comparative",
+      "expected": {
+        "answer": "The method set of T contains methods declared with receiver T. The method set of *T contains methods declared with receiver T or *T.",
+        "keyFacts": [
+          "T includes methods with receiver T.",
+          "*T includes methods with receiver T.",
+          "*T also includes methods with receiver *T."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "go-language-specification",
+          "section": "Method sets"
+        }
+      ],
+      "tags": [
+        "go",
+        "type-system",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "go-recover-conditions-001",
+      "status": "human-approved",
+      "language": "Go",
+      "domain": "panic-recovery",
+      "question": "When does Go's recover stop a panicking sequence, and when does it return nil?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "expected": {
+        "answer": "A direct recover call in a deferred function can obtain the panic value; if that deferred function returns normally without starting another panic, the sequence stops. recover returns nil when the goroutine is not panicking or when it was not called directly by a deferred function.",
+        "keyFacts": [
+          "recover must be called directly by a deferred function to recover a panic.",
+          "Normal return from that deferred function stops the panicking sequence.",
+          "recover returns nil outside a panic or when not called directly by a deferred function."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "go-language-specification",
+          "section": "Handling panics"
+        }
+      ],
+      "tags": [
+        "go",
+        "panic-recovery",
+        "expanded-v3"
+      ],
+      "notes": "Verified against the locally extracted corpus; independent user confirmation pending.",
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "local-corpus-extraction-inspection",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "cpp-qt-signals-001",
+      "status": "human-approved",
+      "language": "C++",
+      "domain": "adjacent-technology",
+      "question": "How do QObject::connect and Qt::QueuedConnection deliver a signal across threads?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the C++ language working draft, not the Qt framework manuals."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "c++",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains the C++ language working draft, not the Qt framework manuals.",
+        "absenceProbes": [
+          "QObject::connect",
+          "Qt::QueuedConnection",
+          "Q_OBJECT"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "cpp-cmake-targets-001",
+      "status": "human-approved",
+      "language": "C++",
+      "domain": "adjacent-technology",
+      "question": "How should target_link_libraries and find_package be combined for imported CMake targets?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains C++ language documentation, not CMake documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "c++",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains C++ language documentation, not CMake documentation.",
+        "absenceProbes": [
+          "target_link_libraries",
+          "CMAKE_PREFIX_PATH",
+          "find_package(CONFIG"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "javascript-node-fs-001",
+      "status": "human-approved",
+      "language": "JavaScript",
+      "domain": "adjacent-technology",
+      "question": "How do fs.promises.readFile and AbortSignal interact in Node.js?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the ECMAScript language specification, not the Node.js runtime API."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "javascript",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains the ECMAScript language specification, not the Node.js runtime API.",
+        "absenceProbes": [
+          "fs.promises.readFile",
+          "node:fs/promises",
+          "Buffer.allocUnsafe"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "javascript-express-router-001",
+      "status": "human-approved",
+      "language": "JavaScript",
+      "domain": "adjacent-technology",
+      "question": "How does express.Router merge route parameters from a parent router?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains ECMAScript and React material, not Express framework documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "javascript",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains ECMAScript and React material, not Express framework documentation.",
+        "absenceProbes": [
+          "express.urlencoded",
+          "Router({ mergeParams",
+          "req.app.locals"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "kotlin-compose-effects-001",
+      "status": "human-approved",
+      "language": "Kotlin",
+      "domain": "adjacent-technology",
+      "question": "When should Jetpack Compose use LaunchedEffect instead of rememberCoroutineScope?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the Kotlin language specification, not Jetpack Compose documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "kotlin",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains the Kotlin language specification, not Jetpack Compose documentation.",
+        "absenceProbes": [
+          "LaunchedEffect",
+          "rememberCoroutineScope",
+          "rememberSaveable"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "kotlin-gradle-plugin-001",
+      "status": "human-approved",
+      "language": "Kotlin",
+      "domain": "adjacent-technology",
+      "question": "How does the Kotlin Gradle plugin configure jvmToolchain and compilerOptions?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the Kotlin language specification, not Gradle plugin documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "kotlin",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains the Kotlin language specification, not Gradle plugin documentation.",
+        "absenceProbes": [
+          "jvmToolchain",
+          "KotlinCompile",
+          "compilerOptions.freeCompilerArgs"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "bash-zsh-completion-001",
+      "status": "human-approved",
+      "language": "Bash",
+      "domain": "adjacent-technology",
+      "question": "How do zstyle and compinit configure completion matching in Zsh?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the GNU Bash manual, not Zsh documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "bash",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains the GNU Bash manual, not Zsh documentation.",
+        "absenceProbes": [
+          "zstyle",
+          "compinit",
+          "matcher-list"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "bash-fish-argparse-001",
+      "status": "human-approved",
+      "language": "Bash",
+      "domain": "adjacent-technology",
+      "question": "How does Fish shell argparse expose parsed options to a function?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the GNU Bash manual, not Fish shell documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "bash",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains the GNU Bash manual, not Fish shell documentation.",
+        "absenceProbes": [
+          "__fish_seen_subcommand_from",
+          "fish_opt",
+          "argparse --ignore-unknown"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "python-numpy-broadcast-001",
+      "status": "human-approved",
+      "language": "Python",
+      "domain": "adjacent-technology",
+      "question": "How do numpy.broadcast_to and numpy.einsum apply NumPy broadcasting rules?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain NumPy API documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "python",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus does not contain NumPy API documentation.",
+        "absenceProbes": [
+          "numpy.broadcast_to",
+          "numpy.einsum",
+          "numpy.ndarray"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "python-fastapi-dependencies-001",
+      "status": "human-approved",
+      "language": "Python",
+      "domain": "adjacent-technology",
+      "question": "How does FastAPI cache nested Depends dependencies within one request?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain FastAPI documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "python",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus does not contain FastAPI documentation.",
+        "absenceProbes": [
+          "fastapi.Depends",
+          "fastapi.APIRouter",
+          "dependency_overrides"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "typescript-angular-onpush-001",
+      "status": "human-approved",
+      "language": "TypeScript",
+      "domain": "adjacent-technology",
+      "question": "When does Angular's ChangeDetectionStrategy.OnPush re-check a component?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains TypeScript handbook material, not Angular documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "typescript",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains TypeScript handbook material, not Angular documentation.",
+        "absenceProbes": [
+          "ChangeDetectionStrategy.OnPush",
+          "ChangeDetectorRef.markForCheck",
+          "provideZoneChangeDetection"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "typescript-nestjs-guards-001",
+      "status": "human-approved",
+      "language": "TypeScript",
+      "domain": "adjacent-technology",
+      "question": "How does a NestJS guard use ExecutionContext to inspect route metadata?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains TypeScript handbook material, not NestJS documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "typescript",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains TypeScript handbook material, not NestJS documentation.",
+        "absenceProbes": [
+          "ExecutionContext",
+          "CanActivate",
+          "Reflector.getAllAndOverride"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "rust-tokio-tasks-001",
+      "status": "human-approved",
+      "language": "Rust",
+      "domain": "adjacent-technology",
+      "question": "How do tokio::spawn and JoinSet propagate task cancellation and panics?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains Rust language/book entry pages, not Tokio API documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "rust",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains Rust language/book entry pages, not Tokio API documentation.",
+        "absenceProbes": [
+          "tokio::spawn",
+          "JoinSet",
+          "JoinError::is_panic"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "rust-serde-custom-001",
+      "status": "human-approved",
+      "language": "Rust",
+      "domain": "adjacent-technology",
+      "question": "How does Serde's deserialize_with attribute customize field deserialization?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain Serde documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "rust",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus does not contain Serde documentation.",
+        "absenceProbes": [
+          "deserialize_with",
+          "serde_json::from_str",
+          "derive(Serialize"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    },
+    {
+      "id": "go-client-kubernetes-001",
+      "status": "human-approved",
+      "language": "Go",
+      "domain": "adjacent-technology",
+      "question": "How does client-go build a Kubernetes client with rest.InClusterConfig and a shared informer?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the Go language specification, not Kubernetes client-go documentation."
+      },
+      "evidence": [],
+      "tags": [
+        "negative",
+        "hard-negative",
+        "adjacent-technology",
+        "go",
+        "expanded-v3"
+      ],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains the Go language specification, not Kubernetes client-go documentation.",
+        "absenceProbes": [
+          "rest.InClusterConfig",
+          "kubernetes.NewForConfig",
+          "SharedIndexInformer"
+        ]
+      },
+      "authoredBy": "codex-assisted-curation",
+      "verifiedBy": "corpus-scope-and-absence-probe",
+      "verifiedAt": "2026-07-16T00:00:00.000Z",
+      "approval": {
+        "state": "pending-confirmation",
+        "approvedBy": "user-delegated-ai-review",
+        "approvedAt": "2026-07-16T00:00:00.000Z",
+        "basis": "Operational approval requested by the user after source/corpus verification; the user will independently confirm the case before final thesis reporting."
+      }
+    }
+  ]
+}
