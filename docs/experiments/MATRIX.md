@@ -1,5 +1,7 @@
 # Experimental matrix and decision register
 
+The canonical thesis-oriented index is `registry.v1.json`, rendered as `THESIS_EXPERIMENT_MAP.md` and CSV. This matrix retains lower-level engineering history; when wording diverges, the validated registry and versioned result reports take precedence.
+
 Each row is a candidate configuration, including alternatives that fail or are rejected. A choice becomes a thesis conclusion only after controlled runs share the same corpus hash, golden-set hash, review-state filter, and evaluation protocol.
 
 | Component | Alternatives to test | Controlled variables | Primary metrics | Current state |
@@ -8,9 +10,10 @@ Each row is a candidate configuration, including alternatives that fail or are r
 | Chunk overlap | 0%, about 10%, about 20% | Same target size/model | Recall@k, duplicate-hit rate, indexed words, latency | Planned |
 | Chunk boundary | Word window, heading-aware, semantic | Same target budget/model | Evidence hit rate, MRR, context coherence | Word window baseline implemented; alternatives planned |
 | Embedding | Current Gemini baseline plus at least two supported alternatives | Same chunks/questions/task types/output dimensions/top-k | Recall@k, MRR, nDCG, latency, API requests, estimated tokens and cost | Persistent model-aware cache and dry-run estimator implemented; model shortlist must be verified before runs |
-| Retrieval | Dense cosine, BM25, hybrid fusion | Same chunks/golden set/top-k | Recall@k, Precision@k, MRR, nDCG | Dense cosine implemented |
+| Retrieval | Dense cosine, BM25, hybrid RRF | Same chunks/validation split/top-k | Recall@k, Precision@k, MRR, nDCG | Compared; dense cosine is the only variant satisfying all v1 guardrails |
+| Metadata compatibility | Dense baseline, technology/version gate | Same dense rankings/validation split/threshold grid/top-k | No-answer FPR, Recall@k, MRR, compatibility rejections | Validation completed; gate reaches zero FPR at 0.18, fresh held-out test required |
 | Reranking | None, cross-encoder, LLM reranker | Same candidate pool and final k | nDCG, MRR, latency, cost | Planned |
-| Threshold | Fixed grid 0.18–0.80, then validation-set tuning | Same 300-word chunks/model/task format/top-k/cases | No-answer false positives, recall, MRR, nDCG, returned chunks | Cache-only exploratory sweep implemented; held-out calibration pending dataset expansion |
+| Threshold | Fixed grid 0.18–0.80 with validation selection | Same 300-word chunks/model/task format/top-k/cases | No-answer false positives, recall, MRR, nDCG, returned chunks | Balanced validation selected 0.75; locked test retained a 1/6 version false positive without retuning |
 | Generator | Existing baseline plus two models | Frozen retrieved evidence | Key-fact coverage, groundedness, citations, latency, cost | Planned after retrieval benchmark |
 | Judge | Disabled, judge model A/B, prompt variants | Human-labelled calibration subset | Agreement, confusion matrix, rank correlation | Foundation exists; calibration planned |
 | Agent loop | Single pass, query rewrite, retrieve-check-retry | Same maximum budget and corpus | Success lift, iterations, latency, cost | Deferred until single-pass baselines are stable |

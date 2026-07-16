@@ -1,0 +1,3 @@
+variant,selected_threshold,recall_at_4,precision_at_4,mrr,ndcg_at_4,no_answer_fpr,decision
+dense-cosine,0.75,1,0.7083333333333334,1,1,0,Selected by the predeclared validation rule.
+metadata-aware-dense,0.18,1,0.6666666666666666,1,1,0,Selected by the predeclared validation rule.

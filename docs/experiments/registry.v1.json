@@ -79,14 +79,14 @@
       "id": "metadata-version-filter-v1",
       "thesisSection": "Metadata-aware retrieval",
       "researchQuestion": "Can query-corpus technology and version compatibility reduce false positives without harming answerable retrieval?",
-      "status": "in-progress",
+      "status": "completed",
       "variable": "Compatibility gate enabled or disabled",
       "controls": ["Dense cosine rankings", "validation split", "threshold grid", "topK=4"],
       "metrics": ["No-answer FPR", "Recall@4", "MRR", "compatibility rejections", "latency"],
-      "artifacts": [],
-      "decision": "Pending validation run.",
-      "limitations": ["Test split already consumed by the previous threshold experiment", "Metadata extraction must remain deterministic"],
-      "nextStep": "Implement and run on validation only."
+      "artifacts": ["docs/experiments/common-metadata-filter.v1.json", "docs/experiment-results/common-metadata-filter-validation.md"],
+      "decision": "On validation, metadata-aware dense reaches zero no-answer FPR at 0.18 while preserving Recall@4, MRR, and nDCG@4 at 1.0; retain it as a promising candidate, not a final winner.",
+      "limitations": ["Test split already consumed by the previous threshold experiment", "Rule-based query recognition may miss implicit technologies or aliases", "Metadata coverage and correctness become retrieval dependencies"],
+      "nextStep": "Expand compatibility-focused validation cases and create a fresh held-out split before claiming generalization."
     },
     {
       "order": 7,

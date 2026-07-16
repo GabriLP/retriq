@@ -2,7 +2,7 @@
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
 - Experiment families: **10**
-- Completed: **4**
+- Completed: **5**
 - Superseded but retained: **1**
 
 This is the narrative index for the thesis. The JSON registry is the source of truth; generated Markdown and CSV provide readable and tabular views. Every experiment records its question, isolated variable, controls, metrics, decision, limitations, and next action.
@@ -14,7 +14,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 3 | Abstention calibration | threshold-seed-v1 | superseded | Dense cosine minimum score | The preliminary 0.65 threshold was superseded after expanding negative cases. |
 | 4 | Abstention calibration | threshold-balanced-v2 | completed | Dense cosine minimum score | Select 0.75 on validation; retain the 1/6 test version false positive without retuning. |
 | 5 | Retrieval strategy comparison | retrieval-strategies-v1 | completed | Retrieval strategy | Keep dense cosine; BM25 and simple RRF fail the declared guardrails. |
-| 6 | Metadata-aware retrieval | metadata-version-filter-v1 | in-progress | Compatibility gate enabled or disabled | Pending validation run. |
+| 6 | Metadata-aware retrieval | metadata-version-filter-v1 | completed | Compatibility gate enabled or disabled | On validation, metadata-aware dense reaches zero no-answer FPR at 0.18 while preserving Recall@4, MRR, and nDCG@4 at 1.0; retain it as a promising candidate, not a final winner. |
 | 7 | Embedding model comparison | embedding-models-v1 | planned | Embedding model and, separately, output dimensionality | Pending. |
 | 8 | Reranking | reranking-v1 | planned | No reranker, cross-encoder, or LLM reranker | Pending. |
 | 9 | Answer generation and LLM-as-a-judge | generation-and-judge-v1 | planned | Generator model, judge model, and judge prompt in separate experiments | Pending. |
@@ -83,14 +83,14 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 ## 6. Metadata-aware retrieval: metadata-version-filter-v1
 
 - **Research question:** Can query-corpus technology and version compatibility reduce false positives without harming answerable retrieval?
-- **Status:** in-progress
+- **Status:** completed
 - **Changed variable:** Compatibility gate enabled or disabled
 - **Controls:** Dense cosine rankings; validation split; threshold grid; topK=4
 - **Metrics:** No-answer FPR; Recall@4; MRR; compatibility rejections; latency
-- **Artifacts:** not created yet
-- **Decision:** Pending validation run.
-- **Limitations:** Test split already consumed by the previous threshold experiment; Metadata extraction must remain deterministic
-- **Next step:** Implement and run on validation only.
+- **Artifacts:** `docs/experiments/common-metadata-filter.v1.json`; `docs/experiment-results/common-metadata-filter-validation.md`
+- **Decision:** On validation, metadata-aware dense reaches zero no-answer FPR at 0.18 while preserving Recall@4, MRR, and nDCG@4 at 1.0; retain it as a promising candidate, not a final winner.
+- **Limitations:** Test split already consumed by the previous threshold experiment; Rule-based query recognition may miss implicit technologies or aliases; Metadata coverage and correctness become retrieval dependencies
+- **Next step:** Expand compatibility-focused validation cases and create a fresh held-out split before claiming generalization.
 
 ## 7. Embedding model comparison: embedding-models-v1
 
