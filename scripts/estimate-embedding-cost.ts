@@ -12,7 +12,7 @@ import {
 } from "../src/lib/rag/embedding-cache";
 import { formatEmbeddingInput } from "../src/lib/rag/embeddings";
 import type { ExperimentConfig, ExperimentRun } from "../src/lib/rag/experiment-types";
-import { loadGoldenSet, validateGoldenSet, type GoldenCaseStatus } from "../src/lib/rag/golden-set";
+import { loadGoldenSet, loadGoldenSetSplit, selectGoldenSplit, validateGoldenSet, validateGoldenSetSplit, type GoldenCaseStatus, type GoldenSplitName } from "../src/lib/rag/golden-set";
 import { matchesEvidence } from "../src/lib/rag/retrieval-metrics";
 import type { DocumentationChunk } from "../src/lib/rag/types";
 
@@ -22,7 +22,7 @@ type Estimate = {
   createdAt: string;
   parentRunId: string;
   experimentId: string;
-  inputHashes: { config: string; chunks: string; goldenSet: string };
+  inputHashes: { config: string; chunks: string; goldenSet: string; splitManifest?: string };
   configuration: {
     provider: string;
     model: string;
@@ -33,6 +33,7 @@ type Estimate = {
     requestMode: "standard" | "batch";
     batchSize: number;
     outputDimensionality: number | null;
+    split: GoldenSplitName | null;
   };
   caseSelection: { selected: number; excludedDraftOrStatus: number; excludedOutsideCorpus: number };
   documents: EmbeddingCachePlan;
@@ -71,7 +72,17 @@ async function main() {
   const validation = await validateGoldenSet(goldenSet);
   if (validation.errors.length) throw new Error(validation.errors.join("\n"));
   const allowedStatuses = (config.evaluation.caseStatuses ?? ["human-approved"]) as GoldenCaseStatus[];
-  const statusSelected = goldenSet.cases.filter((testCase) => allowedStatuses.includes(testCase.status));
+  let splitRaw: string | undefined;
+  let splitSelected = goldenSet.cases;
+  if (config.evaluation.splitManifest || config.evaluation.split) {
+    if (!config.evaluation.splitManifest || !config.evaluation.split) throw new Error("evaluation.splitManifest and evaluation.split must be configured together.");
+    splitRaw = await fs.readFile(path.resolve(config.evaluation.splitManifest), "utf8");
+    const split = await loadGoldenSetSplit(config.evaluation.splitManifest);
+    const splitValidation = validateGoldenSetSplit(goldenSet, split);
+    if (splitValidation.errors.length) throw new Error(splitValidation.errors.join("\n"));
+    splitSelected = selectGoldenSplit(goldenSet, split, config.evaluation.split);
+  }
+  const statusSelected = splitSelected.filter((testCase) => allowedStatuses.includes(testCase.status));
   const selectedCases = statusSelected.filter(
     (testCase) =>
       testCase.answerability === "unanswerable" ||
@@ -107,7 +118,7 @@ async function main() {
     createdAt,
     parentRunId: run.runId,
     experimentId: run.experimentId,
-    inputHashes: { config: sha256(configRaw), chunks: sha256(chunksRaw), goldenSet: sha256(goldenRaw) },
+    inputHashes: { config: sha256(configRaw), chunks: sha256(chunksRaw), goldenSet: sha256(goldenRaw), ...(splitRaw ? { splitManifest: sha256(splitRaw) } : {}) },
     configuration: {
       provider: config.embedding.provider,
       model: config.embedding.model,
@@ -118,10 +129,11 @@ async function main() {
       requestMode: config.embedding.pricing?.requestMode ?? "standard",
       batchSize: config.embedding.batchSize ?? 32,
       outputDimensionality: config.embedding.outputDimensionality ?? null,
+      split: config.evaluation.split ?? null,
     },
     caseSelection: {
       selected: selectedCases.length,
-      excludedDraftOrStatus: goldenSet.cases.length - statusSelected.length,
+      excludedDraftOrStatus: splitSelected.length - statusSelected.length,
       excludedOutsideCorpus: statusSelected.length - selectedCases.length,
     },
     documents,
@@ -169,6 +181,7 @@ function renderSummary(estimate: Estimate) {
 - Price assumption: ${estimate.configuration.priceUsdPerMillionTokens === null ? "not configured" : `$${estimate.configuration.priceUsdPerMillionTokens} per million input tokens`}
 - Price source/date: ${estimate.configuration.priceSourceUrl ?? "not recorded"} (${estimate.configuration.priceObservedAt ?? "date not recorded"})
 - Output dimensions: ${estimate.configuration.outputDimensionality ?? "provider default"}
+- Dataset split: ${estimate.configuration.split ?? "all eligible cases"}
 - Request mode/batch size: ${estimate.configuration.requestMode} / ${estimate.configuration.batchSize} inputs
 
 | Input group | Requested | Unique | Cache hits | API inputs | Avoided inputs | Estimated API tokens | Estimated cost (USD) |

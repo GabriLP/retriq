@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { loadGoldenSet, validateGoldenSet, type GoldenCase } from "../src/lib/rag/golden-set";
+import { loadGoldenSet, loadGoldenSetSplit, selectGoldenSplit, validateGoldenSet, validateGoldenSetSplit, type GoldenCase } from "../src/lib/rag/golden-set";
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
@@ -10,16 +10,23 @@ async function main() {
   if (validation.errors.length) throw new Error(validation.errors.join("\n"));
   const outputBase = path.resolve(options.output);
   await fs.mkdir(path.dirname(outputBase), { recursive: true });
-  await fs.writeFile(`${outputBase}.md`, renderMarkdown(dataset.id, dataset.version, dataset.cases));
+  const split = options.split ? await loadGoldenSetSplit(options.split) : undefined;
+  if (split) {
+    const splitValidation = validateGoldenSetSplit(dataset, split);
+    if (splitValidation.errors.length) throw new Error(splitValidation.errors.join("\n"));
+  }
+  await fs.writeFile(`${outputBase}.md`, renderMarkdown(dataset.id, dataset.version, dataset.cases, split));
   await fs.writeFile(`${outputBase}.csv`, renderCsv(dataset.cases));
   console.log(`Wrote ${outputBase}.md and ${outputBase}.csv`);
 }
 
-function renderMarkdown(id: string, version: string, cases: GoldenCase[]) {
+function renderMarkdown(id: string, version: string, cases: GoldenCase[], split?: Awaited<ReturnType<typeof loadGoldenSetSplit>>) {
   const status = count(cases, (item) => item.status);
   const language = count(cases, (item) => item.language);
   const difficulty = count(cases, (item) => item.difficulty);
   const answerability = count(cases, (item) => item.answerability);
+  const negativeCategories = count(cases.filter((item) => item.answerability === "unanswerable"), (item) => item.negativeVerification?.category ?? "unclassified");
+  const splitSection = split ? `\n## Validation/test split\n\n| Split | Cases | Answerable | Unanswerable | Locked |\n|---|---:|---:|---:|---|\n${(["validation", "test"] as const).map((name) => { const selected = selectGoldenSplit({ cases }, split, name); const answerable = selected.filter((item) => item.answerability === "answerable").length; return `| ${name} | ${selected.length} | ${answerable} | ${selected.length - answerable} | ${name === "test" ? (split.testLocked ? "yes" : "no") : "n/a"} |`; }).join("\n")}\n\nThe validation split is used for threshold and configuration selection. The locked test split is used once for the final unbiased estimate.\n` : "";
   return `# Golden set summary
 
 - Dataset: \`${id}@${version}\`
@@ -34,6 +41,9 @@ function renderMarkdown(id: string, version: string, cases: GoldenCase[]) {
 | Language/domain | ${formatCounts(language)} |
 | Difficulty | ${formatCounts(difficulty)} |
 | Answerability | ${formatCounts(answerability)} |
+| Negative category | ${formatCounts(negativeCategories)} |
+
+${splitSection}
 
 ## Case inventory
 
@@ -82,9 +92,11 @@ function csvCell(value: unknown) {
 function parseArgs(args: string[]) {
   const datasetIndex = args.findIndex((arg) => arg === "--dataset" || arg === "-d");
   const outputIndex = args.findIndex((arg) => arg === "--output" || arg === "-o");
+  const splitIndex = args.findIndex((arg) => arg === "--split" || arg === "-s");
   return {
     dataset: datasetIndex >= 0 ? args[datasetIndex + 1] : "docs/evaluation/golden-set.v1.json",
     output: outputIndex >= 0 ? args[outputIndex + 1] : "docs/evaluation/golden-set-summary",
+    split: splitIndex >= 0 ? args[splitIndex + 1] : "docs/evaluation/golden-set-splits.v1.json",
   };
 }
 

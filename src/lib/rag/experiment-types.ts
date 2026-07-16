@@ -38,6 +38,8 @@ export type ExperimentConfig = {
     judgeModel?: string;
     goldenSet?: string;
     caseStatuses?: Array<"source-verified" | "human-approved">;
+    splitManifest?: string;
+    split?: "validation" | "test";
   };
 };
 

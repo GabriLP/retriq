@@ -12,6 +12,17 @@ java-ods-skiplist-analysis-001,source-verified,Java,skiplists,medium,factual,ans
 java-ods-linear-probing-001,source-verified,Java,hash-tables,hard,factual,answerable,Under which assumptions does the LinearHashTable analysis obtain O(1) expected operation time?,1
 java-ods-red-black-tree-001,source-verified,Java,balanced-search-trees,hard,multi-hop,answerable,How does the correspondence with a 2-4 tree establish the height bound for a red-black tree?,1
 postgresql-license-001,source-verified,PostgreSQL,documentation-license,medium,factual,answerable,Under which condition does the PostgreSQL 18 manual grant permission to copy and distribute the software and documentation?,1
+csharp-linq-iqueryable-001,source-verified,C#,scope-control,easy,unanswerable,unanswerable,How does C# IQueryable defer a LINQ query and translate its expression tree when ToList is called?,0
+swift-sendable-actors-001,source-verified,Swift,scope-control,easy,unanswerable,unanswerable,When must a value conform to Swift Sendable to cross an actor isolation boundary?,0
+ruby-activerecord-callbacks-001,source-verified,Ruby,scope-control,easy,unanswerable,unanswerable,"In Ruby on Rails, in what order do Active Record validation and save callbacks run?",0
+haskell-stm-retry-001,source-verified,Haskell,scope-control,easy,unanswerable,unanswerable,How do retry and orElse compose transactions in Haskell Software Transactional Memory?,0
+java-android-activity-lifecycle-001,source-verified,Java,adjacent-framework,hard,unanswerable,unanswerable,Which Android Activity lifecycle callbacks run when an Activity moves from the foreground to the stopped state?,0
+react-native-flatlist-001,source-verified,React,adjacent-framework,hard,unanswerable,unanswerable,How should React Native FlatList getItemLayout be implemented for fixed-height rows?,0
+python-django-atomic-001,source-verified,Python,adjacent-framework,hard,unanswerable,unanswerable,How do nested Django transaction.atomic blocks use savepoints and propagate rollback state?,0
+postgresql-rds-parameter-groups-001,source-verified,PostgreSQL,vendor-service,hard,unanswerable,unanswerable,Which AWS RDS PostgreSQL parameters require a reboot after changing a DB parameter group?,0
+c-msvc-sal-annotations-001,source-verified,C,vendor-extension,hard,unanswerable,unanswerable,How do Microsoft SAL annotations _In_reads_ and _Out_writes_ affect MSVC static analysis of a C function?,0
+java-se-27-value-classes-001,source-verified,Java,unsupported-version,hard,unanswerable,unanswerable,What final syntax and binary compatibility rules does Java SE 27 define for value classes?,0
+postgresql-19-release-001,source-verified,PostgreSQL,unsupported-version,hard,unanswerable,unanswerable,Which features are listed as final additions in the PostgreSQL 19 release notes?,0
 c-array-decay-001,draft,C,arrays-and-pointers,hard,factual,answerable,In which expression contexts does a C array expression not get converted to a pointer to its first element?,0
 java-overload-resolution-001,draft,Java,method-invocation,hard,procedural,answerable,What are the main phases used by Java to determine whether a method is applicable during overload resolution?,0
 postgresql-transaction-001,draft,PostgreSQL,transactions,medium,factual,answerable,What atomicity guarantee does PostgreSQL provide for the statements enclosed by BEGIN and COMMIT?,0

@@ -8,7 +8,7 @@ import * as nextEnv from "@next/env";
 
 import type { EmbeddingCachePlan } from "../src/lib/rag/embedding-cache";
 import type { ExperimentConfig, ExperimentRun } from "../src/lib/rag/experiment-types";
-import { loadGoldenSet, validateGoldenSet, type GoldenCaseStatus } from "../src/lib/rag/golden-set";
+import { loadGoldenSet, loadGoldenSetSplit, selectGoldenSplit, validateGoldenSet, validateGoldenSetSplit, type GoldenCaseStatus } from "../src/lib/rag/golden-set";
 import {
   aggregateRetrievalMetrics,
   evaluateRetrievalCase,
@@ -58,7 +58,7 @@ type SweepAttempt = {
   readiness: ThresholdProtocol["readiness"];
   hypothesis: string;
   variedPath: "retrieval.minScore";
-  inputHashes: { protocol: string; baseConfig: string; runConfig: string; chunks: string; goldenSet: string };
+  inputHashes: { protocol: string; baseConfig: string; runConfig: string; chunks: string; goldenSet: string; splitManifest: string };
   code: { gitCommit: string; dirty: boolean; gitDiffHash: string };
   controlledConfiguration: {
     chunking: ExperimentConfig["chunking"];
@@ -66,6 +66,7 @@ type SweepAttempt = {
     retrievalStrategy: string;
     topK: number;
     caseStatuses: GoldenCaseStatus[];
+    split: "validation";
   };
   caseSelection: { selected: number; answerable: number; unanswerable: number };
   cache?: {
@@ -106,13 +107,20 @@ async function main() {
     throw new Error("The prepared run configuration does not match the protocol base configuration.");
   }
   if (!config.evaluation.goldenSet) throw new Error("Base experiment must define evaluation.goldenSet.");
+  if (!config.evaluation.splitManifest || config.evaluation.split !== "validation") {
+    throw new Error("Threshold calibration requires evaluation.split='validation' and a split manifest.");
+  }
 
   const goldenRaw = await fs.readFile(path.resolve(config.evaluation.goldenSet), "utf8");
   const goldenSet = await loadGoldenSet(config.evaluation.goldenSet);
   const validation = await validateGoldenSet(goldenSet);
   if (validation.errors.length) throw new Error(validation.errors.join("\n"));
+  const splitRaw = await fs.readFile(path.resolve(config.evaluation.splitManifest), "utf8");
+  const splitManifest = await loadGoldenSetSplit(config.evaluation.splitManifest);
+  const splitValidation = validateGoldenSetSplit(goldenSet, splitManifest);
+  if (splitValidation.errors.length) throw new Error(splitValidation.errors.join("\n"));
   const allowedStatuses = (config.evaluation.caseStatuses ?? ["human-approved"]) as GoldenCaseStatus[];
-  const selectedCases = goldenSet.cases
+  const selectedCases = selectGoldenSplit(goldenSet, splitManifest, "validation")
     .filter((testCase) => allowedStatuses.includes(testCase.status))
     .filter(
       (testCase) =>
@@ -144,6 +152,7 @@ async function main() {
       runConfig: sha256(runConfigRaw),
       chunks: sha256(chunksRaw),
       goldenSet: sha256(goldenRaw),
+      splitManifest: sha256(splitRaw),
     },
     code: {
       gitCommit: runCommand("git", ["rev-parse", "HEAD"]) || "unknown",
@@ -156,6 +165,7 @@ async function main() {
       retrievalStrategy: config.retrieval.strategy,
       topK: config.retrieval.topK,
       caseStatuses: allowedStatuses,
+      split: "validation",
     },
     caseSelection: {
       selected: selectedCases.length,
@@ -312,7 +322,8 @@ function renderMarkdown(attempt: SweepAttempt) {
 - Status: **${attempt.status}**
 - Base experiment/run: \`${attempt.experimentId}\` / \`${attempt.parentRunId}\`
 - Readiness: **${attempt.readiness.status}** - ${attempt.readiness.reason}
-- Selected exploratory threshold: **${attempt.selectedThreshold ?? "none"}**
+- Calibration split: **validation** (${attempt.caseSelection.answerable} answerable + ${attempt.caseSelection.unanswerable} unanswerable)
+- Selected threshold: **${attempt.selectedThreshold ?? "none"}**
 - Selection: ${attempt.selectionReason ?? "not available"}
 - Cache-only: ${attempt.cache?.documents.apiInputs === 0 && attempt.cache?.queries.apiInputs === 0 ? "yes" : "no"}
 
@@ -322,9 +333,7 @@ ${rows.join("\n")}
 
 Score diagnostics: maximum unanswerable top score ${format(attempt.scoreDiagnostics?.maximumUnanswerableTopScore ?? null)}, minimum answerable top score ${format(attempt.scoreDiagnostics?.minimumAnswerableTopScore ?? null)}, and minimum answerable fourth score ${format(attempt.scoreDiagnostics?.minimumAnswerableKthScore ?? null)}.
 
-The 0.75 candidate increases measured precision by returning fewer chunks, but 0.65 is preferred by the predeclared rule because it already eliminates the observed false positive while preserving more context. At 0.80, Recall@k and MRR fall to 0.50.
-
-This diagnostic uses one source-verified unanswerable case and no held-out test split. It can identify the next engineering baseline but cannot establish a thesis-grade calibrated threshold.
+The threshold is selected exclusively on the validation split. The locked test split must be evaluated once, after this choice is recorded, and must not be used to revise the threshold.
 `;
 }
 
@@ -395,7 +404,7 @@ function parseArgs(args: string[]) {
     protocol:
       protocolIndex >= 0
         ? args[protocolIndex + 1]
-        : "docs/experiments/common-programming-threshold-sweep.v1.json",
+        : "docs/experiments/common-programming-threshold-sweep.v2.json",
     writeReport: args.includes("--write-report"),
   };
 }

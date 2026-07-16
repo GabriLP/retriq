@@ -8,7 +8,15 @@ import * as nextEnv from "@next/env";
 
 import type { ExperimentConfig, ExperimentRun } from "../src/lib/rag/experiment-types";
 import type { EmbeddingCachePlan } from "../src/lib/rag/embedding-cache";
-import { loadGoldenSet, validateGoldenSet, type GoldenCaseStatus } from "../src/lib/rag/golden-set";
+import {
+  loadGoldenSet,
+  loadGoldenSetSplit,
+  selectGoldenSplit,
+  validateGoldenSet,
+  validateGoldenSetSplit,
+  type GoldenCaseStatus,
+  type GoldenSplitName,
+} from "../src/lib/rag/golden-set";
 import {
   aggregateRetrievalMetrics,
   evaluateRetrievalCase,
@@ -26,7 +34,7 @@ type Attempt = {
   completedAt?: string;
   parentRunId: string;
   experimentId: string;
-  inputHashes: { config: string; chunks: string; goldenSet: string };
+  inputHashes: { config: string; chunks: string; goldenSet: string; splitManifest?: string };
   code: { gitCommit: string; dirty: boolean; gitDiffHash: string };
   configuration: {
     embeddingModel: string;
@@ -39,6 +47,7 @@ type Attempt = {
     queryTask: string;
     batchSize: number;
     pricing: ExperimentConfig["embedding"]["pricing"] | null;
+    split: GoldenSplitName | null;
   };
   corpus: { chunks: number; embeddedTexts: number; embeddingDimension?: number };
   embeddings?: {
@@ -91,7 +100,19 @@ async function main() {
   const validation = await validateGoldenSet(goldenSet);
   if (validation.errors.length) throw new Error(validation.errors.join("\n"));
   const allowedStatuses = (config.evaluation.caseStatuses ?? ["human-approved"]) as GoldenCaseStatus[];
-  const statusSelected = goldenSet.cases.filter((testCase) => allowedStatuses.includes(testCase.status));
+  let splitRaw: string | undefined;
+  let splitSelected = goldenSet.cases;
+  if (config.evaluation.splitManifest || config.evaluation.split) {
+    if (!config.evaluation.splitManifest || !config.evaluation.split) {
+      throw new Error("evaluation.splitManifest and evaluation.split must be configured together.");
+    }
+    splitRaw = await fs.readFile(path.resolve(config.evaluation.splitManifest), "utf8");
+    const splitManifest = await loadGoldenSetSplit(config.evaluation.splitManifest);
+    const splitValidation = validateGoldenSetSplit(goldenSet, splitManifest);
+    if (splitValidation.errors.length) throw new Error(splitValidation.errors.join("\n"));
+    splitSelected = selectGoldenSplit(goldenSet, splitManifest, config.evaluation.split);
+  }
+  const statusSelected = splitSelected.filter((testCase) => allowedStatuses.includes(testCase.status));
   const selectedCases = statusSelected.filter(
     (testCase) =>
       testCase.answerability === "unanswerable" ||
@@ -123,6 +144,7 @@ async function main() {
       config: sha256(configRaw),
       chunks: sha256(chunksRaw),
       goldenSet: sha256(goldenRaw),
+      ...(splitRaw ? { splitManifest: sha256(splitRaw) } : {}),
     },
     code: {
       gitCommit: runCommand("git", ["rev-parse", "HEAD"]) || "unknown",
@@ -140,11 +162,12 @@ async function main() {
       queryTask: config.embedding.queryTask ?? "QUESTION_ANSWERING",
       batchSize: config.embedding.batchSize ?? 32,
       pricing: config.embedding.pricing ?? null,
+      split: config.evaluation.split ?? null,
     },
     corpus: { chunks: chunks.length, embeddedTexts: chunks.length + selectedCases.length },
     caseSelection: {
       selected: selectedCases.length,
-      excludedDraftOrStatus: goldenSet.cases.length - statusSelected.length,
+      excludedDraftOrStatus: splitSelected.length - statusSelected.length,
       excludedOutsideCorpus: statusSelected.length - selectedCases.length,
     },
   };
@@ -234,6 +257,7 @@ function renderSummary(attempt: Attempt) {
 - Status: **${attempt.status}**
 - Embedding: ${attempt.configuration.embeddingModel}
 - Retrieval: ${attempt.configuration.retrievalStrategy}, top-k ${attempt.configuration.topK}, threshold ${attempt.configuration.minScore}
+- Dataset split: ${attempt.configuration.split ?? "all eligible cases"}
 - Cases: ${attempt.caseSelection.selected} selected, ${attempt.caseSelection.excludedOutsideCorpus} outside corpus, ${attempt.caseSelection.excludedDraftOrStatus} excluded by review state
 - Git: \`${attempt.code.gitCommit}\`${attempt.code.dirty ? " (dirty workspace)" : ""}
 

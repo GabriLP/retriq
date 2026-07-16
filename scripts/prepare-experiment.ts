@@ -34,6 +34,9 @@ async function main() {
           path: path.resolve(config.evaluation.goldenSet),
           sha256: sha256(await fs.readFile(path.resolve(config.evaluation.goldenSet))),
         },
+        ...(config.evaluation.splitManifest
+          ? [{ path: path.resolve(config.evaluation.splitManifest), sha256: sha256(await fs.readFile(path.resolve(config.evaluation.splitManifest))) }]
+          : []),
       ]
     : [];
 
@@ -226,6 +229,7 @@ function renderSummary(run: ExperimentRun) {
 | Generator | ${run.configuration.generation.provider} / ${run.configuration.generation.model} |
 | Golden set | ${run.configuration.evaluation.goldenSet ?? "Not configured"} |
 | Included review states | ${run.configuration.evaluation.caseStatuses?.join(", ") ?? "Not configured"} |
+| Evaluation split | ${run.configuration.evaluation.split ?? "All eligible cases"} |
 
 ## Preparation results
 

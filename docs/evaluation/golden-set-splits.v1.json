@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "retriq-programming-qa-validation-test-v1",
+  "version": "1.0.0",
+  "datasetId": "retriq-programming-qa",
+  "datasetVersion": "1.2.0-negative-splits",
+  "createdAt": "2026-07-16T00:00:00.000Z",
+  "method": "Manual deterministic stratification by answerability, difficulty, language/domain coverage, and negative category.",
+  "seed": "retriq-thesis-split-v1",
+  "eligibleStatuses": ["source-verified"],
+  "stratifyBy": ["answerability", "difficulty", "language/domain", "negative category"],
+  "testLocked": true,
+  "validationCaseIds": [
+    "react-state-snapshot-001",
+    "react-effects-001",
+    "c-standard-purpose-001",
+    "java-spec-release-001",
+    "java-ods-arraystack-amortized-001",
+    "java-ods-skiplist-analysis-001",
+    "react-out-of-scope-001",
+    "swift-sendable-actors-001",
+    "haskell-stm-retry-001",
+    "react-native-flatlist-001",
+    "postgresql-rds-parameter-groups-001",
+    "java-se-27-value-classes-001"
+  ],
+  "testCaseIds": [
+    "react-state-queue-001",
+    "react-refs-001",
+    "java-ods-dual-array-deque-001",
+    "java-ods-linear-probing-001",
+    "java-ods-red-black-tree-001",
+    "postgresql-license-001",
+    "csharp-linq-iqueryable-001",
+    "ruby-activerecord-callbacks-001",
+    "java-android-activity-lifecycle-001",
+    "python-django-atomic-001",
+    "c-msvc-sal-annotations-001",
+    "postgresql-19-release-001"
+  ]
+}
