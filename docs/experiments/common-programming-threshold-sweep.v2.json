@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "common-programming-threshold-sweep-v2",
+  "title": "Dense-cosine abstention threshold calibration on validation",
+  "hypothesis": "A threshold above the negative-query score range will reduce false positives while preserving answerable-case Recall@4 on the balanced validation split.",
+  "baseExperimentConfig": "common-programming-word-300-validation.json",
+  "variedPath": "retrieval.minScore",
+  "thresholds": [0.18, 0.4, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8],
+  "selectionRule": {
+    "primary": "noAnswerFalsePositiveRate",
+    "primaryDirection": "lower",
+    "guardrails": [
+      { "metric": "recallAtK", "minimum": 1.0 },
+      { "metric": "mrr", "minimum": 1.0 }
+    ],
+    "tieBreakers": [
+      { "metric": "ndcgAtK", "direction": "higher" },
+      { "metric": "threshold", "direction": "lower" },
+      { "metric": "precisionAtK", "direction": "higher" }
+    ]
+  },
+  "readiness": {
+    "status": "exploratory",
+    "reason": "Calibration uses six answerable and six verified negatives; the separately locked test split remains untouched until selection is recorded. Human approval is still pending."
+  },
+  "reportOutput": "docs/experiment-results/common-threshold-sweep-validation"
+}
