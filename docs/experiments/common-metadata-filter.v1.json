@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "common-metadata-filter-v1",
+  "title": "Dense retrieval with technology and version compatibility",
+  "hypothesis": "A deterministic compatibility gate will reduce out-of-scope and unsupported-version retrieval while preserving answerable Recall@4 and MRR.",
+  "baseExperimentConfig": "common-programming-word-300-validation.json",
+  "split": "validation",
+  "variants": ["dense-cosine", "metadata-aware-dense"],
+  "thresholds": [0.18, 0.4, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8],
+  "selectionRule": {
+    "primary": "noAnswerFalsePositiveRate",
+    "primaryTarget": 0,
+    "guardrails": { "recallAtK": 1, "mrr": 1 },
+    "tieBreakers": ["ndcgAtK:higher", "threshold:lower", "precisionAtK:higher"]
+  },
+  "controlledVariables": ["corpus snapshot", "validation cases", "chunking", "embeddings", "cosine scoring", "topK=4"],
+  "changedVariable": "Deterministic query-to-corpus technology/version compatibility gate",
+  "reportOutput": "docs/experiment-results/common-metadata-filter-validation"
+}

@@ -26,6 +26,8 @@
     "retrieval:strategies:test": "tsx scripts/test-retrieval-strategies.ts",
     "experiment:retrieval:strategies": "tsx scripts/evaluate-retrieval-strategies.ts",
     "experiment:registry:report": "tsx scripts/report-experiment-registry.ts",
+    "metadata:filter:test": "tsx scripts/test-metadata-filter.ts",
+    "experiment:metadata:filter": "tsx scripts/evaluate-metadata-filter.ts",
     "golden:validate": "tsx scripts/validate-golden-set.ts --dataset docs/evaluation/golden-set.v1.json --split docs/evaluation/golden-set-splits.v1.json",
     "golden:report": "tsx scripts/report-golden-set.ts --split docs/evaluation/golden-set-splits.v1.json",
     "golden:verify:negatives": "tsx scripts/verify-negative-cases.ts",

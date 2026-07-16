@@ -9,6 +9,12 @@ export type ManifestSource = {
   url?: string;
   path?: string;
   language?: string;
+  version?: string;
+  family?: string;
+  documentRole?: string;
+  authority?: string;
+  stability?: string;
+  publisher?: string;
   license?: string;
   title?: string;
   qualityExceptions?: QualityException[];
@@ -28,6 +34,12 @@ export type SourceMetadata = {
   title?: string;
   sourceType?: "pdf" | "html" | "markdown";
   language?: string;
+  version?: string;
+  family?: string;
+  documentRole?: string;
+  authority?: string;
+  stability?: string;
+  publisher?: string;
   qualityPolicy?: ArtifactQualityPolicy;
   qualityExceptions?: QualityException[];
 };
@@ -38,6 +50,7 @@ type CorpusManifest = {
   baseUrl?: string;
   parsedBasePath?: string;
   qualityPolicy?: ArtifactQualityPolicy;
+  defaults?: Partial<ManifestSource>;
   sources: Array<string | ManifestSource>;
 };
 
@@ -62,6 +75,7 @@ export async function loadCorpusManifests(manifestPaths: string[]) {
         manifestDirectory,
         manifest.parsedBasePath,
         manifest.qualityPolicy ?? "fail",
+        manifest.defaults,
       );
       sources.push(resolved.input);
       if (resolved.metadata) sourceMetadataByInput[resolved.input] = resolved.metadata;
@@ -77,19 +91,17 @@ function resolveManifestSource(
   manifestDirectory: string,
   parsedBasePath: string | undefined,
   qualityPolicy: ArtifactQualityPolicy,
+  defaults: Partial<ManifestSource> | undefined,
 ) {
-  if (typeof source === "string") return { input: resolvePathOrUrl(source, manifestDirectory) };
+  if (typeof source === "string") {
+    const input = resolvePathOrUrl(source, manifestDirectory);
+    const metadata = defaults ? toSourceMetadata({ ...defaults, id: "", url: source }, qualityPolicy) : undefined;
+    return { input, metadata };
+  }
+  source = { ...defaults, ...source };
   if (!source.id) throw new Error("Every structured corpus source requires an id.");
 
-  const metadata: SourceMetadata = {
-    sourceId: source.id,
-    sourceUrl: source.url,
-    title: source.title,
-    sourceType: source.type,
-    language: source.language,
-    qualityPolicy,
-    qualityExceptions: source.qualityExceptions,
-  };
+  const metadata = toSourceMetadata(source, qualityPolicy);
   if (source.type === "pdf" && parsedBasePath) {
     return {
       input: path.resolve(manifestDirectory, parsedBasePath, source.id, "normalized.json"),
@@ -99,6 +111,24 @@ function resolveManifestSource(
   if (source.path) return { input: resolvePathOrUrl(source.path, manifestDirectory), metadata };
   if (source.url) return { input: source.url, metadata };
   throw new Error(`Corpus source '${source.id}' must include a path or url.`);
+}
+
+function toSourceMetadata(source: ManifestSource, qualityPolicy: ArtifactQualityPolicy): SourceMetadata {
+  return {
+    sourceId: source.id || undefined,
+    sourceUrl: source.url,
+    title: source.title,
+    sourceType: source.type,
+    language: source.language,
+    version: source.version,
+    family: source.family,
+    documentRole: source.documentRole,
+    authority: source.authority,
+    stability: source.stability,
+    publisher: source.publisher,
+    qualityPolicy,
+    qualityExceptions: source.qualityExceptions,
+  };
 }
 
 function resolvePathOrUrl(source: string, manifestDirectory: string) {

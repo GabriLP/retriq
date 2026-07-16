@@ -30,6 +30,12 @@ type SourceMetadata = {
   title?: string;
   sourceType?: SourceType;
   language?: string;
+  version?: string;
+  family?: string;
+  documentRole?: string;
+  authority?: string;
+  stability?: string;
+  publisher?: string;
   qualityPolicy?: ArtifactQualityPolicy;
   qualityExceptions?: QualityException[];
 };
@@ -269,9 +275,15 @@ function applySourceMetadata(
     ...document,
     title: metadata?.title ?? document.title,
     sourceUrl: metadata?.sourceUrl ?? document.sourceUrl,
-    sourceId: metadata?.sourceId,
+    sourceId: metadata?.sourceId ?? document.sourceId,
     sourceType: metadata?.sourceType ?? fallbackType,
-    language: metadata?.language,
+    language: metadata?.language ?? document.language,
+    version: metadata?.version ?? document.version,
+    family: metadata?.family ?? document.family,
+    documentRole: metadata?.documentRole ?? document.documentRole,
+    authority: metadata?.authority ?? document.authority,
+    stability: metadata?.stability ?? document.stability,
+    publisher: metadata?.publisher ?? document.publisher,
   };
 }
 

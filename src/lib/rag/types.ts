@@ -9,6 +9,12 @@ export type DocumentationChunk = {
   sourceId?: string;
   sourceType?: SourceType;
   language?: string;
+  version?: string;
+  family?: string;
+  documentRole?: string;
+  authority?: string;
+  stability?: string;
+  publisher?: string;
   pageStart?: number;
   pageEnd?: number;
   wordCount: number;
@@ -85,6 +91,12 @@ export type SourceDocument = {
   sourceId?: string;
   sourceType?: SourceType;
   language?: string;
+  version?: string;
+  family?: string;
+  documentRole?: string;
+  authority?: string;
+  stability?: string;
+  publisher?: string;
   pageStart?: number;
   pageEnd?: number;
 };
