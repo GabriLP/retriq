@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "common-programming-word-300-test-threshold-075",
+  "title": "Common programming corpus - locked test at threshold 0.75",
+  "hypothesis": "The validation-selected 0.75 threshold will preserve Recall@4 while reducing no-answer false positives on the untouched balanced test split.",
+  "tags": ["held-out-test", "threshold-0.75", "common-corpus"],
+  "corpus": {
+    "manifests": ["docs/corpus/react-learn.json", "docs/corpus/programming-foundation.json"]
+  },
+  "chunking": { "strategy": "word-window", "minWords": 200, "targetWords": 300, "overlapWords": 80 },
+  "embedding": {
+    "provider": "google",
+    "model": "gemini-embedding-2",
+    "outputDimensionality": 768,
+    "documentTask": "RETRIEVAL_DOCUMENT",
+    "queryTask": "QUESTION_ANSWERING",
+    "batchSize": 32,
+    "pricing": {
+      "requestMode": "standard",
+      "usdPerMillionInputTokens": 0.2,
+      "observedAt": "2026-07-16",
+      "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+    }
+  },
+  "retrieval": { "strategy": "dense-cosine", "topK": 4, "minScore": 0.75 },
+  "generation": { "provider": "google", "model": "gemini-3.5-flash" },
+  "evaluation": {
+    "judgeEnabled": false,
+    "judgeModel": "gemini-3.5-flash",
+    "goldenSet": "docs/evaluation/golden-set.v1.json",
+    "caseStatuses": ["source-verified"],
+    "splitManifest": "docs/evaluation/golden-set-splits.v1.json",
+    "split": "test"
+  }
+}
