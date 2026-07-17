@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
@@ -78,6 +79,9 @@ async function main() {
   const results = protocol.variants.map((variant) => evaluateVariant(variant, variantRankings[variant], cases, protocol));
   const decisions = cases.map((item, index) => ({ caseId: item.id, answerability: item.answerability, ...compatibility[index].decision, compatibleChunks: compatibility[index].chunks.length }));
   const createdAt = new Date().toISOString();
+  const provenancePaths = ["src", "scripts", "package.json", "package-lock.json", "docs/corpus", "docs/experiments", "docs/evaluation"];
+  const gitStatus = runCommand("git", ["status", "--porcelain", "--", ...provenancePaths]);
+  const gitDiff = runCommand("git", ["diff", "--binary", "--", ...provenancePaths]);
   const artifact = {
     schemaVersion: 1,
     id: protocol.id,
@@ -88,6 +92,7 @@ async function main() {
     hypothesis: protocol.hypothesis,
     split: "validation",
     inputHashes: { protocol: sha256(protocolRaw), config: sha256(configRaw), chunks: sha256(chunksRaw), goldenSet: sha256(goldenRaw), splitManifest: sha256(splitRaw) },
+    code: { gitCommit: runCommand("git", ["rev-parse", "HEAD"]) || "unknown", dirty: Boolean(gitStatus), gitDiffHash: sha256(gitDiff) },
     cache: { documentHits: documents.cache.cacheHits, queryHits: queries.cache.cacheHits, apiInputs: documents.apiInputs + queries.apiInputs, apiRequests: documents.apiRequests + queries.apiRequests },
     timingsMs: { totalScoring: Math.round(performance.now() - started) },
     metadataCoverage: { chunks: chunks.length, withLanguage: chunks.filter((chunk) => chunk.language).length, withVersion: chunks.filter((chunk) => chunk.version).length },
@@ -118,8 +123,8 @@ function evaluateVariant(variant: VariantId, rankings: Array<Array<Documentation
   return { variant, selectedThreshold: selected?.threshold ?? null, selectedMetrics: selected?.metrics ?? null, thresholdResults, decision: selected ? "Selected by the predeclared validation rule." : "No threshold satisfied the guardrails." };
 }
 
-function renderMarkdown(artifact: { id: string; attemptId: string; parentRunId: string; hypothesis: string; cache: { apiInputs: number }; metadataCoverage: { chunks: number; withLanguage: number; withVersion: number }; changedVariable: string; compatibilityDecisions: Array<{ caseId: string; answerability: string; status: CompatibilityDecision["status"]; requestedTechnology: string | null; requestedVersion: number | null; reason: string; compatibleChunks: number }>; results: VariantResult[] }) {
-  return `# Metadata-aware retrieval comparison\n\n- Protocol/attempt: \`${artifact.id}\` / \`${artifact.attemptId}\`\n- Parent run: \`${artifact.parentRunId}\`\n- Split: **validation only**\n- Hypothesis: ${artifact.hypothesis}\n- Changed variable: ${artifact.changedVariable}\n- Cache-only: **${artifact.cache.apiInputs === 0 ? "yes" : "no"}**\n- Metadata coverage: ${artifact.metadataCoverage.withLanguage}/${artifact.metadataCoverage.chunks} chunks with language, ${artifact.metadataCoverage.withVersion}/${artifact.metadataCoverage.chunks} with version\n\n| Variant | Selected threshold | Recall@4 | Precision@4 | MRR | nDCG@4 | No-answer FPR | Decision |\n|---|---:|---:|---:|---:|---:|---:|---|\n${artifact.results.map((item) => `| ${item.variant} | ${item.selectedThreshold ?? "n/a"} | ${format(item.selectedMetrics?.recallAtK)} | ${format(item.selectedMetrics?.precisionAtK)} | ${format(item.selectedMetrics?.mrr)} | ${format(item.selectedMetrics?.ndcgAtK)} | ${format(item.selectedMetrics?.noAnswerFalsePositiveRate)} | ${item.decision} |`).join("\n")}\n\n## Compatibility decisions\n\n| Case | Answerability | Decision | Technology | Version | Compatible chunks |\n|---|---|---|---|---:|---:|\n${artifact.compatibilityDecisions.map((item) => `| ${item.caseId} | ${item.answerability} | ${item.status} | ${item.requestedTechnology ?? "-"} | ${item.requestedVersion ?? "-"} | ${item.compatibleChunks} |`).join("\n")}\n\nThe compatibility gate is deterministic and uses manifest-derived metadata. It does not inspect expected answers or evidence. This validation result must not be reported as a new held-out test result; the previous test split has already been observed.\n`;
+function renderMarkdown(artifact: { id: string; attemptId: string; parentRunId: string; hypothesis: string; code: { gitCommit: string; dirty: boolean; gitDiffHash: string }; cache: { apiInputs: number }; metadataCoverage: { chunks: number; withLanguage: number; withVersion: number }; changedVariable: string; compatibilityDecisions: Array<{ caseId: string; answerability: string; status: CompatibilityDecision["status"]; requestedTechnology: string | null; requestedVersion: number | null; reason: string; compatibleChunks: number }>; results: VariantResult[] }) {
+  return `# Metadata-aware retrieval comparison\n\n- Protocol/attempt: \`${artifact.id}\` / \`${artifact.attemptId}\`\n- Parent run: \`${artifact.parentRunId}\`\n- Evaluation code: \`${artifact.code.gitCommit}\`${artifact.code.dirty ? " (dirty)" : ""}\n- Code diff hash: \`${artifact.code.gitDiffHash}\`\n- Split: **validation only**\n- Hypothesis: ${artifact.hypothesis}\n- Changed variable: ${artifact.changedVariable}\n- Cache-only: **${artifact.cache.apiInputs === 0 ? "yes" : "no"}**\n- Metadata coverage: ${artifact.metadataCoverage.withLanguage}/${artifact.metadataCoverage.chunks} chunks with language, ${artifact.metadataCoverage.withVersion}/${artifact.metadataCoverage.chunks} with version\n\n| Variant | Selected threshold | Recall@4 | Precision@4 | MRR | nDCG@4 | No-answer FPR | Decision |\n|---|---:|---:|---:|---:|---:|---:|---|\n${artifact.results.map((item) => `| ${item.variant} | ${item.selectedThreshold ?? "n/a"} | ${format(item.selectedMetrics?.recallAtK)} | ${format(item.selectedMetrics?.precisionAtK)} | ${format(item.selectedMetrics?.mrr)} | ${format(item.selectedMetrics?.ndcgAtK)} | ${format(item.selectedMetrics?.noAnswerFalsePositiveRate)} | ${item.decision} |`).join("\n")}\n\n## Compatibility decisions\n\n| Case | Answerability | Decision | Technology | Version | Compatible chunks |\n|---|---|---|---|---:|---:|\n${artifact.compatibilityDecisions.map((item) => `| ${item.caseId} | ${item.answerability} | ${item.status} | ${item.requestedTechnology ?? "-"} | ${item.requestedVersion ?? "-"} | ${item.compatibleChunks} |`).join("\n")}\n\nThe compatibility gate is deterministic and uses manifest-derived metadata. It does not inspect expected answers or evidence. This validation result must not be reported as a new held-out test result.\n`;
 }
 
 async function writeReport(output: string, artifact: Parameters<typeof renderMarkdown>[0]) {
@@ -135,5 +140,6 @@ function parseArgs(args: string[]) { const value = (name: string, fallback?: str
 function canonicalJson(value: string) { return JSON.stringify(JSON.parse(value)); }
 function sha256(value: string) { return crypto.createHash("sha256").update(value).digest("hex"); }
 function format(value: number | null | undefined) { return value === null || value === undefined ? "n/a" : value.toFixed(4); }
+function runCommand(command: string, args: string[]) { const result = spawnSync(command, args, { encoding: "utf8", windowsHide: true }); return result.status === 0 ? result.stdout.trim() : ""; }
 
 main().catch((error) => { console.error(error); process.exit(1); });
