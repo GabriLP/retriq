@@ -121,14 +121,14 @@
       "id": "reranking-v1",
       "thesisSection": "Reranking",
       "researchQuestion": "Does reranking a fixed dense candidate pool improve ordering quality enough to justify added latency and cost?",
-      "status": "planned",
-      "variable": "No reranker, cross-encoder, or LLM reranker",
-      "controls": ["Candidate pool", "final topK", "corpus", "queries"],
+      "status": "completed",
+      "variable": "No reranker, Voyage rerank-2.5, or Voyage rerank-2.5-lite",
+      "controls": ["Gemini Embedding 2", "metadata gate", "cosine abstention threshold 0.68", "candidate depth 20", "final topK=4", "corpus", "validation queries"],
       "metrics": ["MRR", "nDCG@4", "Recall@4", "latency", "cost"],
-      "artifacts": [],
-      "decision": "Pending.",
-      "limitations": ["Requires a larger ranking-sensitive benchmark"],
-      "nextStep": "Run after metadata-aware retrieval."
+      "artifacts": ["docs/experiments/reranking-v1.json", "docs/experiment-results/reranking-v1-validation.md", "docs/experiment-results/reranking-v1-validation.csv"],
+      "decision": "Retain no reranker. With candidate Recall@20 equal to 1.0, rerank-2.5 preserved Recall@4 but reduced MRR from 0.9444 to 0.9259 and nDCG@4 from 0.9493 to 0.9327; rerank-2.5-lite reduced them further. Both added cost and about 0.31-0.33 seconds median API latency.",
+      "limitations": ["Only one provider family was tested", "The baseline leaves little headroom", "All benchmark approvals remain provisional", "Latency reflects one API run from Europe/Rome", "The 24-case test remains untouched"],
+      "nextStep": "Keep the simpler metadata-aware dense retriever and proceed to frozen-evidence answer generation and judge calibration."
     },
     {
       "order": 10,

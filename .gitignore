@@ -41,6 +41,7 @@ yarn-error.log*
 /data/parsed/*
 /data/experiments/*
 /data/embedding-cache/*
+/data/reranker-cache/*
 !/data/vector-store.json
 !/data/.gitkeep
 !/data/source/.gitkeep

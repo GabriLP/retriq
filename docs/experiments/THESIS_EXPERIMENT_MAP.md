@@ -2,7 +2,7 @@
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
 - Experiment families: **11**
-- Completed: **6**
+- Completed: **7**
 - Superseded but retained: **1**
 
 This is the narrative index for the thesis. The JSON registry is the source of truth; generated Markdown and CSV provide readable and tabular views. Every experiment records its question, isolated variable, controls, metrics, decision, limitations, and next action.
@@ -17,7 +17,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 6 | Retrieval strategy comparison | retrieval-strategies-v1 | completed | Retrieval strategy | Keep dense cosine; BM25 and simple RRF fail the declared guardrails. |
 | 7 | Metadata-aware retrieval | metadata-version-filter-v1 | completed | Compatibility gate enabled or disabled | On the 54-case v4 validation split, the pre-registered v1 attempt failed because C++ queries were misclassified as C. After a tested detector correction, v2 selects metadata-aware dense at 0.68 with Recall@4 0.9630, MRR 0.9444, nDCG@4 0.9493, and zero no-answer false positives. Pure dense still has no threshold satisfying all guardrails. |
 | 8 | Embedding model comparison | embedding-models-v2 | completed | Embedding provider/model at a fixed 1024-dimensional output | On the 54-case v4 validation split, retain Gemini Embedding 2 at threshold 0.68. It is the only 1024-dimensional candidate satisfying zero no-answer false positives, Recall@4 >= 0.90, and MRR >= 0.85. OpenAI Large is strongest at a permissive threshold but fails after zero-FPR calibration; Voyage preserves recall but misses the MRR floor. |
-| 9 | Reranking | reranking-v1 | planned | No reranker, cross-encoder, or LLM reranker | Pending. |
+| 9 | Reranking | reranking-v1 | completed | No reranker, Voyage rerank-2.5, or Voyage rerank-2.5-lite | Retain no reranker. With candidate Recall@20 equal to 1.0, rerank-2.5 preserved Recall@4 but reduced MRR from 0.9444 to 0.9259 and nDCG@4 from 0.9493 to 0.9327; rerank-2.5-lite reduced them further. Both added cost and about 0.31-0.33 seconds median API latency. |
 | 10 | Answer generation and LLM-as-a-judge | generation-and-judge-v1 | planned | Generator model, judge model, and judge prompt in separate experiments | Pending. |
 | 11 | Agentic RAG | rag-agent-loop-v1 | planned | Single pass versus bounded retrieve-check-rewrite loop | Pending. |
 
@@ -120,14 +120,14 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 ## 9. Reranking: reranking-v1
 
 - **Research question:** Does reranking a fixed dense candidate pool improve ordering quality enough to justify added latency and cost?
-- **Status:** planned
-- **Changed variable:** No reranker, cross-encoder, or LLM reranker
-- **Controls:** Candidate pool; final topK; corpus; queries
+- **Status:** completed
+- **Changed variable:** No reranker, Voyage rerank-2.5, or Voyage rerank-2.5-lite
+- **Controls:** Gemini Embedding 2; metadata gate; cosine abstention threshold 0.68; candidate depth 20; final topK=4; corpus; validation queries
 - **Metrics:** MRR; nDCG@4; Recall@4; latency; cost
-- **Artifacts:** not created yet
-- **Decision:** Pending.
-- **Limitations:** Requires a larger ranking-sensitive benchmark
-- **Next step:** Run after metadata-aware retrieval.
+- **Artifacts:** `docs/experiments/reranking-v1.json`; `docs/experiment-results/reranking-v1-validation.md`; `docs/experiment-results/reranking-v1-validation.csv`
+- **Decision:** Retain no reranker. With candidate Recall@20 equal to 1.0, rerank-2.5 preserved Recall@4 but reduced MRR from 0.9444 to 0.9259 and nDCG@4 from 0.9493 to 0.9327; rerank-2.5-lite reduced them further. Both added cost and about 0.31-0.33 seconds median API latency.
+- **Limitations:** Only one provider family was tested; The baseline leaves little headroom; All benchmark approvals remain provisional; Latency reflects one API run from Europe/Rome; The 24-case test remains untouched
+- **Next step:** Keep the simpler metadata-aware dense retriever and proceed to frozen-evidence answer generation and judge calibration.
 
 ## 10. Answer generation and LLM-as-a-judge: generation-and-judge-v1
 
