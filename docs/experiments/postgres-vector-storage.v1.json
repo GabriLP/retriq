@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "postgres-vector-storage-v1",
+  "title": "Deploy the selected exact retriever on Neon PostgreSQL with pgvector",
+  "status": "completed",
+  "observedAt": "2026-07-17",
+  "researchQuestion": "Can the frozen metadata-aware dense retriever be moved from local experiment artifacts to a production database without changing its validation outputs?",
+  "changedVariable": "Vector persistence and query execution: local exhaustive cosine computation versus PostgreSQL pgvector exact cosine distance",
+  "controlledVariables": [
+    "baseline-gemini-300-v4-validation run 20260717084956473-e60c88ec",
+    "33,079 frozen chunks",
+    "Gemini Embedding 2 at 1,024 dimensions",
+    "QUESTION_ANSWERING and RETRIEVAL_DOCUMENT roles",
+    "metadata compatibility gate",
+    "cosine eligibility threshold 0.68",
+    "topK=4",
+    "no reranker",
+    "validation cases only; locked test untouched"
+  ],
+  "alternatives": [
+    {
+      "id": "versioned-json",
+      "status": "rejected-for-expanded-production",
+      "pros": ["Exact baseline", "Inspectable", "No database service"],
+      "cons": ["Requires loading and scanning every vector", "Large repository and deployment artifact", "Poor serverless cold-start characteristics"]
+    },
+    {
+      "id": "pgvector-exact",
+      "status": "selected",
+      "pros": ["Exact cosine ordering", "Server-side filtering", "Corpus versioning and atomic activation", "Fits the free tier"],
+      "cons": ["External managed service", "Cold compute can add latency", "Requires migration and import tooling"]
+    },
+    {
+      "id": "pgvector-hnsw",
+      "status": "deferred-experiment",
+      "pros": ["Lower expected query latency at larger scale"],
+      "cons": ["Approximate results can change retrieval metrics", "Additional index storage", "Must be benchmarked as a separate variable"]
+    },
+    {
+      "id": "pgvector-ivfflat",
+      "status": "deferred-experiment",
+      "pros": ["Fast index build and smaller memory requirement than HNSW"],
+      "cons": ["Requires list/probe tuning", "Approximate recall", "Unnecessary at the current corpus size without evidence"]
+    }
+  ],
+  "selectionRule": "Select the deployable backend only if all frozen validation retrieval outputs remain identical within a 0.0002 cosine-score tolerance and no provider requests are needed during import or parity verification.",
+  "pricing": {
+    "provider": "Neon Free",
+    "observedMonthlyCostUsd": 0,
+    "includedStorageGb": 0.5,
+    "source": "https://neon.com/pricing",
+    "creditsOrPaidCapacityUsed": false
+  },
+  "result": "docs/experiment-results/postgres-vector-storage-v1.json"
+}

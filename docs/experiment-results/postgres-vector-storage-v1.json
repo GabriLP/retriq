@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "postgres-vector-storage-v1-result",
+  "observedAt": "2026-07-17",
+  "provider": "Neon",
+  "plan": "Free",
+  "region": "aws-eu-central-1",
+  "postgresExtension": "vector",
+  "pgvectorVersion": "0.8.0",
+  "searchMode": "exact-cosine",
+  "approximateIndex": null,
+  "activeCorpus": {
+    "versionId": "baseline-gemini-300-v4-validation-20260717084956473-e60c88ec",
+    "chunksSha256": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
+    "configSha256": "e7d95b88394a8f87f08a4de9885b8c80cfa70f729e337b5a646e6500b1a40880",
+    "sourceCount": 434,
+    "chunkCount": 33079,
+    "wordCount": 6117327,
+    "embeddingProvider": "google",
+    "embeddingModel": "gemini-embedding-2",
+    "embeddingDimensions": 1024,
+    "duplicateHistoricalChunkIdRowsPreservedByOrdinal": 561
+  },
+  "storage": {
+    "databaseSize": "228 MB",
+    "freeTierIncludedStorage": "0.5 GB",
+    "observedMonthlyCostUsd": 0
+  },
+  "verification": {
+    "frozenValidationCases": 54,
+    "exactRankingMatches": 54,
+    "scoreTolerance": 0.0002,
+    "embeddingProviderRequestsDuringImport": 0,
+    "embeddingProviderRequestsDuringParityCheck": 0,
+    "testSplitTouched": false
+  },
+  "operationalSmokeTest": {
+    "questionTechnology": "Java SE 26",
+    "retrievedChunks": 4,
+    "topSourceFormat": "pdf",
+    "topSource": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+    "topCosineScore": 0.797,
+    "retrievalLatencyMs": 985,
+    "note": "This single request is a connectivity smoke test, not a latency benchmark."
+  },
+  "decision": "Use exact pgvector retrieval in production. Keep HNSW and IVFFlat disabled until each is evaluated as an isolated retrieval experiment.",
+  "limitations": [
+    "Neon Free compute may cold-start after inactivity.",
+    "The 228 MB measurement includes one active corpus and database overhead; additional embedding versions require capacity monitoring.",
+    "No statistically meaningful production latency benchmark has been run yet.",
+    "The locked test split remains untouched."
+  ]
+}

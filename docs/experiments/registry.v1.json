@@ -157,6 +157,20 @@
       "decision": "Pending.",
       "limitations": ["Must not hide a weak single-pass baseline"],
       "nextStep": "Run only after retrieval, generation, and judge baselines are frozen."
+    },
+    {
+      "order": 12,
+      "id": "postgres-vector-storage-v1",
+      "thesisSection": "Production retrieval infrastructure",
+      "researchQuestion": "Can the frozen metadata-aware dense retriever be deployed on managed PostgreSQL without changing its validation outputs?",
+      "status": "completed",
+      "variable": "Local exhaustive cosine persistence versus exact pgvector execution",
+      "controls": ["Frozen 33,079-chunk corpus", "Gemini Embedding 2 at 1,024 dimensions", "metadata gate", "threshold 0.68", "topK=4", "no reranker", "validation only"],
+      "metrics": ["Exact ranking agreement", "cosine-score tolerance", "database size", "provider requests", "cost", "operational smoke-test latency"],
+      "artifacts": ["docs/experiments/postgres-vector-storage.v1.json", "docs/experiment-results/postgres-vector-storage-v1.json", "docs/experiment-results/postgres-vector-storage-v1.md", "db/migrations/001_pgvector_runtime.sql", "db/migrations/002_preserve_duplicate_chunk_ids.sql"],
+      "decision": "Deploy exact pgvector search on Neon Free. It preserved all 54 frozen validation outputs within a 0.0002 score tolerance, stored 33,079 chunks in 228 MB, reused cached embeddings with zero provider calls, and cost $0 at observation time. HNSW and IVFFlat remain deferred experiments.",
+      "limitations": ["One operational latency sample is not a benchmark", "Free compute can cold-start", "Additional corpus or embedding versions require storage monitoring", "The locked test remains untouched"],
+      "nextStep": "Collect repeated production latency samples and evaluate HNSW only if exact-search latency becomes materially problematic."
     }
   ]
 }

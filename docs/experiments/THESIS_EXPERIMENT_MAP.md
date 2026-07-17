@@ -1,8 +1,8 @@
 # Thesis experiment map
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
-- Experiment families: **11**
-- Completed: **7**
+- Experiment families: **12**
+- Completed: **8**
 - Superseded but retained: **1**
 
 This is the narrative index for the thesis. The JSON registry is the source of truth; generated Markdown and CSV provide readable and tabular views. Every experiment records its question, isolated variable, controls, metrics, decision, limitations, and next action.
@@ -20,6 +20,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 9 | Reranking | reranking-v1 | completed | No reranker, Voyage rerank-2.5, or Voyage rerank-2.5-lite | Retain no reranker. With candidate Recall@20 equal to 1.0, rerank-2.5 preserved Recall@4 but reduced MRR from 0.9444 to 0.9259 and nDCG@4 from 0.9493 to 0.9327; rerank-2.5-lite reduced them further. Both added cost and about 0.31-0.33 seconds median API latency. |
 | 10 | Answer generation and LLM-as-a-judge | generation-and-judge-v1 | in-progress | Generator model first; judge model and judge prompt only after human reference labels exist | The 72-row blinded human review selects GLM-5.2 BaseTen FP8 on validation: normalized quality 0.9740, every guardrail passed, and the lowest observed generation cost. Grok 4.5 scored 0.9323 and passed all guardrails. Gemini 3.5 Flash scored 0.9219 but its one human-labelled generator failure produced a 4.17% rate, above the preregistered 2% limit. The locked test remains untouched. |
 | 11 | Agentic RAG | rag-agent-loop-v1 | planned | Single pass versus bounded retrieve-check-rewrite loop | Pending. |
+| 12 | Production retrieval infrastructure | postgres-vector-storage-v1 | completed | Local exhaustive cosine persistence versus exact pgvector execution | Deploy exact pgvector search on Neon Free. It preserved all 54 frozen validation outputs within a 0.0002 score tolerance, stored 33,079 chunks in 228 MB, reused cached embeddings with zero provider calls, and cost $0 at observation time. HNSW and IVFFlat remain deferred experiments. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
 
@@ -152,3 +153,15 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Decision:** Pending.
 - **Limitations:** Must not hide a weak single-pass baseline
 - **Next step:** Run only after retrieval, generation, and judge baselines are frozen.
+
+## 12. Production retrieval infrastructure: postgres-vector-storage-v1
+
+- **Research question:** Can the frozen metadata-aware dense retriever be deployed on managed PostgreSQL without changing its validation outputs?
+- **Status:** completed
+- **Changed variable:** Local exhaustive cosine persistence versus exact pgvector execution
+- **Controls:** Frozen 33,079-chunk corpus; Gemini Embedding 2 at 1,024 dimensions; metadata gate; threshold 0.68; topK=4; no reranker; validation only
+- **Metrics:** Exact ranking agreement; cosine-score tolerance; database size; provider requests; cost; operational smoke-test latency
+- **Artifacts:** `docs/experiments/postgres-vector-storage.v1.json`; `docs/experiment-results/postgres-vector-storage-v1.json`; `docs/experiment-results/postgres-vector-storage-v1.md`; `db/migrations/001_pgvector_runtime.sql`; `db/migrations/002_preserve_duplicate_chunk_ids.sql`
+- **Decision:** Deploy exact pgvector search on Neon Free. It preserved all 54 frozen validation outputs within a 0.0002 score tolerance, stored 33,079 chunks in 228 MB, reused cached embeddings with zero provider calls, and cost $0 at observation time. HNSW and IVFFlat remain deferred experiments.
+- **Limitations:** One operational latency sample is not a benchmark; Free compute can cold-start; Additional corpus or embedding versions require storage monitoring; The locked test remains untouched
+- **Next step:** Collect repeated production latency samples and evaluate HNSW only if exact-search latency becomes materially problematic.
