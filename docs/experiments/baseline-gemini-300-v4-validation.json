@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "baseline-gemini-300-v4-validation",
+  "title": "Gemini 300-word baseline on benchmark v4 validation",
+  "hypothesis": "The selected Gemini 300-word baseline preserves strong retrieval on the expanded corpus and retrieves the correct canonical HTML pages for Python, TypeScript, and Rust while rejecting hard negatives.",
+  "tags": ["baseline", "benchmark-v4", "validation", "gemini", "300-word", "html-snapshots"],
+  "corpus": { "manifests": ["docs/corpus/react-learn.json", "docs/corpus/programming-foundation.json"] },
+  "chunking": { "strategy": "word-window", "minWords": 200, "targetWords": 300, "overlapWords": 80 },
+  "embedding": {
+    "provider": "google",
+    "model": "gemini-embedding-2",
+    "outputDimensionality": 1024,
+    "documentTask": "RETRIEVAL_DOCUMENT",
+    "queryTask": "QUESTION_ANSWERING",
+    "batchSize": 32,
+    "pricing": {
+      "requestMode": "standard",
+      "usdPerMillionInputTokens": 0.2,
+      "observedAt": "2026-07-16",
+      "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+    }
+  },
+  "retrieval": { "strategy": "dense-cosine", "topK": 4, "minScore": 0.18 },
+  "generation": { "provider": "google", "model": "gemini-3.5-flash" },
+  "evaluation": {
+    "judgeEnabled": false,
+    "goldenSet": "docs/evaluation/golden-set.v4.json",
+    "caseStatuses": ["human-approved"],
+    "splitManifest": "docs/evaluation/golden-set-splits.v4.json",
+    "split": "validation"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "baseline-gemini-300-v4-metadata-filter-v1",
+  "title": "Metadata-aware Gemini baseline on benchmark v4 validation",
+  "hypothesis": "The deterministic technology/version compatibility gate keeps the no-answer false-positive rate at zero on the expanded benchmark without materially degrading page-specific answerable retrieval.",
+  "baseExperimentConfig": "baseline-gemini-300-v4-validation.json",
+  "split": "validation",
+  "variants": ["dense-cosine", "metadata-aware-dense"],
+  "thresholds": [0.18, 0.4, 0.5, 0.55, 0.6, 0.62, 0.64, 0.65, 0.66, 0.68, 0.7, 0.72, 0.74, 0.75, 0.76, 0.78, 0.8],
+  "selectionRule": {
+    "primary": "noAnswerFalsePositiveRate",
+    "primaryTarget": 0,
+    "guardrails": { "recallAtK": 0.9, "mrr": 0.85 },
+    "tieBreakers": ["ndcgAtK:higher", "threshold:lower", "precisionAtK:higher"]
+  },
+  "controlledVariables": [
+    "expanded corpus snapshot",
+    "54 validation cases",
+    "300-word chunks with 80-word overlap",
+    "Gemini 1024-dimensional embeddings",
+    "cosine scoring",
+    "topK=4"
+  ],
+  "changedVariable": "Deterministic query-to-corpus technology/version compatibility gate",
+  "reportOutput": "docs/experiment-results/baseline-gemini-300-v4-metadata-filter-validation"
+}
