@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "reranking-v1",
+  "title": "Specialized cross-encoder reranking on benchmark v4 validation",
+  "hypothesis": "A specialized cross-encoder can improve nDCG@4 over the already strong metadata-aware dense baseline by reordering a fixed top-20 candidate pool without reducing recall, MRR, or abstention quality.",
+  "baseExperimentConfig": "baseline-gemini-300-v4-validation.json",
+  "split": "validation",
+  "variants": [
+    { "id": "no-reranker", "provider": null, "model": null, "priceUsdPerMillionTokens": 0 },
+    { "id": "voyage-rerank-2.5", "provider": "voyage", "model": "rerank-2.5", "priceUsdPerMillionTokens": 0.05 },
+    { "id": "voyage-rerank-2.5-lite", "provider": "voyage", "model": "rerank-2.5-lite", "priceUsdPerMillionTokens": 0.02 }
+  ],
+  "candidateDepth": 20,
+  "finalTopK": 4,
+  "denseEligibilityThreshold": 0.68,
+  "selectionRule": {
+    "primary": "ndcgAtK",
+    "minimumAbsoluteLift": 0.005,
+    "guardrails": {
+      "noAnswerFalsePositiveRateMaximum": 0,
+      "recallAtKMinimum": 0.9629629629629629,
+      "mrrMinimum": 0.9444444444444444
+    },
+    "tieBreakers": ["estimatedCostUsd:lower", "medianLatencyMs:lower"]
+  },
+  "controlledVariables": [
+    "33,079-chunk frozen corpus snapshot",
+    "54 benchmark v4 validation cases",
+    "300-word chunks with 80-word overlap",
+    "Gemini Embedding 2 at 1024 dimensions",
+    "metadata compatibility gate",
+    "dense query-level abstention threshold 0.68",
+    "fixed candidate depth 20",
+    "final topK=4",
+    "no generative LLM reranker"
+  ],
+  "changedVariable": "Specialized reranker model",
+  "pricing": {
+    "observedAt": "2026-07-17",
+    "sourceUrl": "https://docs.voyageai.com/docs/pricing",
+    "freeTierNotSubtracted": true
+  },
+  "reportOutput": "docs/experiment-results/reranking-v1-validation"
+}
