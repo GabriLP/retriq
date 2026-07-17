@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-v4-openai-3-large-1024",
+  "title": "OpenAI text-embedding-3-large on benchmark v4 validation",
+  "hypothesis": "OpenAI's large model may improve page-specific retrieval quality on the expanded benchmark at the same vector dimension.",
+  "tags": ["embedding-model", "benchmark-v4", "validation", "openai", "1024-dim"],
+  "corpus": { "manifests": ["docs/corpus/react-learn.json", "docs/corpus/programming-foundation.json"] },
+  "chunking": { "strategy": "word-window", "minWords": 200, "targetWords": 300, "overlapWords": 80 },
+  "embedding": {
+    "provider": "openai", "model": "text-embedding-3-large", "outputDimensionality": 1024,
+    "documentTask": "RETRIEVAL_DOCUMENT", "queryTask": "QUESTION_ANSWERING", "batchSize": 32,
+    "pricing": { "requestMode": "standard", "usdPerMillionInputTokens": 0.13, "observedAt": "2026-07-16", "sourceUrl": "https://developers.openai.com/api/docs/models/text-embedding-3-large" }
+  },
+  "retrieval": { "strategy": "dense-cosine", "topK": 4, "minScore": 0.18 },
+  "generation": { "provider": "google", "model": "gemini-3.5-flash" },
+  "evaluation": { "judgeEnabled": false, "goldenSet": "docs/evaluation/golden-set.v4.json", "caseStatuses": ["human-approved"], "splitManifest": "docs/evaluation/golden-set-splits.v4.json", "split": "validation" }
+}

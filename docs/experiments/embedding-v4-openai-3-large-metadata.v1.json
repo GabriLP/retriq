@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-v4-openai-3-large-metadata-v1",
+  "title": "OpenAI large metadata-aware threshold calibration on v4",
+  "hypothesis": "OpenAI text-embedding-3-large can meet the common zero-FPR retrieval guardrails after independent threshold calibration.",
+  "baseExperimentConfig": "embedding-v4-openai-3-large-1024.json",
+  "split": "validation",
+  "variants": ["dense-cosine", "metadata-aware-dense"],
+  "thresholds": [0.18, 0.4, 0.5, 0.55, 0.6, 0.62, 0.64, 0.65, 0.66, 0.68, 0.7, 0.72, 0.74, 0.75, 0.76, 0.78, 0.8],
+  "selectionRule": { "primary": "noAnswerFalsePositiveRate", "primaryTarget": 0, "guardrails": { "recallAtK": 0.9, "mrr": 0.85 }, "tieBreakers": ["ndcgAtK:higher", "threshold:lower", "precisionAtK:higher"] },
+  "controlledVariables": ["expanded corpus snapshot", "54 validation cases", "300-word chunks with 80-word overlap", "1024-dimensional output", "metadata compatibility gate", "cosine scoring", "topK=4", "common threshold grid and selection rule"],
+  "changedVariable": "Embedding provider/model: OpenAI text-embedding-3-large",
+  "reportOutput": "docs/experiment-results/embedding-v4-openai-3-large-metadata-validation"
+}

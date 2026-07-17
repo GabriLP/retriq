@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-models-v2",
+  "title": "Commercial embedding comparison on benchmark v4",
+  "hypothesis": "The expanded page-specific benchmark will reveal quality and cost differences that were uncertain on the smaller validation set.",
+  "variedPaths": ["embedding.provider", "embedding.model", "embedding.pricing"],
+  "commonDimension": 1024,
+  "candidates": [
+    "baseline-gemini-300-v4-validation.json",
+    "embedding-v4-openai-3-large-1024.json",
+    "embedding-v4-openai-3-small-1024.json",
+    "embedding-v4-voyage-code-3-1024.json"
+  ],
+  "split": "validation",
+  "primaryMetrics": ["Recall@4", "MRR", "nDCG@4", "No-answer FPR"],
+  "secondaryMetrics": ["Precision@4", "embedding latency", "estimated cost", "cache reuse"],
+  "selectionPolicy": "Calibrate every model independently with the same metadata gate, threshold grid, zero-FPR target, Recall@4 >= 0.90, and MRR >= 0.85. A model with no eligible threshold remains unselected.",
+  "status": "preregistered",
+  "resultArtifact": "../experiment-results/embedding-model-comparison-v4-validation.json"
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-v4-voyage-code-3-1024",
+  "title": "Voyage Code 3 on benchmark v4 validation",
+  "hypothesis": "A code-specialized embedding model may improve programming-documentation retrieval on the expanded benchmark.",
+  "tags": ["embedding-model", "benchmark-v4", "validation", "voyage", "code-specialized", "1024-dim"],
+  "corpus": { "manifests": ["docs/corpus/react-learn.json", "docs/corpus/programming-foundation.json"] },
+  "chunking": { "strategy": "word-window", "minWords": 200, "targetWords": 300, "overlapWords": 80 },
+  "embedding": {
+    "provider": "voyage", "model": "voyage-code-3", "outputDimensionality": 1024,
+    "documentTask": "RETRIEVAL_DOCUMENT", "queryTask": "QUESTION_ANSWERING", "batchSize": 32,
+    "pricing": { "requestMode": "standard", "usdPerMillionInputTokens": 0.18, "observedAt": "2026-07-16", "sourceUrl": "https://docs.voyageai.com/docs/pricing" }
+  },
+  "retrieval": { "strategy": "dense-cosine", "topK": 4, "minScore": 0.18 },
+  "generation": { "provider": "google", "model": "gemini-3.5-flash" },
+  "evaluation": { "judgeEnabled": false, "goldenSet": "docs/evaluation/golden-set.v4.json", "caseStatuses": ["human-approved"], "splitManifest": "docs/evaluation/golden-set-splits.v4.json", "split": "validation" }
+}
