@@ -8,6 +8,7 @@ const chunks = [
   chunk("java", "Java", "Java SE 26"),
   chunk("react", "React"),
   chunk("c", "C", "N1570 / C11 committee draft"),
+  chunk("cpp", "C++", "N5046 / C++26 working draft"),
 ];
 
 assert.equal(filterChunksByQueryMetadata("What changed in PostgreSQL 19?", chunks).decision.status, "unsupported-version");
@@ -17,6 +18,8 @@ assert.equal(filterChunksByQueryMetadata("How does Java overload resolution work
 assert.equal(filterChunksByQueryMetadata("How does React Native FlatList work?", chunks).decision.status, "unsupported-technology");
 assert.equal(filterChunksByQueryMetadata("Why is state a snapshot?", chunks).chunks.length, chunks.length);
 assert.equal(filterChunksByQueryMetadata("Which exceptions exist in C11 array conversion?", chunks).chunks[0]?.id, "c");
+assert.equal(filterChunksByQueryMetadata("What parameter form makes a C++ move constructor?", chunks).decision.requestedTechnology, "cpp");
+assert.equal(filterChunksByQueryMetadata("What parameter form makes a C++ move constructor?", chunks).chunks[0]?.id, "cpp");
 
 console.log("Metadata filter tests passed.");
 

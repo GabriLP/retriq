@@ -35,7 +35,7 @@ const RULES: TechnologyRule[] = [
   technology("rust", [/\bRust\b/i], [/^Rust$/i]),
   technology("go", [/\bGo\s+(?:language|version|1\.)/i, /\bGolang\b/i], [/^Go$/i], /\bGo(?:lang)?\s+(?:version\s+)?(\d+)(?:\.\d+)?\b/i, /go(\d+)(?:\.\d+)?/i),
   technology("bash", [/\bBash\b/i], [/^Bash$/i], /\bBash\s+(\d+)(?:\.\d+)?\b/i, /\b(\d+)(?:\.\d+)?/),
-  technology("cpp", [/\bC\+\+\b/], [/^C\+\+$/i]),
+  technology("cpp", [/\bC\+\+(?!\w)/i], [/^C\+\+$/i]),
   technology("c", [/\bC(?:11|17|23|26)?\b/], [/^C$/], /\bC(11|17|23|26)\b/, /\bC(11|17|23|26)\b/),
 ];
 
