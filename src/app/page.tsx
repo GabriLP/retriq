@@ -1,8 +1,8 @@
 import { QueryWorkbench } from "@/components/query-workbench";
-import { readCorpusSummary } from "@/lib/rag/vector-store";
+import { readRuntimeCorpusSummary } from "@/lib/rag/runtime-vector-store";
 
 export default async function Home() {
-  const corpusSummary = await readCorpusSummary();
+  const corpusSummary = await readRuntimeCorpusSummary();
 
   return <QueryWorkbench corpusSummary={corpusSummary} />;
 }

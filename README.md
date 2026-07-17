@@ -33,9 +33,10 @@ Rebuild the local chunks and vector store after changing that manifest:
 npm run ingest -- --manifest docs/corpus/react-learn.json
 ```
 
-The generated `data/vector-store.json` is versioned because both the production
-build and the query API need it. Intermediate chunks and local evaluation logs
-remain ignored by Git.
+The generated `data/vector-store.json` remains versioned as a small, inspectable
+React-only fallback. The expanded production corpus is stored in Neon
+PostgreSQL with pgvector; intermediate chunks, embedding caches, database
+credentials, and local evaluation logs remain ignored by Git.
 
 The initial multi-language registry is `docs/corpus/programming-foundation.json`.
 It declares publisher PDFs for C, Java, and PostgreSQL, and official HTML
@@ -178,9 +179,34 @@ suppresses the original grounded answer.
 
 ## Vercel demo deployment
 
-Import the GitHub repository into Vercel, keep the detected Next.js build
-settings, and add `GEMINI_API_KEY` to the project environment variables before
-deploying.
+The selected production backend is exact pgvector search over the frozen
+`baseline-gemini-300-v4-validation` run. Bootstrap and verify it with:
+
+```bash
+npx neonctl@latest init
+npm run database:migrate
+npm run database:import -- --batch-size 100 --activate
+npm run database:inspect
+npm run database:parity
+```
+
+`database:import` is resumable and cache-only: it refuses to call the embedding
+provider when a frozen vector is missing. Corpus versions are content-hashed
+and activated explicitly. Historical duplicate chunk IDs are preserved by
+their frozen row ordinal instead of being silently removed.
+
+Configure Vercel Production and Preview with `GEMINI_API_KEY`, a sensitive
+pooled `DATABASE_URL`, and these non-secret values:
+
+```bash
+RETRIQ_VECTOR_STORE_BACKEND=postgres
+GEMINI_EMBEDDING_OUTPUT_DIMENSIONALITY=1024
+RETRIQ_MIN_SCORE=0.68
+```
+
+Exact cosine search intentionally has no approximate index. HNSW and IVFFlat
+can only be enabled after a separately recorded recall, ranking, latency, and
+storage comparison.
 
 Do not enable `RETRIQ_EVALUATION_LOG_ENABLED` on Vercel. Production logging is
 disabled by default because the serverless filesystem is not persistent.

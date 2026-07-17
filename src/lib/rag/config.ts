@@ -3,12 +3,18 @@ import path from "node:path";
 const root = process.cwd();
 const evaluationLoggingSetting = process.env.RETRIQ_EVALUATION_LOG_ENABLED;
 const judgeEnabledSetting = process.env.RETRIQ_LLM_JUDGE_ENABLED;
+const vectorStoreBackend = process.env.RETRIQ_VECTOR_STORE_BACKEND ?? "json";
+
+if (!isVectorStoreBackend(vectorStoreBackend)) {
+  throw new Error("RETRIQ_VECTOR_STORE_BACKEND must be either 'json' or 'postgres'.");
+}
 
 export const ragConfig = {
   // Local JSON files keep chunks, vectors, and logs directly inspectable
   // without requiring database tooling during early development.
   chunksPath: path.join(root, "data", "chunks.json"),
   vectorStorePath: path.join(root, "data", "vector-store.json"),
+  vectorStoreBackend,
   evaluationLogPath: path.join(root, "data", "evaluation-log.jsonl"),
   // Local evaluation logs are enabled during development. Production defaults
   // to disabled because serverless filesystems do not provide durable storage.
@@ -34,6 +40,10 @@ export const ragConfig = {
   judgeEnabled: judgeEnabledSetting === "true",
   judgeModel: process.env.RETRIQ_LLM_JUDGE_MODEL ?? process.env.GEMINI_MODEL ?? "gemini-3.5-flash",
 };
+
+function isVectorStoreBackend(value: string): value is "json" | "postgres" {
+  return value === "json" || value === "postgres";
+}
 
 function optionalNumber(value: string | undefined) {
   if (value === undefined || value.trim() === "") return undefined;

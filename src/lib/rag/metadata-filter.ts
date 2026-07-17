@@ -12,34 +12,43 @@ type TechnologyRule = {
   id: string;
   queryPatterns: RegExp[];
   languagePatterns: RegExp[];
+  databaseLanguages: string[];
   versionPattern?: RegExp;
   manifestVersionPattern?: RegExp;
 };
 
 const RULES: TechnologyRule[] = [
-  absent("react-native", [/\bReact\s+Native\b/i]),
-  absent("aws-rds", [/\bAWS\s+RDS\b/i, /\bRDS\s+PostgreSQL\b/i]),
-  absent("android", [/\bAndroid\b/i, /\bandroid\.[a-z.]+/i]),
-  absent("django", [/\bDjango\b/i]),
-  absent("angular", [/\bAngular\b/i, /@NgModule\b/i]),
-  absent("csharp", [/\bC#\b/i, /\b\.NET\b/i, /\bIQueryable\b/i]),
-  absent("swift", [/\bSwift\b/i, /\bSendable\b/]),
-  absent("ruby", [/\bRuby\b/i, /\bRails\b/i, /\bActive\s+Record\b/i]),
-  absent("haskell", [/\bHaskell\b/i, /\bSoftware\s+Transactional\s+Memory\b/i]),
-  technology("postgresql", [/\bPostgreSQL\b/i], [/PostgreSQL/i], /\bPostgreSQL\s+(\d+(?:\.\d+)*)\b/i, /\b(\d+)(?:\.\d+)?/),
-  technology("java", [/\bJava(?:\s+SE)?\b/i], [/^Java$/i], /\bJava(?:\s+SE)?\s+(\d+)\b/i, /Java\s+SE\s+(\d+)/i),
-  technology("react", [/\bReact\b/i], [/^React$/i]),
-  technology("python", [/\bPython\b/i], [/^Python$/i], /\bPython\s+(\d+)(?:\.\d+)?\b/i, /\b(\d+)\.x\b/i),
-  technology("kotlin", [/\bKotlin\b/i], [/^Kotlin$/i], /\bKotlin\s+(\d+)(?:\.\d+)?\b/i, /\b(\d+)(?:\.\d+)?/),
-  technology("typescript", [/\bTypeScript\b/i], [/^TypeScript$/i]),
-  technology("rust", [/\bRust\b/i], [/^Rust$/i]),
-  technology("go", [/\bGo\s+(?:language|version|1\.)/i, /\bGolang\b/i], [/^Go$/i], /\bGo(?:lang)?\s+(?:version\s+)?(\d+)(?:\.\d+)?\b/i, /go(\d+)(?:\.\d+)?/i),
-  technology("bash", [/\bBash\b/i], [/^Bash$/i], /\bBash\s+(\d+)(?:\.\d+)?\b/i, /\b(\d+)(?:\.\d+)?/),
-  technology("cpp", [/\bC\+\+(?!\w)/i], [/^C\+\+$/i]),
-  technology("c", [/\bC(?:11|17|23|26)?\b/], [/^C$/], /\bC(11|17|23|26)\b/, /\bC(11|17|23|26)\b/),
+  absent("react-native", [/\bReact\s+Native\b/i], ["React Native"]),
+  absent("aws-rds", [/\bAWS\s+RDS\b/i, /\bRDS\s+PostgreSQL\b/i], ["AWS RDS"]),
+  absent("android", [/\bAndroid\b/i, /\bandroid\.[a-z.]+/i], ["Android"]),
+  absent("django", [/\bDjango\b/i], ["Django"]),
+  absent("angular", [/\bAngular\b/i, /@NgModule\b/i], ["Angular"]),
+  absent("csharp", [/\bC#\b/i, /\b\.NET\b/i, /\bIQueryable\b/i], ["C#"]),
+  absent("swift", [/\bSwift\b/i, /\bSendable\b/], ["Swift"]),
+  absent("ruby", [/\bRuby\b/i, /\bRails\b/i, /\bActive\s+Record\b/i], ["Ruby"]),
+  absent("haskell", [/\bHaskell\b/i, /\bSoftware\s+Transactional\s+Memory\b/i], ["Haskell"]),
+  technology("postgresql", [/\bPostgreSQL\b/i], [/PostgreSQL/i], ["PostgreSQL / SQL"], /\bPostgreSQL\s+(\d+(?:\.\d+)*)\b/i, /\b(\d+)(?:\.\d+)?/),
+  technology("java", [/\bJava(?:\s+SE)?\b/i], [/^Java$/i], ["Java"], /\bJava(?:\s+SE)?\s+(\d+)\b/i, /Java\s+SE\s+(\d+)/i),
+  technology("react", [/\bReact\b/i], [/^React$/i], ["React"]),
+  technology("python", [/\bPython\b/i], [/^Python$/i], ["Python"], /\bPython\s+(\d+)(?:\.\d+)?\b/i, /\b(\d+)\.x\b/i),
+  technology("kotlin", [/\bKotlin\b/i], [/^Kotlin$/i], ["Kotlin"], /\bKotlin\s+(\d+)(?:\.\d+)?\b/i, /\b(\d+)(?:\.\d+)?/),
+  technology("typescript", [/\bTypeScript\b/i], [/^TypeScript$/i], ["TypeScript"]),
+  technology("javascript", [/\bJavaScript\b/i, /\bECMAScript\b/i], [/^JavaScript$/i], ["JavaScript"]),
+  technology("rust", [/\bRust\b/i], [/^Rust$/i], ["Rust"]),
+  technology("go", [/\bGo\s+(?:language|version|1\.)/i, /\bGolang\b/i], [/^Go$/i], ["Go"], /\bGo(?:lang)?\s+(?:version\s+)?(\d+)(?:\.\d+)?\b/i, /go(\d+)(?:\.\d+)?/i),
+  technology("bash", [/\bBash\b/i], [/^Bash$/i], ["Bash"], /\bBash\s+(\d+)(?:\.\d+)?\b/i, /\b(\d+)(?:\.\d+)?/),
+  technology("cpp", [/\bC\+\+(?!\w)/i], [/^C\+\+$/i], ["C++"]),
+  technology("c", [/\bC(?:11|17|23|26)?\b/], [/^C$/], ["C"], /\bC(11|17|23|26)\b/, /\bC(11|17|23|26)\b/),
 ];
 
-export function filterChunksByQueryMetadata(query: string, chunks: DocumentationChunk[]) {
+export type QueryMetadataConstraint = { technology: string; databaseLanguages: string[]; requestedVersion: number | null };
+
+export function detectQueryMetadataConstraint(query: string): QueryMetadataConstraint | null {
+  const rule = RULES.find((candidate) => candidate.queryPatterns.some((pattern) => pattern.test(query)));
+  return rule ? { technology: rule.id, databaseLanguages: rule.databaseLanguages, requestedVersion: extractNumber(query, rule.versionPattern) } : null;
+}
+
+export function filterChunksByQueryMetadata<T extends DocumentationChunk>(query: string, chunks: T[]) {
   const rule = RULES.find((candidate) => candidate.queryPatterns.some((pattern) => pattern.test(query)));
   if (!rule) return { chunks, decision: compatible(null, null, [], "No supported technology or version constraint was detected.") };
   const requestedVersion = extractNumber(query, rule.versionPattern);
@@ -57,12 +66,12 @@ export function filterChunksByQueryMetadata(query: string, chunks: Documentation
   return { chunks: versionChunks, decision: compatible(rule.id, requestedVersion, availableVersions, `Restricted retrieval to ${versionChunks.length} metadata-compatible chunks.`) };
 }
 
-function technology(id: string, queryPatterns: RegExp[], languagePatterns: RegExp[], versionPattern?: RegExp, manifestVersionPattern?: RegExp): TechnologyRule {
-  return { id, queryPatterns, languagePatterns, versionPattern, manifestVersionPattern };
+function technology(id: string, queryPatterns: RegExp[], languagePatterns: RegExp[], databaseLanguages: string[], versionPattern?: RegExp, manifestVersionPattern?: RegExp): TechnologyRule {
+  return { id, queryPatterns, languagePatterns, databaseLanguages, versionPattern, manifestVersionPattern };
 }
 
-function absent(id: string, queryPatterns: RegExp[]): TechnologyRule {
-  return technology(id, queryPatterns, [new RegExp(`^${escapeRegex(id)}$`, "i")]);
+function absent(id: string, queryPatterns: RegExp[], databaseLanguages: string[]): TechnologyRule {
+  return technology(id, queryPatterns, [new RegExp(`^${escapeRegex(id)}$`, "i")], databaseLanguages);
 }
 
 function compatible(requestedTechnology: string | null, requestedVersion: number | null, availableVersions: number[], reason: string): CompatibilityDecision {
