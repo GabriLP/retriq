@@ -37,6 +37,7 @@
     "generation:benchmark:validate": "tsx scripts/validate-generation-benchmark.ts",
     "generation:providers:test": "tsx scripts/test-generator-providers.ts",
     "generation:review:test": "tsx scripts/test-generation-review.ts",
+    "generation:review:report": "tsx scripts/report-generation-human-review.ts",
     "experiment:generation": "tsx scripts/evaluate-generation-models.ts",
     "experiment:retrieval:strategies": "tsx scripts/evaluate-retrieval-strategies.ts",
     "experiment:registry:report": "tsx scripts/report-experiment-registry.ts",

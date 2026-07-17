@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "generation-models-v1",
   "title": "Grounded answer generation on frozen benchmark v4 evidence",
-  "status": "outputs-generated-awaiting-human-review",
+  "status": "human-reviewed-judge-calibration-pending",
   "hypothesis": "Changing only the generator model produces measurable differences in grounded answer quality, citation behavior, latency, and cost when retrieval evidence and prompting are frozen.",
   "split": "validation",
   "benchmark": "docs/evaluation/generation-benchmark.v1.json",
@@ -106,7 +106,19 @@
       "The original Z.AI GLM endpoint became degraded before returning a benchmark answer; the preregistered amendment switched to BaseTen FP8 before answer quality was observed.",
       "BaseTen returned one upstream 429 on the first complete attempt. A cache-preserving rerun retried only that case and completed 27/27 GLM answers without fallback."
     ],
-    "selectionStatus": "No winner selected; awaiting blinded human review."
+    "selectionStatus": "GLM-5.2 BaseTen FP8 selected on human-reviewed validation quality; untouched-test confirmation remains pending."
+  },
+  "humanReview": {
+    "completedAt": "2026-07-17T13:33:53.936Z",
+    "reviewerCount": 1,
+    "reviewedRows": 72,
+    "source": "docs/evaluation/generation-human-review-v1.completed.csv",
+    "sourceSha256": "793f0b4563459026a09e0fb0117cc8aadc7cf6ee2c6f0f27c7dc70a258e6835b",
+    "summary": "docs/experiment-results/generation-human-review-v1-summary.json",
+    "selectedCandidate": "glm-5.2-openrouter-baseten-fp8",
+    "selectedValidationQuality": 0.9739583333333334,
+    "testSplitTouched": false,
+    "limitation": "The initial human reference has one reviewer; judge disagreements and a random agreement sample should receive a second audit."
   },
   "reportOutput": "docs/experiment-results/generation-model-comparison-v1-validation"
 }

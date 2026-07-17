@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "id": "generation-human-review-v1-summary",
+  "createdAt": "2026-07-17T13:39:57.868Z",
+  "split": "validation",
+  "testSplitTouched": false,
+  "source": {
+    "humanReview": "docs/evaluation/generation-human-review-v1.completed.csv",
+    "humanReviewSha256": "793f0b4563459026a09e0fb0117cc8aadc7cf6ee2c6f0f27c7dc70a258e6835b",
+    "rubric": "docs/evaluation/generation-human-rubric.v1.json",
+    "generatorOutputs": "docs/experiment-results/generation-model-comparison-v1-validation.json"
+  },
+  "review": {
+    "rows": 72,
+    "answerableRows": 36,
+    "unanswerableRows": 36,
+    "reviewers": [
+      "Gabriele"
+    ],
+    "status": "complete-single-reviewer-reference"
+  },
+  "summaries": [
+    {
+      "candidateId": "gemini-3.5-flash-direct",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerableRows": 12,
+      "unanswerableRows": 12,
+      "meanNormalizedQuality": 0.921875,
+      "metrics": {
+        "meanGroundedness": 3.8333333333333335,
+        "meanKeyFactCoverage": 3.5,
+        "meanCitationCorrectness": 3.8333333333333335,
+        "meanCitationCompleteness": 3.5833333333333335,
+        "meanDirectness": 1.6666666666666667,
+        "correctAbstentionRate": 1,
+        "criticalUnsupportedClaimRate": 0,
+        "contradictionRate": 0,
+        "invalidCitationLabelRate": 0,
+        "generatorFailureRate": 0.041666666666666664
+      },
+      "guardrails": {
+        "checks": {
+          "criticalUnsupportedClaim": true,
+          "citationCorrectness": true,
+          "correctAbstention": true,
+          "generatorFailure": false
+        },
+        "allPassed": false
+      },
+      "operational": {
+        "costUsd": 0.164763,
+        "medianLatencyMs": 1772.89,
+        "p95LatencyMs": 3141.88
+      }
+    },
+    {
+      "candidateId": "glm-5.2-openrouter-baseten-fp8",
+      "blindVariantId": "variant-cff457f4",
+      "answerableRows": 12,
+      "unanswerableRows": 12,
+      "meanNormalizedQuality": 0.9739583333333334,
+      "metrics": {
+        "meanGroundedness": 4,
+        "meanKeyFactCoverage": 3.75,
+        "meanCitationCorrectness": 3.9166666666666665,
+        "meanCitationCompleteness": 3.9166666666666665,
+        "meanDirectness": 1.8333333333333333,
+        "correctAbstentionRate": 1,
+        "criticalUnsupportedClaimRate": 0,
+        "contradictionRate": 0,
+        "invalidCitationLabelRate": 0,
+        "generatorFailureRate": 0
+      },
+      "guardrails": {
+        "checks": {
+          "criticalUnsupportedClaim": true,
+          "citationCorrectness": true,
+          "correctAbstention": true,
+          "generatorFailure": true
+        },
+        "allPassed": true
+      },
+      "operational": {
+        "costUsd": 0.06927,
+        "medianLatencyMs": 3454.26,
+        "p95LatencyMs": 5959.06
+      }
+    },
+    {
+      "candidateId": "grok-4.5-openrouter-xai",
+      "blindVariantId": "variant-015380ad",
+      "answerableRows": 12,
+      "unanswerableRows": 12,
+      "meanNormalizedQuality": 0.9322916666666666,
+      "metrics": {
+        "meanGroundedness": 3.9166666666666665,
+        "meanKeyFactCoverage": 3.6666666666666665,
+        "meanCitationCorrectness": 3.75,
+        "meanCitationCompleteness": 3.5833333333333335,
+        "meanDirectness": 1.5833333333333333,
+        "correctAbstentionRate": 1,
+        "criticalUnsupportedClaimRate": 0,
+        "contradictionRate": 0,
+        "invalidCitationLabelRate": 0,
+        "generatorFailureRate": 0
+      },
+      "guardrails": {
+        "checks": {
+          "criticalUnsupportedClaim": true,
+          "citationCorrectness": true,
+          "correctAbstention": true,
+          "generatorFailure": true
+        },
+        "allPassed": true
+      },
+      "operational": {
+        "costUsd": 0.171426,
+        "medianLatencyMs": 5216.25,
+        "p95LatencyMs": 8096.17
+      }
+    }
+  ],
+  "selection": {
+    "candidateId": "glm-5.2-openrouter-baseten-fp8",
+    "blindVariantId": "variant-cff457f4",
+    "rule": "Highest mean normalized grounded answer quality among candidates passing every preregistered guardrail; cost and median latency break ties.",
+    "testConfirmationPending": true
+  },
+  "limitations": [
+    "The reference labels were produced by one human reviewer and therefore do not estimate inter-rater reliability.",
+    "The review was completed quickly; a second reviewer should audit judge disagreements and a random sample of agreements.",
+    "These validation labels may calibrate judge prompts but must not be reused as hidden test evidence."
+  ]
+}
