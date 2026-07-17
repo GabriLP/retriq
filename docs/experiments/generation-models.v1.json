@@ -14,7 +14,7 @@
       "id": "gemini-3.5-flash-direct",
       "provider": "google",
       "model": "gemini-3.5-flash",
-      "reasoningEffort": "medium",
+      "reasoningEffort": "low",
       "inputPriceUsdPerMillionTokens": 1.5,
       "outputPriceUsdPerMillionTokens": 9
     },
@@ -22,11 +22,11 @@
       "id": "glm-5.2-openrouter-baseten-fp8",
       "provider": "openrouter",
       "model": "z-ai/glm-5.2-20260616",
-      "expectedResponseModel": "z-ai/glm-5.2-20260616",
+      "expectedResponseModel": "z-ai/glm-5.2",
       "expectedResponseProvider": "BaseTen",
       "providerOrder": ["baseten/fp8"],
       "allowFallbacks": false,
-      "reasoningEffort": "medium",
+      "reasoningEffort": "low",
       "inputPriceUsdPerMillionTokens": 1.4,
       "outputPriceUsdPerMillionTokens": 4.4
     },
@@ -34,11 +34,11 @@
       "id": "grok-4.5-openrouter-xai",
       "provider": "openrouter",
       "model": "x-ai/grok-4.5-20260708",
-      "expectedResponseModel": "x-ai/grok-4.5-20260708",
+      "expectedResponseModel": "x-ai/grok-4.5",
       "expectedResponseProvider": "xAI",
       "providerOrder": ["xai"],
       "allowFallbacks": false,
-      "reasoningEffort": "medium",
+      "reasoningEffort": "low",
       "inputPriceUsdPerMillionTokens": 2,
       "outputPriceUsdPerMillionTokens": 6
     }
@@ -51,7 +51,7 @@
     "no reranker",
     "identical system and user prompts",
     "temperature 0",
-    "medium reasoning effort",
+    "low reasoning effort",
     "maximum 900 output tokens",
     "identical citation format",
     "deterministic no-evidence response",
@@ -87,6 +87,13 @@
       "change": "Pin GLM-5.2 FP8 to BaseTen instead of Z.AI; model, quantization, reasoning controls, and list prices remain unchanged.",
       "reason": "The Z.AI endpoint changed to OpenRouter status -2 with approximately 92% five-minute uptime and did not return the first benchmark response. BaseTen FP8 reported status 0 and 100% thirty-minute uptime.",
       "selectionRule": "Highest observed thirty-minute uptime among healthy FP8 endpoints at the same frozen list price; no answer-quality output was available when selected."
+    },
+    {
+      "observedAt": "2026-07-17T12:51:00+02:00",
+      "beforeAnySuccessfulOpenRouterBenchmarkOutput": true,
+      "change": "Use low rather than medium reasoning effort for every candidate; prompt, 900-token ceiling, and all other controls remain unchanged.",
+      "reason": "A non-benchmark operational probe showed that GLM-5.2 at medium effort exhausted a small output allowance entirely on reasoning. At low effort it produced the requested content while still exposing reasoning-token usage. The Google baseline is regenerated under the amended setting.",
+      "selectionRule": "Apply the same explicit nominal effort to all candidates before producing comparison outputs; do not inspect answer quality during the operational probe."
     }
   ],
   "reportOutput": "docs/experiment-results/generation-model-comparison-v1-validation"

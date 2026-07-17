@@ -14,7 +14,7 @@ export type GeneratorCandidate = {
   expectedResponseProvider?: string;
   providerOrder?: string[];
   allowFallbacks?: false;
-  reasoningEffort: "medium";
+  reasoningEffort: "low" | "medium";
   inputPriceUsdPerMillionTokens: number;
   outputPriceUsdPerMillionTokens: number;
 };
@@ -99,7 +99,7 @@ async function generateWithGoogle(options: GenerateOptions): Promise<GeneratorRe
       systemInstruction: options.systemInstruction,
       temperature: options.temperature,
       maxOutputTokens: options.maxOutputTokens,
-      thinkingConfig: { thinkingLevel: ThinkingLevel.MEDIUM },
+      thinkingConfig: { thinkingLevel: options.candidate.reasoningEffort === "low" ? ThinkingLevel.LOW : ThinkingLevel.MEDIUM },
     },
   });
   const answer = response.text?.trim();

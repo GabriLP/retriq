@@ -208,7 +208,7 @@ async function writeTrackedReports(outputBase: string, artifact: Parameters<type
 function validateProtocol(protocol: Protocol) {
   if (protocol.schemaVersion !== 1 || protocol.split !== "validation" || protocol.status !== "preregistered") throw new Error("Generation protocol must be preregistered on validation.");
   if (protocol.generatorCandidates.length !== 3) throw new Error("Exactly three generator candidates must be frozen.");
-  if (protocol.generatorCandidates.some((item) => item.reasoningEffort !== "medium")) throw new Error("All candidates must use medium reasoning effort.");
+  if (protocol.generatorCandidates.some((item) => item.reasoningEffort !== "low")) throw new Error("All candidates must use low reasoning effort.");
 }
 function classifyAnswerStatus(answer: string) { return /cannot be fully determined|does not contain enough information|insufficient/i.test(answer) ? "insufficient_context" : "grounded"; }
 function blindId(candidateId: string) { return `variant-${sha256(`retriq-generation-blinding-v1:${candidateId}`).slice(0, 8)}`; }
