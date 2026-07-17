@@ -11,6 +11,8 @@ This guide defines the reference labels used later to calibrate LLM-as-a-judge. 
 5. Add a short rationale identifying unsupported claims, missing facts, and citation errors.
 6. Do not revise a label after seeing an automatic judge score.
 
+Use `generation-human-review-v1.csv` as the review worksheet. Score answerable rows on the frozen 0–4 groundedness, key-fact coverage, citation-correctness, and citation-completeness scales plus the 0–2 directness scale. Score unanswerable rows only with `correct_abstention_0_1`; use the four binary failure columns for either stratum and enter `0` explicitly when a failure is absent. Leave non-applicable numeric dimensions blank.
+
 ## Blinding and provenance
 
 - Answers receive randomized opaque labels; provider and model names are hidden from the reviewer.

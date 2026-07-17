@@ -186,7 +186,7 @@ function summarizeCandidate(candidate: GeneratorCandidate, outputs: CaseOutput[]
 }
 
 function renderSummary(artifact: { id: string; attemptId: string; summaries: ReturnType<typeof summarizeCandidate>[]; selectionStatus: string; testSplitTouched: boolean }) {
-  return `# Grounded generator comparison outputs\n\n- Protocol/attempt: \`${artifact.id}\` / \`${artifact.attemptId}\`\n- Split: **validation only**\n- Selection: **${artifact.selectionStatus}**\n- Judge: **disabled**\n\n| Blind variant | Generated | Errors | Cache hits | Input tokens | Output tokens | Reasoning tokens | Cost USD | Median ms | P95 ms |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n${artifact.summaries.map((item) => `| ${item.blindVariantId} | ${item.generatedCases} | ${item.errors} | ${item.cacheHits} | ${item.tokens.prompt} | ${item.tokens.completion} | ${item.tokens.reasoning} | ${item.costUsd.toFixed(6)} | ${item.latencyMs.median.toFixed(2)} | ${item.latencyMs.p95.toFixed(2)} |`).join("\n")}\n\nNo quality winner is selected from latency or cost alone. Human review must be completed using the blinded package before judge calibration or test execution. The locked test split was touched: **${artifact.testSplitTouched ? "yes" : "no"}**.\n`;
+  return `# Grounded generator comparison outputs\n\n- Protocol/attempt: \`${artifact.id}\` / \`${artifact.attemptId}\`\n- Split: **validation only**\n- Selection: **${artifact.selectionStatus}**\n- Judge: **disabled**\n\n| Blind variant | Generated | Errors | Cache hits | Input tokens | Output tokens | Reasoning tokens | Cost USD | Median ms | P95 ms |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n${artifact.summaries.map((item) => `| ${item.blindVariantId} | ${item.generatedCases} | ${item.errors} | ${item.cacheHits} | ${item.tokens.prompt} | ${item.tokens.completion} | ${item.tokens.reasoning} | ${item.costUsd.toFixed(6)} | ${item.latencyMs.median.toFixed(2)} | ${item.latencyMs.p95.toFixed(2)} |`).join("\n")}\n\nNo quality winner is selected from latency or cost alone. Human review must be completed using the blinded package before judge calibration or test execution. Cache hits indicate that the final replay reused a successful content-addressed response; token usage, cost, and latency remain those captured from its original provider request. Google cost is a dated list-price estimate, while OpenRouter cost is provider-reported. The locked test split was touched: **${artifact.testSplitTouched ? "yes" : "no"}**.\n`;
 }
 
 async function writeTrackedReports(outputBase: string, artifact: Parameters<typeof renderSummary>[0] & { outputs: CaseOutput[]; candidates: GeneratorCandidate[]; createdAt: string; inputHashes: Record<string, string> }, benchmark: Benchmark, prepared: Array<{ item: BenchmarkCase; evidence: string[] }>) {
@@ -198,15 +198,15 @@ async function writeTrackedReports(outputBase: string, artifact: Parameters<type
   const cases = new Map(prepared.map((entry) => [entry.item.caseId, entry]));
   const rows = artifact.outputs.filter((item) => calibration.has(item.caseId)).map((output) => {
     const entry = cases.get(output.caseId)!;
-    return [output.caseId, output.blindVariantId, entry.item.answerability, entry.item.language, entry.item.question, entry.item.expected.keyFacts.join(" | "), entry.evidence.join("\n\n---\n\n"), output.answer, "", "", "", "", ""];
+    return [output.caseId, output.blindVariantId, entry.item.answerability, entry.item.language, entry.item.question, entry.item.expected.keyFacts.join(" | "), entry.evidence.join("\n\n---\n\n"), output.answer, "", "", "", "", "", "", "", "", "", "", ""];
   });
   const reviewPath = path.resolve("docs/evaluation/generation-human-review-v1.csv");
-  const header = ["case_id", "blind_variant_id", "answerability", "language", "question", "expected_key_facts", "frozen_evidence", "candidate_answer", "key_fact_coverage_1_5", "groundedness_1_5", "citation_correctness_1_5", "abstention_correctness_1_5", "reviewer_notes"];
+  const header = ["case_id", "blind_variant_id", "answerability", "language", "question", "expected_key_facts", "frozen_evidence", "candidate_answer", "groundedness_0_4", "key_fact_coverage_0_4", "citation_correctness_0_4", "citation_completeness_0_4", "directness_0_2", "correct_abstention_0_1", "critical_unsupported_claim_0_1", "contradicts_evidence_0_1", "invalid_citation_label_0_1", "generator_failure_0_1", "reviewer_notes"];
   await fs.writeFile(reviewPath, [header, ...rows].map((row) => row.map(csvCell).join(",")).join("\n") + "\n");
 }
 
 function validateProtocol(protocol: Protocol) {
-  if (protocol.schemaVersion !== 1 || protocol.split !== "validation" || protocol.status !== "preregistered") throw new Error("Generation protocol must be preregistered on validation.");
+  if (protocol.schemaVersion !== 1 || protocol.split !== "validation" || !["preregistered", "outputs-generated-awaiting-human-review"].includes(protocol.status)) throw new Error("Generation protocol must be preregistered or awaiting human review on validation.");
   if (protocol.generatorCandidates.length !== 3) throw new Error("Exactly three generator candidates must be frozen.");
   if (protocol.generatorCandidates.some((item) => item.reasoningEffort !== "low")) throw new Error("All candidates must use low reasoning effort.");
 }

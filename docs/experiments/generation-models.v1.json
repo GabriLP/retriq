@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "generation-models-v1",
   "title": "Grounded answer generation on frozen benchmark v4 evidence",
-  "status": "preregistered",
+  "status": "outputs-generated-awaiting-human-review",
   "hypothesis": "Changing only the generator model produces measurable differences in grounded answer quality, citation behavior, latency, and cost when retrieval evidence and prompting are frozen.",
   "split": "validation",
   "benchmark": "docs/evaluation/generation-benchmark.v1.json",
@@ -96,5 +96,17 @@
       "selectionRule": "Apply the same explicit nominal effort to all candidates before producing comparison outputs; do not inspect answer quality during the operational probe."
     }
   ],
+  "execution": {
+    "completedAt": "2026-07-17T10:57:49.265Z",
+    "finalAttemptId": "20260717105749265",
+    "generatedAnswersPerCandidate": 27,
+    "deterministicAbstentionsPerCandidate": 27,
+    "finalErrors": 0,
+    "transientEvents": [
+      "The original Z.AI GLM endpoint became degraded before returning a benchmark answer; the preregistered amendment switched to BaseTen FP8 before answer quality was observed.",
+      "BaseTen returned one upstream 429 on the first complete attempt. A cache-preserving rerun retried only that case and completed 27/27 GLM answers without fallback."
+    ],
+    "selectionStatus": "No winner selected; awaiting blinded human review."
+  },
   "reportOutput": "docs/experiment-results/generation-model-comparison-v1-validation"
 }
