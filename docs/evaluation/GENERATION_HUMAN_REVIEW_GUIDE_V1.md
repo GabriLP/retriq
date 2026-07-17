@@ -13,6 +13,10 @@ This guide defines the reference labels used later to calibrate LLM-as-a-judge. 
 
 Use `generation-human-review-v1.csv` as the review worksheet. Score answerable rows on the frozen 0–4 groundedness, key-fact coverage, citation-correctness, and citation-completeness scales plus the 0–2 directness scale. Score unanswerable rows only with `correct_abstention_0_1`; use the four binary failure columns for either stratum and enter `0` explicitly when a failure is absent. Leave non-applicable numeric dimensions blank.
 
+## Local review interface
+
+Run `npm run dev` and open `http://localhost:3000/evaluation/generation-review`. The interface autosaves progress in the browser, hides model identities, and reduces the worksheet to 48 effective decisions by presenting each identical deterministic abstention once. When the review is finished, use **Esporta CSV**: the exporter restores all 72 source rows, copies each abstention assessment to its three equivalent rows, and appends reviewer provenance. **Backup JSON** provides a portable progress snapshot; clearing browser storage removes the autosaved copy.
+
 ## Blinding and provenance
 
 - Answers receive randomized opaque labels; provider and model names are hidden from the reviewer.
