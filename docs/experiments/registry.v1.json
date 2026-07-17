@@ -97,10 +97,10 @@
       "variable": "Compatibility gate enabled or disabled",
       "controls": ["Dense cosine rankings", "validation split", "threshold grid", "topK=4"],
       "metrics": ["No-answer FPR", "Recall@4", "MRR", "compatibility rejections", "latency"],
-      "artifacts": ["docs/experiments/common-metadata-filter.v1.json", "docs/experiment-results/common-metadata-filter-validation.md", "docs/experiments/baseline-gemini-300-v2-metadata-filter.v1.json", "docs/experiment-results/baseline-gemini-300-v2-metadata-filter-validation.md"],
-      "decision": "On the expanded 24-case validation split, pure dense thresholds cannot satisfy all guardrails. Metadata-aware dense selects 0.65 and reaches Recall@4, MRR, and nDCG@4 of 1.0 with zero no-answer false positives.",
-      "limitations": ["Rule-based query recognition may miss implicit technologies or aliases", "Metadata coverage and correctness become retrieval dependencies", "Approvals are provisional", "The six-case fresh test remains intentionally untouched"],
-      "nextStep": "Freeze metadata-aware Gemini retrieval at threshold 0.65 for the next engineering stage; confirm the benchmark before the one-time test."
+      "artifacts": ["docs/experiments/common-metadata-filter.v1.json", "docs/experiment-results/common-metadata-filter-validation.md", "docs/experiments/baseline-gemini-300-v2-metadata-filter.v1.json", "docs/experiment-results/baseline-gemini-300-v2-metadata-filter-validation.md", "docs/experiments/baseline-gemini-300-v4-validation.json", "docs/experiment-results/baseline-gemini-300-v4-validation.md", "docs/experiments/baseline-gemini-300-v4-metadata-filter.v1.json", "docs/experiment-results/baseline-gemini-300-v4-metadata-filter-validation.md", "docs/experiments/baseline-gemini-300-v4-metadata-filter.v2.json", "docs/experiment-results/baseline-gemini-300-v4-metadata-filter-v2-validation.md"],
+      "decision": "On the 54-case v4 validation split, the pre-registered v1 attempt failed because C++ queries were misclassified as C. After a tested detector correction, v2 selects metadata-aware dense at 0.68 with Recall@4 0.9630, MRR 0.9444, nDCG@4 0.9493, and zero no-answer false positives. Pure dense still has no threshold satisfying all guardrails.",
+      "limitations": ["Rule-based query recognition may miss implicit technologies or aliases", "Metadata coverage and correctness become retrieval dependencies", "One Python answerable case misses its exact canonical evidence page", "All 78 approvals are provisional", "The 24-case test remains intentionally untouched"],
+      "nextStep": "Use 0.68 as the current v4 validation threshold and rerun the embedding alternatives on the same frozen corpus and validation cases before any held-out test execution."
     },
     {
       "order": 8,
