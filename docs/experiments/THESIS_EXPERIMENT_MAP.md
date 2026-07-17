@@ -16,7 +16,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 5 | Abstention calibration | threshold-balanced-v2 | completed | Dense cosine minimum score | Select 0.75 on validation; retain the 1/6 test version false positive without retuning. |
 | 6 | Retrieval strategy comparison | retrieval-strategies-v1 | completed | Retrieval strategy | Keep dense cosine; BM25 and simple RRF fail the declared guardrails. |
 | 7 | Metadata-aware retrieval | metadata-version-filter-v1 | completed | Compatibility gate enabled or disabled | On the 54-case v4 validation split, the pre-registered v1 attempt failed because C++ queries were misclassified as C. After a tested detector correction, v2 selects metadata-aware dense at 0.68 with Recall@4 0.9630, MRR 0.9444, nDCG@4 0.9493, and zero no-answer false positives. Pure dense still has no threshold satisfying all guardrails. |
-| 8 | Embedding model comparison | embedding-models-v1 | completed | Embedding provider/model at a fixed 1024-dimensional output | On validation, retain Gemini Embedding 2 as the baseline and Voyage Code 3 as the strongest alternative. Gemini remains ahead at 300, 450, and 850 target words; no model-ranking reversal is observed. |
+| 8 | Embedding model comparison | embedding-models-v2 | completed | Embedding provider/model at a fixed 1024-dimensional output | On the 54-case v4 validation split, retain Gemini Embedding 2 at threshold 0.68. It is the only 1024-dimensional candidate satisfying zero no-answer false positives, Recall@4 >= 0.90, and MRR >= 0.85. OpenAI Large is strongest at a permissive threshold but fails after zero-FPR calibration; Voyage preserves recall but misses the MRR floor. |
 | 9 | Reranking | reranking-v1 | planned | No reranker, cross-encoder, or LLM reranker | Pending. |
 | 10 | Answer generation and LLM-as-a-judge | generation-and-judge-v1 | planned | Generator model, judge model, and judge prompt in separate experiments | Pending. |
 | 11 | Agentic RAG | rag-agent-loop-v1 | planned | Single pass versus bounded retrieve-check-rewrite loop | Pending. |
@@ -105,17 +105,17 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Limitations:** Rule-based query recognition may miss implicit technologies or aliases; Metadata coverage and correctness become retrieval dependencies; One Python answerable case misses its exact canonical evidence page; All 78 approvals are provisional; The 24-case test remains intentionally untouched
 - **Next step:** Use 0.68 as the current v4 validation threshold and rerun the embedding alternatives on the same frozen corpus and validation cases before any held-out test execution.
 
-## 8. Embedding model comparison: embedding-models-v1
+## 8. Embedding model comparison: embedding-models-v2
 
 - **Research question:** Which embedding model and dimensionality provide the best quality-cost trade-off?
 - **Status:** completed
 - **Changed variable:** Embedding provider/model at a fixed 1024-dimensional output
 - **Controls:** Frozen chunks; queries; retrieval strategy; topK
 - **Metrics:** Recall@4; MRR; nDCG@4; latency; index size; cost
-- **Artifacts:** `docs/experiments/embedding-models.v1.json`; `docs/experiment-results/embedding-model-readiness.md`; `docs/experiment-results/embedding-model-comparison-validation.md`; `docs/experiment-results/embedding-chunk-interaction-validation.md`
-- **Decision:** On validation, retain Gemini Embedding 2 as the baseline and Voyage Code 3 as the strongest alternative. Gemini remains ahead at 300, 450, and 850 target words; no model-ranking reversal is observed.
-- **Limitations:** Provider availability and prices may change; Only twelve validation cases are available; The existing test split has already been observed and cannot support final model selection; Indexing latency is not comparable because cache resumptions and provider rate limits differed
-- **Next step:** Expand and human-approve the benchmark, create a fresh untouched test split, freeze the selection rule, and evaluate it once.
+- **Artifacts:** `docs/experiments/embedding-models.v1.json`; `docs/experiment-results/embedding-model-readiness.md`; `docs/experiment-results/embedding-model-comparison-validation.md`; `docs/experiment-results/embedding-chunk-interaction-validation.md`; `docs/experiments/embedding-models.v2.json`; `docs/experiments/embedding-model-comparison-v4.runs.json`; `docs/experiment-results/embedding-model-comparison-v4-validation.md`; `docs/experiment-results/embedding-model-comparison-v4-validation.json`; `docs/experiment-results/embedding-model-comparison-v4-validation.csv`
+- **Decision:** On the 54-case v4 validation split, retain Gemini Embedding 2 at threshold 0.68. It is the only 1024-dimensional candidate satisfying zero no-answer false positives, Recall@4 >= 0.90, and MRR >= 0.85. OpenAI Large is strongest at a permissive threshold but fails after zero-FPR calibration; Voyage preserves recall but misses the MRR floor.
+- **Limitations:** Provider availability and prices may change; All 78 benchmark approvals remain provisional; The 24-case test split remains intentionally untouched; Indexing latency is not comparable because cache resumptions and provider rate limits differed; A Voyage retry added separately reported redundant API cost
+- **Next step:** Freeze Gemini Embedding 2 with metadata-aware retrieval at 0.68, then compare reranking or answer generation while changing one variable family at a time.
 
 ## 9. Reranking: reranking-v1
 

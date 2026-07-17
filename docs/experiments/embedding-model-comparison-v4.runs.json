@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-model-comparison-v4-validation-runs",
+  "suite": "docs/experiments/embedding-models.v2.json",
+  "split": "validation",
+  "testSplitTouched": false,
+  "runs": [
+    {
+      "label": "Gemini Embedding 2",
+      "role": "baseline",
+      "attempt": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec/metadata-filter-attempts/baseline-gemini-300-v4-metadata-filter-v2/20260717085715242/attempt.json",
+      "estimate": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec/embedding-estimates/20260717085016630-gemini-embedding-2/estimate.json"
+    },
+    {
+      "label": "OpenAI text-embedding-3-small",
+      "role": "candidate",
+      "attempt": "data/experiments/embedding-v4-openai-3-small-1024/20260717090411682-2093d4f8/metadata-filter-attempts/embedding-v4-openai-3-small-metadata-v1/20260717090933829/attempt.json",
+      "estimate": "data/experiments/embedding-v4-openai-3-small-1024/20260717090411682-2093d4f8/embedding-estimates/20260717090434825-text-embedding-3-small/estimate.json"
+    },
+    {
+      "label": "OpenAI text-embedding-3-large",
+      "role": "candidate",
+      "attempt": "data/experiments/embedding-v4-openai-3-large-1024/20260717090411683-a87a6306/metadata-filter-attempts/embedding-v4-openai-3-large-metadata-v1/20260717090933845/attempt.json",
+      "estimate": "data/experiments/embedding-v4-openai-3-large-1024/20260717090411683-a87a6306/embedding-estimates/20260717090434732-text-embedding-3-large/estimate.json"
+    },
+    {
+      "label": "Voyage Code 3",
+      "role": "candidate",
+      "attempt": "data/experiments/embedding-v4-voyage-code-3-1024/20260717090411684-9806c48d/metadata-filter-attempts/embedding-v4-voyage-code-3-metadata-v1/20260717090933753/attempt.json",
+      "estimate": "data/experiments/embedding-v4-voyage-code-3-1024/20260717090411684-9806c48d/embedding-estimates/20260717090434562-voyage-code-3/estimate.json",
+      "additionalAttempts": [
+        "data/experiments/embedding-v4-voyage-code-3-1024/20260717090411684-9806c48d/retrieval-attempts/20260717090843725-voyage-code-3/attempt.json"
+      ],
+      "executionNote": "The first indexing process outlived the shell timeout. A concurrent resume caused 120 redundant API inputs; this overhead is reported separately from the clean-run estimate."
+    }
+  ]
+}

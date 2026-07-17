@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 1,
+  "id": "embedding-model-comparison-v4-validation-runs",
+  "generatedAt": "2026-07-17T09:09:33.845Z",
+  "suite": "docs/experiments/embedding-models.v2.json",
+  "split": "validation",
+  "testSplitTouched": false,
+  "commonControls": {
+    "cases": 54,
+    "chunks": 33079,
+    "targetChunkWords": 300,
+    "overlapWords": 80,
+    "outputDimensionality": 1024,
+    "retrieval": "metadata-aware dense cosine",
+    "topK": 4,
+    "selectionGuardrails": {
+      "noAnswerFalsePositiveRate": 0,
+      "minimumRecallAtK": 0.9,
+      "minimumMrr": 0.85
+    }
+  },
+  "winner": {
+    "label": "Gemini Embedding 2",
+    "threshold": 0.68,
+    "metrics": {
+      "evaluatedCases": 54,
+      "answerableCases": 27,
+      "unanswerableCases": 27,
+      "recallAtK": 0.9629629629629629,
+      "precisionAtK": 0.6296296296296297,
+      "mrr": 0.9444444444444444,
+      "ndcgAtK": 0.9492936945767206,
+      "noAnswerFalsePositiveRate": 0
+    }
+  },
+  "decision": "Gemini Embedding 2 remains the selected embedding model because it is the only candidate satisfying every pre-registered guardrail.",
+  "aggregateEstimatedCostUsd": {
+    "cleanRuns": 0.7068504,
+    "retryOverhead": 0.009314639999999999,
+    "observedTotal": 0.71616504
+  },
+  "results": [
+    {
+      "label": "Gemini Embedding 2",
+      "role": "baseline",
+      "provider": "google",
+      "model": "gemini-embedding-2",
+      "experimentId": "baseline-gemini-300-v4-validation",
+      "attemptId": "20260717085715242",
+      "attemptCreatedAt": "2026-07-17T08:57:15.242Z",
+      "gitCommit": "9661590f1507214980a89d0936121b5ee584bf80",
+      "gitDirty": false,
+      "inputHashes": {
+        "protocol": "a50991298f9d41eb5ac5366e398800fa11a2a306ee75e476fab5878a70fc1278",
+        "config": "e7d95b88394a8f87f08a4de9885b8c80cfa70f729e337b5a646e6500b1a40880",
+        "chunks": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
+        "goldenSet": "2e59f0b027d3c1b6c1efc1f2fda2e219a2b41357a8868b75637dd3fdbda04159",
+        "splitManifest": "67705cf053ba8774b5c83f50401f150ce2efe47111300b5163f2d2af1956d70e"
+      },
+      "cases": 54,
+      "outputDimensionality": 1024,
+      "selectedThreshold": 0.68,
+      "selectedMetrics": {
+        "evaluatedCases": 54,
+        "answerableCases": 27,
+        "unanswerableCases": 27,
+        "recallAtK": 0.9629629629629629,
+        "precisionAtK": 0.6296296296296297,
+        "mrr": 0.9444444444444444,
+        "ndcgAtK": 0.9492936945767206,
+        "noAnswerFalsePositiveRate": 0
+      },
+      "eligible": true,
+      "exploratoryLowThreshold": {
+        "threshold": 0.18,
+        "metrics": {
+          "evaluatedCases": 54,
+          "answerableCases": 27,
+          "unanswerableCases": 27,
+          "recallAtK": 0.9629629629629629,
+          "precisionAtK": 0.6296296296296297,
+          "mrr": 0.9444444444444444,
+          "ndcgAtK": 0.9492936945767206,
+          "noAnswerFalsePositiveRate": 0.5555555555555556
+        },
+        "returnedChunks": 168
+      },
+      "bestZeroFpr": {
+        "threshold": 0.68,
+        "metrics": {
+          "evaluatedCases": 54,
+          "answerableCases": 27,
+          "unanswerableCases": 27,
+          "recallAtK": 0.9629629629629629,
+          "precisionAtK": 0.6296296296296297,
+          "mrr": 0.9444444444444444,
+          "ndcgAtK": 0.9492936945767206,
+          "noAnswerFalsePositiveRate": 0
+        },
+        "returnedChunks": 104
+      },
+      "cleanRunEstimate": {
+        "cacheMisses": 2656,
+        "providerRequests": 84,
+        "apiTokens": 1356120,
+        "costUsd": 0.27122399999999997
+      },
+      "observedRetryOverhead": {
+        "apiInputs": 0,
+        "estimatedCostUsd": 0
+      },
+      "price": {
+        "usdPerMillionTokens": 0.2,
+        "observedAt": "2026-07-16",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "executionNote": null,
+      "failureReason": null
+    },
+    {
+      "label": "OpenAI text-embedding-3-small",
+      "role": "candidate",
+      "provider": "openai",
+      "model": "text-embedding-3-small",
+      "experimentId": "embedding-v4-openai-3-small-1024",
+      "attemptId": "20260717090933829",
+      "attemptCreatedAt": "2026-07-17T09:09:33.829Z",
+      "gitCommit": "576a28ba767ef60bc346010b393aa19b644c78ef",
+      "gitDirty": false,
+      "inputHashes": {
+        "protocol": "cc2f26512b06f90968bafb192e4b577f707518140613218288a0c25df73f5c5a",
+        "config": "e3919b68a60ec9bda705e4e7c999e418a7caaf4b2b2b0b60c91126dda4b92a4c",
+        "chunks": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
+        "goldenSet": "2e59f0b027d3c1b6c1efc1f2fda2e219a2b41357a8868b75637dd3fdbda04159",
+        "splitManifest": "67705cf053ba8774b5c83f50401f150ce2efe47111300b5163f2d2af1956d70e"
+      },
+      "cases": 54,
+      "outputDimensionality": 1024,
+      "selectedThreshold": null,
+      "selectedMetrics": null,
+      "eligible": false,
+      "exploratoryLowThreshold": {
+        "threshold": 0.18,
+        "metrics": {
+          "evaluatedCases": 54,
+          "answerableCases": 27,
+          "unanswerableCases": 27,
+          "recallAtK": 0.9259259259259259,
+          "precisionAtK": 0.46296296296296297,
+          "mrr": 0.7839506172839505,
+          "ndcgAtK": 0.8231589069189856,
+          "noAnswerFalsePositiveRate": 0.5555555555555556
+        },
+        "returnedChunks": 168
+      },
+      "bestZeroFpr": {
+        "threshold": 0.6,
+        "metrics": {
+          "evaluatedCases": 54,
+          "answerableCases": 27,
+          "unanswerableCases": 27,
+          "recallAtK": 0.6296296296296297,
+          "precisionAtK": 0.4320987654320988,
+          "mrr": 0.5925925925925926,
+          "ndcgAtK": 0.602291092857145,
+          "noAnswerFalsePositiveRate": 0
+        },
+        "returnedChunks": 61
+      },
+      "cleanRunEstimate": {
+        "cacheMisses": 2648,
+        "providerRequests": 84,
+        "apiTokens": 1320080,
+        "costUsd": 0.026401600000000004
+      },
+      "observedRetryOverhead": {
+        "apiInputs": 0,
+        "estimatedCostUsd": 0
+      },
+      "price": {
+        "usdPerMillionTokens": 0.02,
+        "observedAt": "2026-07-16",
+        "sourceUrl": "https://developers.openai.com/api/docs/models/text-embedding-3-small"
+      },
+      "executionNote": null,
+      "failureReason": "Recall@4 0.6296 < 0.9000; MRR 0.5926 < 0.8500"
+    },
+    {
+      "label": "OpenAI text-embedding-3-large",
+      "role": "candidate",
+      "provider": "openai",
+      "model": "text-embedding-3-large",
+      "experimentId": "embedding-v4-openai-3-large-1024",
+      "attemptId": "20260717090933845",
+      "attemptCreatedAt": "2026-07-17T09:09:33.845Z",
+      "gitCommit": "576a28ba767ef60bc346010b393aa19b644c78ef",
+      "gitDirty": false,
+      "inputHashes": {
+        "protocol": "6b4051eeb263410cd096d118bd85c9a831fc55bc1a6c0ab6d7366f961ff90cbe",
+        "config": "fc630342a1a51fcf14c2654b69de01a1b15c34605e6d2e869d5fb5e78a9bcee0",
+        "chunks": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
+        "goldenSet": "2e59f0b027d3c1b6c1efc1f2fda2e219a2b41357a8868b75637dd3fdbda04159",
+        "splitManifest": "67705cf053ba8774b5c83f50401f150ce2efe47111300b5163f2d2af1956d70e"
+      },
+      "cases": 54,
+      "outputDimensionality": 1024,
+      "selectedThreshold": null,
+      "selectedMetrics": null,
+      "eligible": false,
+      "exploratoryLowThreshold": {
+        "threshold": 0.18,
+        "metrics": {
+          "evaluatedCases": 54,
+          "answerableCases": 27,
+          "unanswerableCases": 27,
+          "recallAtK": 0.9629629629629629,
+          "precisionAtK": 0.5833333333333334,
+          "mrr": 0.9012345679012346,
+          "ndcgAtK": 0.9141326035663371,
+          "noAnswerFalsePositiveRate": 0.5555555555555556
+        },
+        "returnedChunks": 168
+      },
+      "bestZeroFpr": {
+        "threshold": 0.6,
+        "metrics": {
+          "evaluatedCases": 54,
+          "answerableCases": 27,
+          "unanswerableCases": 27,
+          "recallAtK": 0.8333333333333334,
+          "precisionAtK": 0.6882716049382717,
+          "mrr": 0.7901234567901234,
+          "ndcgAtK": 0.7916669148114214,
+          "noAnswerFalsePositiveRate": 0
+        },
+        "returnedChunks": 63
+      },
+      "cleanRunEstimate": {
+        "cacheMisses": 2648,
+        "providerRequests": 84,
+        "apiTokens": 1320080,
+        "costUsd": 0.17161040000000002
+      },
+      "observedRetryOverhead": {
+        "apiInputs": 0,
+        "estimatedCostUsd": 0
+      },
+      "price": {
+        "usdPerMillionTokens": 0.13,
+        "observedAt": "2026-07-16",
+        "sourceUrl": "https://developers.openai.com/api/docs/models/text-embedding-3-large"
+      },
+      "executionNote": null,
+      "failureReason": "Recall@4 0.8333 < 0.9000; MRR 0.7901 < 0.8500"
+    },
+    {
+      "label": "Voyage Code 3",
+      "role": "candidate",
+      "provider": "voyage",
+      "model": "voyage-code-3",
+      "experimentId": "embedding-v4-voyage-code-3-1024",
+      "attemptId": "20260717090933753",
+      "attemptCreatedAt": "2026-07-17T09:09:33.753Z",
+      "gitCommit": "576a28ba767ef60bc346010b393aa19b644c78ef",
+      "gitDirty": false,
+      "inputHashes": {
+        "protocol": "8097672e13515305205fd0a8e33476e7d0253c17f6745b3b078b7a0cfcff3d44",
+        "config": "595e7042a81a1bf3e472f83d87fe3c908ab1b286329bded51c5c3469584c23f2",
+        "chunks": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
+        "goldenSet": "2e59f0b027d3c1b6c1efc1f2fda2e219a2b41357a8868b75637dd3fdbda04159",
+        "splitManifest": "67705cf053ba8774b5c83f50401f150ce2efe47111300b5163f2d2af1956d70e"
+      },
+      "cases": 54,
+      "outputDimensionality": 1024,
+      "selectedThreshold": null,
+      "selectedMetrics": null,
+      "eligible": false,
+      "exploratoryLowThreshold": {
+        "threshold": 0.18,
+        "metrics": {
+          "evaluatedCases": 54,
+          "answerableCases": 27,
+          "unanswerableCases": 27,
+          "recallAtK": 0.9444444444444444,
+          "precisionAtK": 0.4722222222222222,
+          "mrr": 0.8209876543209877,
+          "ndcgAtK": 0.843251702245287,
+          "noAnswerFalsePositiveRate": 0.5555555555555556
+        },
+        "returnedChunks": 168
+      },
+      "bestZeroFpr": {
+        "threshold": 0.5,
+        "metrics": {
+          "evaluatedCases": 54,
+          "answerableCases": 27,
+          "unanswerableCases": 27,
+          "recallAtK": 0.9444444444444444,
+          "precisionAtK": 0.5185185185185185,
+          "mrr": 0.8209876543209877,
+          "ndcgAtK": 0.843251702245287,
+          "noAnswerFalsePositiveRate": 0
+        },
+        "returnedChunks": 103
+      },
+      "cleanRunEstimate": {
+        "cacheMisses": 2648,
+        "providerRequests": 84,
+        "apiTokens": 1320080,
+        "costUsd": 0.2376144
+      },
+      "observedRetryOverhead": {
+        "apiInputs": 120,
+        "estimatedCostUsd": 0.009314639999999999
+      },
+      "price": {
+        "usdPerMillionTokens": 0.18,
+        "observedAt": "2026-07-16",
+        "sourceUrl": "https://docs.voyageai.com/docs/pricing"
+      },
+      "executionNote": "The first indexing process outlived the shell timeout. A concurrent resume caused 120 redundant API inputs; this overhead is reported separately from the clean-run estimate.",
+      "failureReason": "MRR 0.8210 < 0.8500"
+    }
+  ],
+  "limitations": [
+    "All benchmark approvals remain provisional pending independent human confirmation.",
+    "Price observations are dated snapshots and may change.",
+    "Embedding latency is excluded from model ranking because cache state and provider rate limits differed.",
+    "The 24-case test split remains untouched and was not used for this decision."
+  ]
+}

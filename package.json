@@ -18,6 +18,7 @@
     "experiment:embedding:estimate": "tsx scripts/estimate-embedding-cost.ts",
     "experiment:embedding:validate": "tsx scripts/validate-embedding-suite.ts",
     "experiment:embedding:report": "tsx scripts/validate-embedding-suite.ts --write",
+    "experiment:embedding:comparison:report": "tsx scripts/report-embedding-model-comparison.ts",
     "experiment:embedding-chunk:validate": "tsx scripts/validate-embedding-chunk-suite.ts",
     "embedding:cache:test": "tsx scripts/test-embedding-cache.ts",
     "embedding:providers:test": "tsx scripts/test-embedding-providers.ts",

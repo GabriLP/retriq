@@ -1,0 +1,3 @@
+variant,selected_threshold,recall_at_4,precision_at_4,mrr,ndcg_at_4,no_answer_fpr,decision
+dense-cosine,,,,,,,No threshold satisfied the guardrails.
+metadata-aware-dense,,,,,,,No threshold satisfied the guardrails.
