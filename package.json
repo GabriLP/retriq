@@ -33,6 +33,8 @@
     "retrieval:strategies:test": "tsx scripts/test-retrieval-strategies.ts",
     "rerankers:test": "tsx scripts/test-rerankers.ts",
     "experiment:reranking": "tsx scripts/evaluate-reranking.ts",
+    "generation:benchmark:build": "tsx scripts/build-generation-benchmark.ts",
+    "generation:benchmark:validate": "tsx scripts/validate-generation-benchmark.ts",
     "experiment:retrieval:strategies": "tsx scripts/evaluate-retrieval-strategies.ts",
     "experiment:registry:report": "tsx scripts/report-experiment-registry.ts",
     "metadata:filter:test": "tsx scripts/test-metadata-filter.ts",

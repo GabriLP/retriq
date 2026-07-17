@@ -1,0 +1,2542 @@
+{
+  "schemaVersion": 1,
+  "id": "retriq-generation-benchmark-v1",
+  "version": "1.0.0",
+  "createdAt": "2026-07-17T09:33:22.581Z",
+  "split": "validation",
+  "source": {
+    "goldenSet": "docs/evaluation/golden-set.v4.json",
+    "goldenSetId": "retriq-programming-qa",
+    "goldenSetVersion": "4.0.0-html-language-coverage",
+    "splitManifest": "docs/evaluation/golden-set-splits.v4.json",
+    "splitId": "retriq-programming-qa-validation-test-v4",
+    "splitVersion": "4.0.0",
+    "retrievalAttempt": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec/reranking-attempts/reranking-v1/20260717093322581/attempt.json",
+    "retrievalAttemptId": "20260717093322581",
+    "parentRunId": "20260717084956473-e60c88ec",
+    "experimentId": "baseline-gemini-300-v4-validation",
+    "retrievalCode": {
+      "gitCommit": "ff5f774ed593f0a36792d392cac3ede556975952",
+      "dirty": false,
+      "gitDiffHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "inputHashes": {
+      "protocol": "7349a54c645d733af50db8da8e4363c5ab553323550c8f9489572a35ceba83df",
+      "config": "e7d95b88394a8f87f08a4de9885b8c80cfa70f729e337b5a646e6500b1a40880",
+      "chunks": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
+      "goldenSet": "2e59f0b027d3c1b6c1efc1f2fda2e219a2b41357a8868b75637dd3fdbda04159",
+      "splitManifest": "67705cf053ba8774b5c83f50401f150ce2efe47111300b5163f2d2af1956d70e"
+    },
+    "chunksSha256": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
+    "goldenSetSha256": "2e59f0b027d3c1b6c1efc1f2fda2e219a2b41357a8868b75637dd3fdbda04159",
+    "splitManifestSha256": "67705cf053ba8774b5c83f50401f150ce2efe47111300b5163f2d2af1956d70e"
+  },
+  "frozenRetrieval": {
+    "embeddingModel": "gemini-embedding-2",
+    "embeddingDimensions": 1024,
+    "metadataAware": true,
+    "denseEligibilityThreshold": 0.68,
+    "reranker": null,
+    "topK": 4
+  },
+  "prompt": "docs/evaluation/generation-prompt.v1.json",
+  "humanRubric": "docs/evaluation/generation-human-rubric.v1.json",
+  "caseCounts": {
+    "total": 54,
+    "answerable": 27,
+    "unanswerable": 27,
+    "invokeGenerator": 27,
+    "deterministicAbstention": 27
+  },
+  "humanCalibration": {
+    "method": "Take the twelve lowest SHA-256 orderings per answerability stratum using a predeclared seed.",
+    "seed": "retriq-generation-human-calibration-v1",
+    "selectedBeforeGeneration": true,
+    "caseIds": [
+      "cpp-move-constructor-001",
+      "python-parameter-kinds-001",
+      "javascript-array-filter-holes-001",
+      "c-standard-purpose-001",
+      "java-spec-release-001",
+      "rust-mutable-reference-rules-001",
+      "java-ods-red-black-tree-001",
+      "react-effects-001",
+      "java-ods-dual-array-deque-001",
+      "javascript-promise-all-001",
+      "rust-ownership-move-clone-001",
+      "react-state-queue-001",
+      "c-msvc-sal-annotations-001",
+      "ruby-activerecord-callbacks-001",
+      "cpp-cmake-targets-001",
+      "react-out-of-scope-001",
+      "kotlin-gradle-plugin-001",
+      "typescript-angular-onpush-001",
+      "typescript-prisma-transaction-001",
+      "postgresql-19-release-001",
+      "swift-sendable-actors-001",
+      "java-android-activity-lifecycle-001",
+      "rust-diesel-querydsl-001",
+      "bash-fish-argparse-001"
+    ]
+  },
+  "testSplit": {
+    "locked": true,
+    "touched": false,
+    "casesIncluded": 0
+  },
+  "cases": [
+    {
+      "caseId": "react-state-snapshot-001",
+      "language": "React",
+      "domain": "state",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "Why does reading a state variable immediately after calling its setter still return the value from the current render?",
+      "expected": {
+        "answer": "Setting state requests another render; it does not mutate the state snapshot already captured by the running render or event handler.",
+        "keyFacts": [
+          "A state setter requests a new render.",
+          "Each render receives a snapshot of state.",
+          "The current handler continues to observe the snapshot for its render."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "dc648d4e5831c175",
+          "cosineScore": 0.7881544220128799,
+          "title": "State as a Snapshot",
+          "section": "Setting state triggers renders (part 4)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/state-as-a-snapshot",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 313,
+          "contentSha256": "9603bfe2656e60389822413d3ff140fc29e736b1ba11df897d1f573e31e4a49e",
+          "promptDocumentSha256": "5dbb556baaed00574f20eb5d3a92496c4076c65e72af88218f1043a8a9cb3402"
+        },
+        {
+          "rank": 2,
+          "chunkId": "fa2e31e783804974",
+          "cosineScore": 0.7842217934794689,
+          "title": "State as a Snapshot",
+          "section": "Setting state triggers renders (part 3)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/state-as-a-snapshot",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 307,
+          "contentSha256": "8072c6b8b856b4e19f6f93c47d554b37e6e19dd16476853940895461a2d3cc50",
+          "promptDocumentSha256": "50044d5ff55c9bfa33f28393f0907307cb3910d4ec546e001372bca8e4618a7b"
+        },
+        {
+          "rank": 3,
+          "chunkId": "e841e501529c1760",
+          "cosineScore": 0.7799363338779016,
+          "title": "State as a Snapshot",
+          "section": "Setting state triggers renders (part 5)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/state-as-a-snapshot",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 350,
+          "contentSha256": "342e1a3f7743856bac0b59e587ceaf89dfa76059bc44c689ba7303b4a03c9262",
+          "promptDocumentSha256": "90ccd05ac136b8cfb32d2d9e1dbe30508714bc25cc6db72aefba45b6eadb2055"
+        },
+        {
+          "rank": 4,
+          "chunkId": "5aaaec5c082fd1eb",
+          "cosineScore": 0.7796694840446705,
+          "title": "State as a Snapshot",
+          "section": "Setting state triggers renders (part 1)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/state-as-a-snapshot",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 324,
+          "contentSha256": "bcb0d2059c3ffd6fd0d2192b6fbd74aa610daef191b13c9c0074bdcc6330d4ac",
+          "promptDocumentSha256": "e6729983e0aea4ce797aa553f971b62877b7009731743d8572c4ce28b9fe8a50"
+        }
+      ],
+      "retrievalRelevantCount": 4,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "react-state-queue-001",
+      "language": "React",
+      "domain": "state",
+      "difficulty": "medium",
+      "questionType": "procedural",
+      "answerability": "answerable",
+      "question": "How should a component increment the same state value three times in one event handler?",
+      "expected": {
+        "answer": "Pass an updater function to the setter three times, for example setNumber(n => n + 1), so React processes the queued updates in sequence.",
+        "keyFacts": [
+          "Use the functional updater form.",
+          "React queues updater functions.",
+          "Each updater receives the result of the preceding queued updater."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "d8e41cb2f2fb6bd3",
+          "cosineScore": 0.8102083119266955,
+          "title": "Queueing a Series of State Updates",
+          "section": "React batches state updates (part 3)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 327,
+          "contentSha256": "c759efc68c4219da84f7b6ed747fa26ea54aec3d56bef92f1d04331c434eeb47",
+          "promptDocumentSha256": "293f1907d5b08de47a96d84e2e0a4cf0c1b8c79cedd9667b79774b6b142cb966"
+        },
+        {
+          "rank": 2,
+          "chunkId": "2da618e713137e93",
+          "cosineScore": 0.8071351196456665,
+          "title": "Queueing a Series of State Updates",
+          "section": "React batches state updates (part 2)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 306,
+          "contentSha256": "318aa19a26e7f9a94ec2431b207cd91b365350d11aa269410af89d309b52027e",
+          "promptDocumentSha256": "6ef1fef039a08783b7985d3664c7604e7837792225fb75ff183465bcfdb1b39a"
+        },
+        {
+          "rank": 3,
+          "chunkId": "dc648d4e5831c175",
+          "cosineScore": 0.8004556797931945,
+          "title": "State as a Snapshot",
+          "section": "Setting state triggers renders (part 4)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/state-as-a-snapshot",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 313,
+          "contentSha256": "9603bfe2656e60389822413d3ff140fc29e736b1ba11df897d1f573e31e4a49e",
+          "promptDocumentSha256": "5dbb556baaed00574f20eb5d3a92496c4076c65e72af88218f1043a8a9cb3402"
+        },
+        {
+          "rank": 4,
+          "chunkId": "7f8bb278413d64cf",
+          "cosineScore": 0.7841307457198841,
+          "title": "Queueing a Series of State Updates",
+          "section": "React batches state updates (part 1)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 345,
+          "contentSha256": "dc8eb23156bdcddae2be53499d300db211668839b31c6826342739b4df9f85eb",
+          "promptDocumentSha256": "471d28a1e6fa0c940c6df4b10b36bc9bcfc9ba23beb4c433d2cba0d655e70c93"
+        }
+      ],
+      "retrievalRelevantCount": 3,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "react-effects-001",
+      "language": "React",
+      "domain": "effects",
+      "difficulty": "medium",
+      "questionType": "comparative",
+      "answerability": "answerable",
+      "question": "When is an Effect appropriate instead of deriving a value during rendering?",
+      "expected": {
+        "answer": "Use an Effect to synchronize with an external system. If no external system is involved and a value can be derived from props or state, calculate it during rendering.",
+        "keyFacts": [
+          "Effects synchronize React components with external systems.",
+          "Derived values generally do not require an Effect.",
+          "Unnecessary Effects add extra render work and complexity."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "97dbc5e2beca8b8d",
+          "cosineScore": 0.7818965653960707,
+          "title": "Synchronizing with Effects",
+          "section": "What are Effects and how are they different from events? (part 2)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/synchronizing-with-effects",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 341,
+          "contentSha256": "38430fdbae65de5401f4fb9bfe9cd978471d351ca962ac393804addb48e0256c",
+          "promptDocumentSha256": "9527d3b9de8b68438b3c4c7d1571d31f31c80ab72fdd7e34d8be9731371de492"
+        },
+        {
+          "rank": 2,
+          "chunkId": "d500ea68f84c856e",
+          "cosineScore": 0.7799956548972437,
+          "title": "You Might Not Need an Effect",
+          "section": "How to remove unnecessary Effects (part 2)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/you-might-not-need-an-effect",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 339,
+          "contentSha256": "d07426f37d96c600533314b9981f703cfba399929a928deb0c12ac26b5fb790f",
+          "promptDocumentSha256": "670b74477f556b1755eaed61facf507e2f09fe1f36e482b4c983936590de683f"
+        },
+        {
+          "rank": 3,
+          "chunkId": "1f874a42916c090a",
+          "cosineScore": 0.773015105050914,
+          "title": "Synchronizing with Effects",
+          "section": "What are Effects and how are they different from events? (part 3)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/synchronizing-with-effects",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 326,
+          "contentSha256": "fcef9465007665ce7dddf3bf27dae822952870ec0406399e63bccc706e106702",
+          "promptDocumentSha256": "4e3d2f710ebacc3a76e524150d192f62c0110506057840fbc9513b48827402a9"
+        },
+        {
+          "rank": 4,
+          "chunkId": "e581484c010768d8",
+          "cosineScore": 0.7710197062332194,
+          "title": "Synchronizing with Effects",
+          "section": "What are Effects and how are they different from events? (part 1)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/synchronizing-with-effects",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 320,
+          "contentSha256": "68be135f9353ac7a51549ed6c358e3342a98918f525818bb42d8c315e849d675",
+          "promptDocumentSha256": "eba07a29f39f2ace5680a634c0f5c75819af88ead700f7d971cebd0dda9ef824"
+        }
+      ],
+      "retrievalRelevantCount": 4,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "react-refs-001",
+      "language": "React",
+      "domain": "refs",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "Why is a ref unsuitable for a value that must update what the component displays?",
+      "expected": {
+        "answer": "Changing ref.current does not trigger a re-render, so React will not update the displayed output from that change alone.",
+        "keyFacts": [
+          "Mutating a ref does not trigger a re-render.",
+          "State should be used for values that affect rendered output."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "8365fd87ae7b55d6",
+          "cosineScore": 0.7978768386572144,
+          "title": "Referencing Values with Refs",
+          "section": "Adding a ref to your component (part 4)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/referencing-values-with-refs",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 327,
+          "contentSha256": "cb93199ec3e4ec30f1e33da9952455d8e0db67fe4c038a6ffb3ba76d6fcb3fa1",
+          "promptDocumentSha256": "4a9d6d47734d6d91db56c0be56351bab34f2dcc18a2d8b5f9ceecf09170bf48e"
+        },
+        {
+          "rank": 2,
+          "chunkId": "d9d4844cdc053dc5",
+          "cosineScore": 0.771346466041307,
+          "title": "useRef",
+          "section": "Reference (part 4)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/reference/react/useRef",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 323,
+          "contentSha256": "c26734b47a4580213f8ce6c5e92af6a3338d0ada45bab100cc2a35a3e9968969",
+          "promptDocumentSha256": "5a4f917297a423a8515d73c4efbc014ce981d8096a06957ce3b806216b4a7a9d"
+        },
+        {
+          "rank": 3,
+          "chunkId": "a6213c65b7d5b16c",
+          "cosineScore": 0.7705245348178099,
+          "title": "Referencing Values with Refs",
+          "section": "Adding a ref to your component (part 5)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/referencing-values-with-refs",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 346,
+          "contentSha256": "3fb305e99a851c728dff130e2b51019f75a4af1e256a9282511fe0fea6fd71b6",
+          "promptDocumentSha256": "b33cc02ef7135d6b094d5aff7a1af7b6d38efd0b6a32a4ac7dd7525a57722c5e"
+        },
+        {
+          "rank": 4,
+          "chunkId": "634aee579c11b679",
+          "cosineScore": 0.7678916713050528,
+          "title": "Referencing Values with Refs",
+          "section": "Adding a ref to your component (part 1)",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn/referencing-values-with-refs",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 328,
+          "contentSha256": "a460ef96bb69db5326a1805479fdcb3167e097da7804bf8bf52738729b2ea467",
+          "promptDocumentSha256": "b8c1cc09755637d26040ed3e137fe75d0213306b2ece3bfc9582d1e748462a1f"
+        }
+      ],
+      "retrievalRelevantCount": 3,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "react-out-of-scope-001",
+      "language": "React",
+      "domain": "scope-control",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How do I configure dependency injection providers in an Angular NgModule?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The selected corpus contains React and programming-language documentation, not Angular NgModule documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "c-standard-purpose-001",
+      "language": "C",
+      "domain": "language-standard",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "What purpose does the C11 N1570 draft state for the C language standard?",
+      "expected": {
+        "answer": "It specifies the form and interpretation of C programs to promote portability, reliability, maintainability, and efficient execution across computing systems.",
+        "keyFacts": [
+          "It specifies the form and interpretation of C programs.",
+          "Its goals include portability, reliability, maintainability, and efficient execution."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "bfc25f97482d7f7f",
+          "cosineScore": 0.8181197692476727,
+          "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
+          "section": "ABSTRACT",
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "pageStart": 1,
+          "pageEnd": 1,
+          "wordCount": 175,
+          "contentSha256": "d95cf5b6a7aac1a50176ca0194d03eb46413cfbe299db3aaf0174f7e865347a4",
+          "promptDocumentSha256": "5dfe992a4d01e3a0a1ea66e4c00e2511cec1e6a5b5ba5ba8cc9bcfad4a279029"
+        },
+        {
+          "rank": 2,
+          "chunkId": "e42df028d8c70752",
+          "cosineScore": 0.7954483767240208,
+          "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
+          "section": "1.  Scope",
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "pageStart": 19,
+          "pageEnd": 19,
+          "wordCount": 210,
+          "contentSha256": "379cee4d8e0ca68646d871f3b537726e008c263f71489bd0fe7fc1b430ccdf08",
+          "promptDocumentSha256": "59d85f86bfbf1a79c92baa4a93cc86accef62a1b1aea36a2054a57ec6976006a"
+        },
+        {
+          "rank": 3,
+          "chunkId": "74b12aaa93ec80fa",
+          "cosineScore": 0.7527108665313882,
+          "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
+          "section": "ISO/IEC 9899:201x Committee Draft - April 12, 2011 N1570",
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "pageStart": 2,
+          "pageEnd": 2,
+          "wordCount": 10,
+          "contentSha256": "c92df085de9dc4363f66097d4dbce4684f7833599926514b060ec9de7fb2fd6a",
+          "promptDocumentSha256": "2acd756bc75a104818a1a23dc35613d65464aff3abd9b6df3ef6eb6fad607356"
+        },
+        {
+          "rank": 4,
+          "chunkId": "464f0c81d0ad9d8c",
+          "cosineScore": 0.752673430843216,
+          "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
+          "section": "Programming languages - C",
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "pageStart": 19,
+          "pageEnd": 19,
+          "wordCount": 5,
+          "contentSha256": "5d34ba7176b62e29ceccc1aca338827fa357c9478d079e50ca8154e79264fe43",
+          "promptDocumentSha256": "b69164df7e966838a859c6a5b7a9051b770b4268821e273a3d794415b15d62dd"
+        }
+      ],
+      "retrievalRelevantCount": 2,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "java-spec-release-001",
+      "language": "Java",
+      "domain": "language-specification",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "Which Java release and specification status are identified by the Java Language Specification in this corpus?",
+      "expected": {
+        "answer": "The document is the Java SE 26 edition, version 26, marked Final Release and released in March 2026.",
+        "keyFacts": [
+          "Java SE 26 edition and version 26.",
+          "Status is Final Release.",
+          "Release date is March 2026."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "7d9f9e34c3ab05cf",
+          "cosineScore": 0.8087263681914445,
+          "title": "The Java Language Specification, Java SE 26 Edition",
+          "section": "Java SE 26 Edition",
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "pageStart": 1,
+          "pageEnd": 2,
+          "wordCount": 69,
+          "contentSha256": "38f4958717da1a7153617cd50b7cb56f2cb1800033170ee5e08da238615fbe4d",
+          "promptDocumentSha256": "3ccaff2e5106eb0f2e06135cc5214f6218a0a6ca2a2b1e27fc6fd42572708585"
+        },
+        {
+          "rank": 2,
+          "chunkId": "6359b4ecf7adf80f",
+          "cosineScore": 0.8038997130465106,
+          "title": "The Java Language Specification, Java SE 26 Edition",
+          "section": "Appendix A. Limited License Grant",
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "pageStart": 887,
+          "pageEnd": 887,
+          "wordCount": 66,
+          "contentSha256": "4da31a56a4440ba4c00cb60dd65e3611b99aba6e74b1471f6ca17edc3cdfc47b",
+          "promptDocumentSha256": "14a86d52ec128aec87032d4623e9bc96f6e1ddfb3b5130aa20623e6ea98ae1ac"
+        },
+        {
+          "rank": 3,
+          "chunkId": "c32e3a3624025980",
+          "cosineScore": 0.7858983765433539,
+          "title": "The Java Language Specification, Java SE 26 Edition",
+          "section": "The Java ®  Language Specification",
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "pageStart": 1,
+          "pageEnd": 1,
+          "wordCount": 6,
+          "contentSha256": "752b3adf4f53699450a8be2c89cc807c4ef930099e0104b083ff09d6cc5aa84c",
+          "promptDocumentSha256": "8579d562e01e26001e95a2daf9a868ca22f9b7593775b5e74181664aaa5fc247"
+        },
+        {
+          "rank": 4,
+          "chunkId": "67e6bd605a08d550",
+          "cosineScore": 0.7763058339344849,
+          "title": "The Java Language Specification, Java SE 26 Edition",
+          "section": "1.5.2 Current Preview Language Features",
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "pageStart": 26,
+          "pageEnd": 26,
+          "wordCount": 47,
+          "contentSha256": "5ed1b15da3757319d7cc3e8356317d5d0dd60ec149a3909afe9a0f3c97242a2b",
+          "promptDocumentSha256": "6a51786365c0f349707c3f86b2bb0d3696e215d7a331e95bcf0d5d4a45c5c424"
+        }
+      ],
+      "retrievalRelevantCount": 2,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "java-ods-arraystack-amortized-001",
+      "language": "Java",
+      "domain": "array-based-data-structures",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "answerability": "answerable",
+      "question": "Why can ArrayStack resizing take linear time for one operation while still adding only constant amortized cost per update?",
+      "expected": {
+        "answer": "One resize copies n elements and costs O(n), but enough add or remove operations must occur between resizes. Across any sequence of m updates, the total resizing work is O(m), so the amortized resize cost per update is O(1).",
+        "keyFacts": [
+          "A single resize allocates a new array and copies n elements, costing O(n).",
+          "At least roughly n/2 updates occur between consecutive resizes.",
+          "The total resizing time over m add/remove operations is O(m), giving O(1) amortized resizing cost."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "05b87327a4d909da",
+          "cosineScore": 0.7856114409347792,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "2.1.2 Growing and Shrinking (part 1)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 30,
+          "pageEnd": 31,
+          "wordCount": 340,
+          "contentSha256": "0c0f23a58667480c202b69257e3815ce60765a45d3d0e3e1d4be021a24d96096",
+          "promptDocumentSha256": "d7c62fd2eb5e879150c6aed9b889364c53c5cf1eb34ab9e5c002e6fe5137bb29"
+        },
+        {
+          "rank": 2,
+          "chunkId": "f490ae8363440df8",
+          "cosineScore": 0.7646653610687156,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "2.1.3 Summary",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 32,
+          "pageEnd": 32,
+          "wordCount": 163,
+          "contentSha256": "9428556fc8091fa1216504638d11356b62485a7a9d52e1e97fd639dadd38f65e",
+          "promptDocumentSha256": "7d153821be747f7561e5efe76b802515dbe3df3b531c5fd71d40333f2cb67800"
+        },
+        {
+          "rank": 3,
+          "chunkId": "0cdab49da52e20b9",
+          "cosineScore": 0.7492950775980693,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "Array-Based Lists (part 2)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 27,
+          "pageEnd": 28,
+          "wordCount": 248,
+          "contentSha256": "68210dd883c8342f26e3fb567a1b68a59eea4ff72a7ff6c632162e70911bef0c",
+          "promptDocumentSha256": "b922ce458912db423302aa548dffcd344b91643167a6fd2855bb11e060aface9"
+        },
+        {
+          "rank": 4,
+          "chunkId": "848e06c824eaba71",
+          "cosineScore": 0.7381574491543191,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "2.6.1 Analysis of Growing and Shrinking",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 48,
+          "pageEnd": 49,
+          "wordCount": 188,
+          "contentSha256": "5e8571fca0408d6694c51e67acacdcb22f6822a14e55b5a3cecb80479d9891a4",
+          "promptDocumentSha256": "270754d010a85022961dc3dd193650c74d997cc74845839593dc3df7bdd53378"
+        }
+      ],
+      "retrievalRelevantCount": 1,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "java-ods-dual-array-deque-001",
+      "language": "Java",
+      "domain": "deques",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "answerability": "answerable",
+      "question": "What balance invariant does DualArrayDeque maintain, and why does its occasional O(n) rebalancing remain O(1) amortized per update?",
+      "expected": {
+        "answer": "Unless there are fewer than two elements, both front and back contain at least n/4 elements. Rebalancing moves Θ(n) elements, but at least roughly n/2 updates are required before another rebalance, so total balancing work over m updates is O(m).",
+        "keyFacts": [
+          "Each side contains at least n/4 elements except for the very small case.",
+          "Rebalancing restores the two sides to floor(n/2) and ceil(n/2) elements.",
+          "A rebalance costs O(n), but sufficiently many updates separate rebalances, producing O(1) amortized balancing cost."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "3564e6768c7dcc9b",
+          "cosineScore": 0.7930780581996817,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "2.5.1 Balancing (part 1)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 42,
+          "pageEnd": 44,
+          "wordCount": 354,
+          "contentSha256": "db5fecab1bf8374c3060cf3379cb7035b4f1f39f5b34d047a13d6cc643c52c02",
+          "promptDocumentSha256": "55d30aba1eb09c9be7c58ef48a440fe2a9943286685043640ba172829e3c94c7"
+        },
+        {
+          "rank": 2,
+          "chunkId": "1aebebb6fbe3373e",
+          "cosineScore": 0.7802806709791377,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "2.5.1 Balancing (part 2)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 42,
+          "pageEnd": 44,
+          "wordCount": 296,
+          "contentSha256": "8416b50070d1965b6882e6176e978d52a2ee5508b857ddcb9866a634ab6171d4",
+          "promptDocumentSha256": "2abeeb42b609f300f942476a688f87ae000f3250d4d3fad2943cb7d9fc04ef1b"
+        },
+        {
+          "rank": 3,
+          "chunkId": "d3bd1c4b0c214b42",
+          "cosineScore": 0.7692149847027081,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "2.5 DualArrayDeque : Building a Deque from Two Stacks (part 3)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 39,
+          "pageEnd": 42,
+          "wordCount": 368,
+          "contentSha256": "e16d5cb41f908398db528663ac01d90a0bfe8151770b3398ac1287a38c0661b1",
+          "promptDocumentSha256": "955750d5d8efeffcf2a4dab62be9efc69f7f68cd30d34accce4dfd2fbd418cc0"
+        },
+        {
+          "rank": 4,
+          "chunkId": "8106a6af6ec188c7",
+          "cosineScore": 0.7507444144034936,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "2.5 DualArrayDeque : Building a Deque from Two Stacks (part 1)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 39,
+          "pageEnd": 42,
+          "wordCount": 315,
+          "contentSha256": "8ea12c6bdcfb18596efa991745d4921ee5dd15d4fb3031f9d6ddf33d25ec89db",
+          "promptDocumentSha256": "7a5cd0abddea6d09a1d2613cd5353c916b7bf64bc13f02b25718b23626395708"
+        }
+      ],
+      "retrievalRelevantCount": 4,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "java-ods-skiplist-analysis-001",
+      "language": "Java",
+      "domain": "skiplists",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "What expected space and search-path bounds are established for a skiplist containing n elements?",
+      "expected": {
+        "answer": "The skiplist has expected size O(n), and the expected search path for a particular element is at most 2 log n plus a constant term.",
+        "keyFacts": [
+          "Expected skiplist size is O(n).",
+          "Expected height is at most log n + 2.",
+          "Expected search-path length is at most 2 log n + O(1)."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "c29de7e7039ae4b1",
+          "cosineScore": 0.8014965086913333,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "4.4 Analysis of Skiplists (part 2)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 83,
+          "pageEnd": 86,
+          "wordCount": 308,
+          "contentSha256": "0e74499ac1b7c4b702e163d886bcf930f8fb8492a490f00ce342b1bd31985353",
+          "promptDocumentSha256": "3a42eda7c3a97eb739af6f7988bd09a553ed520011bf5b8151b50645377c8f3c"
+        },
+        {
+          "rank": 2,
+          "chunkId": "9f0625aefb865e09",
+          "cosineScore": 0.7937314102149917,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "4.1 The Basic Structure (part 2)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 73,
+          "pageEnd": 75,
+          "wordCount": 320,
+          "contentSha256": "12b8dbea6f9ca10a97629dd11809b5a589493a3f5dc76c7bc4a853ea404bc582",
+          "promptDocumentSha256": "b71e5063997e4e93a4413e66e07cfa1ef35f262bc9faf7696e2372d5b79519e0"
+        },
+        {
+          "rank": 3,
+          "chunkId": "07ae531c8893199c",
+          "cosineScore": 0.7928123202064143,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "4.4 Analysis of Skiplists (part 1)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 83,
+          "pageEnd": 86,
+          "wordCount": 301,
+          "contentSha256": "ccd2614ec85f5a5f2171a928a2ab8aa60dbbb50e73d37fccc826e12fe4f2d3cc",
+          "promptDocumentSha256": "0ba9c749ae1a2752c08b38dae498cb40397b3eeea3489b978b989ad1cd801994"
+        },
+        {
+          "rank": 4,
+          "chunkId": "891675bfb5a7364e",
+          "cosineScore": 0.7928084385106319,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "4.4 Analysis of Skiplists (part 3)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 83,
+          "pageEnd": 86,
+          "wordCount": 312,
+          "contentSha256": "bbe7376537bd285ac3b6d1350ebd34897949d7e101f57b243b28f81ac9621e72",
+          "promptDocumentSha256": "57fca397f5572c2ff1ecdae11c473cf875cbb649f82f1a105437236930d33b9e"
+        }
+      ],
+      "retrievalRelevantCount": 3,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "java-ods-linear-probing-001",
+      "language": "Java",
+      "domain": "hash-tables",
+      "difficulty": "hard",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "Under which assumptions does the LinearHashTable analysis obtain O(1) expected operation time?",
+      "expected": {
+        "answer": "The analysis assumes independent uniform hash values and maintains a load condition with at most half the table entries non-null. Under those assumptions, run lengths decrease exponentially and find, add, and remove take O(1) expected time before amortized resizing is included.",
+        "keyFacts": [
+          "Hash values are assumed independent and uniformly distributed.",
+          "The table maintains q no greater than half the table length.",
+          "Run-length probability decreases exponentially, yielding O(1) expected find/add/remove time apart from resizing.",
+          "Resizing is handled separately with amortized analysis."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "e0bdb7083d82a3aa",
+          "cosineScore": 0.8110031736611338,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "5.2.1 Analysis of Linear Probing (part 4)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 98,
+          "pageEnd": 100,
+          "wordCount": 379,
+          "contentSha256": "b001a90e98f7be1d1dc30e22e14bb414b64f8886809b0e844aeeb679add2fb4d",
+          "promptDocumentSha256": "5e2d4312f257794cf4a0d7e675b00d74795862c6a462b9ac4f8e71a65de32e5b"
+        },
+        {
+          "rank": 2,
+          "chunkId": "6bb113802966cd73",
+          "cosineScore": 0.7904961632584394,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "5.2.2 Summary",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 100,
+          "pageEnd": 101,
+          "wordCount": 140,
+          "contentSha256": "a951b59421135dde16cf8c3fbccf0da2dc4e9c19fb5f97f653f0f6b7fa4e810e",
+          "promptDocumentSha256": "162848ec3beb515d1e17e6a17a842532f4258839044e4e6acde07986b10c6be8"
+        },
+        {
+          "rank": 3,
+          "chunkId": "ddac1a9599b7ed4f",
+          "cosineScore": 0.7841032765384356,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "5.2.1 Analysis of Linear Probing (part 1)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 98,
+          "pageEnd": 100,
+          "wordCount": 367,
+          "contentSha256": "81af5bec65a1453be13238db302e8951eafa4e16d466ba8c0de27032ee1fe07a",
+          "promptDocumentSha256": "44222a90003f2815e3cc2a28794dcc9dad43f0b455fe881689c1930379652721"
+        },
+        {
+          "rank": 4,
+          "chunkId": "0550dd4cb21de4b8",
+          "cosineScore": 0.7781473824337375,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "5.2.1 Analysis of Linear Probing (part 3)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 98,
+          "pageEnd": 100,
+          "wordCount": 321,
+          "contentSha256": "726051d62d1df68d3a81197ba1f461af04c9328e0b0141cec46ab9661adf3211",
+          "promptDocumentSha256": "13b22f3e6d3572a38019ebf82f967474d6ef273c5a0110c6205df956150c6573"
+        }
+      ],
+      "retrievalRelevantCount": 4,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "java-ods-red-black-tree-001",
+      "language": "Java",
+      "domain": "balanced-search-trees",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "answerability": "answerable",
+      "question": "How does the correspondence with a 2-4 tree establish the height bound for a red-black tree?",
+      "expected": {
+        "answer": "Removing each red node and attaching its children to the black parent produces a 2-4 tree whose root-to-leaf paths have equal black height. A red-black path contains at most one red node between black nodes, so its length is at most twice the corresponding 2-4-tree height, giving height at most 2 log n.",
+        "keyFacts": [
+          "Collapsing red nodes transforms the red-black tree into a 2-4 tree.",
+          "The black-height property gives equal root-to-leaf length in the transformed tree.",
+          "At most one of every two internal nodes on a red-black path is red.",
+          "The resulting red-black-tree height is at most 2 log n."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "e5c3673459462a65",
+          "cosineScore": 0.8051616398832765,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "9.2.1 Red-Black Trees and 2-4 Trees (part 2)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 156,
+          "pageEnd": 159,
+          "wordCount": 362,
+          "contentSha256": "be141c4878bd66b4b2961bf3d3f8b7aaf45df293433cb207ab638d3485592db5",
+          "promptDocumentSha256": "4182a9dbf2519e898fe7b5fcab17ed806df7e4ad7412d1f2edb95133392b7836"
+        },
+        {
+          "rank": 2,
+          "chunkId": "b6ed352ad68c11ed",
+          "cosineScore": 0.8034103266852457,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "9.2.1 Red-Black Trees and 2-4 Trees (part 1)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 156,
+          "pageEnd": 159,
+          "wordCount": 314,
+          "contentSha256": "09006efcae4af6cce0da8c41f268536d774dfe2aeb1d473433763b83058e5d5f",
+          "promptDocumentSha256": "416d1f01aab2cd18dda3a57e608a399bef39d92c0ef8f13819d11619dcb34f17"
+        },
+        {
+          "rank": 3,
+          "chunkId": "f933e69c13b229b7",
+          "cosineScore": 0.7524905990406968,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "Red-Black Trees (part 2)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 151,
+          "pageEnd": 152,
+          "wordCount": 256,
+          "contentSha256": "59d44004690b82cf757a549519529462d3d2fb941c39a4e73c82b776d9f4db13",
+          "promptDocumentSha256": "64b9354bc81375a80458cbf5f7f4b79bc71a88bc0de15887d5d5bb8f91cb017c"
+        },
+        {
+          "rank": 4,
+          "chunkId": "79d9224d486ad448",
+          "cosineScore": 0.7393656455901094,
+          "title": "Open Data Structures (Java Edition)",
+          "section": "9.2 RedBlackTree : A Simulated 2-4 Tree (part 1)",
+          "sourceId": "open-data-structures-java",
+          "sourceUrl": "https://opendatastructures.org/versions/edition-0.1/ods-java.pdf",
+          "pageStart": 154,
+          "pageEnd": 156,
+          "wordCount": 314,
+          "contentSha256": "a23a9fe4942db75c117048b703ad35153b54877faaa088b8d9bd8f9c554a5632",
+          "promptDocumentSha256": "60c3686cd1042ad469be28bbc9703f08a500f7ca3a92cddf96e983a6aa9cce0b"
+        }
+      ],
+      "retrievalRelevantCount": 3,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "postgresql-license-001",
+      "language": "PostgreSQL",
+      "domain": "documentation-license",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "Under which condition does the PostgreSQL 18 manual grant permission to copy and distribute the software and documentation?",
+      "expected": {
+        "answer": "The permission is granted without fee or written agreement provided the copyright notice and the specified accompanying paragraphs appear in all copies.",
+        "keyFacts": [
+          "Permission is granted without fee and without a written agreement.",
+          "The required copyright notice and accompanying paragraphs must appear in all copies."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "14d8d46a40c5f9df",
+          "cosineScore": 0.7611314854547337,
+          "title": "PostgreSQL 18.4 Documentation",
+          "section": "Legal Notice",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 2,
+          "pageEnd": 2,
+          "wordCount": 176,
+          "contentSha256": "fddd001f7079e7c6db7401deb259c66cf7c3d5f9d2e4dfef48f9b0fc0b9feae5",
+          "promptDocumentSha256": "8fff23cbd1bc8d6315a0d98ef060b457fdf9746173eedd29733a0c69af6ca07e"
+        },
+        {
+          "rank": 2,
+          "chunkId": "08d06fd75f62cb7b",
+          "cosineScore": 0.7246839784912488,
+          "title": "PostgreSQL 18.4 Documentation",
+          "section": "PostgreSQL 18.4 Documentation",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 2,
+          "pageEnd": 2,
+          "wordCount": 17,
+          "contentSha256": "7202429c39de0c9b653306b1b83d6e9055fbe3085799d683b4ff04559cb42649",
+          "promptDocumentSha256": "1c232f812a6081ecbdf5e1dfd7bca7a32b0c3480153cf6500ebbd4a51f7da55a"
+        },
+        {
+          "rank": 3,
+          "chunkId": "d7d9bd5404edc08c",
+          "cosineScore": 0.7122252590189734,
+          "title": "PostgreSQL 18.4 Documentation",
+          "section": "Table of Contents (part 2)",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 3,
+          "pageEnd": 21,
+          "wordCount": 440,
+          "contentSha256": "44ee493564f6c1de2d06e8ff668e86ebc0c2cedb2df9fc1a5d549448deaee00c",
+          "promptDocumentSha256": "b3691968bbcc772cdd146d6f0849e4b0aa3642a98589ddc31dd7e151db533df1"
+        },
+        {
+          "rank": 4,
+          "chunkId": "71bc978da787f0ba",
+          "cosineScore": 0.7104773127986468,
+          "title": "PostgreSQL 18.4 Documentation",
+          "section": "The PostgreSQL Global Development Group",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 1,
+          "pageEnd": 1,
+          "wordCount": 6,
+          "contentSha256": "31c58b0dd282f325b8bca82867dafa04fdcf6a09a18326e50be20c2197084657",
+          "promptDocumentSha256": "07e971956ba2938f9ab8e6ddf245b965920328ce3196ec855562b22c850eb854"
+        }
+      ],
+      "retrievalRelevantCount": 2,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "csharp-linq-iqueryable-001",
+      "language": "C#",
+      "domain": "scope-control",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How does C# IQueryable defer a LINQ query and translate its expression tree when ToList is called?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain C#/.NET or LINQ provider documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "swift-sendable-actors-001",
+      "language": "Swift",
+      "domain": "scope-control",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "When must a value conform to Swift Sendable to cross an actor isolation boundary?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain Swift language or concurrency documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "ruby-activerecord-callbacks-001",
+      "language": "Ruby",
+      "domain": "scope-control",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "In Ruby on Rails, in what order do Active Record validation and save callbacks run?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain Ruby on Rails or Active Record documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "haskell-stm-retry-001",
+      "language": "Haskell",
+      "domain": "scope-control",
+      "difficulty": "easy",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How do retry and orElse compose transactions in Haskell Software Transactional Memory?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain Haskell or STM documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "java-android-activity-lifecycle-001",
+      "language": "Java",
+      "domain": "adjacent-framework",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "Which Android Activity lifecycle callbacks run when an Activity moves from the foreground to the stopped state?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "Java is covered, but the corpus has no Android framework or Activity lifecycle documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "react-native-flatlist-001",
+      "language": "React",
+      "domain": "adjacent-framework",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How should React Native FlatList getItemLayout be implemented for fixed-height rows?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains React web learning material, not React Native component documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "python-django-atomic-001",
+      "language": "Python",
+      "domain": "adjacent-framework",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How do nested Django transaction.atomic blocks use savepoints and propagate rollback state?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains Python language documentation, not Django ORM transaction documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "postgresql-rds-parameter-groups-001",
+      "language": "PostgreSQL",
+      "domain": "vendor-service",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "Which AWS RDS PostgreSQL parameters require a reboot after changing a DB parameter group?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains upstream PostgreSQL documentation, not AWS RDS service documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "c-msvc-sal-annotations-001",
+      "language": "C",
+      "domain": "vendor-extension",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How do Microsoft SAL annotations _In_reads_ and _Out_writes_ affect MSVC static analysis of a C function?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the C standard, not Microsoft compiler-specific SAL documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "java-se-27-value-classes-001",
+      "language": "Java",
+      "domain": "unsupported-version",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "What final syntax and binary compatibility rules does Java SE 27 define for value classes?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The frozen corpus contains an earlier Java specification and cannot establish final Java SE 27 rules."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "postgresql-19-release-001",
+      "language": "PostgreSQL",
+      "domain": "unsupported-version",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "Which features are listed as final additions in the PostgreSQL 19 release notes?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The frozen corpus is the PostgreSQL 18 manual and cannot contain final PostgreSQL 19 release notes."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "cpp-move-constructor-001",
+      "language": "C++",
+      "domain": "object-lifetime",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "What parameter form makes a non-template C++ constructor a move constructor?",
+      "expected": {
+        "answer": "Its first parameter must be an rvalue reference to the class type, possibly cv-qualified (X&&, const X&&, volatile X&&, or const volatile X&&), and any remaining parameters must have default arguments.",
+        "keyFacts": [
+          "The first parameter is an rvalue reference to X.",
+          "The referenced X may be cv-qualified.",
+          "Any additional parameters require default arguments."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "f3fef32688393442",
+          "cosineScore": 0.769461992854638,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "11.4.5.3 Copy/move constructors (part 1)",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 331,
+          "pageEnd": 331,
+          "wordCount": 311,
+          "contentSha256": "900e5208b5ba000d0888dc272ee4ed38b4471189a3a127efcf771f3330dafbe1",
+          "promptDocumentSha256": "1ee1dcb8beb62e41e4fdcff0ae5904ccabdea6252b9e87fd63adfecab491266c"
+        },
+        {
+          "rank": 2,
+          "chunkId": "d589b6d93cec9884",
+          "cosineScore": 0.732278224689961,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "N5046 (part 2)",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 332,
+          "pageEnd": 333,
+          "wordCount": 300,
+          "contentSha256": "ab3fbea45c00878eb11f57b1c7eca8d1fc75489323509667b1cdaf2aef84d1c6",
+          "promptDocumentSha256": "ff3952602e59168e573bee28d7db5320840f37b66db6d12ec901e7662e5942f5"
+        },
+        {
+          "rank": 3,
+          "chunkId": "3b99ea6961e561a8",
+          "cosineScore": 0.7267259999950954,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "move construction",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 17,
+          "pageEnd": 17,
+          "wordCount": 18,
+          "contentSha256": "e50dfc7570cffdf6981cd19e24dc1caeb79abc3f7cb5460e2ba6be158abd9e10",
+          "promptDocumentSha256": "130277d69df9667141dfc84d4e4badb41a1cc00e16822552075d71c9763a3feb"
+        },
+        {
+          "rank": 4,
+          "chunkId": "8f36a560f5cc3185",
+          "cosineScore": 0.705893499477953,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "N5046 (part 4)",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 332,
+          "pageEnd": 333,
+          "wordCount": 222,
+          "contentSha256": "8d7db322e9d5461dccf5b49c176727a163a86d1de73b752bbf3d5c52f2ef35fe",
+          "promptDocumentSha256": "b3c4235efd41f3e8d4bb9c7286d35155ab65394032d9dae3872a1436e25b5601"
+        }
+      ],
+      "retrievalRelevantCount": 1,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "cpp-structured-binding-size-001",
+      "language": "C++",
+      "domain": "declarations",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "Without a structured binding pack, what constraint applies to the number of names in a C++ structured binding declaration?",
+      "expected": {
+        "answer": "The number of identifiers must equal the structured binding size of the initializer type.",
+        "keyFacts": [
+          "The identifier count must equal the structured binding size.",
+          "The different rule allowing fewer non-pack elements applies only when a structured binding pack exists."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "6a293bfec5a2f468",
+          "cosineScore": 0.8077574293475626,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "[dcl.struct.bind] (part 2)",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 280,
+          "pageEnd": 280,
+          "wordCount": 313,
+          "contentSha256": "6ae88402924535655903d6e7f7caab204c0bcdc2ac0105c84656f55200376d70",
+          "promptDocumentSha256": "12ecd78f1b4bfa060579098a6b0dfb1c3e26149d96fda4db9d8aa5ed21738f11"
+        },
+        {
+          "rank": 2,
+          "chunkId": "c1e0f25df113a1c5",
+          "cosineScore": 0.7949882934684863,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "[dcl.struct.bind] (part 1)",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 280,
+          "pageEnd": 280,
+          "wordCount": 337,
+          "contentSha256": "138f7b656b76d267f1f8e61d32ba35e4df2591fc8a8f5e2db9b1873c5576fdcb",
+          "promptDocumentSha256": "971e252338de0acc0599868aa2ef291cd6d489f9690d5a3399c9e1828d0f2eaa"
+        },
+        {
+          "rank": 3,
+          "chunkId": "0b5bf6628eba4f78",
+          "cosineScore": 0.7632330839303823,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "N5046 (part 1)",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 451,
+          "pageEnd": 451,
+          "wordCount": 303,
+          "contentSha256": "7eeb6b1a8ec29fd80ff96d611c14832b4340b6cdb545875a6af80fcc5c2176ca",
+          "promptDocumentSha256": "27d898d1f2dcf2991af251fcbccdfcd8f69d7ad7d350c842367cd3743aa54239"
+        },
+        {
+          "rank": 4,
+          "chunkId": "1f7db8cd510bb4fc",
+          "cosineScore": 0.7352217232305388,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "N5046 (part 3)",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 281,
+          "pageEnd": 281,
+          "wordCount": 286,
+          "contentSha256": "626f622291003a07c03dd321a69ffabab0a64b2c4db56b17b51d22cc1ec6e85f",
+          "promptDocumentSha256": "ffce0a3e01e0db4de7fab13a0c7846dc2f0c8242c62276dfde370c334ff1a336"
+        }
+      ],
+      "retrievalRelevantCount": 2,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "javascript-promise-all-001",
+      "language": "JavaScript",
+      "domain": "promises",
+      "difficulty": "medium",
+      "questionType": "comparative",
+      "answerability": "answerable",
+      "question": "How do Promise.all and Promise.allSettled differ when one input promise rejects?",
+      "expected": {
+        "answer": "Promise.all rejects with the reason of the first input promise that rejects. Promise.allSettled instead waits until every input settles and fulfills with an array describing each outcome.",
+        "keyFacts": [
+          "Promise.all rejects on the first rejection.",
+          "Promise.allSettled waits for all inputs to settle.",
+          "Promise.allSettled fulfills with state snapshots for all inputs."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "8a30e186ac0e05cd",
+          "cosineScore": 0.7070195853640585,
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "27.2.4.2 Promise.allSettled ( iterable )",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 773,
+          "pageEnd": 773,
+          "wordCount": 151,
+          "contentSha256": "aac2ecf7e15c2beedd2111551841d392501c120268a41acd816ced502236ae3e",
+          "promptDocumentSha256": "1ec6a535ea730bd23c7b89d01e6ac96a3d38eff2f5320652ee446acb256c4c57"
+        },
+        {
+          "rank": 2,
+          "chunkId": "51b0124babe774ef",
+          "cosineScore": 0.6825035220230145,
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "27.2.4.1 Promise.all ( iterable )",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 771,
+          "pageEnd": 772,
+          "wordCount": 161,
+          "contentSha256": "72560ec59a344ede05419479b883c8478489afe8d0eaf7be80a42560b133ae0e",
+          "promptDocumentSha256": "6962fa8dfdaefe4a4ba7400e1530fafe247759af90c93332d3786749a262ca71"
+        }
+      ],
+      "retrievalRelevantCount": 2,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "javascript-array-filter-holes-001",
+      "language": "JavaScript",
+      "domain": "arrays",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "Does Array.prototype.filter call its callback for missing array elements or elements appended after filtering starts?",
+      "expected": {
+        "answer": "No. filter calls the callback only for elements that exist, and the range it processes is fixed before the first callback, so later appended elements are not visited.",
+        "keyFacts": [
+          "Missing elements do not trigger the callback.",
+          "The processed range is fixed before the first callback.",
+          "Elements appended after filtering starts are not visited."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "afb7352d6e16f7ac",
+          "cosineScore": 0.7537151075140522,
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "23.1.3.8 Array.prototype.filter ( callback [ , thisArg ] ) (part 1)",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 623,
+          "pageEnd": 624,
+          "wordCount": 300,
+          "contentSha256": "ee4f7d31cc1fe918a5310a4b2f69ff92f5e067501e75b6878d4875c01bc97aec",
+          "promptDocumentSha256": "444d8d07c6f40972445d33b446795deaf873a011a621daa32c444aff0b7c56e2"
+        },
+        {
+          "rank": 2,
+          "chunkId": "99c35b24cb3ad310",
+          "cosineScore": 0.7466770547495205,
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "23.1.3.8 Array.prototype.filter ( callback [ , thisArg ] ) (part 2)",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 623,
+          "pageEnd": 624,
+          "wordCount": 262,
+          "contentSha256": "51b86a1a239fa550f11aefcb67dc64259d69b61796563c55b6a37322bdd46e71",
+          "promptDocumentSha256": "fd07098dd73cae1ca53c8e00192a831ae417b0ebc42fba264bbc858cf85d01ca"
+        },
+        {
+          "rank": 3,
+          "chunkId": "4316b59fbdb496ff",
+          "cosineScore": 0.6901578894126214,
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "23.1.3.6 Array.prototype.every ( callback [ , thisArg ] ) (part 2)",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 622,
+          "pageEnd": 622,
+          "wordCount": 241,
+          "contentSha256": "dd29837432c350705a142a18d8a2915647d4bb39a8d13f7eedf08f53c74f3af9",
+          "promptDocumentSha256": "5dafb391cdf1937382ee97a831b2c8c68b28111ee076599b60cc7cc7f216be81"
+        },
+        {
+          "rank": 4,
+          "chunkId": "db650a6fd02a5dba",
+          "cosineScore": 0.6821657215196276,
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "23.1.3.15 Array.prototype.forEach ( callback [ , thisArg ] ) (part 1)",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 627,
+          "pageEnd": 628,
+          "wordCount": 301,
+          "contentSha256": "481350ca76684a26ea996ecc7bed9cc8b30a9f4f1d021e65097df7e53240ecf7",
+          "promptDocumentSha256": "5f5744efea8486740aacd4a9a6dbfae6da1af05c272672af94402fb57190be69"
+        }
+      ],
+      "retrievalRelevantCount": 2,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "kotlin-smart-cast-001",
+      "language": "Kotlin",
+      "domain": "type-system",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "What problem do Kotlin smart casts solve?",
+      "expected": {
+        "answer": "Smart casts provide flow-sensitive typing: when data-flow analysis guarantees a runtime type, the compiler refines the expression's compile-time type so an explicit cast is unnecessary.",
+        "keyFacts": [
+          "Smart casts are a form of flow-sensitive typing.",
+          "They rely on data-flow information.",
+          "They avoid explicit casts when the runtime type is guaranteed."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "b30367d4e4529cb1",
+          "cosineScore": 0.7700448618688932,
+          "title": "Kotlin Language Specification",
+          "section": "14.1 Smart casts",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 273,
+          "pageEnd": 274,
+          "wordCount": 90,
+          "contentSha256": "3d9b6895c3a560f8b405a5045f9892822f09b7ab38c032dcb6e993918cd7d2bb",
+          "promptDocumentSha256": "9669b3e5a2203677cd05f06f7fa531c7dc2f4ad7132ebc61873712b5d682141a"
+        },
+        {
+          "rank": 2,
+          "chunkId": "e40da1bf04136d60",
+          "cosineScore": 0.7563784010386044,
+          "title": "Kotlin Language Specification",
+          "section": "14.1.2 Smart cast types (part 1)",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 276,
+          "pageEnd": 277,
+          "wordCount": 323,
+          "contentSha256": "ddcdc363b9b51c98b3ddf8941bc486fa01eef3bf3631f392a5164bfa9a0c381b",
+          "promptDocumentSha256": "db49f7a6a7fcd584b9d4aafec15211ff8ad4abaefaa8077e8b63da5b4764acd7"
+        },
+        {
+          "rank": 3,
+          "chunkId": "12994ecb468378a5",
+          "cosineScore": 0.7443589079603815,
+          "title": "Kotlin Language Specification",
+          "section": "Example:",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 281,
+          "pageEnd": 282,
+          "wordCount": 199,
+          "contentSha256": "9940962ad6b157f2c8d647703e500e1ff985687d85f63ee2a1e9ad26113b555b",
+          "promptDocumentSha256": "5472ba37479d78d143bf7823738eef787fc48cccdf04fc5373039397d91d288e"
+        },
+        {
+          "rank": 4,
+          "chunkId": "153ed030f8b4f934",
+          "cosineScore": 0.7316861175652732,
+          "title": "Kotlin Language Specification",
+          "section": "14.1.3 Smart cast sink stability",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 278,
+          "pageEnd": 278,
+          "wordCount": 144,
+          "contentSha256": "079e9a6eccfed4e5bde1dd38110a93c02587a9f21d1813249e7b3d69e4c3b6d4",
+          "promptDocumentSha256": "ecb0a0d8611760046425919cc734d0c32cebea4e3c611318ac627d054156a0e1"
+        }
+      ],
+      "retrievalRelevantCount": 1,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "kotlin-not-null-assertion-001",
+      "language": "Kotlin",
+      "domain": "null-safety",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "What happens when Kotlin's not-null assertion operator is applied to a nullable expression?",
+      "expected": {
+        "answer": "The expression is evaluated; if its result is null, a runtime exception is thrown. Otherwise that value is returned with a non-nullable type.",
+        "keyFacts": [
+          "A null result causes a runtime exception.",
+          "A non-null result is returned.",
+          "The resulting type is non-nullable."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "28d637b8f836927c",
+          "cosineScore": 0.8165762443502464,
+          "title": "Kotlin Language Specification",
+          "section": "8.19 Not-null assertion expressions",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 192,
+          "pageEnd": 192,
+          "wordCount": 130,
+          "contentSha256": "10cc622c6bfc0214dcf167c6256cb2af21b3d4039a7418bbd30e93dcace449a3",
+          "promptDocumentSha256": "e7a8005f04b3806e98e4119ca87ec874f8e1facf028df01027f0f2b2933b8ecb"
+        },
+        {
+          "rank": 2,
+          "chunkId": "de8e8d15fe992755",
+          "cosineScore": 0.7004484724092535,
+          "title": "Kotlin Language Specification",
+          "section": "2.1.8 Nullable types",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 76,
+          "pageEnd": 76,
+          "wordCount": 101,
+          "contentSha256": "6ce5cb9ba60148e60423a58bf23a7314d7965d2ae6332c9214c2c3399383eeb7",
+          "promptDocumentSha256": "7e6b4f0cd484b4938a1e47f55bf30d8a2cf6fffa72cda4ee9cf6cbe8910f5be5"
+        },
+        {
+          "rank": 3,
+          "chunkId": "d08840d67f98cbfc",
+          "cosineScore": 0.6997218553249804,
+          "title": "Kotlin Language Specification",
+          "section": "8.12 Elvis operator expressions",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 186,
+          "pageEnd": 186,
+          "wordCount": 114,
+          "contentSha256": "c8cfbb4338fcd8132e35561ab82b01226aa0a738879a61091ad597f6d6c4d09a",
+          "promptDocumentSha256": "f10c397e57eaffbfc3dd6a86b7be995d83906c658206f927e3436c99059fad67"
+        },
+        {
+          "rank": 4,
+          "chunkId": "30450b4bcd14ca6a",
+          "cosineScore": 0.6969063203556228,
+          "title": "Kotlin Language Specification",
+          "section": "2.1. TYPE KINDS",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 77,
+          "pageEnd": 77,
+          "wordCount": 96,
+          "contentSha256": "428c4af1484a0a6f3829879d6f98c9c25463d0f81427f5c4e03e693c5386df2e",
+          "promptDocumentSha256": "968f03106af21104f53bb630bef36be5e1f98eda73eafbf6c102900c6f68abbc"
+        }
+      ],
+      "retrievalRelevantCount": 1,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "bash-pipeline-stderr-001",
+      "language": "Bash",
+      "domain": "pipelines",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "What does the Bash |& pipeline operator do, and when is its implicit redirection applied?",
+      "expected": {
+        "answer": "It connects both standard output and standard error of the left command to the next command's standard input. It is shorthand for 2>&1 |, and the implicit stderr redirection occurs after redirections explicitly written for the command.",
+        "keyFacts": [
+          "|& pipes both stdout and stderr.",
+          "It is shorthand for 2>&1 |.",
+          "Its implicit redirection is applied after explicit command redirections."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "416d83385eea32ee",
+          "cosineScore": 0.7843050173446372,
+          "title": "GNU Bash Reference Manual",
+          "section": "3.2.3 Pipelines (part 1)",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 16,
+          "pageEnd": 16,
+          "wordCount": 336,
+          "contentSha256": "56ee3b7b121cd016ef38c21215b2a5bfebfa731af47a7439ea882e90d20106ef",
+          "promptDocumentSha256": "d31eb9087e3ad50ebe0f7c5a9721a6f2a58f249a29a581e3e7bc521c6543b39b"
+        },
+        {
+          "rank": 2,
+          "chunkId": "7d10c492d87ed9f3",
+          "cosineScore": 0.734206656805139,
+          "title": "GNU Bash Reference Manual",
+          "section": "Appendix B Major Differences From The Bourne Shell (part 7)",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 191,
+          "pageEnd": 196,
+          "wordCount": 313,
+          "contentSha256": "5ee0f57ef227b405e63697f2b4a6be0568eece1f492a2c5a63755f769091714b",
+          "promptDocumentSha256": "08df7e65f1f9e5a181d91237a33054ea62333c56643ff53ef154b544ba8f258d"
+        },
+        {
+          "rank": 3,
+          "chunkId": "7732c1555b61ac8f",
+          "cosineScore": 0.7275811365855458,
+          "title": "GNU Bash Reference Manual",
+          "section": "3.2.3 Pipelines (part 2)",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 16,
+          "pageEnd": 16,
+          "wordCount": 405,
+          "contentSha256": "ec89e25fc60586d3e6308977ba2dad6c7ebe5ca1826b718c6a868baf06ad2dc4",
+          "promptDocumentSha256": "1aff6ee80dcd89c93d31eb6765356b68096cd011cb5b86cac4cc0c95f2a7f3e1"
+        },
+        {
+          "rank": 4,
+          "chunkId": "c4cdac94929c34e1",
+          "cosineScore": 0.7242985623551538,
+          "title": "GNU Bash Reference Manual",
+          "section": "3.6.4 Redirecting Standard Output and Standard Error",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 49,
+          "pageEnd": 49,
+          "wordCount": 98,
+          "contentSha256": "d12e4707fdb8d93c087ec0ad5e62b61d31691fcc572b47b02415315087db1b1f",
+          "promptDocumentSha256": "52c55e31e91f73e99d230e7d8724b6b9704737f9c2879d42fbbe61ea481764af"
+        }
+      ],
+      "retrievalRelevantCount": 2,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "bash-heredoc-quoted-delimiter-001",
+      "language": "Bash",
+      "domain": "redirection",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "How does quoting a Bash here-document delimiter affect expansion in the body?",
+      "expected": {
+        "answer": "If any part of the delimiter word is quoted, the delimiter is formed after quote removal and the here-document lines are not subjected to parameter expansion, command substitution, or arithmetic expansion.",
+        "keyFacts": [
+          "Quote removal determines the delimiter.",
+          "A quoted delimiter disables parameter expansion in the body.",
+          "It also disables command substitution and arithmetic expansion."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "3d1ef89cc9c7c9a4",
+          "cosineScore": 0.7904519247008094,
+          "title": "GNU Bash Reference Manual",
+          "section": "3.6.6 Here Documents",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 50,
+          "pageEnd": 50,
+          "wordCount": 266,
+          "contentSha256": "0db8c4326dcc50fd91f48d43cdbdbbf07a2677f92b34b44b86f588c25342d5c0",
+          "promptDocumentSha256": "40a15f60da7f109aa298ba63d4efd042ef0c10a298e04aa7ad7775db1cf4cd02"
+        },
+        {
+          "rank": 2,
+          "chunkId": "94bc61ca7b8ad6dd",
+          "cosineScore": 0.7399271827046178,
+          "title": "GNU Bash Reference Manual",
+          "section": "3.6.7 Here Strings",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 50,
+          "pageEnd": 50,
+          "wordCount": 67,
+          "contentSha256": "e9c78f8365b46a11f79a33c98fc75778d6408f25236b71f31bfbe377881e0f5c",
+          "promptDocumentSha256": "f07d259b8810045027b58b99a571c170eabd37208750a5424b2c8f025dfb7d00"
+        },
+        {
+          "rank": 3,
+          "chunkId": "bf6e1e405027ab98",
+          "cosineScore": 0.7202521726766227,
+          "title": "GNU Bash Reference Manual",
+          "section": "Table of Contents (part 2)",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 3,
+          "pageEnd": 6,
+          "wordCount": 1095,
+          "contentSha256": "c60705f2a4aef03ecf6923371b43fd2d85edd1ec0041dad697c3caf475cfd4b4",
+          "promptDocumentSha256": "eed90c535256d61b312f91c6ce25e1885c225b93a096e1c3719fe6a8c62f1ec0"
+        },
+        {
+          "rank": 4,
+          "chunkId": "c76822f06c97061d",
+          "cosineScore": 0.7125479773269899,
+          "title": "GNU Bash Reference Manual",
+          "section": "3.1.2.4 ANSI-C Quoting",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 12,
+          "pageEnd": 13,
+          "wordCount": 141,
+          "contentSha256": "851797694302162860aba5f134e03768089eaa9f599171c9c2646086d55ed458",
+          "promptDocumentSha256": "810264ce71e23a342e5a6eaea393ee5548ba6ec07fe564d2845f68a6f24fbbb4"
+        }
+      ],
+      "retrievalRelevantCount": 2,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "go-recover-conditions-001",
+      "language": "Go",
+      "domain": "panic-recovery",
+      "difficulty": "hard",
+      "questionType": "multi-hop",
+      "answerability": "answerable",
+      "question": "When does Go's recover stop a panicking sequence, and when does it return nil?",
+      "expected": {
+        "answer": "A direct recover call in a deferred function can obtain the panic value; if that deferred function returns normally without starting another panic, the sequence stops. recover returns nil when the goroutine is not panicking or when it was not called directly by a deferred function.",
+        "keyFacts": [
+          "recover must be called directly by a deferred function to recover a panic.",
+          "Normal return from that deferred function stops the panicking sequence.",
+          "recover returns nil outside a panic or when not called directly by a deferred function."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "9cb23ea407465d5c",
+          "cosineScore": 0.755125645677265,
+          "title": "The Go Programming Language Specification",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 163)",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 304,
+          "contentSha256": "e99ce97b9f6c471c75feff6048bcf8dcbab8fb417469e61d8d3e525ffe0ee10a",
+          "promptDocumentSha256": "c6b9653a5dab00b9337aa4a1946d03a87efbde6478e7eb8124abc06b93285c76"
+        },
+        {
+          "rank": 2,
+          "chunkId": "6c20e64faa491ac9",
+          "cosineScore": 0.7029797896263285,
+          "title": "The Go Programming Language Specification",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 162)",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 387,
+          "contentSha256": "d0c086d93fdd3c58a6a1fecec03c5aa7073048fc053df06cf9e664f944d333fc",
+          "promptDocumentSha256": "95103d7f7083ee239bc937e628f711359879dde75412d68a86a18a87c41aed49"
+        }
+      ],
+      "retrievalRelevantCount": 2,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "cpp-cmake-targets-001",
+      "language": "C++",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How should target_link_libraries and find_package be combined for imported CMake targets?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains C++ language documentation, not CMake documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "javascript-express-router-001",
+      "language": "JavaScript",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How does express.Router merge route parameters from a parent router?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains ECMAScript and React material, not Express framework documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "kotlin-gradle-plugin-001",
+      "language": "Kotlin",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How does the Kotlin Gradle plugin configure jvmToolchain and compilerOptions?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the Kotlin language specification, not Gradle plugin documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "bash-zsh-completion-001",
+      "language": "Bash",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How do zstyle and compinit configure completion matching in Zsh?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the GNU Bash manual, not Zsh documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "bash-fish-argparse-001",
+      "language": "Bash",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How does Fish shell argparse expose parsed options to a function?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains the GNU Bash manual, not Fish shell documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "python-fastapi-dependencies-001",
+      "language": "Python",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How does FastAPI cache nested Depends dependencies within one request?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain FastAPI documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "typescript-angular-onpush-001",
+      "language": "TypeScript",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "When does Angular's ChangeDetectionStrategy.OnPush re-check a component?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains TypeScript handbook material, not Angular documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "typescript-nestjs-guards-001",
+      "language": "TypeScript",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How does a NestJS guard use ExecutionContext to inspect route metadata?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains TypeScript handbook material, not NestJS documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "rust-serde-custom-001",
+      "language": "Rust",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How does Serde's deserialize_with attribute customize field deserialization?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus does not contain Serde documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "python-list-comprehension-001",
+      "language": "Python",
+      "domain": "data-structures",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "What are the main parts of a Python list comprehension, and what does it produce?",
+      "expected": {
+        "answer": "A list comprehension places an expression inside brackets, followed by a for clause and optionally additional for or if clauses. It evaluates the expression for the selected items and produces a new list.",
+        "keyFacts": [
+          "The expression is written inside brackets.",
+          "It includes a for clause and may include additional for or if clauses.",
+          "Its result is a newly created list."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "3ef8eea7f0ae00c6",
+          "cosineScore": 0.7181045237432283,
+          "title": "The Python Tutorial",
+          "section": "5.1. More on Lists¶ (part 5)",
+          "sourceId": "python-tutorial",
+          "sourceUrl": "https://docs.python.org/3/tutorial/datastructures.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 403,
+          "contentSha256": "037cc437b081fa7dcf181468a0f6ee6427e46d554b57b30d7492fd2248a93a28",
+          "promptDocumentSha256": "d576093b2f98baf944967e2710ca66f21fea96b362c783039d48dbec0f46c272"
+        },
+        {
+          "rank": 2,
+          "chunkId": "bc13cfcda489092e",
+          "cosineScore": 0.707459048694343,
+          "title": "Python Language Reference",
+          "section": "6.1. Arithmetic conversions¶ (part 8)",
+          "sourceId": "python-language-reference",
+          "sourceUrl": "https://docs.python.org/3/reference/expressions.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 327,
+          "contentSha256": "0d7a7997778fc568729f189a6354d8d5c16b06ce59c5098bd0ea2ab1c40c45ab",
+          "promptDocumentSha256": "bca0e8105160bd81bc828b01b707d131ea15fc35881be87ea877c83f646589fe"
+        },
+        {
+          "rank": 3,
+          "chunkId": "e488724cf26c7e70",
+          "cosineScore": 0.6958291837467486,
+          "title": "The Python Tutorial",
+          "section": "5.1. More on Lists¶ (part 4)",
+          "sourceId": "python-tutorial",
+          "sourceUrl": "https://docs.python.org/3/tutorial/datastructures.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 345,
+          "contentSha256": "bbfe3ae3b5da1e94141f4a88240e9cb4f38fc5f9a196c3cd27c5b39c6fc58380",
+          "promptDocumentSha256": "a57a3f2c69d00019ebfbc9216fdce82e0e764cb99fa4409feea0371857a7e82b"
+        },
+        {
+          "rank": 4,
+          "chunkId": "6e1439f6ff35b397",
+          "cosineScore": 0.691893576993099,
+          "title": "The Python Tutorial",
+          "section": "5.1. More on Lists¶ (part 6)",
+          "sourceId": "python-tutorial",
+          "sourceUrl": "https://docs.python.org/3/tutorial/datastructures.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 306,
+          "contentSha256": "ca2fcd72114cbf9e6a0c4b5b49b50332af837b6a56d79758957b6d4a507c04b2",
+          "promptDocumentSha256": "bcd1cd3f0c70fb57e75407078819c09c697721807bae27cbaaad594c43cbc60e"
+        }
+      ],
+      "retrievalRelevantCount": 3,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "python-parameter-kinds-001",
+      "language": "Python",
+      "domain": "functions",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "How do / and * divide positional-only, positional-or-keyword, and keyword-only parameters in a Python function definition?",
+      "expected": {
+        "answer": "Parameters before / are positional-only. Parameters between / and * may be passed positionally or by keyword. Parameters after * are keyword-only.",
+        "keyFacts": [
+          "Parameters before / are positional-only.",
+          "Parameters between the separators accept either calling style.",
+          "Parameters after * are keyword-only."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "2ac32a0f6f00def6",
+          "cosineScore": 0.8013133289805059,
+          "title": "The Python Tutorial",
+          "section": "4.1. if Statements¶ (part 22)",
+          "sourceId": "python-tutorial",
+          "sourceUrl": "https://docs.python.org/3/tutorial/controlflow.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 311,
+          "contentSha256": "4218803cb78f6b8e4f50c293cde7413ff3fc5459f123fe3b887d6694884384f1",
+          "promptDocumentSha256": "9a02aa3ed630b9879fed0a58e580438d1b3eb63b31e7bd4da74819195dc6d7ca"
+        },
+        {
+          "rank": 2,
+          "chunkId": "e9fd3499dd4b6c29",
+          "cosineScore": 0.7778652624234381,
+          "title": "The Python Tutorial",
+          "section": "4.1. if Statements¶ (part 23)",
+          "sourceId": "python-tutorial",
+          "sourceUrl": "https://docs.python.org/3/tutorial/controlflow.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 322,
+          "contentSha256": "8f73a8a577ddea1e10122b5185de7c19e4051096744c82c6adac422c7a825937",
+          "promptDocumentSha256": "0fde556a818006abc44371fd4f26ecb1871f09a95f264e5acf8e4f3a07691e65"
+        },
+        {
+          "rank": 3,
+          "chunkId": "f0ac85c074e06f93",
+          "cosineScore": 0.7590169272303061,
+          "title": "The Python Tutorial",
+          "section": "4.1. if Statements¶ (part 24)",
+          "sourceId": "python-tutorial",
+          "sourceUrl": "https://docs.python.org/3/tutorial/controlflow.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 312,
+          "contentSha256": "0037c48919194ceb72e44e96b0bc1dbde5065cc418444efaad7390ebb5842150",
+          "promptDocumentSha256": "ed05e3fc96bf1498ddd644803577d7c586702cb6e1998c69b990989a40acef90"
+        },
+        {
+          "rank": 4,
+          "chunkId": "dd86f816909e07b5",
+          "cosineScore": 0.7394754685505252,
+          "title": "The Python Tutorial",
+          "section": "4.1. if Statements¶ (part 21)",
+          "sourceId": "python-tutorial",
+          "sourceUrl": "https://docs.python.org/3/tutorial/controlflow.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 300,
+          "contentSha256": "8c4c2c4123498ca8c10ca132955a49592c0be68a51b70366bd1fd40c27a39367",
+          "promptDocumentSha256": "9fdebed2da1afd7aa1869d5aef190dffcbfdcc76c8552fdae40049772aad58f4"
+        }
+      ],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "typescript-conditional-distribution-001",
+      "language": "TypeScript",
+      "domain": "type-system",
+      "difficulty": "hard",
+      "questionType": "comparative",
+      "answerability": "answerable",
+      "question": "When does a TypeScript conditional type distribute over a union, and how can that behavior be prevented?",
+      "expected": {
+        "answer": "A conditional type distributes when its checked type is a naked generic type parameter and it receives a union, applying the conditional to each member. Wrapping both sides of extends in single-element tuple types prevents distribution.",
+        "keyFacts": [
+          "A generic conditional type distributes over union members.",
+          "Each union member is processed separately.",
+          "Tuple-wrapping the checked and constraint types prevents distribution."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "ba75bdbb5f439f64",
+          "cosineScore": 0.77513132563223,
+          "title": "The TypeScript Handbook",
+          "section": "Conditional Types (part 3)",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 399,
+          "contentSha256": "1c0d3f99a7f830af2ac9c47b7c542837d3eccec0c054596fb64e7ffeb125b5b1",
+          "promptDocumentSha256": "a2b768adc3a28f0314294aa45f1f0822971caf220e55044a7d986bdc4750bb5c"
+        },
+        {
+          "rank": 2,
+          "chunkId": "7c3ac29f1b73f204",
+          "cosineScore": 0.7642210881138745,
+          "title": "The TypeScript Handbook",
+          "section": "Distributive Conditional Types (part 6)",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/conditional-types.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 221,
+          "contentSha256": "ae09c56ac312b3702adbe6e764e1203a2011b56b7068eb9eb301ca44364f72f7",
+          "promptDocumentSha256": "b5539d14add1688003c97a47bc8f62e6764975e1189da1dcf5778f859743e418"
+        },
+        {
+          "rank": 3,
+          "chunkId": "31d0eeb40090e657",
+          "cosineScore": 0.7591296376184035,
+          "title": "The TypeScript Handbook",
+          "section": "Distributive Conditional Types (part 1)",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/conditional-types.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 307,
+          "contentSha256": "dabefa53ac46cfb2fbf7f45b7420f2c6fed4e82527878df268c180b52299f267",
+          "promptDocumentSha256": "f421ca20b7007fb236d6e027c226282316377b96b92e8eeb227fd9e68d773547"
+        },
+        {
+          "rank": 4,
+          "chunkId": "58f1eb66c455cd63",
+          "cosineScore": 0.7532031445111044,
+          "title": "The TypeScript Handbook",
+          "section": "Distributive Conditional Types (part 3)",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/conditional-types.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 301,
+          "contentSha256": "fa9efde705a636ced5fe56403b6528877b3f06a081d6eff58c43540cb8de53bd",
+          "promptDocumentSha256": "6f103478862ef01fc0c2e61d0ec03bce247dc1ea93084afa1a349d8daac2b450"
+        }
+      ],
+      "retrievalRelevantCount": 3,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "typescript-keyof-001",
+      "language": "TypeScript",
+      "domain": "type-system",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "What type does TypeScript's keyof operator produce for an object type?",
+      "expected": {
+        "answer": "keyof produces a union of the object's known property keys as string or numeric literal types; index signatures can broaden the result to string, number, or both.",
+        "keyFacts": [
+          "keyof returns a union of property keys.",
+          "Known keys appear as literal types.",
+          "Index signatures may broaden the result to string or number."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "a161a4852f8d8b26",
+          "cosineScore": 0.8279160666030474,
+          "title": "The TypeScript Handbook",
+          "section": "The keyof type operator",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/keyof-types.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 206,
+          "contentSha256": "8edeb20356a5e472a99d34981a8aa1f540b7132a342158421665558cb963f6df",
+          "promptDocumentSha256": "bca12803dd0655a80c51f2e8d07645710570220320d230d6d9f166bab750ef40"
+        },
+        {
+          "rank": 2,
+          "chunkId": "c75d42a3cf8525e6",
+          "cosineScore": 0.7870768510945381,
+          "title": "The TypeScript Handbook",
+          "section": "keyof and Lookup Types (part 1)",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 308,
+          "contentSha256": "a5d94c0202a99f281f955e4060b84224a67748f21f08418232e0fa03800f31e6",
+          "promptDocumentSha256": "26fa427496f873b2ae02da676a7511d2e5a2026d5ad54bb27f5b766993239ef8"
+        },
+        {
+          "rank": 3,
+          "chunkId": "7846f933bbc30ba8",
+          "cosineScore": 0.7535277667900389,
+          "title": "The TypeScript Handbook",
+          "section": "Support number and symbol named properties with keyof and mapped types (part 3)",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-9.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 301,
+          "contentSha256": "91e2dd202fdb2913e3613bf616be36579c5a3a922bb3069552a1156f39bb9cbc",
+          "promptDocumentSha256": "18093914a19df1efe782bf7f2a6c862d51728d2fb9d6c9e0b46aab51c575d0f4"
+        },
+        {
+          "rank": 4,
+          "chunkId": "37f3c046f0b55ffb",
+          "cosineScore": 0.7493196014067267,
+          "title": "The TypeScript Handbook",
+          "section": "Support number and symbol named properties with keyof and mapped types (part 2)",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-9.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 320,
+          "contentSha256": "d94adb52d4dd8edd1a18c482d95530e06ba921758269e9a15786d398ca0aba2e",
+          "promptDocumentSha256": "046e1a31cf08cf9e6c425abc8d1a4c109276511f9ea81e2d3de27406e21dc100"
+        }
+      ],
+      "retrievalRelevantCount": 1,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "rust-ownership-move-clone-001",
+      "language": "Rust",
+      "domain": "ownership",
+      "difficulty": "medium",
+      "questionType": "comparative",
+      "answerability": "answerable",
+      "question": "What is the difference between moving and cloning a heap-owning Rust value such as String?",
+      "expected": {
+        "answer": "A move transfers ownership and makes the previous binding unusable, without duplicating the heap data. clone performs an explicit deep copy, so both bindings remain independently usable.",
+        "keyFacts": [
+          "A move transfers ownership.",
+          "The previous binding cannot be used after the move.",
+          "clone duplicates heap data so both values remain usable."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "8762e3a7c9bff3ec",
+          "cosineScore": 0.7779034369744778,
+          "title": "The Rust Programming Language",
+          "section": "What Is Ownership? (part 17)",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 345,
+          "contentSha256": "063f387ffb07bb01e71ec641bf8b20d6dfd87b9633f69f30031ee1af39203d16",
+          "promptDocumentSha256": "2bcc2632c72baf85aa0cce852d7c1f8f8907327ee79565e1a9ec820792813985"
+        },
+        {
+          "rank": 2,
+          "chunkId": "0983fffbbbb70128",
+          "cosineScore": 0.7686493031347273,
+          "title": "The Rust Programming Language",
+          "section": "What Is Ownership? (part 16)",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 319,
+          "contentSha256": "0b33934697644e5a1010fba913f2aad9ceba03b2d1f9953b89f527344de05e6b",
+          "promptDocumentSha256": "a75f59791870d34060bbfa7d8a95865a6a35bf60dd60e4e8ea23bdd40a44d53c"
+        },
+        {
+          "rank": 3,
+          "chunkId": "e04be5c1f7fdcd2e",
+          "cosineScore": 0.7661826060165838,
+          "title": "The Rust Programming Language",
+          "section": "What Is Ownership? (part 12)",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 304,
+          "contentSha256": "45a8d9c896691689fe05acfa75b4f6250e100c53c4e5589cd0ec329ba6986b81",
+          "promptDocumentSha256": "e2f6776116ca6b18828872d6cedde19c6af8014049034a4aba3a0ca7d21aa755"
+        },
+        {
+          "rank": 4,
+          "chunkId": "468b97d6cfe0b192",
+          "cosineScore": 0.7627449016492895,
+          "title": "The Rust Programming Language",
+          "section": "What Is Ownership? (part 11)",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 329,
+          "contentSha256": "49b2b543c113bfd810e91cf780fb35cceef75e4284b1d17e8a7c018b2108e147",
+          "promptDocumentSha256": "1743c6f4c383ee0052fd3ce6f5142053c96c7bbc17c834de4670e3e6f15fe378"
+        }
+      ],
+      "retrievalRelevantCount": 4,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "rust-mutable-reference-rules-001",
+      "language": "Rust",
+      "domain": "borrowing",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "answerability": "answerable",
+      "question": "What restrictions apply while a mutable Rust reference to a value is active?",
+      "expected": {
+        "answer": "Only one mutable reference to that value may be active, and immutable references to the same value cannot overlap it. These restrictions prevent data races at compile time.",
+        "keyFacts": [
+          "Only one active mutable reference is allowed.",
+          "Mutable and immutable references to the same value cannot overlap.",
+          "The restrictions prevent data races."
+        ]
+      },
+      "evidence": [
+        {
+          "rank": 1,
+          "chunkId": "4eafffc76b0ff35e",
+          "cosineScore": 0.7658803231648312,
+          "title": "The Rust Programming Language",
+          "section": "References and Borrowing (part 5)",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch04-02-references-and-borrowing.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 313,
+          "contentSha256": "ff3ace4a7424aeb784d4c2e0fd79919d48585c7278607236e0857dfca8cab3d1",
+          "promptDocumentSha256": "866472b24837025f69889ecb61f856179283e65325dabbdde53512fcf90f3746"
+        },
+        {
+          "rank": 2,
+          "chunkId": "47b9164f06017165",
+          "cosineScore": 0.7642975244488119,
+          "title": "The Rust Programming Language",
+          "section": "References and Borrowing (part 6)",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch04-02-references-and-borrowing.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 342,
+          "contentSha256": "6f05979359e932f99b1a0464c9b3b94f8d9ae0e89a055309edce046206d0e10c",
+          "promptDocumentSha256": "309ef86384caea8620c3e10cbf3e3aebf85589a9592054ec8ed60b383f3336c8"
+        },
+        {
+          "rank": 3,
+          "chunkId": "7d5542f54b585ec5",
+          "cosineScore": 0.7580430595681508,
+          "title": "The Rust Programming Language",
+          "section": "References and Borrowing (part 4)",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch04-02-references-and-borrowing.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 340,
+          "contentSha256": "3db20f2922d28e3793d9b882f92f771a038b45446d1f9454aaf0af4767fac00a",
+          "promptDocumentSha256": "aefc600bdddeb2d77d1013cc53a6ad92ae66681877a310f54744bc81dab7ae96"
+        },
+        {
+          "rank": 4,
+          "chunkId": "f26de57c09b9fe01",
+          "cosineScore": 0.7563956760845028,
+          "title": "The Rust Reference",
+          "section": "Pointed-to bytes (part 3)",
+          "sourceId": "rust-reference",
+          "sourceUrl": "https://doc.rust-lang.org/stable/reference/behavior-considered-undefined.html",
+          "pageStart": null,
+          "pageEnd": null,
+          "wordCount": 325,
+          "contentSha256": "880515ba70f7edc74e095360f7d545134223e348a0cd6b3c5a3b8ba727f16c1d",
+          "promptDocumentSha256": "4f3ae1dc34f6f3a189876fcaa6035968505cba55a8dbf8c60ba6ea292529f361"
+        }
+      ],
+      "retrievalRelevantCount": 3,
+      "generationPolicy": "invoke-generator"
+    },
+    {
+      "caseId": "python-pandas-groupby-001",
+      "language": "Python",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How do pandas GroupBy.transform and named aggregation differ when returning grouped results?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains Python language documentation, not the pandas API."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "python-celery-retry-001",
+      "language": "Python",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How do Celery task acks_late and apply_async affect retries and delivery acknowledgement?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains Python language documentation, not Celery documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "typescript-vite-glob-001",
+      "language": "TypeScript",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How does Vite transform import.meta.glob and configure its eager option?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains TypeScript language documentation, not Vite documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "typescript-prisma-transaction-001",
+      "language": "TypeScript",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How does PrismaClient $transaction coordinate interactive transactions and relationLoadStrategy?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains TypeScript language documentation, not Prisma ORM documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "rust-bevy-query-001",
+      "language": "Rust",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How does Bevy ECS query mutable Transform components while filtering by Changed<T>?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains Rust language documentation, not the Bevy engine API."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    },
+    {
+      "caseId": "rust-diesel-querydsl-001",
+      "language": "Rust",
+      "domain": "adjacent-technology",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "answerability": "unanswerable",
+      "question": "How do Diesel QueryDsl and RunQueryDsl construct and execute a typed SQL query?",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains Rust language documentation, not Diesel ORM documentation."
+      },
+      "evidence": [],
+      "retrievalRelevantCount": 0,
+      "generationPolicy": "deterministic-abstention"
+    }
+  ]
+}

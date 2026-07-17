@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "generation-models-v1",
+  "title": "Grounded answer generation on frozen benchmark v4 evidence",
+  "status": "benchmark-preparation",
+  "hypothesis": "Changing only the generator model produces measurable differences in grounded answer quality, citation behavior, latency, and cost when retrieval evidence and prompting are frozen.",
+  "split": "validation",
+  "benchmark": "docs/evaluation/generation-benchmark.v1.json",
+  "prompt": "docs/evaluation/generation-prompt.v1.json",
+  "humanRubric": "docs/evaluation/generation-human-rubric.v1.json",
+  "generatorCandidates": [],
+  "changedVariable": "Generator provider and model",
+  "controlledVariables": [
+    "54 benchmark v4 validation cases",
+    "frozen metadata-aware Gemini retrieval evidence",
+    "dense abstention threshold 0.68",
+    "no reranker",
+    "identical system and user prompts",
+    "temperature 0",
+    "maximum 900 output tokens",
+    "identical citation format",
+    "deterministic no-evidence response",
+    "judge disabled during generation"
+  ],
+  "selectionRule": {
+    "primaryMetric": "human grounded answer quality",
+    "guardrailsSource": "docs/evaluation/generation-human-rubric.v1.json",
+    "modelSelectionSplit": "validation",
+    "testExecution": "exactly once after human review and judge calibration are frozen"
+  },
+  "reportOutput": "docs/experiment-results/generation-model-comparison-v1-validation"
+}

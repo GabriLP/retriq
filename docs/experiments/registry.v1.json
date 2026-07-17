@@ -135,14 +135,14 @@
       "id": "generation-and-judge-v1",
       "thesisSection": "Answer generation and LLM-as-a-judge",
       "researchQuestion": "How do generator choices affect grounded answer quality, and how reliably can an LLM judge reproduce human assessments?",
-      "status": "planned",
-      "variable": "Generator model, judge model, and judge prompt in separate experiments",
+      "status": "in-progress",
+      "variable": "Generator model first; judge model and judge prompt only after human reference labels exist",
       "controls": ["Frozen retrieved evidence", "answer prompt", "human-labelled judge subset"],
       "metrics": ["Key-fact coverage", "groundedness", "citation correctness", "judge agreement", "latency", "cost"],
-      "artifacts": [],
-      "decision": "Pending.",
-      "limitations": ["Judge must not validate itself", "Human calibration is required"],
-      "nextStep": "Build human-labelled calibration cases after retrieval stabilizes."
+      "artifacts": ["docs/experiments/generation-models.v1.json", "docs/evaluation/generation-benchmark.v1.json", "docs/evaluation/generation-benchmark.v1.md", "docs/evaluation/generation-benchmark.v1.csv", "docs/evaluation/generation-prompt.v1.json", "docs/evaluation/generation-human-rubric.v1.json", "docs/evaluation/GENERATION_HUMAN_REVIEW_GUIDE_V1.md"],
+      "decision": "Freeze the 54-case v4 validation benchmark before model calls: 27 answerable cases invoke a generator using 104 hashed evidence references, while 27 unanswerable cases use the frozen deterministic abstention policy. A balanced 24-case human calibration subset was selected by seeded hashing before outputs exist.",
+      "limitations": ["All benchmark approvals remain provisional", "The initial reference labels have one primary human reviewer", "Judge must not validate itself", "Generator candidates and dated prices are not frozen yet", "The 24-case test remains untouched"],
+      "nextStep": "Verify current generator availability and pricing, preregister the baseline plus two alternatives, then generate blinded validation outputs with the judge disabled."
     },
     {
       "order": 11,

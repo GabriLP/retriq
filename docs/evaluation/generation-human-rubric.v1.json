@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "retriq-generation-human-rubric-v1",
+  "version": "1.0.0",
+  "answerableDimensions": [
+    {
+      "id": "groundedness",
+      "range": [0, 4],
+      "anchors": { "0": "The answer is materially unsupported or contradicted by the frozen evidence.", "1": "Many important claims are unsupported.", "2": "Support is mixed, with at least one material unsupported claim.", "3": "Nearly all material claims are supported; only minor imprecision remains.", "4": "Every material factual claim is supported by the frozen evidence." }
+    },
+    {
+      "id": "keyFactCoverage",
+      "range": [0, 4],
+      "anchors": { "0": "No expected key fact is conveyed.", "1": "Less than half of the expected key facts are conveyed.", "2": "At least half, but not all, expected key facts are conveyed.", "3": "All essential facts are conveyed with a minor omission.", "4": "All expected key facts are clearly conveyed." }
+    },
+    {
+      "id": "citationCorrectness",
+      "range": [0, 4],
+      "anchors": { "0": "Citations are absent or point to unrelated evidence.", "1": "Most cited claims are not supported by their cited excerpts.", "2": "Citation support is mixed.", "3": "Nearly all citations support their associated claims.", "4": "Every citation supports the claim to which it is attached." }
+    },
+    {
+      "id": "citationCompleteness",
+      "range": [0, 4],
+      "anchors": { "0": "Material factual claims are uncited.", "1": "Most material claims are uncited.", "2": "Some material claims are cited and some are not.", "3": "Nearly every material claim is cited.", "4": "Every material factual claim has an appropriate inline citation." }
+    },
+    {
+      "id": "directness",
+      "range": [0, 2],
+      "anchors": { "0": "The response is unusably unclear or does not answer the question.", "1": "The answer is understandable but unnecessarily indirect or verbose.", "2": "The answer is direct, clear, and appropriately scoped." }
+    }
+  ],
+  "binaryFlags": [
+    "criticalUnsupportedClaim",
+    "contradictsEvidence",
+    "invalidCitationLabel",
+    "generatorFailure"
+  ],
+  "unanswerableDimensions": [
+    { "id": "correctAbstention", "range": [0, 1], "passDefinition": "The system declines to provide a substantive answer and does not introduce unsupported technical claims." }
+  ],
+  "generatorSelection": {
+    "primaryMetric": "mean normalized grounded answer quality over answerable cases",
+    "qualityFormula": "(groundedness + keyFactCoverage + citationCorrectness + citationCompleteness) / 16",
+    "guardrails": {
+      "criticalUnsupportedClaimRateMaximum": 0,
+      "meanCitationCorrectnessMinimum": 3.6,
+      "correctAbstentionRateMinimum": 1,
+      "generatorFailureRateMaximum": 0.02
+    },
+    "tieBreakers": ["lower list-price cost", "lower median latency"]
+  },
+  "futureJudgeCalibration": {
+    "humanLabelsAreReference": true,
+    "minimumQuadraticWeightedKappa": 0.6,
+    "minimumSpearmanOverallScore": 0.7,
+    "minimumBinaryPassAgreement": 0.8,
+    "selfJudgingProhibited": true
+  }
+}

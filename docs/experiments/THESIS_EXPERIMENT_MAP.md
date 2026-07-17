@@ -18,7 +18,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 7 | Metadata-aware retrieval | metadata-version-filter-v1 | completed | Compatibility gate enabled or disabled | On the 54-case v4 validation split, the pre-registered v1 attempt failed because C++ queries were misclassified as C. After a tested detector correction, v2 selects metadata-aware dense at 0.68 with Recall@4 0.9630, MRR 0.9444, nDCG@4 0.9493, and zero no-answer false positives. Pure dense still has no threshold satisfying all guardrails. |
 | 8 | Embedding model comparison | embedding-models-v2 | completed | Embedding provider/model at a fixed 1024-dimensional output | On the 54-case v4 validation split, retain Gemini Embedding 2 at threshold 0.68. It is the only 1024-dimensional candidate satisfying zero no-answer false positives, Recall@4 >= 0.90, and MRR >= 0.85. OpenAI Large is strongest at a permissive threshold but fails after zero-FPR calibration; Voyage preserves recall but misses the MRR floor. |
 | 9 | Reranking | reranking-v1 | completed | No reranker, Voyage rerank-2.5, or Voyage rerank-2.5-lite | Retain no reranker. With candidate Recall@20 equal to 1.0, rerank-2.5 preserved Recall@4 but reduced MRR from 0.9444 to 0.9259 and nDCG@4 from 0.9493 to 0.9327; rerank-2.5-lite reduced them further. Both added cost and about 0.31-0.33 seconds median API latency. |
-| 10 | Answer generation and LLM-as-a-judge | generation-and-judge-v1 | planned | Generator model, judge model, and judge prompt in separate experiments | Pending. |
+| 10 | Answer generation and LLM-as-a-judge | generation-and-judge-v1 | in-progress | Generator model first; judge model and judge prompt only after human reference labels exist | Freeze the 54-case v4 validation benchmark before model calls: 27 answerable cases invoke a generator using 104 hashed evidence references, while 27 unanswerable cases use the frozen deterministic abstention policy. A balanced 24-case human calibration subset was selected by seeded hashing before outputs exist. |
 | 11 | Agentic RAG | rag-agent-loop-v1 | planned | Single pass versus bounded retrieve-check-rewrite loop | Pending. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
@@ -132,14 +132,14 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 ## 10. Answer generation and LLM-as-a-judge: generation-and-judge-v1
 
 - **Research question:** How do generator choices affect grounded answer quality, and how reliably can an LLM judge reproduce human assessments?
-- **Status:** planned
-- **Changed variable:** Generator model, judge model, and judge prompt in separate experiments
+- **Status:** in-progress
+- **Changed variable:** Generator model first; judge model and judge prompt only after human reference labels exist
 - **Controls:** Frozen retrieved evidence; answer prompt; human-labelled judge subset
 - **Metrics:** Key-fact coverage; groundedness; citation correctness; judge agreement; latency; cost
-- **Artifacts:** not created yet
-- **Decision:** Pending.
-- **Limitations:** Judge must not validate itself; Human calibration is required
-- **Next step:** Build human-labelled calibration cases after retrieval stabilizes.
+- **Artifacts:** `docs/experiments/generation-models.v1.json`; `docs/evaluation/generation-benchmark.v1.json`; `docs/evaluation/generation-benchmark.v1.md`; `docs/evaluation/generation-benchmark.v1.csv`; `docs/evaluation/generation-prompt.v1.json`; `docs/evaluation/generation-human-rubric.v1.json`; `docs/evaluation/GENERATION_HUMAN_REVIEW_GUIDE_V1.md`
+- **Decision:** Freeze the 54-case v4 validation benchmark before model calls: 27 answerable cases invoke a generator using 104 hashed evidence references, while 27 unanswerable cases use the frozen deterministic abstention policy. A balanced 24-case human calibration subset was selected by seeded hashing before outputs exist.
+- **Limitations:** All benchmark approvals remain provisional; The initial reference labels have one primary human reviewer; Judge must not validate itself; Generator candidates and dated prices are not frozen yet; The 24-case test remains untouched
+- **Next step:** Verify current generator availability and pricing, preregister the baseline plus two alternatives, then generate blinded validation outputs with the judge disabled.
 
 ## 11. Agentic RAG: rag-agent-loop-v1
 
