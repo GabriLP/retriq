@@ -19,12 +19,12 @@
       "outputPriceUsdPerMillionTokens": 9
     },
     {
-      "id": "glm-5.2-openrouter-zai-fp8",
+      "id": "glm-5.2-openrouter-baseten-fp8",
       "provider": "openrouter",
       "model": "z-ai/glm-5.2-20260616",
       "expectedResponseModel": "z-ai/glm-5.2-20260616",
-      "expectedResponseProvider": "Z.AI",
-      "providerOrder": ["z-ai/fp8"],
+      "expectedResponseProvider": "BaseTen",
+      "providerOrder": ["baseten/fp8"],
       "allowFallbacks": false,
       "reasoningEffort": "medium",
       "inputPriceUsdPerMillionTokens": 1.4,
@@ -80,5 +80,14 @@
     "judge": "disabled until human reference labels are complete",
     "qualityDecision": "never infer a winner from cost or latency alone"
   },
+  "amendments": [
+    {
+      "observedAt": "2026-07-17T12:43:00+02:00",
+      "beforeAnySuccessfulGlmOutput": true,
+      "change": "Pin GLM-5.2 FP8 to BaseTen instead of Z.AI; model, quantization, reasoning controls, and list prices remain unchanged.",
+      "reason": "The Z.AI endpoint changed to OpenRouter status -2 with approximately 92% five-minute uptime and did not return the first benchmark response. BaseTen FP8 reported status 0 and 100% thirty-minute uptime.",
+      "selectionRule": "Highest observed thirty-minute uptime among healthy FP8 endpoints at the same frozen list price; no answer-quality output was available when selected."
+    }
+  ],
   "reportOutput": "docs/experiment-results/generation-model-comparison-v1-validation"
 }

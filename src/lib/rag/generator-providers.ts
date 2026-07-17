@@ -137,7 +137,7 @@ async function generateWithOpenRouter(options: GenerateOptions): Promise<Generat
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
       "HTTP-Referer": "https://github.com/retriq-thesis/retriq",
-      "X-Title": "Retriq thesis generator benchmark",
+      "X-OpenRouter-Title": "Retriq thesis generator benchmark",
     },
     body: JSON.stringify({
       model: options.candidate.model,
@@ -151,6 +151,7 @@ async function generateWithOpenRouter(options: GenerateOptions): Promise<Generat
       provider: { order: options.candidate.providerOrder, allow_fallbacks: false },
       usage: { include: true },
     }),
+    signal: AbortSignal.timeout(180_000),
   });
   const raw = await response.text();
   if (!response.ok) throw new Error(`OpenRouter ${response.status} for ${options.candidate.id}: ${raw.slice(0, 1000)}`);

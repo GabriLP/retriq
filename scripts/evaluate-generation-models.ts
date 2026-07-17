@@ -96,6 +96,7 @@ async function main() {
           allowProviderRequests: true,
         });
         outputs.push({ caseId: entry.item.caseId, answerability: entry.item.answerability, candidateId: candidate.id, blindVariantId, answer: result.answer, responseHash: sha256(result.answer), answerStatus: classifyAnswerStatus(result.answer), generationPolicy: entry.item.generationPolicy, result, error: null });
+        console.log(`  ${entry.item.caseId}: ok (${result.cacheHit ? "cache" : `${result.latencyMs} ms`})`);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         outputs.push({ caseId: entry.item.caseId, answerability: entry.item.answerability, candidateId: candidate.id, blindVariantId, answer: "", responseHash: sha256(""), answerStatus: "error", generationPolicy: entry.item.generationPolicy, result: null, error: message });
