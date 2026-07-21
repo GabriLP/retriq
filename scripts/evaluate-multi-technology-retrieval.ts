@@ -41,6 +41,12 @@ type Protocol = {
   controlledVariables: string[];
   metrics: string[];
   decisionRule: { eligibility: string; primary: string; tieBreakers: string[]; scope: string };
+  execution?: {
+    attemptId: string;
+    queryEmbeddingProviderInputs: number;
+    queryEmbeddingProviderRequests: number;
+    estimatedEmbeddingCostUsd: number;
+  };
   reportOutput: string;
 };
 type ScoredChunk = DocumentationChunk & { score: number };
@@ -82,6 +88,7 @@ type Artifact = {
   code: { gitCommit: string; dirty: boolean; gitDiffHash: string };
   controls: { minScore: number; topK: number; embeddingProvider: string; embeddingModel: string; outputDimensionality: number; reranker: null };
   cache: { documentHits: number; documentMisses: number; queryHits: number; queryMisses: number; apiInputs: number; apiRequests: number; estimatedApiTokens: number; estimatedApiCostUsd: number };
+  originalProviderExecution: { attemptId: string; apiInputs: number; apiRequests: number; estimatedCostUsd: number } | null;
   timingsMs: { cosineScoring: number };
   detection: Array<{ caseId: string; expectedLanguages: string[]; detectedLanguages: string[] }>;
   results: VariantResult[];
@@ -166,6 +173,12 @@ async function main() {
       estimatedApiTokens: documents.cache.estimatedApiTokens + queries.cache.estimatedApiTokens,
       estimatedApiCostUsd: (documents.cache.estimatedApiCostUsd ?? 0) + (queries.cache.estimatedApiCostUsd ?? 0),
     },
+    originalProviderExecution: protocol.execution ? {
+      attemptId: protocol.execution.attemptId,
+      apiInputs: protocol.execution.queryEmbeddingProviderInputs,
+      apiRequests: protocol.execution.queryEmbeddingProviderRequests,
+      estimatedCostUsd: protocol.execution.estimatedEmbeddingCostUsd,
+    } : null,
     timingsMs: { cosineScoring: scoringMs },
     detection: benchmark.cases.map((item) => ({ caseId: item.id, expectedLanguages: item.expectedLanguages, detectedLanguages: detectQueryMetadataConstraint(item.question)?.databaseLanguages ?? [] })),
     results: variants,
@@ -289,7 +302,8 @@ function validateProtocol(protocol: Protocol) {
 }
 
 function renderMarkdown(artifact: Artifact) {
-  return `# Comparative-query retrieval benchmark\n\n- Protocol/attempt: \`${artifact.id}\` / \`${artifact.attemptId}\`\n- Parent run: \`${artifact.parentRunId}\`\n- Split: **validation only**; locked test touched: **${artifact.testSplitTouched ? "yes" : "no"}**\n- Hypothesis: ${artifact.hypothesis}\n- Evaluation commit: \`${artifact.code.gitCommit}\`${artifact.code.dirty ? " (dirty)" : ""}\n- Fixed retrieval: Gemini Embedding 2 (1,024d), cosine >= ${artifact.controls.minScore}, topK=${artifact.controls.topK}, no reranker\n- Query embedding provider inputs: **${artifact.cache.apiInputs}** in **${artifact.cache.apiRequests}** request(s), estimated cost **$${artifact.cache.estimatedApiCostUsd.toFixed(8)}**\n- Cosine scoring time: **${artifact.timingsMs.cosineScoring} ms**\n\n| Variant | Both languages @4 | Mean language-side coverage | Both canonical evidence sides @4 | Mean evidence-side recall | Macro side MRR | Returned chunks |\n|---|---:|---:|---:|---:|---:|---:|\n${artifact.results.map((item) => `| ${item.variant} | ${format(item.metrics.bothLanguageCoverageAt4)} | ${format(item.metrics.meanLanguageSideCoverageAt4)} | ${format(item.metrics.bothEvidenceSideCoverageAt4)} | ${format(item.metrics.meanEvidenceSideRecallAt4)} | ${format(item.metrics.macroEvidenceSideMrr)} | ${item.metrics.returnedChunks} |`).join("\n")}\n\n## Decision\n\n**${artifact.selection.selectedVariant ?? "No candidate selected"}.** ${artifact.selection.reason}\n\n## Per-case audit\n\n${artifact.results.map((variant) => `### ${variant.variant}\n\n| Case | Languages represented | Canonical evidence represented | Retrieved chunks |\n|---|---|---|---|\n${variant.cases.map((item) => `| ${item.caseId} | ${item.representedLanguages.join(" + ") || "none"} | ${item.evidenceLanguages.join(" + ") || "none"} | ${item.retrieved.map((chunk) => `${chunk.rank}:${chunk.language ?? "?"}/${chunk.chunkId}@${chunk.score.toFixed(4)}`).join("; ") || "none"} |`).join("\n")}`).join("\n\n")}\n\n## Scope and limitations\n\n${artifact.limitations.map((item) => `- ${item}`).join("\n")}\n`;
+  const original = artifact.originalProviderExecution;
+  return `# Comparative-query retrieval benchmark\n\n- Protocol/attempt: \`${artifact.id}\` / \`${artifact.attemptId}\`\n- Parent run: \`${artifact.parentRunId}\`\n- Split: **validation only**; locked test touched: **${artifact.testSplitTouched ? "yes" : "no"}**\n- Hypothesis: ${artifact.hypothesis}\n- Evaluation commit: \`${artifact.code.gitCommit}\`${artifact.code.dirty ? " (dirty)" : ""}\n- Fixed retrieval: Gemini Embedding 2 (1,024d), cosine >= ${artifact.controls.minScore}, topK=${artifact.controls.topK}, no reranker\n- This replay: **${artifact.cache.apiInputs}** provider input(s) in **${artifact.cache.apiRequests}** request(s), estimated incremental cost **$${artifact.cache.estimatedApiCostUsd.toFixed(8)}**\n${original ? `- Original provider execution: \`${original.attemptId}\`, **${original.apiInputs}** input(s) in **${original.apiRequests}** request(s), estimated cost **$${original.estimatedCostUsd.toFixed(8)}**\n` : ""}- Cosine scoring time: **${artifact.timingsMs.cosineScoring} ms**\n\n| Variant | Both languages @4 | Mean language-side coverage | Both canonical evidence sides @4 | Mean evidence-side recall | Macro side MRR | Returned chunks |\n|---|---:|---:|---:|---:|---:|---:|\n${artifact.results.map((item) => `| ${item.variant} | ${format(item.metrics.bothLanguageCoverageAt4)} | ${format(item.metrics.meanLanguageSideCoverageAt4)} | ${format(item.metrics.bothEvidenceSideCoverageAt4)} | ${format(item.metrics.meanEvidenceSideRecallAt4)} | ${format(item.metrics.macroEvidenceSideMrr)} | ${item.metrics.returnedChunks} |`).join("\n")}\n\n## Decision\n\n**${artifact.selection.selectedVariant ?? "No candidate selected"}.** ${artifact.selection.reason}\n\n## Per-case audit\n\n${artifact.results.map((variant) => `### ${variant.variant}\n\n| Case | Languages represented | Canonical evidence represented | Retrieved chunks |\n|---|---|---|---|\n${variant.cases.map((item) => `| ${item.caseId} | ${item.representedLanguages.join(" + ") || "none"} | ${item.evidenceLanguages.join(" + ") || "none"} | ${item.retrieved.map((chunk) => `${chunk.rank}:${chunk.language ?? "?"}/${chunk.chunkId}@${chunk.score.toFixed(4)}`).join("; ") || "none"} |`).join("\n")}`).join("\n\n")}\n\n## Scope and limitations\n\n${artifact.limitations.map((item) => `- ${item}`).join("\n")}\n`;
 }
 
 async function writeReport(output: string, artifact: Artifact) {
