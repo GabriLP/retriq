@@ -1,3 +1,5 @@
+import { FinishReason, ThinkingLevel } from "@google/genai";
+
 import { ragConfig } from "./config";
 import { getGeminiClient } from "./gemini-client";
 import { answerInstructions, buildGroundedPrompt } from "./prompt";
@@ -6,6 +8,12 @@ import type { AnswerStatus, RetrievalResult } from "./types";
 export type GeneratedAnswer = {
   answer: string;
   answerStatus: AnswerStatus;
+  generation: {
+    finishReason: string | null;
+    truncated: boolean;
+    outputTokens: number;
+    reasoningTokens: number;
+  };
 };
 
 export async function generateGroundedAnswer(question: string, chunks: RetrievalResult[]): Promise<GeneratedAnswer> {
@@ -14,6 +22,12 @@ export async function generateGroundedAnswer(question: string, chunks: Retrieval
       answer:
         "The retrieved documentation does not contain enough information to answer this question. Try ingesting more relevant documentation or lowering the retrieval threshold for exploration.",
       answerStatus: "insufficient_context" satisfies AnswerStatus,
+      generation: {
+        finishReason: null,
+        truncated: false,
+        outputTokens: 0,
+        reasoningTokens: 0,
+      },
     };
   }
 
@@ -24,16 +38,28 @@ export async function generateGroundedAnswer(question: string, chunks: Retrieval
     model: ragConfig.model,
     contents: prompt,
     config: {
-      maxOutputTokens: 900,
+      // Gemini thinking tokens share the output budget. Keeping reasoning low
+      // and reserving a larger explicit budget prevents short, half-rendered
+      // answers such as an unfinished Markdown list item.
+      maxOutputTokens: ragConfig.generationMaxOutputTokens,
+      temperature: 0,
+      thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
       systemInstruction: answerInstructions,
     },
   });
 
   const answer = response.text?.trim() || "The model returned an empty response for the retrieved context.";
+  const finishReason = response.candidates?.[0]?.finishReason ?? null;
 
   return {
     answer,
     answerStatus: classifyAnswerStatus(answer),
+    generation: {
+      finishReason,
+      truncated: finishReason === FinishReason.MAX_TOKENS,
+      outputTokens: response.usageMetadata?.candidatesTokenCount ?? 0,
+      reasoningTokens: response.usageMetadata?.thoughtsTokenCount ?? 0,
+    },
   };
 }
 

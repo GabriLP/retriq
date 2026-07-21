@@ -36,6 +36,7 @@ export async function answerQuestion(question: string, topK = ragConfig.defaultT
     question,
     answer: generatedAnswer.answer,
     answerStatus: generatedAnswer.answerStatus,
+    generation: generatedAnswer.generation,
     citations,
     retrievedChunks,
     timings: {

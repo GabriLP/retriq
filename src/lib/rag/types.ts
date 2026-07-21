@@ -62,6 +62,12 @@ export type QueryResponse = {
   question: string;
   answer: string;
   answerStatus: AnswerStatus;
+  generation: {
+    finishReason: string | null;
+    truncated: boolean;
+    outputTokens: number;
+    reasoningTokens: number;
+  };
   citations: Citation[];
   retrievedChunks: RetrievalResult[];
   timings: {

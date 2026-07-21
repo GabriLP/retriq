@@ -204,6 +204,14 @@ export function QueryWorkbench({ corpusSummary }: { corpusSummary: CorpusSummary
             <CardContent>
               {result ? (
                 <div className="space-y-4">
+                  {result.generation?.truncated ? (
+                    <Alert className="border-amber-300 bg-amber-50 text-amber-950">
+                      <AlertTitle>Answer incomplete</AlertTitle>
+                      <AlertDescription>
+                        The model reached its output-token limit. The text below may end mid-sentence; submit the question again after increasing the generation budget.
+                      </AlertDescription>
+                    </Alert>
+                  ) : null}
                   <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4 text-sm leading-7 text-zinc-800">
                     <ReactMarkdown
                       // The generated answer is rendered as Markdown, while
@@ -271,6 +279,12 @@ export function QueryWorkbench({ corpusSummary }: { corpusSummary: CorpusSummary
                         <ExternalLink className="size-3" />
                       </CitationReference>
                     ))}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-zinc-100 pt-3 font-mono text-[11px] text-zinc-400">
+                    <span>{result.model}</span>
+                    <span>{result.timings.generationMs.toLocaleString()} ms generation</span>
+                    {result.generation?.outputTokens ? <span>{result.generation.outputTokens} output tokens</span> : null}
+                    {result.generation?.reasoningTokens ? <span>{result.generation.reasoningTokens} reasoning tokens</span> : null}
                   </div>
                 </div>
               ) : (

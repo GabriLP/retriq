@@ -25,6 +25,7 @@ export const ragConfig = {
   defaultTopK: Number(process.env.RETRIQ_TOP_K ?? 4),
   minScore: Number(process.env.RETRIQ_MIN_SCORE ?? 0.18),
   model: process.env.GEMINI_MODEL ?? "gemini-3.5-flash",
+  generationMaxOutputTokens: Number(process.env.RETRIQ_GENERATION_MAX_OUTPUT_TOKENS ?? 2048),
   embeddingModel: process.env.GEMINI_EMBEDDING_MODEL ?? "gemini-embedding-2",
   embeddingOutputDimensionality: Number(process.env.GEMINI_EMBEDDING_OUTPUT_DIMENSIONALITY ?? 768),
   embeddingCacheEnabled:

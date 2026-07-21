@@ -7,6 +7,7 @@ export const answerInstructions = [
   "Do not fabricate APIs, functions, behavior, versions, or links.",
   "Cite sources inline only with bracketed labels like [S1] or [S1, S2]. Do not cite sources as plain S1.",
   "Clearly separate confirmed documentation facts from uncertainty.",
+  "Prefer a concise, complete answer. Never stop midway through a sentence, list item, code block, or Markdown delimiter.",
 ].join("\n");
 
 export function buildGroundedPrompt(question: string, chunks: RetrievalResult[]) {
