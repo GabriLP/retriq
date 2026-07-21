@@ -269,6 +269,20 @@
       "decision": "Do not select GPT-5.4 Nano prompt v1. Calibration QWK 0.4320 and Spearman 0.3570 missed their 0.60 and 0.70 floors, although pass agreement was 0.8333. Held-out audit QWK 0.1912, Spearman 0.4948, and pass agreement 0.7917 all failed. Abstention agreement was 1.0. Valid responses cost $0.046874; two provider responses without model identity were rejected.",
       "limitations": ["Single quickly completed human reviewer", "No inter-rater reliability estimate", "Internal audit is not the locked test", "v1 incurred a small separately recorded failed-attempt cost"],
       "nextStep": "Complete secondary human review of the five audit disagreements and six sampled agreements before deciding whether the reference labels need correction or a separately preregistered stronger judge should be tested."
+    },
+    {
+      "order": 20,
+      "id": "judge-human-adjudication-v1",
+      "thesisSection": "LLM judge reference adjudication",
+      "researchQuestion": "Are GPT-5.4 Nano disagreements caused by judge errors, noisy first-pass human labels, or insufficient frozen evidence?",
+      "status": "in-progress",
+      "variable": "Second time-separated review with blind scoring followed by explicit comparison and adjudication",
+      "controls": ["All 12 answerable held-out audit rows", "three unique unanswerable controls", "same frozen evidence", "references hidden until every blind score is frozen", "original human and judge artifacts immutable"],
+      "metrics": ["Phase-one versus original-human agreement", "phase-one versus judge agreement", "label-change count", "adjudication decision frequencies", "evidence-ambiguity rate", "recomputed cached judge agreement"],
+      "artifacts": ["docs/evaluation/llm-judge-human-adjudication.v1.json", "docs/evaluation/JUDGE_ADJUDICATION_GUIDE_V1.md", "src/app/evaluation/judge-adjudication/page.tsx", "src/components/judge-adjudication-workbench.tsx"],
+      "decision": "Pending the exported 15-row human adjudication CSV.",
+      "limitations": ["The same primary reviewer performs the time-separated adjudication", "Only three unanswerable controls are included because abstention agreement was already perfect", "Reviewing the held-out audit consumes it for future prompt tuning"],
+      "nextStep": "Complete the local two-phase review, import the exported CSV, and recompute Nano metrics from cached outputs without provider calls."
     }
   ]
 }

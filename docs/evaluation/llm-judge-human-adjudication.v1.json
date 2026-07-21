@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "llm-judge-human-adjudication-v1",
+  "createdAt": "2026-07-21T10:30:24.811Z",
+  "purpose": "Accessible blinded re-review of the complete answerable judge audit plus a small unique abstention control.",
+  "sources": {
+    "humanReview": "docs/evaluation/generation-human-review-v1.completed.csv",
+    "humanReviewSha256": "793f0b4563459026a09e0fb0117cc8aadc7cf6ee2c6f0f27c7dc70a258e6835b",
+    "judgeAudit": "docs/experiment-results/llm-judge-calibration-v1.1-disagreement-audit.csv",
+    "judgeAuditSha256": "fba18841519d0e92a0176369711b49f5bfc0e0fb572746c50b6e27191f1cca46"
+  },
+  "selection": {
+    "salt": "retriq-judge-adjudication-v1",
+    "answerable": "All 12 held-out audit rows.",
+    "unanswerable": "Three unique case IDs selected by SHA-256 order; one deterministic-answer row per case.",
+    "counts": {
+      "total": 15,
+      "answerable": 12,
+      "unanswerable": 3
+    },
+    "rowIds": [
+      "swift-sendable-actors-001::variant-015380ad",
+      "cpp-cmake-targets-001::variant-015380ad",
+      "java-spec-release-001::variant-20c2ee7c",
+      "cpp-move-constructor-001::variant-cff457f4",
+      "java-ods-red-black-tree-001::variant-cff457f4",
+      "react-effects-001::variant-cff457f4",
+      "java-ods-dual-array-deque-001::variant-015380ad",
+      "rust-ownership-move-clone-001::variant-015380ad",
+      "c-standard-purpose-001::variant-20c2ee7c",
+      "python-parameter-kinds-001::variant-015380ad",
+      "kotlin-gradle-plugin-001::variant-015380ad",
+      "react-state-queue-001::variant-015380ad",
+      "react-state-queue-001::variant-20c2ee7c",
+      "java-ods-dual-array-deque-001::variant-cff457f4",
+      "cpp-move-constructor-001::variant-20c2ee7c"
+    ]
+  },
+  "reviewProtocol": {
+    "phase1": "Score every case from candidate answer, expected facts, and frozen evidence. Human and judge references remain hidden.",
+    "phase2": "After all phase-1 scores are frozen, reveal both references and record an adjudication decision. Final scores may be edited but phase-1 values remain preserved.",
+    "originalArtifactsRemainImmutable": true
+  }
+}
