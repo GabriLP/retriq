@@ -1,0 +1,3 @@
+variant,max_output_tokens,generated_cases,errors,finish_reason_coverage,explicit_max_token_stops,human_generator_failures,confirmed_near_budget_abrupt_stops,prompt_tokens,completion_tokens,reasoning_tokens,total_tokens,cost_usd,mean_latency_ms,median_latency_ms,p95_latency_ms,mean_response_characters,median_response_characters
+budget-900-frozen,900,27,0,0,0,1,1,52578,5012,4532,62122,0.164763,1916.77,1772.89,3141.88,740.48,599
+budget-2048,2048,27,0,27,0,0,0,52578,5471,4280,62329,0.166626,2017.91,1796.5,4235.43,809.59,691

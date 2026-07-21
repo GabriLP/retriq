@@ -130,7 +130,7 @@ async function main() {
   const protocolPath = path.resolve(options.protocol);
   const protocolRaw = await fs.readFile(protocolPath, "utf8");
   const protocol = JSON.parse(protocolRaw) as Protocol;
-  validateProtocol(protocol);
+  validateProtocol(protocol, options.cacheOnly);
 
   const benchmarkRaw = await fs.readFile(path.resolve(protocol.benchmark), "utf8");
   const benchmark = JSON.parse(benchmarkRaw) as Benchmark;
@@ -164,7 +164,7 @@ async function main() {
   }
 
   const estimate = estimateExperiment(prepared, protocol.candidate, candidateVariant.maxOutputTokens);
-  if (!options.allowProviderRequests) {
+  if (!options.allowProviderRequests && !options.cacheOnly) {
     console.log(JSON.stringify({
       protocol: protocol.id,
       split: protocol.split,
@@ -187,7 +187,7 @@ async function main() {
         userPrompt: entry.prompt,
         temperature: prompt.generationControls.temperature,
         maxOutputTokens: candidateVariant.maxOutputTokens,
-        allowProviderRequests: true,
+        allowProviderRequests: !options.cacheOnly,
       });
       outputs.push({
         caseId: entry.item.caseId,
@@ -238,6 +238,11 @@ async function main() {
     code: provenance,
     controls: protocol.controlledVariables,
     estimate,
+    execution: {
+      cacheOnly: options.cacheOnly,
+      providerRequests: outputs.filter((item) => item.result?.cacheHit === false).length,
+      cacheHits: outputs.filter((item) => item.result?.cacheHit === true).length,
+    },
     summaries: [baselineSummary, candidateSummary],
     knownRegression: {
       caseId: knownRegressionCaseId,
@@ -269,9 +274,15 @@ async function main() {
   console.log(`COMPLETED ${protocol.id}/${attemptId}: ${decision.status}`);
 }
 
-function validateProtocol(protocol: Protocol) {
-  if (protocol.schemaVersion !== 1 || protocol.status !== "preregistered" || protocol.split !== "validation") {
-    throw new Error("Generation output-budget protocol must be preregistered on validation.");
+function validateProtocol(protocol: Protocol, cacheOnly: boolean) {
+  if (protocol.schemaVersion !== 1 || protocol.split !== "validation") {
+    throw new Error("Generation output-budget protocol must use schema v1 on validation.");
+  }
+  if (protocol.status === "completed" && !cacheOnly) {
+    throw new Error("A completed output-budget protocol may only be replayed with --cache-only.");
+  }
+  if (!new Set(["preregistered", "completed"]).has(protocol.status)) {
+    throw new Error("Generation output-budget protocol must be preregistered or completed.");
   }
   if (protocol.variants.length !== 2 || protocol.variants.filter((item) => item.source === "frozen-baseline").length !== 1 || protocol.variants.filter((item) => item.source === "new-generation").length !== 1) {
     throw new Error("Protocol must define one frozen baseline and one new-generation variant.");
@@ -416,8 +427,17 @@ function renderCsv(summaries: VariantSummary[]) {
 
 function readCodeProvenance() {
   const gitCommit = runGit(["rev-parse", "HEAD"]) || "unknown";
-  const status = runGit(["status", "--porcelain", "--", "src", "scripts", "docs/experiments", "docs/evaluation", "package.json", "package-lock.json"]);
-  const diff = runGit(["diff", "--binary", "--", "src", "scripts", "docs/experiments", "docs/evaluation", "package.json", "package-lock.json"]);
+  const provenancePaths = [
+    "src/lib/rag/generator-providers.ts",
+    "scripts/evaluate-generation-output-budget.ts",
+    "docs/experiments/generation-output-budget.v1.json",
+    "docs/evaluation/generation-benchmark.v1.json",
+    "docs/evaluation/generation-prompt.v1.json",
+    "package.json",
+    "package-lock.json",
+  ];
+  const status = runGit(["status", "--porcelain", "--", ...provenancePaths]);
+  const diff = runGit(["diff", "--binary", "--", ...provenancePaths]);
   return { gitCommit, dirty: Boolean(status), gitDiffSha256: sha256(diff) };
 }
 
@@ -444,6 +464,7 @@ function parseArgs(args: string[]) {
   return {
     protocol: value("--protocol", "docs/experiments/generation-output-budget.v1.json"),
     allowProviderRequests: args.includes("--allow-provider-requests"),
+    cacheOnly: args.includes("--cache-only"),
     writeReport: args.includes("--write-report"),
   };
 }

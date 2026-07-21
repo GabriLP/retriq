@@ -1,0 +1,3593 @@
+case_id,blind_budget_variant,language,question,expected_key_facts,frozen_evidence,candidate_answer,complete_0_1,groundedness_0_4,key_fact_coverage_0_4,citation_correctness_0_4,citation_completeness_0_4,directness_0_2,reviewer_notes
+react-state-queue-001,budget-blind-a,React,How should a component increment the same state value three times in one event handler?,Use the functional updater form. | React queues updater functions. | Each updater receives the result of the preceding queued updater.,"[S1]
+Title: Queueing a Series of State Updates
+Section: React batches state updates (part 3)
+URL: https://react.dev/learn/queueing-a-series-of-state-updates
+Content:
+It is an uncommon use case, but if you would like to update the same state variable multiple times before the next render, instead of passing the next state value like setNumber(number + 1), you can pass a function that calculates the next state based on the previous one in the queue, like setNumber(n => n + 1). It is a way to tell React to “do something with the state value” instead of just replacing it.
+
+Try incrementing the counter now:
+
+```
+import { useState } from 'react';
+
+export default function Counter() {
+ const [number, setNumber] = useState(0);
+
+return (
+ <>
+ <h1>{number}</h1>
+ <button onClick={() => {
+ setNumber(n => n + 1);
+ setNumber(n => n + 1);
+ setNumber(n => n + 1);
+ }}>+3</button>
+ </>
+ )
+}
+```
+
+Here, n => n + 1 is called an updater function. When you pass it to a state setter:
+
+- React queues this function to be processed after all the other code in the event handler has run.
+
+- During the next render, React goes through the queue and gives you the final updated state.
+
+```
+setNumber(n => n + 1);setNumber(n => n + 1);setNumber(n => n + 1);
+```
+
+Here’s how React works through these lines of code while executing the event handler:
+
+- setNumber(n => n + 1): n => n + 1 is a function. React adds it to a queue.
+
+- setNumber(n => n + 1): n => n + 1 is a function. React adds it to a queue.
+
+- setNumber(n => n + 1): n => n + 1 is a function. React adds it to a queue.
+
+When you call useState during the next render, React goes through the queue. The previous number state was 0, so that’s what React passes to the first updater function as the n argument. Then React takes the return value of your previous updater function and passes it to the next updater as n, and so on:
+
+---
+
+[S2]
+Title: Queueing a Series of State Updates
+Section: React batches state updates (part 2)
+URL: https://react.dev/learn/queueing-a-series-of-state-updates
+Content:
+This might remind you of a waiter taking an order at the restaurant. A waiter doesn’t run to the kitchen at the mention of your first dish! Instead, they let you finish your order, let you make changes to it, and even take orders from other people at the table.
+
+Illustrated by Rachel Lee Nabors
+
+This lets you update multiple state variables—even from multiple components—without triggering too many re-renders. But this also means that the UI won’t be updated until after your event handler, and any code in it, completes. This behavior, also known as batching, makes your React app run much faster. It also avoids dealing with confusing “half-finished” renders where only some of the variables have been updated.
+
+React does not batch across multiple intentional events like clicks—each click is handled separately. Rest assured that React only does batching when it’s generally safe to do. This ensures that, for example, if the first button click disables a form, the second click would not submit it again.
+
+## Updating the same state multiple times before the next render
+
+It is an uncommon use case, but if you would like to update the same state variable multiple times before the next render, instead of passing the next state value like setNumber(number + 1), you can pass a function that calculates the next state based on the previous one in the queue, like setNumber(n => n + 1). It is a way to tell React to “do something with the state value” instead of just replacing it.
+
+Try incrementing the counter now:
+
+```
+import { useState } from 'react';
+
+export default function Counter() {
+ const [number, setNumber] = useState(0);
+
+return (
+ <>
+ <h1>{number}</h1>
+ <button onClick={() => {
+ setNumber(n => n + 1);
+ setNumber(n => n + 1);
+ setNumber(n => n + 1);
+ }}>+3</button>
+ </>
+ )
+}
+```
+
+---
+
+[S3]
+Title: State as a Snapshot
+Section: Setting state triggers renders (part 4)
+URL: https://react.dev/learn/state-as-a-snapshot
+Content:
+Setting state only changes it for the next render. During the first render, number was 0. This is why, in that render’s onClick handler, the value of number is still 0 even after setNumber(number + 1) was called:
+
+```
+<button onClick={() => { setNumber(number + 1); setNumber(number + 1); setNumber(number + 1);}}>+3</button>
+```
+
+Here is what this button’s click handler tells React to do:
+
+- setNumber(number + 1): number is 0 so setNumber(0 + 1).
+
+React prepares to change number to 1 on the next render.
+
+- React prepares to change number to 1 on the next render.
+
+- setNumber(number + 1): number is 0 so setNumber(0 + 1).
+
+React prepares to change number to 1 on the next render.
+
+- React prepares to change number to 1 on the next render.
+
+- setNumber(number + 1): number is 0 so setNumber(0 + 1).
+
+React prepares to change number to 1 on the next render.
+
+- React prepares to change number to 1 on the next render.
+
+Even though you called setNumber(number + 1) three times, in this render’s event handler number is always 0, so you set the state to 1 three times. This is why, after your event handler finishes, React re-renders the component with number equal to 1 rather than 3.
+
+You can also visualize this by mentally substituting state variables with their values in your code. Since the number state variable is 0 for this render, its event handler looks like this:
+
+```
+<button onClick={() => { setNumber(0 + 1); setNumber(0 + 1); setNumber(0 + 1);}}>+3</button>
+```
+
+For the next render, number is 1, so that render’s click handler looks like this:
+
+```
+<button onClick={() => { setNumber(1 + 1); setNumber(1 + 1); setNumber(1 + 1);}}>+3</button>
+```
+
+This is why clicking the button again will set the counter to 2, then to 3 on the next click, and so on.
+
+---
+
+[S4]
+Title: Queueing a Series of State Updates
+Section: React batches state updates (part 1)
+URL: https://react.dev/learn/queueing-a-series-of-state-updates
+Content:
+# Queueing a Series of State Updates
+
+Setting a state variable will queue another render. But sometimes you might want to perform multiple operations on the value before queueing the next render. To do this, it helps to understand how React batches state updates.
+
+### You will learn
+
+- What “batching” is and how React uses it to process multiple state updates
+
+- How to apply several updates to the same state variable in a row
+
+## React batches state updates
+
+You might expect that clicking the “+3” button will increment the counter three times because it calls setNumber(number + 1) three times:
+
+```
+import { useState } from 'react';
+
+export default function Counter() {
+ const [number, setNumber] = useState(0);
+
+return (
+ <>
+ <h1>{number}</h1>
+ <button onClick={() => {
+ setNumber(number + 1);
+ setNumber(number + 1);
+ setNumber(number + 1);
+ }}>+3</button>
+ </>
+ )
+}
+```
+
+However, as you might recall from the previous section, each render’s state values are fixed, so the value of number inside the first render’s event handler is always 0, no matter how many times you call setNumber(1):
+
+```
+setNumber(0 + 1);setNumber(0 + 1);setNumber(0 + 1);
+```
+
+But there is one other factor at play here. React waits until all code in the event handlers has run before processing your state updates. This is why the re-render only happens after all these setNumber() calls.
+
+This might remind you of a waiter taking an order at the restaurant. A waiter doesn’t run to the kitchen at the mention of your first dish! Instead, they let you finish your order, let you make changes to it, and even take orders from other people at the table.
+
+Illustrated by Rachel Lee Nabors
+
+This lets you update multiple state variables—even from multiple components—without triggering too many re-renders. But this also means that the UI won’t be updated until after your event handler, and any code in it, completes. This behavior, also known as batching, makes your React app run much faster. It also avoids dealing with confusing “half-finished” renders where only some of the variables have been updated.","To increment the same state value three times in a single event handler, you should pass an **updater function** to the state setter instead of passing the next state value directly [S1, S2]. 
+
+Passing a direct value like `setNumber(number + 1)` three times will only increment the state by 1 because the state value is fixed during that render's event handler [S3, S4]. 
+
+Instead, you pass a function that calculates the next state based on the previous one in the queue, like `n => n + 1` [S1, S2]. This tells React to queue the functions and process them sequentially during the next render [S1].
+
+### Example Implementation
+```jsx
+import { useState } from 'react';
+
+export default function Counter() {
+  const [number, setNumber] = useState(0);
+
+  return (
+    <>
+      <h1>{number}</h1>
+      <button onClick={() => {
+        setNumber(n => n + 1);
+        setNumber(n => n + 1);
+        setNumber(n => n + 1);
+      }}>+3</button>
+    </>
+  );
+}
+```
+*(Source: [S1, S2])*",,,,,,,
+react-state-queue-001,budget-blind-b,React,How should a component increment the same state value three times in one event handler?,Use the functional updater form. | React queues updater functions. | Each updater receives the result of the preceding queued updater.,"[S1]
+Title: Queueing a Series of State Updates
+Section: React batches state updates (part 3)
+URL: https://react.dev/learn/queueing-a-series-of-state-updates
+Content:
+It is an uncommon use case, but if you would like to update the same state variable multiple times before the next render, instead of passing the next state value like setNumber(number + 1), you can pass a function that calculates the next state based on the previous one in the queue, like setNumber(n => n + 1). It is a way to tell React to “do something with the state value” instead of just replacing it.
+
+Try incrementing the counter now:
+
+```
+import { useState } from 'react';
+
+export default function Counter() {
+ const [number, setNumber] = useState(0);
+
+return (
+ <>
+ <h1>{number}</h1>
+ <button onClick={() => {
+ setNumber(n => n + 1);
+ setNumber(n => n + 1);
+ setNumber(n => n + 1);
+ }}>+3</button>
+ </>
+ )
+}
+```
+
+Here, n => n + 1 is called an updater function. When you pass it to a state setter:
+
+- React queues this function to be processed after all the other code in the event handler has run.
+
+- During the next render, React goes through the queue and gives you the final updated state.
+
+```
+setNumber(n => n + 1);setNumber(n => n + 1);setNumber(n => n + 1);
+```
+
+Here’s how React works through these lines of code while executing the event handler:
+
+- setNumber(n => n + 1): n => n + 1 is a function. React adds it to a queue.
+
+- setNumber(n => n + 1): n => n + 1 is a function. React adds it to a queue.
+
+- setNumber(n => n + 1): n => n + 1 is a function. React adds it to a queue.
+
+When you call useState during the next render, React goes through the queue. The previous number state was 0, so that’s what React passes to the first updater function as the n argument. Then React takes the return value of your previous updater function and passes it to the next updater as n, and so on:
+
+---
+
+[S2]
+Title: Queueing a Series of State Updates
+Section: React batches state updates (part 2)
+URL: https://react.dev/learn/queueing-a-series-of-state-updates
+Content:
+This might remind you of a waiter taking an order at the restaurant. A waiter doesn’t run to the kitchen at the mention of your first dish! Instead, they let you finish your order, let you make changes to it, and even take orders from other people at the table.
+
+Illustrated by Rachel Lee Nabors
+
+This lets you update multiple state variables—even from multiple components—without triggering too many re-renders. But this also means that the UI won’t be updated until after your event handler, and any code in it, completes. This behavior, also known as batching, makes your React app run much faster. It also avoids dealing with confusing “half-finished” renders where only some of the variables have been updated.
+
+React does not batch across multiple intentional events like clicks—each click is handled separately. Rest assured that React only does batching when it’s generally safe to do. This ensures that, for example, if the first button click disables a form, the second click would not submit it again.
+
+## Updating the same state multiple times before the next render
+
+It is an uncommon use case, but if you would like to update the same state variable multiple times before the next render, instead of passing the next state value like setNumber(number + 1), you can pass a function that calculates the next state based on the previous one in the queue, like setNumber(n => n + 1). It is a way to tell React to “do something with the state value” instead of just replacing it.
+
+Try incrementing the counter now:
+
+```
+import { useState } from 'react';
+
+export default function Counter() {
+ const [number, setNumber] = useState(0);
+
+return (
+ <>
+ <h1>{number}</h1>
+ <button onClick={() => {
+ setNumber(n => n + 1);
+ setNumber(n => n + 1);
+ setNumber(n => n + 1);
+ }}>+3</button>
+ </>
+ )
+}
+```
+
+---
+
+[S3]
+Title: State as a Snapshot
+Section: Setting state triggers renders (part 4)
+URL: https://react.dev/learn/state-as-a-snapshot
+Content:
+Setting state only changes it for the next render. During the first render, number was 0. This is why, in that render’s onClick handler, the value of number is still 0 even after setNumber(number + 1) was called:
+
+```
+<button onClick={() => { setNumber(number + 1); setNumber(number + 1); setNumber(number + 1);}}>+3</button>
+```
+
+Here is what this button’s click handler tells React to do:
+
+- setNumber(number + 1): number is 0 so setNumber(0 + 1).
+
+React prepares to change number to 1 on the next render.
+
+- React prepares to change number to 1 on the next render.
+
+- setNumber(number + 1): number is 0 so setNumber(0 + 1).
+
+React prepares to change number to 1 on the next render.
+
+- React prepares to change number to 1 on the next render.
+
+- setNumber(number + 1): number is 0 so setNumber(0 + 1).
+
+React prepares to change number to 1 on the next render.
+
+- React prepares to change number to 1 on the next render.
+
+Even though you called setNumber(number + 1) three times, in this render’s event handler number is always 0, so you set the state to 1 three times. This is why, after your event handler finishes, React re-renders the component with number equal to 1 rather than 3.
+
+You can also visualize this by mentally substituting state variables with their values in your code. Since the number state variable is 0 for this render, its event handler looks like this:
+
+```
+<button onClick={() => { setNumber(0 + 1); setNumber(0 + 1); setNumber(0 + 1);}}>+3</button>
+```
+
+For the next render, number is 1, so that render’s click handler looks like this:
+
+```
+<button onClick={() => { setNumber(1 + 1); setNumber(1 + 1); setNumber(1 + 1);}}>+3</button>
+```
+
+This is why clicking the button again will set the counter to 2, then to 3 on the next click, and so on.
+
+---
+
+[S4]
+Title: Queueing a Series of State Updates
+Section: React batches state updates (part 1)
+URL: https://react.dev/learn/queueing-a-series-of-state-updates
+Content:
+# Queueing a Series of State Updates
+
+Setting a state variable will queue another render. But sometimes you might want to perform multiple operations on the value before queueing the next render. To do this, it helps to understand how React batches state updates.
+
+### You will learn
+
+- What “batching” is and how React uses it to process multiple state updates
+
+- How to apply several updates to the same state variable in a row
+
+## React batches state updates
+
+You might expect that clicking the “+3” button will increment the counter three times because it calls setNumber(number + 1) three times:
+
+```
+import { useState } from 'react';
+
+export default function Counter() {
+ const [number, setNumber] = useState(0);
+
+return (
+ <>
+ <h1>{number}</h1>
+ <button onClick={() => {
+ setNumber(number + 1);
+ setNumber(number + 1);
+ setNumber(number + 1);
+ }}>+3</button>
+ </>
+ )
+}
+```
+
+However, as you might recall from the previous section, each render’s state values are fixed, so the value of number inside the first render’s event handler is always 0, no matter how many times you call setNumber(1):
+
+```
+setNumber(0 + 1);setNumber(0 + 1);setNumber(0 + 1);
+```
+
+But there is one other factor at play here. React waits until all code in the event handlers has run before processing your state updates. This is why the re-render only happens after all these setNumber() calls.
+
+This might remind you of a waiter taking an order at the restaurant. A waiter doesn’t run to the kitchen at the mention of your first dish! Instead, they let you finish your order, let you make changes to it, and even take orders from other people at the table.
+
+Illustrated by Rachel Lee Nabors
+
+This lets you update multiple state variables—even from multiple components—without triggering too many re-renders. But this also means that the UI won’t be updated until after your event handler, and any code in it, completes. This behavior, also known as batching, makes your React app run much faster. It also avoids dealing with confusing “half-finished” renders where only some of the variables have been updated.","To increment the same state value three times in a single event handler, you should pass an **updater function** to the state setter instead of passing the next state value directly [S1, S2]. 
+
+Instead of calling `setNumber(number + 1)` multiple times (which only increments it once because the state value is fixed during that render) [S3, S4], you pass a function that calculates the next state based on the previous one in the queue [S1, S2].
+
+### Example Implementation
+You can implement this by calling the state setter three times with an updater function like `n => n + 1` [S1, S2]:
+
+```javascript
+import { useState } from 'react';
+
+export default function Counter() {
+  const [number, setNumber] = useState(0);
+
+  return (
+    <>
+      <h1>{number}</h1>
+      <button onClick={() => {
+        setNumber(n => n + 1);
+        setNumber(n => n + 1);
+        setNumber(n => n + 1);
+      }}>+3</button>
+    </>
+  );
+}
+```
+*(Source: [S1, S2])*
+
+### How It Works
+1. **Queueing:** When you pass an updater function (e.g., `n => n + 1`), React queues the function to be processed after all other code in the event handler has run [S1].
+2. **Processing:** During the next render, React goes through the queue [S1]. It passes the previous state value to the first updater function, takes its return value, and passes that return value as the argument to the next updater function in the queue, and so on, resulting in the final updated state [S1].",,,,,,,
+react-effects-001,budget-blind-a,React,When is an Effect appropriate instead of deriving a value during rendering?,Effects synchronize React components with external systems. | Derived values generally do not require an Effect. | Unnecessary Effects add extra render work and complexity.,"[S1]
+Title: Synchronizing with Effects
+Section: What are Effects and how are they different from events? (part 2)
+URL: https://react.dev/learn/synchronizing-with-effects
+Content:
+Rendering code (introduced in Describing the UI) lives at the top level of your component. This is where you take the props and state, transform them, and return the JSX you want to see on the screen. Rendering code must be pure. Like a math formula, it should only calculate the result, but not do anything else.
+
+- Event handlers (introduced in Adding Interactivity) are nested functions inside your components that do things rather than just calculate them. An event handler might update an input field, submit an HTTP POST request to buy a product, or navigate the user to another screen. Event handlers contain “side effects” (they change the program’s state) caused by a specific user action (for example, a button click or typing).
+
+Event handlers (introduced in Adding Interactivity) are nested functions inside your components that do things rather than just calculate them. An event handler might update an input field, submit an HTTP POST request to buy a product, or navigate the user to another screen. Event handlers contain “side effects” (they change the program’s state) caused by a specific user action (for example, a button click or typing).
+
+Sometimes this isn’t enough. Consider a ChatRoom component that must connect to the chat server whenever it’s visible on the screen. Connecting to a server is not a pure calculation (it’s a side effect) so it can’t happen during rendering. However, there is no single particular event like a click that causes ChatRoom to be displayed.
+
+Effects let you specify side effects that are caused by rendering itself, rather than by a particular event. Sending a message in the chat is an event because it is directly caused by the user clicking a specific button. However, setting up a server connection is an Effect because it should happen no matter which interaction caused the component to appear. Effects run at the end of a commit after the screen updates. This is a good time to synchronize the React components with some external system (like network or a third-party library).
+
+---
+
+[S2]
+Title: You Might Not Need an Effect
+Section: How to remove unnecessary Effects (part 2)
+URL: https://react.dev/learn/you-might-not-need-an-effect
+Content:
+- You don’t need Effects to transform data for rendering. For example, let’s say you want to filter a list before displaying it. You might feel tempted to write an Effect that updates a state variable when the list changes. However, this is inefficient. When you update the state, React will first call your component functions to calculate what should be on the screen. Then React will “commit” these changes to the DOM, updating the screen. Then React will run your Effects. If your Effect also immediately updates the state, this restarts the whole process from scratch! To avoid the unnecessary render passes, transform all the data at the top level of your components. That code will automatically re-run whenever your props or state change.
+
+- You don’t need Effects to handle user events. For example, let’s say you want to send an /api/buy POST request and show a notification when the user buys a product. In the Buy button click event handler, you know exactly what happened. By the time an Effect runs, you don’t know what the user did (for example, which button was clicked). This is why you’ll usually handle user events in the corresponding event handlers.
+
+You do need Effects to synchronize with external systems. For example, you can write an Effect that keeps a jQuery widget synchronized with the React state. You can also fetch data with Effects: for example, you can synchronize the search results with the current search query. Keep in mind that modern frameworks provide more efficient built-in data fetching mechanisms than writing Effects directly in your components.
+
+To help you gain the right intuition, let’s look at some common concrete examples!
+
+### Updating state based on props or state
+
+Suppose you have a component with two state variables: firstName and lastName. You want to calculate a fullName from them by concatenating them. Moreover, you’d like fullName to update whenever firstName or lastName change. Your first instinct might be to add a fullName state variable and update it in an Effect:
+
+---
+
+[S3]
+Title: Synchronizing with Effects
+Section: What are Effects and how are they different from events? (part 3)
+URL: https://react.dev/learn/synchronizing-with-effects
+Content:
+Effects let you specify side effects that are caused by rendering itself, rather than by a particular event. Sending a message in the chat is an event because it is directly caused by the user clicking a specific button. However, setting up a server connection is an Effect because it should happen no matter which interaction caused the component to appear. Effects run at the end of a commit after the screen updates. This is a good time to synchronize the React components with some external system (like network or a third-party library).
+
+### Note
+
+Here and later in this text, capitalized “Effect” refers to the React-specific definition above, i.e. a side effect caused by rendering. To refer to the broader programming concept, we’ll say “side effect”.
+
+## You might not need an Effect
+
+Don’t rush to add Effects to your components. Keep in mind that Effects are typically used to “step out” of your React code and synchronize with some external system. This includes browser APIs, third-party widgets, network, and so on. If your Effect only adjusts some state based on other state, you might not need an Effect.
+
+## How to write an Effect
+
+To write an Effect, follow these three steps:
+
+- Declare an Effect. By default, your Effect will run after every commit.
+
+- Specify the Effect dependencies. Most Effects should only re-run when needed rather than after every render. For example, a fade-in animation should only trigger when a component appears. Connecting and disconnecting to a chat room should only happen when the component appears and disappears, or when the chat room changes. You will learn how to control this by specifying dependencies.
+
+- Add cleanup if needed. Some Effects need to specify how to stop, undo, or clean up whatever they were doing. For example, “connect” needs “disconnect”, “subscribe” needs “unsubscribe”, and “fetch” needs either “cancel” or “ignore”. You will learn how to do this by returning a cleanup function.
+
+---
+
+[S4]
+Title: Synchronizing with Effects
+Section: What are Effects and how are they different from events? (part 1)
+URL: https://react.dev/learn/synchronizing-with-effects
+Content:
+# Synchronizing with Effects
+
+Some components need to synchronize with external systems. For example, you might want to control a non-React component based on the React state, set up a server connection, or send an analytics log when a component appears on the screen. Effects let you run some code after rendering so that you can synchronize your component with some system outside of React.
+
+### You will learn
+
+- What Effects are
+
+- How Effects are different from events
+
+- How to declare an Effect in your component
+
+- How to skip re-running an Effect unnecessarily
+
+- Why Effects run twice in development and how to fix them
+
+## What are Effects and how are they different from events?
+
+Before getting to Effects, you need to be familiar with two types of logic inside React components:
+
+- Rendering code (introduced in Describing the UI) lives at the top level of your component. This is where you take the props and state, transform them, and return the JSX you want to see on the screen. Rendering code must be pure. Like a math formula, it should only calculate the result, but not do anything else.
+
+Rendering code (introduced in Describing the UI) lives at the top level of your component. This is where you take the props and state, transform them, and return the JSX you want to see on the screen. Rendering code must be pure. Like a math formula, it should only calculate the result, but not do anything else.
+
+- Event handlers (introduced in Adding Interactivity) are nested functions inside your components that do things rather than just calculate them. An event handler might update an input field, submit an HTTP POST request to buy a product, or navigate the user to another screen. Event handlers contain “side effects” (they change the program’s state) caused by a specific user action (for example, a button click or typing).","Based on the provided documentation, you do not need an Effect to transform data or derive a value for rendering; instead, you should transform all data at the top level of your components so that it automatically re-runs when props or state change [S2]. 
+
+An Effect is appropriate when you need to ""step out"" of your React code to **synchronize with an external system** [S3, S4]. Examples of when an Effect is appropriate include:
+* Synchronizing with external systems like browser APIs, third-party widgets (e.g., keeping a jQuery widget synchronized with React state), or the network [S2, S3].
+* Fetching data (such as synchronizing search results with a search query) [S2].
+* Setting up a server connection [S1, S4].
+* Sending an analytics log when a component appears on the screen [S4].
+* Controlling a non-React component based on React state [S4].
+
+*Note: The provided excerpts do not contain further details on other specific scenarios for deriving values, but they explicitly state that transforming data for rendering should be done at the top level of components rather than inside an Effect [S2].*",,,,,,,
+react-effects-001,budget-blind-b,React,When is an Effect appropriate instead of deriving a value during rendering?,Effects synchronize React components with external systems. | Derived values generally do not require an Effect. | Unnecessary Effects add extra render work and complexity.,"[S1]
+Title: Synchronizing with Effects
+Section: What are Effects and how are they different from events? (part 2)
+URL: https://react.dev/learn/synchronizing-with-effects
+Content:
+Rendering code (introduced in Describing the UI) lives at the top level of your component. This is where you take the props and state, transform them, and return the JSX you want to see on the screen. Rendering code must be pure. Like a math formula, it should only calculate the result, but not do anything else.
+
+- Event handlers (introduced in Adding Interactivity) are nested functions inside your components that do things rather than just calculate them. An event handler might update an input field, submit an HTTP POST request to buy a product, or navigate the user to another screen. Event handlers contain “side effects” (they change the program’s state) caused by a specific user action (for example, a button click or typing).
+
+Event handlers (introduced in Adding Interactivity) are nested functions inside your components that do things rather than just calculate them. An event handler might update an input field, submit an HTTP POST request to buy a product, or navigate the user to another screen. Event handlers contain “side effects” (they change the program’s state) caused by a specific user action (for example, a button click or typing).
+
+Sometimes this isn’t enough. Consider a ChatRoom component that must connect to the chat server whenever it’s visible on the screen. Connecting to a server is not a pure calculation (it’s a side effect) so it can’t happen during rendering. However, there is no single particular event like a click that causes ChatRoom to be displayed.
+
+Effects let you specify side effects that are caused by rendering itself, rather than by a particular event. Sending a message in the chat is an event because it is directly caused by the user clicking a specific button. However, setting up a server connection is an Effect because it should happen no matter which interaction caused the component to appear. Effects run at the end of a commit after the screen updates. This is a good time to synchronize the React components with some external system (like network or a third-party library).
+
+---
+
+[S2]
+Title: You Might Not Need an Effect
+Section: How to remove unnecessary Effects (part 2)
+URL: https://react.dev/learn/you-might-not-need-an-effect
+Content:
+- You don’t need Effects to transform data for rendering. For example, let’s say you want to filter a list before displaying it. You might feel tempted to write an Effect that updates a state variable when the list changes. However, this is inefficient. When you update the state, React will first call your component functions to calculate what should be on the screen. Then React will “commit” these changes to the DOM, updating the screen. Then React will run your Effects. If your Effect also immediately updates the state, this restarts the whole process from scratch! To avoid the unnecessary render passes, transform all the data at the top level of your components. That code will automatically re-run whenever your props or state change.
+
+- You don’t need Effects to handle user events. For example, let’s say you want to send an /api/buy POST request and show a notification when the user buys a product. In the Buy button click event handler, you know exactly what happened. By the time an Effect runs, you don’t know what the user did (for example, which button was clicked). This is why you’ll usually handle user events in the corresponding event handlers.
+
+You do need Effects to synchronize with external systems. For example, you can write an Effect that keeps a jQuery widget synchronized with the React state. You can also fetch data with Effects: for example, you can synchronize the search results with the current search query. Keep in mind that modern frameworks provide more efficient built-in data fetching mechanisms than writing Effects directly in your components.
+
+To help you gain the right intuition, let’s look at some common concrete examples!
+
+### Updating state based on props or state
+
+Suppose you have a component with two state variables: firstName and lastName. You want to calculate a fullName from them by concatenating them. Moreover, you’d like fullName to update whenever firstName or lastName change. Your first instinct might be to add a fullName state variable and update it in an Effect:
+
+---
+
+[S3]
+Title: Synchronizing with Effects
+Section: What are Effects and how are they different from events? (part 3)
+URL: https://react.dev/learn/synchronizing-with-effects
+Content:
+Effects let you specify side effects that are caused by rendering itself, rather than by a particular event. Sending a message in the chat is an event because it is directly caused by the user clicking a specific button. However, setting up a server connection is an Effect because it should happen no matter which interaction caused the component to appear. Effects run at the end of a commit after the screen updates. This is a good time to synchronize the React components with some external system (like network or a third-party library).
+
+### Note
+
+Here and later in this text, capitalized “Effect” refers to the React-specific definition above, i.e. a side effect caused by rendering. To refer to the broader programming concept, we’ll say “side effect”.
+
+## You might not need an Effect
+
+Don’t rush to add Effects to your components. Keep in mind that Effects are typically used to “step out” of your React code and synchronize with some external system. This includes browser APIs, third-party widgets, network, and so on. If your Effect only adjusts some state based on other state, you might not need an Effect.
+
+## How to write an Effect
+
+To write an Effect, follow these three steps:
+
+- Declare an Effect. By default, your Effect will run after every commit.
+
+- Specify the Effect dependencies. Most Effects should only re-run when needed rather than after every render. For example, a fade-in animation should only trigger when a component appears. Connecting and disconnecting to a chat room should only happen when the component appears and disappears, or when the chat room changes. You will learn how to control this by specifying dependencies.
+
+- Add cleanup if needed. Some Effects need to specify how to stop, undo, or clean up whatever they were doing. For example, “connect” needs “disconnect”, “subscribe” needs “unsubscribe”, and “fetch” needs either “cancel” or “ignore”. You will learn how to do this by returning a cleanup function.
+
+---
+
+[S4]
+Title: Synchronizing with Effects
+Section: What are Effects and how are they different from events? (part 1)
+URL: https://react.dev/learn/synchronizing-with-effects
+Content:
+# Synchronizing with Effects
+
+Some components need to synchronize with external systems. For example, you might want to control a non-React component based on the React state, set up a server connection, or send an analytics log when a component appears on the screen. Effects let you run some code after rendering so that you can synchronize your component with some system outside of React.
+
+### You will learn
+
+- What Effects are
+
+- How Effects are different from events
+
+- How to declare an Effect in your component
+
+- How to skip re-running an Effect unnecessarily
+
+- Why Effects run twice in development and how to fix them
+
+## What are Effects and how are they different from events?
+
+Before getting to Effects, you need to be familiar with two types of logic inside React components:
+
+- Rendering code (introduced in Describing the UI) lives at the top level of your component. This is where you take the props and state, transform them, and return the JSX you want to see on the screen. Rendering code must be pure. Like a math formula, it should only calculate the result, but not do anything else.
+
+Rendering code (introduced in Describing the UI) lives at the top level of your component. This is where you take the props and state, transform them, and return the JSX you want to see on the screen. Rendering code must be pure. Like a math formula, it should only calculate the result, but not do anything else.
+
+- Event handlers (introduced in Adding Interactivity) are nested functions inside your components that do things rather than just calculate them. An event handler might update an input field, submit an HTTP POST request to buy a product, or navigate the user to another screen. Event handlers contain “side effects” (they change the program’s state) caused by a specific user action (for example, a button click or typing).","Based on the provided documentation, you do not need an Effect to transform data or derive a value for rendering; instead, you should transform all data at the top level of your components so that it automatically re-runs when props or state change [S2]. 
+
+An Effect is appropriate when you need to ""step out"" of your React code to **synchronize with an external system** [S3, S4]. Examples of when an Effect is appropriate include:
+* Synchronizing with browser APIs, third-party widgets (such as keeping a jQuery widget synchronized with React state), or the network [S2, S3].
+* Setting up a server connection [S1, S4].
+* Fetching data (such as synchronizing search results with the current search query) [S2].
+* Sending an analytics log when a component appears on the screen [S4].
+* Controlling a non-React component based on the React state [S4].
+
+*Note: The provided excerpts do not explicitly contrast ""deriving a value"" with ""Effects"" in a single sentence, but they clearly state that data transformation for rendering should be done at the top level of components without Effects, reserving Effects strictly for external synchronization [S2, S3].*",,,,,,,
+c-standard-purpose-001,budget-blind-a,C,What purpose does the C11 N1570 draft state for the C language standard?,"It specifies the form and interpretation of C programs. | Its goals include portability, reliability, maintainability, and efficient execution.","[S1]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: ABSTRACT
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+## ABSTRACT
+
+(Cover sheet to be provided by ISO Secretariat.)
+
+This International Standard specifies the form and establishes the interpretation of programs expressed in the programming language C. Its purpose is to promote portability, reliability, maintainability, and efficient execution of C language programs on a variety of computing systems.
+
+Clauses are included that detail the C language itself and the contents of the C language execution library. Annexes summarize aspects of both of them, and enumerate factors that influence the portability of C programs.
+
+Although this International Standard is intended to guide knowledgeable C language programmers as well as implementors of C language translation systems, the document itself is not designed to serve as a tutorial.
+
+Recipients of this draft are invited to submit, with their comments, notification of any relevant patent rights of which they are aware and to provide supporting documentation.
+
+Changes from the previous draft (N1539) are indicated by ''diff marks'' in the right margin: deleted text is marked with '' ∗ '', new or changed text with '' ''.
+
+ISO/IEC 9899:201x
+
+---
+
+[S2]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: 1.  Scope
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+## 1. Scope
+
+1 This International Standard specifies the form and establishes the interpretation of programs written in the C programming language. 1) It specifies
+
+the representation of C programs;
+
+the syntax and constraints of the C language;
+
+the semantic rules for interpreting C programs;
+
+the representation of input data to be processed by C programs;
+
+the representation of output data produced by C programs;
+
+the restrictions and limits imposed by a conforming implementation of C.
+
+2 This International Standard does not specify
+
+the mechanism by which C programs are transformed for use by a data-processing system;
+
+the mechanism by which C programs are invoked for use by a data-processing system;
+
+the mechanism by which input data are transformed for use by a C program;
+
+the mechanism by which output data are transformed after being produced by a C program;
+
+the size or complexity of a program and its data that will exceed the capacity of any specific data-processing system or the capacity of a particular processor;
+
+all minimal requirements of a data-processing system that is capable of supporting a conforming implementation.
+
+1) This International Standard is designed to promote the portability of C programs among a variety of data-processing systems. It is intended for use by implementors and programmers.
+
+---
+
+[S3]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: ISO/IEC 9899:201x Committee Draft - April 12, 2011 N1570
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+## ISO/IEC 9899:201x Committee Draft - April 12, 2011 N1570
+
+---
+
+[S4]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: Programming languages - C
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+## Programming languages - C","Based on the provided documentation, the stated purpose of the C language standard (referred to as ""this International Standard"") is to:
+
+* Promote portability, reliability, maintainability, and efficient execution of C language programs on a variety of computing systems [S1].
+* Promote the portability of C programs among a variety of data-processing systems [S2].
+
+*Note: The provided excerpts are complete and unambiguous regarding the stated purpose of the standard.*",,,,,,,
+c-standard-purpose-001,budget-blind-b,C,What purpose does the C11 N1570 draft state for the C language standard?,"It specifies the form and interpretation of C programs. | Its goals include portability, reliability, maintainability, and efficient execution.","[S1]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: ABSTRACT
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+## ABSTRACT
+
+(Cover sheet to be provided by ISO Secretariat.)
+
+This International Standard specifies the form and establishes the interpretation of programs expressed in the programming language C. Its purpose is to promote portability, reliability, maintainability, and efficient execution of C language programs on a variety of computing systems.
+
+Clauses are included that detail the C language itself and the contents of the C language execution library. Annexes summarize aspects of both of them, and enumerate factors that influence the portability of C programs.
+
+Although this International Standard is intended to guide knowledgeable C language programmers as well as implementors of C language translation systems, the document itself is not designed to serve as a tutorial.
+
+Recipients of this draft are invited to submit, with their comments, notification of any relevant patent rights of which they are aware and to provide supporting documentation.
+
+Changes from the previous draft (N1539) are indicated by ''diff marks'' in the right margin: deleted text is marked with '' ∗ '', new or changed text with '' ''.
+
+ISO/IEC 9899:201x
+
+---
+
+[S2]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: 1.  Scope
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+## 1. Scope
+
+1 This International Standard specifies the form and establishes the interpretation of programs written in the C programming language. 1) It specifies
+
+the representation of C programs;
+
+the syntax and constraints of the C language;
+
+the semantic rules for interpreting C programs;
+
+the representation of input data to be processed by C programs;
+
+the representation of output data produced by C programs;
+
+the restrictions and limits imposed by a conforming implementation of C.
+
+2 This International Standard does not specify
+
+the mechanism by which C programs are transformed for use by a data-processing system;
+
+the mechanism by which C programs are invoked for use by a data-processing system;
+
+the mechanism by which input data are transformed for use by a C program;
+
+the mechanism by which output data are transformed after being produced by a C program;
+
+the size or complexity of a program and its data that will exceed the capacity of any specific data-processing system or the capacity of a particular processor;
+
+all minimal requirements of a data-processing system that is capable of supporting a conforming implementation.
+
+1) This International Standard is designed to promote the portability of C programs among a variety of data-processing systems. It is intended for use by implementors and programmers.
+
+---
+
+[S3]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: ISO/IEC 9899:201x Committee Draft - April 12, 2011 N1570
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+## ISO/IEC 9899:201x Committee Draft - April 12, 2011 N1570
+
+---
+
+[S4]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: Programming languages - C
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+## Programming languages - C","Based on the provided documentation, the stated purpose of the C language standard (referred to as ""this International Standard"") is to:
+
+* Promote portability, reliability, maintainability, and efficient execution of C language programs on a variety of computing systems [S1].
+* Promote the portability of C programs among a variety of data-processing systems [S2].
+
+*Note: The provided excerpts are complete and unambiguous regarding the stated purpose of the standard.*",,,,,,,
+java-spec-release-001,budget-blind-a,Java,Which Java release and specification status are identified by the Java Language Specification in this corpus?,Java SE 26 edition and version 26. | Status is Final Release. | Release date is March 2026.,"[S1]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: Java SE 26 Edition
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+## Java SE 26 Edition
+
+James Gosling
+
+Bill Joy Guy Steele Gilad Bracha Alex Buckley Daniel Smith
+
+Gavin Bierman
+
+Specification: JSR-401 Java SE 26
+
+Version: 26
+
+Status: Final Release
+
+Release: March 2026
+
+Copyright © 1997, 2026, Oracle America, Inc. All rights reserved.
+
+The Specification provided herein is provided to you only under the Limited License Grant included herein as Appendix A. Please see Appendix A, Limited License Grant .
+
+---
+
+[S2]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: Appendix A. Limited License Grant
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+## Appendix A. Limited License Grant
+
+ORACLE AMERICA, INC. IS WILLING TO LICENSE THIS SPECIFICATION TO YOU ONLY UPON THE CONDITION THAT YOU ACCEPT ALL OF THE TERMS CONTAINED IN THIS AGREEMENT (""AGREEMENT""). PLEASE READ THE TERMS AND CONDITIONS OF THIS AGREEMENT CAREFULLY.
+
+Specification: JSR-401 Java SE 26
+
+Version: 26
+
+Status: Final Release
+
+Release: March 2026
+
+Copyright © 1997, 2026, Oracle America, Inc. All rights reserved.
+
+---
+
+[S3]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: The Java ®  Language Specification
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+## The Java ® Language Specification
+
+---
+
+[S4]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: 1.5.2 Current Preview Language Features
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+## 1.5.2 Current Preview Language Features
+
+Java SE 26 defines one preview language feature:
+
+Primitive Types in Patterns, instanceof , and switch
+
+The standalone documents which specify this preview feature are available at the web site which hosts this edition of The Java ® Language Specification .","Based on the provided documentation, the Java release and specification status are identified as follows:
+
+* **Java Release:** Java SE 26 (specifically, Version 26, released in March 2026) [S1, S2].
+* **Specification Status:** Final Release [S1, S2]. 
+
+The specification is also identified as JSR-401 Java SE 26 [S1, S2].",,,,,,,
+java-spec-release-001,budget-blind-b,Java,Which Java release and specification status are identified by the Java Language Specification in this corpus?,Java SE 26 edition and version 26. | Status is Final Release. | Release date is March 2026.,"[S1]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: Java SE 26 Edition
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+## Java SE 26 Edition
+
+James Gosling
+
+Bill Joy Guy Steele Gilad Bracha Alex Buckley Daniel Smith
+
+Gavin Bierman
+
+Specification: JSR-401 Java SE 26
+
+Version: 26
+
+Status: Final Release
+
+Release: March 2026
+
+Copyright © 1997, 2026, Oracle America, Inc. All rights reserved.
+
+The Specification provided herein is provided to you only under the Limited License Grant included herein as Appendix A. Please see Appendix A, Limited License Grant .
+
+---
+
+[S2]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: Appendix A. Limited License Grant
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+## Appendix A. Limited License Grant
+
+ORACLE AMERICA, INC. IS WILLING TO LICENSE THIS SPECIFICATION TO YOU ONLY UPON THE CONDITION THAT YOU ACCEPT ALL OF THE TERMS CONTAINED IN THIS AGREEMENT (""AGREEMENT""). PLEASE READ THE TERMS AND CONDITIONS OF THIS AGREEMENT CAREFULLY.
+
+Specification: JSR-401 Java SE 26
+
+Version: 26
+
+Status: Final Release
+
+Release: March 2026
+
+Copyright © 1997, 2026, Oracle America, Inc. All rights reserved.
+
+---
+
+[S3]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: The Java ®  Language Specification
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+## The Java ® Language Specification
+
+---
+
+[S4]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: 1.5.2 Current Preview Language Features
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+## 1.5.2 Current Preview Language Features
+
+Java SE 26 defines one preview language feature:
+
+Primitive Types in Patterns, instanceof , and switch
+
+The standalone documents which specify this preview feature are available at the web site which hosts this edition of The Java ® Language Specification .","Based on the provided documentation, the Java Language Specification identifies the following:
+
+* **Java Release:** Java SE 26 (specifically, March 2026) [S1, S2].
+* **Specification Status:** Final Release [S1, S2].
+* **Specification/Version:** JSR-401 Java SE 26, Version 26 [S1, S2].",,,,,,,
+java-ods-dual-array-deque-001,budget-blind-a,Java,"What balance invariant does DualArrayDeque maintain, and why does its occasional O(n) rebalancing remain O(1) amortized per update?","Each side contains at least n/4 elements except for the very small case. | Rebalancing restores the two sides to floor(n/2) and ceil(n/2) elements. | A rebalance costs O(n), but sufficiently many updates separate rebalances, producing O(1) amortized balancing cost.","[S1]
+Title: Open Data Structures (Java Edition)
+Section: 2.5.1 Balancing (part 1)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+## 2.5.1 Balancing
+
+Finally, we study the balance () operation performed by add ( i , x ) and remove ( i ). This operation is used to ensure that neither front nor back gets too big (or too small). It ensures that, unless there are fewer than 2 elements, each of front and back contain at least n / 4 elements. If this is not the case, then it moves elements between them so that front and back contain exactly ⌊ n / 2 ⌋ elements and ⌈ n / 2 ⌉ elements, respectively.
+
+DualArrayDeque
+
+void balance() { int n = size(); if (3*front.size() < back.size()) { int s = n/2 -front.size(); List<T> l1 = newStack(); List<T> l2 = newStack(); l1.addAll(back.subList(0,s)); Collections.reverse(l1); l1.addAll(front); l2.addAll(back.subList(s, back.size())); front = l1; back = l2; } else if (3*back.size() < front.size()) {
+
+int s = front.size() - n/2; List<T> l1 = newStack(); List<T> l2 = newStack(); l1.addAll(front.subList(s, front.size())); l2.addAll(front.subList(0, s)); Collections.reverse(l2); l2.addAll(back); front = l1; back = l2; } }
+
+There is not much to analyze. If the balance () operation does rebalancing, then it moves Θ( n ) elements and this takes O ( n ) time. This is bad, since balance () is called with each call to add ( i , x ) and remove ( i ). However, the following lemma shows that, on average, balance () only spends a constant amount of time per operation.
+
+Lemma 2.2. If an empty DualArrayDeque is created and any sequence of m ≥ 1 calls to add ( i , x ) and remove ( i ) are performed, then the total time spent during all calls to balance () is O ( m ) .
+
+Proof. We will show that, if balance () is forced to shift elements, then the number of add ( i , x ) and remove ( i ) operations since the last time balance () shifted any elements is at least n / 2 -1. As in the proof of Lemma 2.1, this is sufficient to prove that the total time spent by balance () is O ( m ).
+
+---
+
+[S2]
+Title: Open Data Structures (Java Edition)
+Section: 2.5.1 Balancing (part 2)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+Lemma 2.2. If an empty DualArrayDeque is created and any sequence of m ≥ 1 calls to add ( i , x ) and remove ( i ) are performed, then the total time spent during all calls to balance () is O ( m ) .
+
+Proof. We will show that, if balance () is forced to shift elements, then the number of add ( i , x ) and remove ( i ) operations since the last time balance () shifted any elements is at least n / 2 -1. As in the proof of Lemma 2.1, this is sufficient to prove that the total time spent by balance () is O ( m ).
+
+We will perform our analysis using the potential method . Define the potential of the DualArrayDeque as
+
+Φ = | front . size () -back . size () | .
+
+The interesting thing about this potential is that a call to add ( i , x ) or remove ( i ) that does not do any balancing can increase the potential by at most 1.
+
+Observe that, immediately after a call to balance () that shifts elements, the potential, Φ 0 , is at most 1, since
+
+Consider the situation immediately before a call to balance () that shifts elements and suppose, without loss of generality, that balance () is shifting elements because 3 front . size () <
+
+back . size (). Notice that, in this case,
+
+Furthermore, the potential at this point in time is
+
+Therefore, the number of calls to add ( i , x ) or remove ( i ) since the last time balance () shifted elements is at least Φ 1 -Φ 0 > n / 2 -1. This completes the proof.
+
+---
+
+[S3]
+Title: Open Data Structures (Java Edition)
+Section: 2.5 DualArrayDeque : Building a Deque from Two Stacks (part 3)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+Figure 2.4: A sequence of add ( i , x ) and remove ( i ) operations on a DualArrayDeque . Arrows denote elements being copied. Operations that result in a rebalancing by balance () are marked with an asterisk.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+Figure 2.4: A sequence of add ( i , x ) and remove ( i ) operations on a DualArrayDeque . Arrows denote elements being copied. Operations that result in a rebalancing by balance () are marked with an asterisk.
+
+The add ( i , x ) method performs rebalancing of the two ArrayStack s front and back , by calling the balance () method. The implementation of balance () is described below, but for now it is sufficient to know that balance () ensures that, unless size () < 2, front . size () and back . size () do not differ by more than a factor of 3. In particular, 3 · front . size () ≥ back . size () and 3 · back . size () ≥ front . size ().
+
+Next we analyze the cost of add ( i , x ), ignoring the cost of the balance () operation. If i < front . size (), then add ( i , x ) becomes front . add ( front . size () -i -1 , x ). Since front is an ArrayStack , the cost of this is
+
+On the other hand, if i ≥ front . size (), then add ( i , x ) becomes back . add ( i -front . size () , x ). The cost of this is
+
+Notice that the first case (2.1) occurs when i < n / 4. The second case (2.2) occurs when i ≥ 3 n / 4. When n / 4 ≤ i < 3 n / 4, we can't be sure whether the operation affects front or back , but in either case, the operation takes O ( n ) = O ( i ) = O ( n -i ) time, since i ≥ n / 4 and n -i > n / 4. Summarizing the situation, we have
+
+---
+
+[S4]
+Title: Open Data Structures (Java Edition)
+Section: 2.5 DualArrayDeque : Building a Deque from Two Stacks (part 1)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+## 2.5 DualArrayDeque : Building a Deque from Two Stacks
+
+Next, we present another data structure, the DualArrayDeque that achieves the same performance bounds as an ArrayDeque by using two ArrayStack s. Although the asymptotic performance of the DualArrayDeque is no better than that of the ArrayDeque , it is still worth studying since it offers a good example of how to make a sophisticated data structure by combining two simpler data structures.
+
+A DualArrayDeque represents a list using two ArrayStack s. Recall that an ArrayStack is fast when the operations on it modify elements near the end. A DualArrayDeque places two ArrayStack s, called front and back , back-to-back so that operations are fast at either end.
+
+DualArrayDeque List<T> front; List<T> back;
+
+A DualArrayDeque does not explicitly store the number, n , of elements it contains. It doesn't need to, since it contains n = front . size ()+ back . size () elements. Nevertheless, when analyzing the DualArrayDeque we will still use n to denote the number of elements it contains.
+
+DualArrayDeque int size() { return front.size() + back.size(); }
+
+The front ArrayStack contains list elements with indices 0 , . . . , front . size () -1, but stores them in reverse order. The back ArrayStack contains list elements with indices front . size () , . . . , size () -1 in the normal order. In this way, get ( i ) and set ( i , x ) translate into appropriate calls to get ( i ) or set ( i , x ) on either front or back , which take O (1) time per operation.
+
+DualArrayDeque T get(int i) { if (i < front.size()) { return front.get(front.size()-i-1); } else { return back.get(i-front.size()); } } T set(int i, T x) { if (i < front.size()) { return front.set(front.size()-i-1, x); } else { return back.set(i-front.size(), x); } }","Based on the provided documentation, here are the details regarding the balance invariant and the amortized cost of rebalancing in a `DualArrayDeque`:
+
+### 1. Balance Invariant
+The `DualArrayDeque` maintains a balance invariant to ensure that neither the `front` nor the `back` stack gets too big or too small [S1]. Specifically:
+* Unless there are fewer than 2 elements, each of `front` and `back` must contain at least $n / 4$ elements [S1].
+* In other words, `front.size()` and `back.size()` do not differ by more than a factor of 3 [S3]. This is expressed as:
+  $$3 \cdot \text{front.size()} \ge \text{back.size()}$$ 
+  and 
+  $$3 \cdot \text{back.size()} \ge \text{front.size()}$$ [S3].
+
+If this invariant is violated, the `balance()` operation is triggered to move elements so that `front` and `back` contain exactly $\lfloor n / 2 \rfloor$ and $\lceil n / 2 \rceil$ elements, respectively [S1].
+
+### 2. Why the Occasional $O(n)$ Rebalancing remains $O(1)$ Amortized
+Although a rebalancing step moves $\Theta(n)$ elements and takes $O(n)$ time, it occurs infrequently enough that the average time spent per operation is constant ($O(1)$ amortized) [S1]. 
+
+This is proven using the potential method with the potential function defined as:
+$$\Phi = | \text{front.size()} - \text{back.size()} |$$ [S2].
+
+* **Low Potential After Balancing:** Immediately after a `balance()` operation that shifts elements, the potential $\Phi_0$ is at most 1 (since the elements are split as evenly as possible) [S1, S2].
+* **High Potential Before Balancing:** Immediately before a `balance()` operation is forced to shift elements, the difference between the sizes of the two stacks is large [S2].
+* **Sufficient Operations Between Rebalances:** Because a single `add(i, x)` or `remove(i)` operation that does not trigger balancing can increase the potential by at most 1, the number of operations required to build up the potential from $\Phi_0$ to the threshold $\Phi_1$ is at least $n / 2 - 1$ [S2]. 
+
+Since at least $n / 2 - 1$ operations must occur between any two consecutive rebalancing steps, the $O(n)$ cost of a rebalance is amortized over $\Omega(n)$ updates, resulting in an amortized cost of $O(1)$ per update [S1, S2].
+
+***
+
+*Note: The proof in the provided text contains some truncated sentences (e.g., ""the potential, $\Phi_0$, is at most 1, since"" and ""Notice that, in this case,"") [S2], but the core mathematical argument that at least $n/2 - 1$ operations must occur between rebalances is fully stated [S1, S2].*",,,,,,,
+java-ods-dual-array-deque-001,budget-blind-b,Java,"What balance invariant does DualArrayDeque maintain, and why does its occasional O(n) rebalancing remain O(1) amortized per update?","Each side contains at least n/4 elements except for the very small case. | Rebalancing restores the two sides to floor(n/2) and ceil(n/2) elements. | A rebalance costs O(n), but sufficiently many updates separate rebalances, producing O(1) amortized balancing cost.","[S1]
+Title: Open Data Structures (Java Edition)
+Section: 2.5.1 Balancing (part 1)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+## 2.5.1 Balancing
+
+Finally, we study the balance () operation performed by add ( i , x ) and remove ( i ). This operation is used to ensure that neither front nor back gets too big (or too small). It ensures that, unless there are fewer than 2 elements, each of front and back contain at least n / 4 elements. If this is not the case, then it moves elements between them so that front and back contain exactly ⌊ n / 2 ⌋ elements and ⌈ n / 2 ⌉ elements, respectively.
+
+DualArrayDeque
+
+void balance() { int n = size(); if (3*front.size() < back.size()) { int s = n/2 -front.size(); List<T> l1 = newStack(); List<T> l2 = newStack(); l1.addAll(back.subList(0,s)); Collections.reverse(l1); l1.addAll(front); l2.addAll(back.subList(s, back.size())); front = l1; back = l2; } else if (3*back.size() < front.size()) {
+
+int s = front.size() - n/2; List<T> l1 = newStack(); List<T> l2 = newStack(); l1.addAll(front.subList(s, front.size())); l2.addAll(front.subList(0, s)); Collections.reverse(l2); l2.addAll(back); front = l1; back = l2; } }
+
+There is not much to analyze. If the balance () operation does rebalancing, then it moves Θ( n ) elements and this takes O ( n ) time. This is bad, since balance () is called with each call to add ( i , x ) and remove ( i ). However, the following lemma shows that, on average, balance () only spends a constant amount of time per operation.
+
+Lemma 2.2. If an empty DualArrayDeque is created and any sequence of m ≥ 1 calls to add ( i , x ) and remove ( i ) are performed, then the total time spent during all calls to balance () is O ( m ) .
+
+Proof. We will show that, if balance () is forced to shift elements, then the number of add ( i , x ) and remove ( i ) operations since the last time balance () shifted any elements is at least n / 2 -1. As in the proof of Lemma 2.1, this is sufficient to prove that the total time spent by balance () is O ( m ).
+
+---
+
+[S2]
+Title: Open Data Structures (Java Edition)
+Section: 2.5.1 Balancing (part 2)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+Lemma 2.2. If an empty DualArrayDeque is created and any sequence of m ≥ 1 calls to add ( i , x ) and remove ( i ) are performed, then the total time spent during all calls to balance () is O ( m ) .
+
+Proof. We will show that, if balance () is forced to shift elements, then the number of add ( i , x ) and remove ( i ) operations since the last time balance () shifted any elements is at least n / 2 -1. As in the proof of Lemma 2.1, this is sufficient to prove that the total time spent by balance () is O ( m ).
+
+We will perform our analysis using the potential method . Define the potential of the DualArrayDeque as
+
+Φ = | front . size () -back . size () | .
+
+The interesting thing about this potential is that a call to add ( i , x ) or remove ( i ) that does not do any balancing can increase the potential by at most 1.
+
+Observe that, immediately after a call to balance () that shifts elements, the potential, Φ 0 , is at most 1, since
+
+Consider the situation immediately before a call to balance () that shifts elements and suppose, without loss of generality, that balance () is shifting elements because 3 front . size () <
+
+back . size (). Notice that, in this case,
+
+Furthermore, the potential at this point in time is
+
+Therefore, the number of calls to add ( i , x ) or remove ( i ) since the last time balance () shifted elements is at least Φ 1 -Φ 0 > n / 2 -1. This completes the proof.
+
+---
+
+[S3]
+Title: Open Data Structures (Java Edition)
+Section: 2.5 DualArrayDeque : Building a Deque from Two Stacks (part 3)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+Figure 2.4: A sequence of add ( i , x ) and remove ( i ) operations on a DualArrayDeque . Arrows denote elements being copied. Operations that result in a rebalancing by balance () are marked with an asterisk.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+Figure 2.4: A sequence of add ( i , x ) and remove ( i ) operations on a DualArrayDeque . Arrows denote elements being copied. Operations that result in a rebalancing by balance () are marked with an asterisk.
+
+The add ( i , x ) method performs rebalancing of the two ArrayStack s front and back , by calling the balance () method. The implementation of balance () is described below, but for now it is sufficient to know that balance () ensures that, unless size () < 2, front . size () and back . size () do not differ by more than a factor of 3. In particular, 3 · front . size () ≥ back . size () and 3 · back . size () ≥ front . size ().
+
+Next we analyze the cost of add ( i , x ), ignoring the cost of the balance () operation. If i < front . size (), then add ( i , x ) becomes front . add ( front . size () -i -1 , x ). Since front is an ArrayStack , the cost of this is
+
+On the other hand, if i ≥ front . size (), then add ( i , x ) becomes back . add ( i -front . size () , x ). The cost of this is
+
+Notice that the first case (2.1) occurs when i < n / 4. The second case (2.2) occurs when i ≥ 3 n / 4. When n / 4 ≤ i < 3 n / 4, we can't be sure whether the operation affects front or back , but in either case, the operation takes O ( n ) = O ( i ) = O ( n -i ) time, since i ≥ n / 4 and n -i > n / 4. Summarizing the situation, we have
+
+---
+
+[S4]
+Title: Open Data Structures (Java Edition)
+Section: 2.5 DualArrayDeque : Building a Deque from Two Stacks (part 1)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+## 2.5 DualArrayDeque : Building a Deque from Two Stacks
+
+Next, we present another data structure, the DualArrayDeque that achieves the same performance bounds as an ArrayDeque by using two ArrayStack s. Although the asymptotic performance of the DualArrayDeque is no better than that of the ArrayDeque , it is still worth studying since it offers a good example of how to make a sophisticated data structure by combining two simpler data structures.
+
+A DualArrayDeque represents a list using two ArrayStack s. Recall that an ArrayStack is fast when the operations on it modify elements near the end. A DualArrayDeque places two ArrayStack s, called front and back , back-to-back so that operations are fast at either end.
+
+DualArrayDeque List<T> front; List<T> back;
+
+A DualArrayDeque does not explicitly store the number, n , of elements it contains. It doesn't need to, since it contains n = front . size ()+ back . size () elements. Nevertheless, when analyzing the DualArrayDeque we will still use n to denote the number of elements it contains.
+
+DualArrayDeque int size() { return front.size() + back.size(); }
+
+The front ArrayStack contains list elements with indices 0 , . . . , front . size () -1, but stores them in reverse order. The back ArrayStack contains list elements with indices front . size () , . . . , size () -1 in the normal order. In this way, get ( i ) and set ( i , x ) translate into appropriate calls to get ( i ) or set ( i , x ) on either front or back , which take O (1) time per operation.
+
+DualArrayDeque T get(int i) { if (i < front.size()) { return front.get(front.size()-i-1); } else { return back.get(i-front.size()); } } T set(int i, T x) { if (i < front.size()) { return front.set(front.size()-i-1, x); } else { return back.set(i-front.size(), x); } }","Based on the provided documentation, here are the details regarding the balance invariant and the amortized cost of rebalancing in a `DualArrayDeque`:
+
+### 1. Balance Invariant
+The `DualArrayDeque` maintains a balance invariant to ensure that neither the `front` nor the `back` stack gets too big or too small [S1]. Specifically:
+* Unless there are fewer than 2 elements, each of `front` and `back` must contain at least $n / 4$ elements [S1].
+* In other words, `front.size()` and `back.size()` do not differ by more than a factor of 3 [S3]. This is expressed as:
+  $$3 \cdot \text{front.size()} \ge \text{back.size()}$$ 
+  and 
+  $$3 \cdot \text{back.size()} \ge \text{front.size()}$$ [S3].
+
+If this invariant is violated, the `balance()` operation is triggered to move elements so that `front` and `back` contain exactly $\lfloor n / 2 \rfloor$ and $\lceil n / 2 \rceil$ elements, respectively [S1].
+
+### 2. Why the Occasional $O(n)$ Rebalancing remains $O(1)$ Amortized
+Although a rebalancing step moves $\Theta(n)$ elements and takes $O(n)$ time, it occurs infrequently enough that the average time spent per operation is constant ($O(1)$ amortized) [S1]. 
+
+This is proven using the potential method with the potential function defined as:
+$$\Phi = | \text{front.size()} - \text{back.size()} |$$ [S2].
+
+* **Low Potential After Balancing:** Immediately after a `balance()` operation that shifts elements, the potential $\Phi_0$ is at most 1 (since the elements are split as evenly as possible) [S1, S2].
+* **High Potential Before Balancing:** Immediately before a `balance()` operation is forced to shift elements, the difference between the sizes of the two stacks is large [S2].
+* **Sufficient Operations Between Rebalances:** Because a single `add(i, x)` or `remove(i)` operation that does not trigger balancing can increase the potential by at most 1, the number of operations required to build up the potential from $\Phi_0$ to the threshold $\Phi_1$ is at least $n / 2 - 1$ [S2]. 
+
+Since at least $n / 2 - 1$ operations must occur between any two consecutive rebalancing steps, the $O(n)$ cost of a rebalance is amortized over $\Omega(n)$ updates, resulting in an amortized cost of $O(1)$ per update [S1, S2].
+
+***
+
+*Note: The proof in the provided text contains some truncated sentences (e.g., ""the potential, $\Phi_0$, is at most 1, since"" and ""Notice that, in this case,"") [S2], but the core mathematical argument that at least $n/2 - 1$ operations must occur between rebalances is fully stated [S1, S2].*",,,,,,,
+java-ods-red-black-tree-001,budget-blind-a,Java,How does the correspondence with a 2-4 tree establish the height bound for a red-black tree?,Collapsing red nodes transforms the red-black tree into a 2-4 tree. | The black-height property gives equal root-to-leaf length in the transformed tree. | At most one of every two internal nodes on a red-black path is red. | The resulting red-black-tree height is at most 2 log n.,"[S1]
+Title: Open Data Structures (Java Edition)
+Section: 9.2.1 Red-Black Trees and 2-4 Trees (part 2)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+The 2-4 tree T ′ has n +1 leaves that correspond to the n +1 external nodes of the red-black tree. Therefore, this tree has height log( n +1). Now, every root to leaf path in the 2-4 tree corresponds to a path from the root of the red-black tree T to an external node. The first and last node in this path are black and at most one out of every two internal nodes is red, so this path has at most log( n +1) black nodes and at most log( n +1) -1 red nodes. Therefore, the longest path from the root to any internal node in T is at most
+
+Figure 9.5: Every red-black tree has a corresponding 2-4 tree.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+Figure 9.5: Every red-black tree has a corresponding 2-4 tree.
+
+for any n ≥ 1. This proves the most important property of red-black trees:
+
+Lemma 9.2. The height of red-black tree with n nodes is at most 2 log n .
+
+Now that we have seen the relationship between 2-4 trees and red-black trees, it is not hard to believe that we can efficiently maintain a red-black tree while adding and removing elements.
+
+We have already seen that adding an element in a BinarySearchTree can be done by adding a new leaf. Therefore, to implement add ( x ) in a red-black tree we need a method of simulating splitting a degree 5 node in a 2-4 tree. A degree 5 node is represented by a black node that has two red children one of which also has a red child. We can 'split' this node by coloring it red and coloring its two children black. An example of this is shown in Figure 9.6.
+
+Similarly, implementing remove ( x ) requires a method of merging two nodes and borrowing a child from a sibling. Merging two nodes is the inverse of a split (shown in Figure 9.6), and involves coloring two (black) siblings red and coloring their (red) parent black. Borrowing from a sibling is the most complicated of the procedures and involves both rotations and recoloring of nodes.
+
+---
+
+[S2]
+Title: Open Data Structures (Java Edition)
+Section: 9.2.1 Red-Black Trees and 2-4 Trees (part 1)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+## 9.2.1 Red-Black Trees and 2-4 Trees
+
+At first it might seem surprising that a red-black tree can be efficiently updated to maintain the black-height and no-red-edge properties, and it seems unusual to even consider these as useful properties. However, red-black trees were designed to be an efficient simulation of 2-4 trees as binary trees.
+
+Refer to Figure 9.5. Consider any red-black tree, T , having n nodes and perform the following transformation: Remove each red node u and connect u 's two children directly to the (black) parent of u . After this transformation we are left with a tree T ′ having only black nodes.
+
+Every internal node in T ′ has 2, 3, or 4 children: A black node that started out with two black children will still have two black children after this transformation. A black node that started out with one red and one black child will have three children after this transformation. A black node that started out with two red children will have 4 children after this transformation. Furthermore, the black-height property now guarantees that every root-to-leaf path in T ′ has the same length. In other words, T ′ is a 2-4 tree!
+
+The 2-4 tree T ′ has n +1 leaves that correspond to the n +1 external nodes of the red-black tree. Therefore, this tree has height log( n +1). Now, every root to leaf path in the 2-4 tree corresponds to a path from the root of the red-black tree T to an external node. The first and last node in this path are black and at most one out of every two internal nodes is red, so this path has at most log( n +1) black nodes and at most log( n +1) -1 red nodes. Therefore, the longest path from the root to any internal node in T is at most
+
+---
+
+[S3]
+Title: Open Data Structures (Java Edition)
+Section: Red-Black Trees (part 2)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+The first two of these properties already put red-black trees ahead of skiplists, treaps, and scapegoat trees. Skiplists and treaps rely on randomization and their O (log n ) running times are only expected. Scapegoat trees have a guaranteed bound on their height, but add ( x ) and remove ( x ) only run in O (log n ) amortized time. The third property is just icing on the cake. It tells us that that the time needed to add or remove an element x is dwarfed by the time it takes to find x . 1
+
+However, the nice properties of red-black trees come with a price: implementation complexity. Maintaining a bound of 2 log n on the height is not easy. It requires a careful analysis of a number of cases and it requires that the implementation does exactly the right thing in each case. One misplaced rotation or change of color produces a bug that can be very difficult to understand and track down.
+
+1 Note that skiplists and treaps also have this property in the expected sense. See Exercise 4.1 and Exercise 7.3.
+
+Figure 9.1: A 2-4 tree of height 3.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+Figure 9.1: A 2-4 tree of height 3.
+
+Rather than jumping directly into the implementation of red-black trees, we will first provide some background on a related data structure: 2-4 trees. This will give some insight into how red-black trees were discovered and why efficiently maintaining red-black trees is even possible.
+
+---
+
+[S4]
+Title: Open Data Structures (Java Edition)
+Section: 9.2 RedBlackTree : A Simulated 2-4 Tree (part 1)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+## 9.2 RedBlackTree : A Simulated 2-4 Tree
+
+A red-black tree is a binary search tree in which each node, u , has a color which is either red or black . Red is represented by the value 0 and black by the value 1.
+
+RedBlackTree class Node<T> extends BinarySearchTree.BSTNode<Node<T>,T> { byte color; }
+
+Before and after any operation on a red-black tree, the following two properties are satisfied. Each property is defined both in terms of the colors red and black, and in terms of the numeric values 0 and 1.
+
+Property 9.3 (black-height) . There are the same number of black nodes on every root to leaf path. (The sum of the colors on any root to leaf path is the same.)
+
+Property 9.4 (no-red-edge) . No two red nodes are adjacent. (For any node u , except the root, u . color + u . parent . color 1.)
+
+≥
+
+Notice that we can always color the root, r , of a red-black tree black without violating either of these two properties, so we will assume that the root is black, and the algorithms for updating a red-black tree will maintain this. Another trick that simplifies red-black trees is to treat the external nodes (represented by nil ) as black nodes. This way, every real node, u , of a red-black tree has exactly two children, each with a well-defined color. An example of a red-black tree is shown in Figure 9.4.
+
+Figure 9.3: Removing a leaf from a 2-4 Tree. This process goes all the way to the root because all of u 's ancestors and their siblings have degree 2.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+Figure 9.3: Removing a leaf from a 2-4 Tree. This process goes all the way to the root because all of u 's ancestors and their siblings have degree 2.","The correspondence with a 2-4 tree establishes the height bound for a red-black tree through the following steps:
+
+1. **Transformation to a 2-4 Tree ($T'$):** By removing each red node $u$ in a red-black tree $T$ and connecting its children directly to its black parent, we obtain a tree $T'$ containing only black nodes [S2]. Because of the black-height and no-red-edge properties, every internal node in $T'$ has 2, 3, or 4 children, and every root-to-leaf path has the same length, making $T'$ a 2-4 tree [S2].
+2. **Height of the 2-4 Tree:** The 2-4 tree $T'$ has $n + 1$ leaves corresponding to the $n + 1$ external nodes of the red-black tree, which gives $T'$ a height of $\log(n + 1)$ [S1, S2].
+3. **Path Correspondence:** Every root-to-leaf path in the 2-4 tree corresponds to a path from the root of the red-black tree $T$ to an external node [S1, S2]. 
+4. **Node Constraints on the Path:** In this path, the first and last nodes are black, and because no two red nodes can be adjacent (at most one out of every two internal nodes is red), the path contains at most $\log(n + 1)$ black nodes and at most $\log(n + 1) - 1$ red nodes [S1, S2]. 
+5. **Resulting Height Bound:** This limits the length of the longest path, proving that the height of a red-black tree with $n$ nodes is at most $2 \log n$ [S1].
+
+*Note: The exact mathematical expression for the longest path calculation is cut off in the provided text of the excerpts, but the resulting bound is confirmed by Lemma 9.2 [S1].*",,,,,,,
+java-ods-red-black-tree-001,budget-blind-b,Java,How does the correspondence with a 2-4 tree establish the height bound for a red-black tree?,Collapsing red nodes transforms the red-black tree into a 2-4 tree. | The black-height property gives equal root-to-leaf length in the transformed tree. | At most one of every two internal nodes on a red-black path is red. | The resulting red-black-tree height is at most 2 log n.,"[S1]
+Title: Open Data Structures (Java Edition)
+Section: 9.2.1 Red-Black Trees and 2-4 Trees (part 2)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+The 2-4 tree T ′ has n +1 leaves that correspond to the n +1 external nodes of the red-black tree. Therefore, this tree has height log( n +1). Now, every root to leaf path in the 2-4 tree corresponds to a path from the root of the red-black tree T to an external node. The first and last node in this path are black and at most one out of every two internal nodes is red, so this path has at most log( n +1) black nodes and at most log( n +1) -1 red nodes. Therefore, the longest path from the root to any internal node in T is at most
+
+Figure 9.5: Every red-black tree has a corresponding 2-4 tree.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+Figure 9.5: Every red-black tree has a corresponding 2-4 tree.
+
+for any n ≥ 1. This proves the most important property of red-black trees:
+
+Lemma 9.2. The height of red-black tree with n nodes is at most 2 log n .
+
+Now that we have seen the relationship between 2-4 trees and red-black trees, it is not hard to believe that we can efficiently maintain a red-black tree while adding and removing elements.
+
+We have already seen that adding an element in a BinarySearchTree can be done by adding a new leaf. Therefore, to implement add ( x ) in a red-black tree we need a method of simulating splitting a degree 5 node in a 2-4 tree. A degree 5 node is represented by a black node that has two red children one of which also has a red child. We can 'split' this node by coloring it red and coloring its two children black. An example of this is shown in Figure 9.6.
+
+Similarly, implementing remove ( x ) requires a method of merging two nodes and borrowing a child from a sibling. Merging two nodes is the inverse of a split (shown in Figure 9.6), and involves coloring two (black) siblings red and coloring their (red) parent black. Borrowing from a sibling is the most complicated of the procedures and involves both rotations and recoloring of nodes.
+
+---
+
+[S2]
+Title: Open Data Structures (Java Edition)
+Section: 9.2.1 Red-Black Trees and 2-4 Trees (part 1)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+## 9.2.1 Red-Black Trees and 2-4 Trees
+
+At first it might seem surprising that a red-black tree can be efficiently updated to maintain the black-height and no-red-edge properties, and it seems unusual to even consider these as useful properties. However, red-black trees were designed to be an efficient simulation of 2-4 trees as binary trees.
+
+Refer to Figure 9.5. Consider any red-black tree, T , having n nodes and perform the following transformation: Remove each red node u and connect u 's two children directly to the (black) parent of u . After this transformation we are left with a tree T ′ having only black nodes.
+
+Every internal node in T ′ has 2, 3, or 4 children: A black node that started out with two black children will still have two black children after this transformation. A black node that started out with one red and one black child will have three children after this transformation. A black node that started out with two red children will have 4 children after this transformation. Furthermore, the black-height property now guarantees that every root-to-leaf path in T ′ has the same length. In other words, T ′ is a 2-4 tree!
+
+The 2-4 tree T ′ has n +1 leaves that correspond to the n +1 external nodes of the red-black tree. Therefore, this tree has height log( n +1). Now, every root to leaf path in the 2-4 tree corresponds to a path from the root of the red-black tree T to an external node. The first and last node in this path are black and at most one out of every two internal nodes is red, so this path has at most log( n +1) black nodes and at most log( n +1) -1 red nodes. Therefore, the longest path from the root to any internal node in T is at most
+
+---
+
+[S3]
+Title: Open Data Structures (Java Edition)
+Section: Red-Black Trees (part 2)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+The first two of these properties already put red-black trees ahead of skiplists, treaps, and scapegoat trees. Skiplists and treaps rely on randomization and their O (log n ) running times are only expected. Scapegoat trees have a guaranteed bound on their height, but add ( x ) and remove ( x ) only run in O (log n ) amortized time. The third property is just icing on the cake. It tells us that that the time needed to add or remove an element x is dwarfed by the time it takes to find x . 1
+
+However, the nice properties of red-black trees come with a price: implementation complexity. Maintaining a bound of 2 log n on the height is not easy. It requires a careful analysis of a number of cases and it requires that the implementation does exactly the right thing in each case. One misplaced rotation or change of color produces a bug that can be very difficult to understand and track down.
+
+1 Note that skiplists and treaps also have this property in the expected sense. See Exercise 4.1 and Exercise 7.3.
+
+Figure 9.1: A 2-4 tree of height 3.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+Figure 9.1: A 2-4 tree of height 3.
+
+Rather than jumping directly into the implementation of red-black trees, we will first provide some background on a related data structure: 2-4 trees. This will give some insight into how red-black trees were discovered and why efficiently maintaining red-black trees is even possible.
+
+---
+
+[S4]
+Title: Open Data Structures (Java Edition)
+Section: 9.2 RedBlackTree : A Simulated 2-4 Tree (part 1)
+URL: https://opendatastructures.org/versions/edition-0.1/ods-java.pdf
+Content:
+## 9.2 RedBlackTree : A Simulated 2-4 Tree
+
+A red-black tree is a binary search tree in which each node, u , has a color which is either red or black . Red is represented by the value 0 and black by the value 1.
+
+RedBlackTree class Node<T> extends BinarySearchTree.BSTNode<Node<T>,T> { byte color; }
+
+Before and after any operation on a red-black tree, the following two properties are satisfied. Each property is defined both in terms of the colors red and black, and in terms of the numeric values 0 and 1.
+
+Property 9.3 (black-height) . There are the same number of black nodes on every root to leaf path. (The sum of the colors on any root to leaf path is the same.)
+
+Property 9.4 (no-red-edge) . No two red nodes are adjacent. (For any node u , except the root, u . color + u . parent . color 1.)
+
+≥
+
+Notice that we can always color the root, r , of a red-black tree black without violating either of these two properties, so we will assume that the root is black, and the algorithms for updating a red-black tree will maintain this. Another trick that simplifies red-black trees is to treat the external nodes (represented by nil ) as black nodes. This way, every real node, u , of a red-black tree has exactly two children, each with a well-defined color. An example of a red-black tree is shown in Figure 9.4.
+
+Figure 9.3: Removing a leaf from a 2-4 Tree. This process goes all the way to the root because all of u 's ancestors and their siblings have degree 2.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+Figure 9.3: Removing a leaf from a 2-4 Tree. This process goes all the way to the root because all of u 's ancestors and their siblings have degree 2.","The correspondence with a 2-4 tree establishes the height bound of a red-black tree through the following steps:
+
+1. **Transformation to a 2-4 Tree:** A red-black tree $T$ with $n$ nodes can be transformed into a tree $T'$ containing only black nodes by removing each red node and connecting its two children directly to its black parent [S2]. Because of the black-height property, every root-to-leaf path in $T'$ has the same length, making $T'$ a 2-4 tree [S2].
+2. **Height of the 2-4 Tree:** The 2-4 tree $T'$ has $n + 1$ leaves corresponding to the $n + 1$ external nodes of the red-black tree, which gives $T'$ a height of $\log(n + 1)$ [S1, S2].
+3. **Path Correspondence and Node Counting:** Every root-to-leaf path in the 2-4 tree $T'$ corresponds to a path from the root of the red-black tree $T$ to an external node [S1, S2]. In this path, the first and last nodes are black, and at most one out of every two internal nodes is red [S1, S2]. 
+4. **Resulting Height Bound:** This path contains at most $\log(n + 1)$ black nodes and at most $\log(n + 1) - 1$ red nodes [S1, S2]. This relationship proves that the height of a red-black tree with $n$ nodes is at most $2 \log n$ [S1].
+
+*Note: The exact mathematical expression for the ""longest path from the root to any internal node in T is at most..."" is cut off in the provided text of the excerpts [S1, S2], but the resulting bound is explicitly stated in Lemma 9.2 as being at most $2 \log n$ [S1].*",,,,,,,
+cpp-move-constructor-001,budget-blind-a,C++,What parameter form makes a non-template C++ constructor a move constructor?,The first parameter is an rvalue reference to X. | The referenced X may be cv-qualified. | Any additional parameters require default arguments.,"[S1]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: 11.4.5.3 Copy/move constructors (part 1)
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+## 11.4.5.3 Copy/move constructors
+
+[class.copy.ctor]
+
+1 A non-template constructor for class X is a copy constructor if its first parameter is of type X& , const X& , volatile X& or const volatile X& , and either there are no other parameters or else all other parameters have default arguments (9.3.4.7).
+
+2 A non-template constructor for class X is a move constructor if its first parameter is of type X&& , const X&& , volatile X&& , or const volatile X&& , and either there are no other parameters or else all other parameters have default arguments (9.3.4.7).
+
+3 Note 1
+
+4 [ Note 2 : If a class X only has a copy constructor with a parameter of type X& , an initializer of type const X or volatile X cannot initialize an object of type cv X .
+
+5 A declaration of a constructor for a class X is ill-formed if its first parameter is of type cv X and either there are no other parameters or else all other parameters have default arguments. A member function template is never instantiated to produce such a constructor signature.
+
+[ Example 1 : X::X(const X&) and X::X(X&,int=1) are copy constructors. struct X { X(int); X(const X&, int = 1); }; X a(1); // calls X(int); X b(a, 0); // calls X(const X&, int); X c = b; // calls X(const X&, int); -end example ]
+
+[ Example 2 : Y::Y(Y&&) is a move constructor. struct Y { Y(const Y&); Y(Y&&); }; extern Y f(int); Y d(f(1)); // calls Y(Y&&) Y e = d; // calls Y(const Y&) -end example ] [ : All forms of copy/move constructor can be declared for a class. [ Example 3 : struct X { X(const X&); X(X&); // OK X(X&&); X(const X&&); // OK, but possibly not sensible }; -end example ] -end note ]
+
+---
+
+[S2]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: N5046 (part 2)
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+-(8.5) X does not have a user-declared destructor.
+
+[ Note 3 : When the move constructor is not implicitly declared or explicitly supplied, expressions that otherwise would have invoked the move constructor might instead invoke a copy constructor. -end note ]
+
+9 The implicitly-declared move constructor for class X will have the form
+
+10 An implicitly-declared copy/move constructor is an inline public member of its class. A defaulted copy/move constructor for a class X is defined as deleted (9.6.3) if X has:
+
+-(10.1) a potentially constructed subobject of type M (or possibly multidimensional array thereof) for which overload resolution (12.2), as applied to find M 's corresponding constructor, either does not result in a usable candidate (12.2.1) or, in the case of a variant member, selects a non-trivial function,
+
+-(10.2) any potentially constructed subobject of class type M (or possibly multidimensional array thereof) where M has a destructor that is deleted or inaccessible from the defaulted constructor, or,
+
+-(10.3) for the copy constructor, a non-static data member of rvalue reference type.
+
+X::X(X&&)
+
+[ Note 4 : A defaulted move constructor that is defined as deleted is ignored by overload resolution (12.2, 12.3). Such a constructor would otherwise interfere with initialization from an rvalue which can use the copy constructor instead. -end note ]
+
+11 [ Note 5 : A using-declaration in a derived class C that names a constructor from a base class never suppresses the implicit declaration of a copy/move constructor of C , even if the base class constructor would be a copy or move constructor if declared as a member of C . -end note ]
+
+12 A copy/move constructor for class X is trivial if it is not user-provided and if
+
+-(12.1) class X has no virtual functions (11.7.3) and no virtual base classes (11.7.2), and
+
+---
+
+[S3]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: move construction
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+## move construction
+
+〈library〉 direct-initialization of an object of some type with an rvalue of the same type
+
+---
+
+[S4]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: N5046 (part 4)
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+15 The implicitly-defined copy/move constructor for a non-union class X performs a memberwise copy/move of its bases and members.
+
+[ Note 8 : Default member initializers of non-static data members are ignored. -end note ]
+
+The order of initialization is the same as the order of initialization of bases and members in a user-defined constructor (see 11.9.3). Let x be either the parameter of the constructor or, for the move constructor, an xvalue referring to the parameter. Each base or non-static data member is copied/moved in the manner appropriate to its type:
+
+-(15.1) if the member is an array, each element is direct-initialized with the corresponding subobject of x ;
+
+-(15.2) if a member m has rvalue reference type T&& , it is direct-initialized with static_cast<T&&>(x.m) ;
+
+-(15.3) otherwise, the base or member is direct-initialized with the corresponding base or member of x .
+
+Virtual base class subobjects shall be initialized only once by the implicitly-defined copy/move constructor (see 11.9.3).
+
+16 The implicitly-defined copy/move constructor for a union X copies the object representation (6.9.1) of X . For each object nested within (6.8.2) the object that is the source of the copy, a corresponding object o nested within the destination is identified (if the object is a subobject) or created (otherwise), and the lifetime of o begins before the copy is performed.","Based on the provided documentation, a non-template constructor for a class `X` is a move constructor if:
+* Its first parameter is of type `X&&`, `const X&&`, `volatile X&&`, or `const volatile X&&` [S1].
+* Either there are no other parameters, or all other parameters have default arguments [S1].",,,,,,,
+cpp-move-constructor-001,budget-blind-b,C++,What parameter form makes a non-template C++ constructor a move constructor?,The first parameter is an rvalue reference to X. | The referenced X may be cv-qualified. | Any additional parameters require default arguments.,"[S1]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: 11.4.5.3 Copy/move constructors (part 1)
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+## 11.4.5.3 Copy/move constructors
+
+[class.copy.ctor]
+
+1 A non-template constructor for class X is a copy constructor if its first parameter is of type X& , const X& , volatile X& or const volatile X& , and either there are no other parameters or else all other parameters have default arguments (9.3.4.7).
+
+2 A non-template constructor for class X is a move constructor if its first parameter is of type X&& , const X&& , volatile X&& , or const volatile X&& , and either there are no other parameters or else all other parameters have default arguments (9.3.4.7).
+
+3 Note 1
+
+4 [ Note 2 : If a class X only has a copy constructor with a parameter of type X& , an initializer of type const X or volatile X cannot initialize an object of type cv X .
+
+5 A declaration of a constructor for a class X is ill-formed if its first parameter is of type cv X and either there are no other parameters or else all other parameters have default arguments. A member function template is never instantiated to produce such a constructor signature.
+
+[ Example 1 : X::X(const X&) and X::X(X&,int=1) are copy constructors. struct X { X(int); X(const X&, int = 1); }; X a(1); // calls X(int); X b(a, 0); // calls X(const X&, int); X c = b; // calls X(const X&, int); -end example ]
+
+[ Example 2 : Y::Y(Y&&) is a move constructor. struct Y { Y(const Y&); Y(Y&&); }; extern Y f(int); Y d(f(1)); // calls Y(Y&&) Y e = d; // calls Y(const Y&) -end example ] [ : All forms of copy/move constructor can be declared for a class. [ Example 3 : struct X { X(const X&); X(X&); // OK X(X&&); X(const X&&); // OK, but possibly not sensible }; -end example ] -end note ]
+
+---
+
+[S2]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: N5046 (part 2)
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+-(8.5) X does not have a user-declared destructor.
+
+[ Note 3 : When the move constructor is not implicitly declared or explicitly supplied, expressions that otherwise would have invoked the move constructor might instead invoke a copy constructor. -end note ]
+
+9 The implicitly-declared move constructor for class X will have the form
+
+10 An implicitly-declared copy/move constructor is an inline public member of its class. A defaulted copy/move constructor for a class X is defined as deleted (9.6.3) if X has:
+
+-(10.1) a potentially constructed subobject of type M (or possibly multidimensional array thereof) for which overload resolution (12.2), as applied to find M 's corresponding constructor, either does not result in a usable candidate (12.2.1) or, in the case of a variant member, selects a non-trivial function,
+
+-(10.2) any potentially constructed subobject of class type M (or possibly multidimensional array thereof) where M has a destructor that is deleted or inaccessible from the defaulted constructor, or,
+
+-(10.3) for the copy constructor, a non-static data member of rvalue reference type.
+
+X::X(X&&)
+
+[ Note 4 : A defaulted move constructor that is defined as deleted is ignored by overload resolution (12.2, 12.3). Such a constructor would otherwise interfere with initialization from an rvalue which can use the copy constructor instead. -end note ]
+
+11 [ Note 5 : A using-declaration in a derived class C that names a constructor from a base class never suppresses the implicit declaration of a copy/move constructor of C , even if the base class constructor would be a copy or move constructor if declared as a member of C . -end note ]
+
+12 A copy/move constructor for class X is trivial if it is not user-provided and if
+
+-(12.1) class X has no virtual functions (11.7.3) and no virtual base classes (11.7.2), and
+
+---
+
+[S3]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: move construction
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+## move construction
+
+〈library〉 direct-initialization of an object of some type with an rvalue of the same type
+
+---
+
+[S4]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: N5046 (part 4)
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+15 The implicitly-defined copy/move constructor for a non-union class X performs a memberwise copy/move of its bases and members.
+
+[ Note 8 : Default member initializers of non-static data members are ignored. -end note ]
+
+The order of initialization is the same as the order of initialization of bases and members in a user-defined constructor (see 11.9.3). Let x be either the parameter of the constructor or, for the move constructor, an xvalue referring to the parameter. Each base or non-static data member is copied/moved in the manner appropriate to its type:
+
+-(15.1) if the member is an array, each element is direct-initialized with the corresponding subobject of x ;
+
+-(15.2) if a member m has rvalue reference type T&& , it is direct-initialized with static_cast<T&&>(x.m) ;
+
+-(15.3) otherwise, the base or member is direct-initialized with the corresponding base or member of x .
+
+Virtual base class subobjects shall be initialized only once by the implicitly-defined copy/move constructor (see 11.9.3).
+
+16 The implicitly-defined copy/move constructor for a union X copies the object representation (6.9.1) of X . For each object nested within (6.8.2) the object that is the source of the copy, a corresponding object o nested within the destination is identified (if the object is a subobject) or created (otherwise), and the lifetime of o begins before the copy is performed.","Based on the provided documentation, a non-template constructor for a class `X` is a move constructor if:
+* Its first parameter is of type `X&&`, `const X&&`, `volatile X&&`, or `const volatile X&&` [S1].
+* Either there are no other parameters, or all other parameters have default arguments [S1].",,,,,,,
+javascript-promise-all-001,budget-blind-a,JavaScript,How do Promise.all and Promise.allSettled differ when one input promise rejects?,Promise.all rejects on the first rejection. | Promise.allSettled waits for all inputs to settle. | Promise.allSettled fulfills with state snapshots for all inputs.,"[S1]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 27.2.4.2 Promise.allSettled ( iterable )
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 27.2.4.2 Promise.allSettled ( iterable )
+
+This function returns a promise that is fulfilled with an array of promise state snapshots, but only after all the original promises have settled, i.e. become either fulfilled or rejected. It resolves all elements of the passed iterable to promises as it runs this algorithm.
+
+Let C be the this value.
+
+Let promiseCapability be ? NewPromiseCapability( C ).
+
+Let promiseResolve be Completion(GetPromiseResolve( C )).
+
+IfAbruptRejectPromise( promiseResolve , promiseCapability ).
+
+Let iteratorRecord be Completion(GetIterator( iterable , SYNC )).
+
+IfAbruptRejectPromise( iteratorRecord , promiseCapability ).
+
+Let result be Completion(PerformPromiseAllSettled( iteratorRecord , C , promiseCapability , promiseResolve )).
+
+If result is an abrupt completion, then
+
+If iteratorRecord .[[Done]] is false , set result to Completion(IteratorClose( iteratorRecord , result )).
+
+IfAbruptRejectPromise( result , promiseCapability ).
+
+Return ! result .
+
+NOTE This function requires its this value to be a constructor function that supports the parameter conventions of the Promise constructor.
+
+---
+
+[S2]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 27.2.4.1 Promise.all ( iterable )
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 27.2.4.1 Promise.all ( iterable )
+
+This function returns a new promise which is fulfilled with an array of fulfillment values for the passed promises, or rejects with the reason of the first passed promise that rejects. It resolves all elements of the passed iterable to promises as it runs this algorithm.
+
+Let C be the this value.
+
+Let promiseCapability be ? NewPromiseCapability( C ).
+
+Let promiseResolve be Completion(GetPromiseResolve( C )).
+
+IfAbruptRejectPromise( promiseResolve , promiseCapability ).
+
+Let iteratorRecord be Completion(GetIterator( iterable , SYNC )).
+
+IfAbruptRejectPromise( iteratorRecord , promiseCapability ).
+
+Let result be Completion(PerformPromiseAll( iteratorRecord , C , promiseCapability , promiseResolve )).
+
+If result is an abrupt completion, then
+
+If iteratorRecord .[[Done]] is false , set result to Completion(IteratorClose( iteratorRecord , result )).
+
+IfAbruptRejectPromise( result , promiseCapability ).
+
+Return ! result .
+
+NOTE This function requires its this value to be a constructor function that supports the parameter conventions of the Promise constructor.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->","Based on the provided documentation, `Promise.all` and `Promise.allSettled` differ in the following ways when an input promise rejects:
+
+* **`Promise.all`** rejects with the reason of the first passed promise that rejects [S2].
+* **`Promise.allSettled`** does not reject; instead, it returns a promise that is fulfilled with an array of promise state snapshots, but only after all of the original promises have settled (meaning they have either fulfilled or rejected) [S1].",,,,,,,
+javascript-promise-all-001,budget-blind-b,JavaScript,How do Promise.all and Promise.allSettled differ when one input promise rejects?,Promise.all rejects on the first rejection. | Promise.allSettled waits for all inputs to settle. | Promise.allSettled fulfills with state snapshots for all inputs.,"[S1]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 27.2.4.2 Promise.allSettled ( iterable )
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 27.2.4.2 Promise.allSettled ( iterable )
+
+This function returns a promise that is fulfilled with an array of promise state snapshots, but only after all the original promises have settled, i.e. become either fulfilled or rejected. It resolves all elements of the passed iterable to promises as it runs this algorithm.
+
+Let C be the this value.
+
+Let promiseCapability be ? NewPromiseCapability( C ).
+
+Let promiseResolve be Completion(GetPromiseResolve( C )).
+
+IfAbruptRejectPromise( promiseResolve , promiseCapability ).
+
+Let iteratorRecord be Completion(GetIterator( iterable , SYNC )).
+
+IfAbruptRejectPromise( iteratorRecord , promiseCapability ).
+
+Let result be Completion(PerformPromiseAllSettled( iteratorRecord , C , promiseCapability , promiseResolve )).
+
+If result is an abrupt completion, then
+
+If iteratorRecord .[[Done]] is false , set result to Completion(IteratorClose( iteratorRecord , result )).
+
+IfAbruptRejectPromise( result , promiseCapability ).
+
+Return ! result .
+
+NOTE This function requires its this value to be a constructor function that supports the parameter conventions of the Promise constructor.
+
+---
+
+[S2]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 27.2.4.1 Promise.all ( iterable )
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 27.2.4.1 Promise.all ( iterable )
+
+This function returns a new promise which is fulfilled with an array of fulfillment values for the passed promises, or rejects with the reason of the first passed promise that rejects. It resolves all elements of the passed iterable to promises as it runs this algorithm.
+
+Let C be the this value.
+
+Let promiseCapability be ? NewPromiseCapability( C ).
+
+Let promiseResolve be Completion(GetPromiseResolve( C )).
+
+IfAbruptRejectPromise( promiseResolve , promiseCapability ).
+
+Let iteratorRecord be Completion(GetIterator( iterable , SYNC )).
+
+IfAbruptRejectPromise( iteratorRecord , promiseCapability ).
+
+Let result be Completion(PerformPromiseAll( iteratorRecord , C , promiseCapability , promiseResolve )).
+
+If result is an abrupt completion, then
+
+If iteratorRecord .[[Done]] is false , set result to Completion(IteratorClose( iteratorRecord , result )).
+
+IfAbruptRejectPromise( result , promiseCapability ).
+
+Return ! result .
+
+NOTE This function requires its this value to be a constructor function that supports the parameter conventions of the Promise constructor.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->","Based on the provided documentation, `Promise.all` and `Promise.allSettled` differ in the following ways when an input promise rejects:
+
+* **`Promise.all`** rejects immediately with the reason of the first passed promise that rejects [S2].
+* **`Promise.allSettled`** does not reject when an input promise rejects; instead, it returns a promise that is fulfilled with an array of promise state snapshots, but only after all of the original promises have settled (meaning they have either fulfilled or rejected) [S1].",,,,,,,
+javascript-array-filter-holes-001,budget-blind-a,JavaScript,Does Array.prototype.filter call its callback for missing array elements or elements appended after filtering starts?,Missing elements do not trigger the callback. | The processed range is fixed before the first callback. | Elements appended after filtering starts are not visited.,"[S1]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 23.1.3.8 Array.prototype.filter ( callback [ , thisArg ] ) (part 1)
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 23.1.3.8 Array.prototype.filter ( callback [ , thisArg ] )
+
+NOTE 1 callback should be a function that accepts three arguments and returns a value that is coercible to a Boolean value. filter calls callback once for each element in the array, in ascending order, and constructs a new array of all the values for which callback returns true . callback is called only for elements of the array which actually exist; it is not called for missing elements of the array.
+
+If a thisArg parameter is provided, it will be used as the this value for each invocation of callback . If it is not provided, undefined is used instead.
+
+callback is called with three arguments: the value of the element, the index of the element, and the object being traversed.
+
+filter does not directly mutate the object on which it is called but the object may be mutated by the calls to callback .
+
+The range of elements processed by filter is set before the first call to callback . Elements which are appended to the array after the call to filter begins will not be visited by callback . If existing elements of the array are changed their value as passed to callback will be the value at the time filter visits them; elements that are deleted after the call to filter begins and before being visited are not visited.
+
+This method performs the following steps when called:
+
+Let O be ? ToObject( this value).
+
+Let len be ? LengthOfArrayLike( O ).
+
+If IsCallable( callback ) is false , throw a TypeError exception.
+
+Let A be ? ArraySpeciesCreate( O , 0 ).
+
+Let k be 0 .
+
+Let to be 0 .
+
+Repeat, while k < len ,
+
+Let Pk be ! ToString( 𝔽 ( k )).
+
+---
+
+[S2]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 23.1.3.8 Array.prototype.filter ( callback [ , thisArg ] ) (part 2)
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+The range of elements processed by filter is set before the first call to callback . Elements which are appended to the array after the call to filter begins will not be visited by callback . If existing elements of the array are changed their value as passed to callback will be the value at the time filter visits them; elements that are deleted after the call to filter begins and before being visited are not visited.
+
+This method performs the following steps when called:
+
+Let O be ? ToObject( this value).
+
+Let len be ? LengthOfArrayLike( O ).
+
+If IsCallable( callback ) is false , throw a TypeError exception.
+
+Let A be ? ArraySpeciesCreate( O , 0 ).
+
+Let k be 0 .
+
+Let to be 0 .
+
+Repeat, while k < len ,
+
+Let Pk be ! ToString( 𝔽 ( k )).
+
+Let kPresent be ? HasProperty( O , Pk ).
+
+If kPresent is true , then
+
+Let kValue be ? Get( O , Pk ).
+
+Let selected be ToBoolean(? Call( callback , thisArg , « kValue , 𝔽 ( k ), O »)).
+
+If selected is true , then
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+Perform ? CreateDataPropertyOrThrow( A , ! ToString( 𝔽 ( to )), kValue ).
+
+Set to to to + 1.
+
+Set k to k + 1.
+
+Return A .
+
+NOTE 2 This method is intentionally generic; it does not require that its this value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
+
+---
+
+[S3]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 23.1.3.6 Array.prototype.every ( callback [ , thisArg ] ) (part 2)
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+The range of elements processed by every is set before the first call to callback . Elements which are appended to the array after the call to every begins will not be visited by callback . If existing elements of the array are changed, their value as passed to callback will be the value at the time every visits them; elements that are deleted after the call to every begins and before being visited are not visited. every acts like the ""for all"" quantifier in mathematics. In particular, for an empty array, it returns true .
+
+This method performs the following steps when called:
+
+Let O be ? ToObject( this value).
+
+Let len be ? LengthOfArrayLike( O ).
+
+If IsCallable( callback ) is false , throw a TypeError exception.
+
+Let k be 0 .
+
+Repeat, while k < len ,
+
+Let Pk be ! ToString( 𝔽 ( k )).
+
+Let kPresent be ? HasProperty( O , Pk ).
+
+If kPresent is true , then
+
+Let kValue be ? Get( O , Pk ).
+
+Let testResult be ToBoolean(? Call( callback , thisArg , « kValue , 𝔽 ( k ), O »)).
+
+If testResult is false , return false .
+
+Set k to k + 1.
+
+Return true .
+
+NOTE 2 This method is intentionally generic; it does not require that its this value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
+
+---
+
+[S4]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 23.1.3.15 Array.prototype.forEach ( callback [ , thisArg ] ) (part 1)
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 23.1.3.15 Array.prototype.forEach ( callback [ , thisArg ] )
+
+NOTE 1 callback should be a function that accepts three arguments. forEach calls callback once for each element present in the array, in ascending order. callback is called only for elements of the array which actually exist; it is not called for missing elements of the array.
+
+If a thisArg parameter is provided, it will be used as the this value for each invocation of callback . If it is not provided, undefined is used instead.
+
+callback is called with three arguments: the value of the element, the index of the element, and the object being traversed.
+
+forEach does not directly mutate the object on which it is called but the object may be mutated by the calls to callback .
+
+The range of elements processed by forEach is set before the first call to callback . Elements which are appended to the array after the call to forEach begins will not be visited by callback . If existing elements of the array are changed, their value as passed to callback will be the value at the time forEach visits them; elements that are deleted after the call to forEach begins and before being visited are not visited.
+
+This method performs the following steps when called:
+
+Let O be ? ToObject( this value).
+
+Let len be ? LengthOfArrayLike( O ).
+
+If IsCallable( callback ) is false , throw a TypeError exception.
+
+Let k be 0 .
+
+Repeat, while k < len ,
+
+Let Pk be ! ToString( 𝔽 ( k )).
+
+Let kPresent be ? HasProperty( O , Pk ).
+
+If kPresent is true , then
+
+Let kValue be ? Get( O , Pk ).
+
+Perform ? Call( callback , thisArg , « kValue , 𝔽 ( k ), O »).","Based on the provided documentation:
+
+1. **Missing array elements:** No, the callback is not called for missing elements. It is called only for elements of the array that actually exist [S1].
+2. **Elements appended after filtering starts:** No, elements that are appended to the array after the call to `filter` begins will not be visited by the callback [S1, S2].",,,,,,,
+javascript-array-filter-holes-001,budget-blind-b,JavaScript,Does Array.prototype.filter call its callback for missing array elements or elements appended after filtering starts?,Missing elements do not trigger the callback. | The processed range is fixed before the first callback. | Elements appended after filtering starts are not visited.,"[S1]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 23.1.3.8 Array.prototype.filter ( callback [ , thisArg ] ) (part 1)
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 23.1.3.8 Array.prototype.filter ( callback [ , thisArg ] )
+
+NOTE 1 callback should be a function that accepts three arguments and returns a value that is coercible to a Boolean value. filter calls callback once for each element in the array, in ascending order, and constructs a new array of all the values for which callback returns true . callback is called only for elements of the array which actually exist; it is not called for missing elements of the array.
+
+If a thisArg parameter is provided, it will be used as the this value for each invocation of callback . If it is not provided, undefined is used instead.
+
+callback is called with three arguments: the value of the element, the index of the element, and the object being traversed.
+
+filter does not directly mutate the object on which it is called but the object may be mutated by the calls to callback .
+
+The range of elements processed by filter is set before the first call to callback . Elements which are appended to the array after the call to filter begins will not be visited by callback . If existing elements of the array are changed their value as passed to callback will be the value at the time filter visits them; elements that are deleted after the call to filter begins and before being visited are not visited.
+
+This method performs the following steps when called:
+
+Let O be ? ToObject( this value).
+
+Let len be ? LengthOfArrayLike( O ).
+
+If IsCallable( callback ) is false , throw a TypeError exception.
+
+Let A be ? ArraySpeciesCreate( O , 0 ).
+
+Let k be 0 .
+
+Let to be 0 .
+
+Repeat, while k < len ,
+
+Let Pk be ! ToString( 𝔽 ( k )).
+
+---
+
+[S2]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 23.1.3.8 Array.prototype.filter ( callback [ , thisArg ] ) (part 2)
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+The range of elements processed by filter is set before the first call to callback . Elements which are appended to the array after the call to filter begins will not be visited by callback . If existing elements of the array are changed their value as passed to callback will be the value at the time filter visits them; elements that are deleted after the call to filter begins and before being visited are not visited.
+
+This method performs the following steps when called:
+
+Let O be ? ToObject( this value).
+
+Let len be ? LengthOfArrayLike( O ).
+
+If IsCallable( callback ) is false , throw a TypeError exception.
+
+Let A be ? ArraySpeciesCreate( O , 0 ).
+
+Let k be 0 .
+
+Let to be 0 .
+
+Repeat, while k < len ,
+
+Let Pk be ! ToString( 𝔽 ( k )).
+
+Let kPresent be ? HasProperty( O , Pk ).
+
+If kPresent is true , then
+
+Let kValue be ? Get( O , Pk ).
+
+Let selected be ToBoolean(? Call( callback , thisArg , « kValue , 𝔽 ( k ), O »)).
+
+If selected is true , then
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+Perform ? CreateDataPropertyOrThrow( A , ! ToString( 𝔽 ( to )), kValue ).
+
+Set to to to + 1.
+
+Set k to k + 1.
+
+Return A .
+
+NOTE 2 This method is intentionally generic; it does not require that its this value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
+
+---
+
+[S3]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 23.1.3.6 Array.prototype.every ( callback [ , thisArg ] ) (part 2)
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+The range of elements processed by every is set before the first call to callback . Elements which are appended to the array after the call to every begins will not be visited by callback . If existing elements of the array are changed, their value as passed to callback will be the value at the time every visits them; elements that are deleted after the call to every begins and before being visited are not visited. every acts like the ""for all"" quantifier in mathematics. In particular, for an empty array, it returns true .
+
+This method performs the following steps when called:
+
+Let O be ? ToObject( this value).
+
+Let len be ? LengthOfArrayLike( O ).
+
+If IsCallable( callback ) is false , throw a TypeError exception.
+
+Let k be 0 .
+
+Repeat, while k < len ,
+
+Let Pk be ! ToString( 𝔽 ( k )).
+
+Let kPresent be ? HasProperty( O , Pk ).
+
+If kPresent is true , then
+
+Let kValue be ? Get( O , Pk ).
+
+Let testResult be ToBoolean(? Call( callback , thisArg , « kValue , 𝔽 ( k ), O »)).
+
+If testResult is false , return false .
+
+Set k to k + 1.
+
+Return true .
+
+NOTE 2 This method is intentionally generic; it does not require that its this value be an Array. Therefore it can be transferred to other kinds of objects for use as a method.
+
+---
+
+[S4]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 23.1.3.15 Array.prototype.forEach ( callback [ , thisArg ] ) (part 1)
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 23.1.3.15 Array.prototype.forEach ( callback [ , thisArg ] )
+
+NOTE 1 callback should be a function that accepts three arguments. forEach calls callback once for each element present in the array, in ascending order. callback is called only for elements of the array which actually exist; it is not called for missing elements of the array.
+
+If a thisArg parameter is provided, it will be used as the this value for each invocation of callback . If it is not provided, undefined is used instead.
+
+callback is called with three arguments: the value of the element, the index of the element, and the object being traversed.
+
+forEach does not directly mutate the object on which it is called but the object may be mutated by the calls to callback .
+
+The range of elements processed by forEach is set before the first call to callback . Elements which are appended to the array after the call to forEach begins will not be visited by callback . If existing elements of the array are changed, their value as passed to callback will be the value at the time forEach visits them; elements that are deleted after the call to forEach begins and before being visited are not visited.
+
+This method performs the following steps when called:
+
+Let O be ? ToObject( this value).
+
+Let len be ? LengthOfArrayLike( O ).
+
+If IsCallable( callback ) is false , throw a TypeError exception.
+
+Let k be 0 .
+
+Repeat, while k < len ,
+
+Let Pk be ! ToString( 𝔽 ( k )).
+
+Let kPresent be ? HasProperty( O , Pk ).
+
+If kPresent is true , then
+
+Let kValue be ? Get( O , Pk ).
+
+Perform ? Call( callback , thisArg , « kValue , 𝔽 ( k ), O »).","Based on the provided documentation:
+
+1. **Missing array elements:** No, the callback is not called for missing elements. It is called only for elements of the array that actually exist [S1].
+2. **Elements appended after filtering starts:** No, elements that are appended to the array after the call to `filter` begins will not be visited by the callback [S1, S2].",,,,,,,
+python-parameter-kinds-001,budget-blind-a,Python,"How do / and * divide positional-only, positional-or-keyword, and keyword-only parameters in a Python function definition?",Parameters before / are positional-only. | Parameters between the separators accept either calling style. | Parameters after * are keyword-only.,"[S1]
+Title: The Python Tutorial
+Section: 4.1. if Statements¶ (part 22)
+URL: https://docs.python.org/3/tutorial/controlflow.html
+Content:
+```
+def f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):
+ ----------- ---------- ----------
+ | | |
+ | Positional or keyword |
+ | - Keyword only
+ -- Positional only
+```
+
+where / and * are optional. If used, these symbols indicate the kind of
+parameter by how the arguments may be passed to the function:
+positional-only, positional-or-keyword, and keyword-only. Keyword parameters
+are also referred to as named parameters.
+
+#### 4.9.3.1. Positional-or-Keyword Arguments¶
+
+If / and * are not present in the function definition, arguments may
+be passed to a function by position or by keyword.
+
+#### 4.9.3.2. Positional-Only Parameters¶
+
+Looking at this in a bit more detail, it is possible to mark certain parameters
+as positional-only. If positional-only, the parameters’ order matters, and
+the parameters cannot be passed by keyword. Positional-only parameters are
+placed before a / (forward-slash). The / is used to logically
+separate the positional-only parameters from the rest of the parameters.
+If there is no / in the function definition, there are no positional-only
+parameters.
+
+Parameters following the / may be positional-or-keyword or keyword-only.
+
+#### 4.9.3.3. Keyword-Only Arguments¶
+
+To mark parameters as keyword-only, indicating the parameters must be passed
+by keyword argument, place an * in the arguments list just before the first
+keyword-only parameter.
+
+#### 4.9.3.4. Function Examples¶
+
+Consider the following example function definitions paying close attention to the
+markers / and *:
+
+```
+>>> def standard_arg(arg):
+... print(arg)
+...
+>>> def pos_only_arg(arg, /):
+... print(arg)
+...
+>>> def kwd_only_arg(*, arg):
+... print(arg)
+...
+>>> def combined_example(pos_only, /, standard, *, kwd_only):
+... print(pos_only, standard, kwd_only)
+```
+
+The first function definition, standard_arg, the most familiar form,
+places no restrictions on the calling convention and arguments may be
+passed by position or keyword:
+
+```
+>>> standard_arg(2)
+2
+
+>>> standard_arg(arg=2)
+2
+```
+
+The second function pos_only_arg is restricted to only use positional
+parameters as there is a / in the function definition:
+
+---
+
+[S2]
+Title: The Python Tutorial
+Section: 4.1. if Statements¶ (part 23)
+URL: https://docs.python.org/3/tutorial/controlflow.html
+Content:
+```
+>>> def standard_arg(arg):
+... print(arg)
+...
+>>> def pos_only_arg(arg, /):
+... print(arg)
+...
+>>> def kwd_only_arg(*, arg):
+... print(arg)
+...
+>>> def combined_example(pos_only, /, standard, *, kwd_only):
+... print(pos_only, standard, kwd_only)
+```
+
+The first function definition, standard_arg, the most familiar form,
+places no restrictions on the calling convention and arguments may be
+passed by position or keyword:
+
+```
+>>> standard_arg(2)
+2
+
+>>> standard_arg(arg=2)
+2
+```
+
+The second function pos_only_arg is restricted to only use positional
+parameters as there is a / in the function definition:
+
+```
+>>> pos_only_arg(1)
+1
+
+>>> pos_only_arg(arg=1)
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: pos_only_arg() got some positional-only arguments passed as keyword arguments: 'arg'
+```
+
+The third function kwd_only_arg only allows keyword arguments as indicated
+by a * in the function definition:
+
+```
+>>> kwd_only_arg(3)
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: kwd_only_arg() takes 0 positional arguments but 1 was given
+
+>>> kwd_only_arg(arg=3)
+3
+```
+
+And the last uses all three calling conventions in the same function
+definition:
+
+```
+>>> combined_example(1, 2, 3)
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: combined_example() takes 2 positional arguments but 3 were given
+
+>>> combined_example(1, 2, kwd_only=3)
+1 2 3
+
+>>> combined_example(1, standard=2, kwd_only=3)
+1 2 3
+
+>>> combined_example(pos_only=1, standard=2, kwd_only=3)
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: combined_example() got some positional-only arguments passed as keyword arguments: 'pos_only'
+```
+
+Finally, consider this function definition which has a potential collision between the positional argument name and **kwds which has name as a key:
+
+```
+def foo(name, **kwds):
+ return 'name' in kwds
+```
+
+There is no possible call that will make it return True as the keyword 'name'
+will always bind to the first parameter. For example:
+
+```
+>>> foo(1, **{'name': 2})
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: foo() got multiple values for argument 'name'
+>>>
+```
+
+---
+
+[S3]
+Title: The Python Tutorial
+Section: 4.1. if Statements¶ (part 24)
+URL: https://docs.python.org/3/tutorial/controlflow.html
+Content:
+Finally, consider this function definition which has a potential collision between the positional argument name and **kwds which has name as a key:
+
+```
+def foo(name, **kwds):
+ return 'name' in kwds
+```
+
+There is no possible call that will make it return True as the keyword 'name'
+will always bind to the first parameter. For example:
+
+```
+>>> foo(1, **{'name': 2})
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: foo() got multiple values for argument 'name'
+>>>
+```
+
+But using / (positional only arguments), it is possible since it allows name as a positional argument and 'name' as a key in the keyword arguments:
+
+```
+>>> def foo(name, /, **kwds):
+... return 'name' in kwds
+...
+>>> foo(1, **{'name': 2})
+True
+```
+
+In other words, the names of positional-only parameters can be used in
+**kwds without ambiguity.
+
+#### 4.9.3.5. Recap¶
+
+The use case will determine which parameters to use in the function definition:
+
+```
+def f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):
+```
+
+As guidance:
+
+- Use positional-only if you want the name of the parameters to not be
+available to the user. This is useful when parameter names have no real
+meaning, if you want to enforce the order of the arguments when the function
+is called or if you need to take some positional parameters and arbitrary
+keywords.
+
+Use positional-only if you want the name of the parameters to not be
+available to the user. This is useful when parameter names have no real
+meaning, if you want to enforce the order of the arguments when the function
+is called or if you need to take some positional parameters and arbitrary
+keywords.
+
+- Use keyword-only when names have meaning and the function definition is
+more understandable by being explicit with names or you want to prevent
+users relying on the position of the argument being passed.
+
+---
+
+[S4]
+Title: The Python Tutorial
+Section: 4.1. if Statements¶ (part 21)
+URL: https://docs.python.org/3/tutorial/controlflow.html
+Content:
+```
+def cheeseshop(kind, *arguments, **keywords):
+ print(""-- Do you have any"", kind, ""?"")
+ print(""-- I'm sorry, we're all out of"", kind)
+ for arg in arguments:
+ print(arg)
+ print(""-"" * 40)
+ for kw in keywords:
+ print(kw, "":"", keywords[kw])
+```
+
+It could be called like this:
+
+```
+cheeseshop(""Limburger"", ""It's very runny, sir."",
+ ""It's really very, VERY runny, sir."",
+ shopkeeper=""Michael Palin"",
+ client=""John Cleese"",
+ sketch=""Cheese Shop Sketch"")
+```
+
+and of course it would print:
+
+```
+-- Do you have any Limburger ?
+-- I'm sorry, we're all out of Limburger
+It's very runny, sir.
+It's really very, VERY runny, sir.
+----------------------------------------
+shopkeeper : Michael Palin
+client : John Cleese
+sketch : Cheese Shop Sketch
+```
+
+Note that the order in which the keyword arguments are printed is guaranteed
+to match the order in which they were provided in the function call.
+
+### 4.9.3. Special parameters¶
+
+By default, arguments may be passed to a Python function either by position
+or explicitly by keyword. For readability and performance, it makes sense to
+restrict the way arguments can be passed so that a developer need only look
+at the function definition to determine if items are passed by position, by
+position or keyword, or by keyword.
+
+A function definition may look like:
+
+```
+def f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):
+ ----------- ---------- ----------
+ | | |
+ | Positional or keyword |
+ | - Keyword only
+ -- Positional only
+```
+
+where / and * are optional. If used, these symbols indicate the kind of
+parameter by how the arguments may be passed to the function:
+positional-only, positional-or-keyword, and keyword-only. Keyword parameters
+are also referred to as named parameters.
+
+#### 4.9.3.1. Positional-or-Keyword Arguments¶
+
+If / and * are not present in the function definition, arguments may
+be passed to a function by position or by keyword.
+
+#### 4.9.3.2. Positional-Only Parameters¶","In a Python function definition, the `/` and `*` symbols divide the parameters as follows:
+
+* **`/` (Forward-slash):** This symbol is used to logically separate positional-only parameters from the rest of the parameters [S1]. 
+  * Parameters placed **before** the `/` are positional-only, meaning their order matters and they cannot be passed by keyword [S1].
+  * Parameters following the `/` may be positional-or-keyword or keyword-only [S1].
+* **`*` (Asterisk):** This symbol is placed in the arguments list just **before** the first keyword-only parameter to mark all subsequent parameters as keyword-only [S1].
+  * Parameters placed **after** the `*` must be passed by keyword argument [S1].
+
+When both symbols are used, the parameters are divided into three distinct zones [S1, S4]:
+```python
+def f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):
+```
+1. **Positional-only parameters** are placed before the `/` [S1, S4].
+2. **Positional-or-keyword parameters** are placed between the `/` and the `*` [S1, S4].
+3. **Keyword-only parameters** are placed after the `*` [S1, S4].",,,,,,,
+python-parameter-kinds-001,budget-blind-b,Python,"How do / and * divide positional-only, positional-or-keyword, and keyword-only parameters in a Python function definition?",Parameters before / are positional-only. | Parameters between the separators accept either calling style. | Parameters after * are keyword-only.,"[S1]
+Title: The Python Tutorial
+Section: 4.1. if Statements¶ (part 22)
+URL: https://docs.python.org/3/tutorial/controlflow.html
+Content:
+```
+def f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):
+ ----------- ---------- ----------
+ | | |
+ | Positional or keyword |
+ | - Keyword only
+ -- Positional only
+```
+
+where / and * are optional. If used, these symbols indicate the kind of
+parameter by how the arguments may be passed to the function:
+positional-only, positional-or-keyword, and keyword-only. Keyword parameters
+are also referred to as named parameters.
+
+#### 4.9.3.1. Positional-or-Keyword Arguments¶
+
+If / and * are not present in the function definition, arguments may
+be passed to a function by position or by keyword.
+
+#### 4.9.3.2. Positional-Only Parameters¶
+
+Looking at this in a bit more detail, it is possible to mark certain parameters
+as positional-only. If positional-only, the parameters’ order matters, and
+the parameters cannot be passed by keyword. Positional-only parameters are
+placed before a / (forward-slash). The / is used to logically
+separate the positional-only parameters from the rest of the parameters.
+If there is no / in the function definition, there are no positional-only
+parameters.
+
+Parameters following the / may be positional-or-keyword or keyword-only.
+
+#### 4.9.3.3. Keyword-Only Arguments¶
+
+To mark parameters as keyword-only, indicating the parameters must be passed
+by keyword argument, place an * in the arguments list just before the first
+keyword-only parameter.
+
+#### 4.9.3.4. Function Examples¶
+
+Consider the following example function definitions paying close attention to the
+markers / and *:
+
+```
+>>> def standard_arg(arg):
+... print(arg)
+...
+>>> def pos_only_arg(arg, /):
+... print(arg)
+...
+>>> def kwd_only_arg(*, arg):
+... print(arg)
+...
+>>> def combined_example(pos_only, /, standard, *, kwd_only):
+... print(pos_only, standard, kwd_only)
+```
+
+The first function definition, standard_arg, the most familiar form,
+places no restrictions on the calling convention and arguments may be
+passed by position or keyword:
+
+```
+>>> standard_arg(2)
+2
+
+>>> standard_arg(arg=2)
+2
+```
+
+The second function pos_only_arg is restricted to only use positional
+parameters as there is a / in the function definition:
+
+---
+
+[S2]
+Title: The Python Tutorial
+Section: 4.1. if Statements¶ (part 23)
+URL: https://docs.python.org/3/tutorial/controlflow.html
+Content:
+```
+>>> def standard_arg(arg):
+... print(arg)
+...
+>>> def pos_only_arg(arg, /):
+... print(arg)
+...
+>>> def kwd_only_arg(*, arg):
+... print(arg)
+...
+>>> def combined_example(pos_only, /, standard, *, kwd_only):
+... print(pos_only, standard, kwd_only)
+```
+
+The first function definition, standard_arg, the most familiar form,
+places no restrictions on the calling convention and arguments may be
+passed by position or keyword:
+
+```
+>>> standard_arg(2)
+2
+
+>>> standard_arg(arg=2)
+2
+```
+
+The second function pos_only_arg is restricted to only use positional
+parameters as there is a / in the function definition:
+
+```
+>>> pos_only_arg(1)
+1
+
+>>> pos_only_arg(arg=1)
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: pos_only_arg() got some positional-only arguments passed as keyword arguments: 'arg'
+```
+
+The third function kwd_only_arg only allows keyword arguments as indicated
+by a * in the function definition:
+
+```
+>>> kwd_only_arg(3)
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: kwd_only_arg() takes 0 positional arguments but 1 was given
+
+>>> kwd_only_arg(arg=3)
+3
+```
+
+And the last uses all three calling conventions in the same function
+definition:
+
+```
+>>> combined_example(1, 2, 3)
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: combined_example() takes 2 positional arguments but 3 were given
+
+>>> combined_example(1, 2, kwd_only=3)
+1 2 3
+
+>>> combined_example(1, standard=2, kwd_only=3)
+1 2 3
+
+>>> combined_example(pos_only=1, standard=2, kwd_only=3)
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: combined_example() got some positional-only arguments passed as keyword arguments: 'pos_only'
+```
+
+Finally, consider this function definition which has a potential collision between the positional argument name and **kwds which has name as a key:
+
+```
+def foo(name, **kwds):
+ return 'name' in kwds
+```
+
+There is no possible call that will make it return True as the keyword 'name'
+will always bind to the first parameter. For example:
+
+```
+>>> foo(1, **{'name': 2})
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: foo() got multiple values for argument 'name'
+>>>
+```
+
+---
+
+[S3]
+Title: The Python Tutorial
+Section: 4.1. if Statements¶ (part 24)
+URL: https://docs.python.org/3/tutorial/controlflow.html
+Content:
+Finally, consider this function definition which has a potential collision between the positional argument name and **kwds which has name as a key:
+
+```
+def foo(name, **kwds):
+ return 'name' in kwds
+```
+
+There is no possible call that will make it return True as the keyword 'name'
+will always bind to the first parameter. For example:
+
+```
+>>> foo(1, **{'name': 2})
+Traceback (most recent call last):
+ File ""<stdin>"", line 1, in <module>
+TypeError: foo() got multiple values for argument 'name'
+>>>
+```
+
+But using / (positional only arguments), it is possible since it allows name as a positional argument and 'name' as a key in the keyword arguments:
+
+```
+>>> def foo(name, /, **kwds):
+... return 'name' in kwds
+...
+>>> foo(1, **{'name': 2})
+True
+```
+
+In other words, the names of positional-only parameters can be used in
+**kwds without ambiguity.
+
+#### 4.9.3.5. Recap¶
+
+The use case will determine which parameters to use in the function definition:
+
+```
+def f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):
+```
+
+As guidance:
+
+- Use positional-only if you want the name of the parameters to not be
+available to the user. This is useful when parameter names have no real
+meaning, if you want to enforce the order of the arguments when the function
+is called or if you need to take some positional parameters and arbitrary
+keywords.
+
+Use positional-only if you want the name of the parameters to not be
+available to the user. This is useful when parameter names have no real
+meaning, if you want to enforce the order of the arguments when the function
+is called or if you need to take some positional parameters and arbitrary
+keywords.
+
+- Use keyword-only when names have meaning and the function definition is
+more understandable by being explicit with names or you want to prevent
+users relying on the position of the argument being passed.
+
+---
+
+[S4]
+Title: The Python Tutorial
+Section: 4.1. if Statements¶ (part 21)
+URL: https://docs.python.org/3/tutorial/controlflow.html
+Content:
+```
+def cheeseshop(kind, *arguments, **keywords):
+ print(""-- Do you have any"", kind, ""?"")
+ print(""-- I'm sorry, we're all out of"", kind)
+ for arg in arguments:
+ print(arg)
+ print(""-"" * 40)
+ for kw in keywords:
+ print(kw, "":"", keywords[kw])
+```
+
+It could be called like this:
+
+```
+cheeseshop(""Limburger"", ""It's very runny, sir."",
+ ""It's really very, VERY runny, sir."",
+ shopkeeper=""Michael Palin"",
+ client=""John Cleese"",
+ sketch=""Cheese Shop Sketch"")
+```
+
+and of course it would print:
+
+```
+-- Do you have any Limburger ?
+-- I'm sorry, we're all out of Limburger
+It's very runny, sir.
+It's really very, VERY runny, sir.
+----------------------------------------
+shopkeeper : Michael Palin
+client : John Cleese
+sketch : Cheese Shop Sketch
+```
+
+Note that the order in which the keyword arguments are printed is guaranteed
+to match the order in which they were provided in the function call.
+
+### 4.9.3. Special parameters¶
+
+By default, arguments may be passed to a Python function either by position
+or explicitly by keyword. For readability and performance, it makes sense to
+restrict the way arguments can be passed so that a developer need only look
+at the function definition to determine if items are passed by position, by
+position or keyword, or by keyword.
+
+A function definition may look like:
+
+```
+def f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):
+ ----------- ---------- ----------
+ | | |
+ | Positional or keyword |
+ | - Keyword only
+ -- Positional only
+```
+
+where / and * are optional. If used, these symbols indicate the kind of
+parameter by how the arguments may be passed to the function:
+positional-only, positional-or-keyword, and keyword-only. Keyword parameters
+are also referred to as named parameters.
+
+#### 4.9.3.1. Positional-or-Keyword Arguments¶
+
+If / and * are not present in the function definition, arguments may
+be passed to a function by position or by keyword.
+
+#### 4.9.3.2. Positional-Only Parameters¶","In a Python function definition, the `/` and `*` symbols divide the parameters as follows:
+
+* **`/` (Forward-slash):** This symbol is used to logically separate positional-only parameters from the rest of the parameters [S1]. 
+  * Parameters placed **before** the `/` are **positional-only** [S1].
+  * Parameters following the `/` may be positional-or-keyword or keyword-only [S1].
+* **`*` (Asterisk):** This symbol is used to mark parameters as keyword-only [S1].
+  * Placing an `*` in the arguments list just **before** the first keyword-only parameter indicates that all subsequent parameters must be passed by keyword [S1].
+
+**Combined Structure:**
+When both are used, the parameters are divided into three distinct zones [S1, S4]:
+```python
+def f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):
+```
+* **Positional-only:** Left of the `/` [S1, S4].
+* **Positional-or-keyword:** Between the `/` and the `*` [S1, S4].
+* **Keyword-only:** Right of the `*` [S1, S4].",,,,,,,
+rust-ownership-move-clone-001,budget-blind-a,Rust,What is the difference between moving and cloning a heap-owning Rust value such as String?,A move transfers ownership. | The previous binding cannot be used after the move. | clone duplicates heap data so both values remain usable.,"[S1]
+Title: The Rust Programming Language
+Section: What Is Ownership? (part 17)
+URL: https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html
+Content:
+If we do want to deeply copy the heap data of the String, not just the
+stack data, we can use a common method called clone. We’ll discuss method
+syntax in Chapter 5, but because methods are a common feature in many
+programming languages, you’ve probably seen them before.
+
+Here’s an example of the clone method in action:
+
+```
+fn main() {
+ let s1 = String::from(""hello"");
+ let s2 = s1.clone();
+
+println!(""s1 = {s1}, s2 = {s2}"");
+}
+```
+
+This works just fine and explicitly produces the behavior shown in Figure 4-3,
+where the heap data does get copied.
+
+When you see a call to clone, you know that some arbitrary code is being
+executed and that code may be expensive. It’s a visual indicator that something
+different is going on.
+
+#### Stack-Only Data: Copy
+
+There’s another wrinkle we haven’t talked about yet. This code using
+integers—part of which was shown in Listing 4-2—works and is valid:
+
+```
+fn main() {
+ let x = 5;
+ let y = x;
+
+println!(""x = {x}, y = {y}"");
+}
+```
+
+But this code seems to contradict what we just learned: We don’t have a call to
+clone, but x is still valid and wasn’t moved into y.
+
+The reason is that types such as integers that have a known size at compile
+time are stored entirely on the stack, so copies of the actual values are quick
+to make. That means there’s no reason we would want to prevent x from being
+valid after we create the variable y. In other words, there’s no difference
+between deep and shallow copying here, so calling clone wouldn’t do anything
+different from the usual shallow copying, and we can leave it out.
+
+Rust has a special annotation called the Copy trait that we can place on
+types that are stored on the stack, as integers are (we’ll talk more about
+traits in Chapter 10). If a type implements the Copy
+trait, variables that use it do not move, but rather are trivially copied,
+making them still valid after assignment to another variable.
+
+---
+
+[S2]
+Title: The Rust Programming Language
+Section: What Is Ownership? (part 16)
+URL: https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html
+Content:
+In addition, there’s a design choice that’s implied by this: Rust will never
+automatically create “deep” copies of your data. Therefore, any automatic
+copying can be assumed to be inexpensive in terms of runtime performance.
+
+#### Scope and Assignment
+
+The inverse of this is true for the relationship between scoping, ownership, and
+memory being freed via the drop function as well. When you assign a completely
+new value to an existing variable, Rust will call drop and free the original
+value’s memory immediately. Consider this code, for example:
+
+```
+fn main() {
+ let mut s = String::from(""hello"");
+ s = String::from(""ahoy"");
+
+println!(""{s}, world!"");
+}
+```
+
+We initially declare a variable s and bind it to a String with the value
+""hello"". Then, we immediately create a new String with the value ""ahoy""
+and assign it to s. At this point, nothing is referring to the original value
+on the heap at all. Figure 4-5 illustrates the stack and heap data now:
+
+Figure 4-5: The representation in memory after the initial
+value has been replaced in its entirety
+
+The original string thus immediately goes out of scope. Rust will run the drop
+function on it and its memory will be freed right away. When we print the value
+at the end, it will be ""ahoy, world!"".
+
+#### Variables and Data Interacting with Clone
+
+If we do want to deeply copy the heap data of the String, not just the
+stack data, we can use a common method called clone. We’ll discuss method
+syntax in Chapter 5, but because methods are a common feature in many
+programming languages, you’ve probably seen them before.
+
+Here’s an example of the clone method in action:
+
+```
+fn main() {
+ let s1 = String::from(""hello"");
+ let s2 = s1.clone();
+
+println!(""s1 = {s1}, s2 = {s2}"");
+}
+```
+
+This works just fine and explicitly produces the behavior shown in Figure 4-3,
+where the heap data does get copied.
+
+---
+
+[S3]
+Title: The Rust Programming Language
+Section: What Is Ownership? (part 12)
+URL: https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html
+Content:
+This looks very similar, so we might assume that the way it works would be the
+same: That is, the second line would make a copy of the value in s1 and bind
+it to s2. But this isn’t quite what happens.
+
+Take a look at Figure 4-1 to see what is happening to String under the
+covers. A String is made up of three parts, shown on the left: a pointer to
+the memory that holds the contents of the string, a length, and a capacity.
+This group of data is stored on the stack. On the right is the memory on the
+heap that holds the contents.
+
+Figure 4-1: The representation in memory of a String
+holding the value ""hello"" bound to s1
+
+The length is how much memory, in bytes, the contents of the String are
+currently using. The capacity is the total amount of memory, in bytes, that the
+String has received from the allocator. The difference between length and
+capacity matters, but not in this context, so for now, it’s fine to ignore the
+capacity.
+
+When we assign s1 to s2, the String data is copied, meaning we copy the
+pointer, the length, and the capacity that are on the stack. We do not copy the
+data on the heap that the pointer refers to. In other words, the data
+representation in memory looks like Figure 4-2.
+
+Figure 4-2: The representation in memory of the variable
+s2 that has a copy of the pointer, length, and capacity of s1
+
+The representation does not look like Figure 4-3, which is what memory would
+look like if Rust instead copied the heap data as well. If Rust did this, the
+operation s2 = s1 could be very expensive in terms of runtime performance if
+the data on the heap were large.
+
+---
+
+[S4]
+Title: The Rust Programming Language
+Section: What Is Ownership? (part 11)
+URL: https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html
+Content:
+Note: In C++, this pattern of deallocating resources at the end of an item’s
+lifetime is sometimes called Resource Acquisition Is Initialization (RAII).
+The drop function in Rust will be familiar to you if you’ve used RAII
+patterns.
+
+This pattern has a profound impact on the way Rust code is written. It may seem
+simple right now, but the behavior of code can be unexpected in more
+complicated situations when we want to have multiple variables use the data
+we’ve allocated on the heap. Let’s explore some of those situations now.
+
+#### Variables and Data Interacting with Move
+
+Multiple variables can interact with the same data in different ways in Rust.
+Listing 4-2 shows an example using an integer.
+
+```
+fn main() {
+ let x = 5;
+ let y = x;
+}
+```
+
+We can probably guess what this is doing: “Bind the value 5 to x; then, make
+a copy of the value in x and bind it to y.” We now have two variables, x
+and y, and both equal 5. This is indeed what is happening, because integers
+are simple values with a known, fixed size, and these two 5 values are pushed
+onto the stack.
+
+Now let’s look at the String version:
+
+```
+fn main() {
+ let s1 = String::from(""hello"");
+ let s2 = s1;
+}
+```
+
+This looks very similar, so we might assume that the way it works would be the
+same: That is, the second line would make a copy of the value in s1 and bind
+it to s2. But this isn’t quite what happens.
+
+Take a look at Figure 4-1 to see what is happening to String under the
+covers. A String is made up of three parts, shown on the left: a pointer to
+the memory that holds the contents of the string, a length, and a capacity.
+This group of data is stored on the stack. On the right is the memory on the
+heap that holds the contents.","Based on the provided documentation, the differences between moving (assigning) and cloning a heap-owning value like a `String` are:
+
+* **Moving (Assignment):** When you assign a `String` to another variable (e.g., `let s2 = s1;`), Rust copies the stack data, which consists of the pointer, length, and capacity [S3]. It does **not** copy the actual data on the heap that the pointer refers to [S3]. This design choice ensures that automatic copying",,,,,,,
+rust-ownership-move-clone-001,budget-blind-b,Rust,What is the difference between moving and cloning a heap-owning Rust value such as String?,A move transfers ownership. | The previous binding cannot be used after the move. | clone duplicates heap data so both values remain usable.,"[S1]
+Title: The Rust Programming Language
+Section: What Is Ownership? (part 17)
+URL: https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html
+Content:
+If we do want to deeply copy the heap data of the String, not just the
+stack data, we can use a common method called clone. We’ll discuss method
+syntax in Chapter 5, but because methods are a common feature in many
+programming languages, you’ve probably seen them before.
+
+Here’s an example of the clone method in action:
+
+```
+fn main() {
+ let s1 = String::from(""hello"");
+ let s2 = s1.clone();
+
+println!(""s1 = {s1}, s2 = {s2}"");
+}
+```
+
+This works just fine and explicitly produces the behavior shown in Figure 4-3,
+where the heap data does get copied.
+
+When you see a call to clone, you know that some arbitrary code is being
+executed and that code may be expensive. It’s a visual indicator that something
+different is going on.
+
+#### Stack-Only Data: Copy
+
+There’s another wrinkle we haven’t talked about yet. This code using
+integers—part of which was shown in Listing 4-2—works and is valid:
+
+```
+fn main() {
+ let x = 5;
+ let y = x;
+
+println!(""x = {x}, y = {y}"");
+}
+```
+
+But this code seems to contradict what we just learned: We don’t have a call to
+clone, but x is still valid and wasn’t moved into y.
+
+The reason is that types such as integers that have a known size at compile
+time are stored entirely on the stack, so copies of the actual values are quick
+to make. That means there’s no reason we would want to prevent x from being
+valid after we create the variable y. In other words, there’s no difference
+between deep and shallow copying here, so calling clone wouldn’t do anything
+different from the usual shallow copying, and we can leave it out.
+
+Rust has a special annotation called the Copy trait that we can place on
+types that are stored on the stack, as integers are (we’ll talk more about
+traits in Chapter 10). If a type implements the Copy
+trait, variables that use it do not move, but rather are trivially copied,
+making them still valid after assignment to another variable.
+
+---
+
+[S2]
+Title: The Rust Programming Language
+Section: What Is Ownership? (part 16)
+URL: https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html
+Content:
+In addition, there’s a design choice that’s implied by this: Rust will never
+automatically create “deep” copies of your data. Therefore, any automatic
+copying can be assumed to be inexpensive in terms of runtime performance.
+
+#### Scope and Assignment
+
+The inverse of this is true for the relationship between scoping, ownership, and
+memory being freed via the drop function as well. When you assign a completely
+new value to an existing variable, Rust will call drop and free the original
+value’s memory immediately. Consider this code, for example:
+
+```
+fn main() {
+ let mut s = String::from(""hello"");
+ s = String::from(""ahoy"");
+
+println!(""{s}, world!"");
+}
+```
+
+We initially declare a variable s and bind it to a String with the value
+""hello"". Then, we immediately create a new String with the value ""ahoy""
+and assign it to s. At this point, nothing is referring to the original value
+on the heap at all. Figure 4-5 illustrates the stack and heap data now:
+
+Figure 4-5: The representation in memory after the initial
+value has been replaced in its entirety
+
+The original string thus immediately goes out of scope. Rust will run the drop
+function on it and its memory will be freed right away. When we print the value
+at the end, it will be ""ahoy, world!"".
+
+#### Variables and Data Interacting with Clone
+
+If we do want to deeply copy the heap data of the String, not just the
+stack data, we can use a common method called clone. We’ll discuss method
+syntax in Chapter 5, but because methods are a common feature in many
+programming languages, you’ve probably seen them before.
+
+Here’s an example of the clone method in action:
+
+```
+fn main() {
+ let s1 = String::from(""hello"");
+ let s2 = s1.clone();
+
+println!(""s1 = {s1}, s2 = {s2}"");
+}
+```
+
+This works just fine and explicitly produces the behavior shown in Figure 4-3,
+where the heap data does get copied.
+
+---
+
+[S3]
+Title: The Rust Programming Language
+Section: What Is Ownership? (part 12)
+URL: https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html
+Content:
+This looks very similar, so we might assume that the way it works would be the
+same: That is, the second line would make a copy of the value in s1 and bind
+it to s2. But this isn’t quite what happens.
+
+Take a look at Figure 4-1 to see what is happening to String under the
+covers. A String is made up of three parts, shown on the left: a pointer to
+the memory that holds the contents of the string, a length, and a capacity.
+This group of data is stored on the stack. On the right is the memory on the
+heap that holds the contents.
+
+Figure 4-1: The representation in memory of a String
+holding the value ""hello"" bound to s1
+
+The length is how much memory, in bytes, the contents of the String are
+currently using. The capacity is the total amount of memory, in bytes, that the
+String has received from the allocator. The difference between length and
+capacity matters, but not in this context, so for now, it’s fine to ignore the
+capacity.
+
+When we assign s1 to s2, the String data is copied, meaning we copy the
+pointer, the length, and the capacity that are on the stack. We do not copy the
+data on the heap that the pointer refers to. In other words, the data
+representation in memory looks like Figure 4-2.
+
+Figure 4-2: The representation in memory of the variable
+s2 that has a copy of the pointer, length, and capacity of s1
+
+The representation does not look like Figure 4-3, which is what memory would
+look like if Rust instead copied the heap data as well. If Rust did this, the
+operation s2 = s1 could be very expensive in terms of runtime performance if
+the data on the heap were large.
+
+---
+
+[S4]
+Title: The Rust Programming Language
+Section: What Is Ownership? (part 11)
+URL: https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html
+Content:
+Note: In C++, this pattern of deallocating resources at the end of an item’s
+lifetime is sometimes called Resource Acquisition Is Initialization (RAII).
+The drop function in Rust will be familiar to you if you’ve used RAII
+patterns.
+
+This pattern has a profound impact on the way Rust code is written. It may seem
+simple right now, but the behavior of code can be unexpected in more
+complicated situations when we want to have multiple variables use the data
+we’ve allocated on the heap. Let’s explore some of those situations now.
+
+#### Variables and Data Interacting with Move
+
+Multiple variables can interact with the same data in different ways in Rust.
+Listing 4-2 shows an example using an integer.
+
+```
+fn main() {
+ let x = 5;
+ let y = x;
+}
+```
+
+We can probably guess what this is doing: “Bind the value 5 to x; then, make
+a copy of the value in x and bind it to y.” We now have two variables, x
+and y, and both equal 5. This is indeed what is happening, because integers
+are simple values with a known, fixed size, and these two 5 values are pushed
+onto the stack.
+
+Now let’s look at the String version:
+
+```
+fn main() {
+ let s1 = String::from(""hello"");
+ let s2 = s1;
+}
+```
+
+This looks very similar, so we might assume that the way it works would be the
+same: That is, the second line would make a copy of the value in s1 and bind
+it to s2. But this isn’t quite what happens.
+
+Take a look at Figure 4-1 to see what is happening to String under the
+covers. A String is made up of three parts, shown on the left: a pointer to
+the memory that holds the contents of the string, a length, and a capacity.
+This group of data is stored on the stack. On the right is the memory on the
+heap that holds the contents.","Based on the provided documentation, the differences between moving (assignment) and cloning a heap-owning value like a `String` are:
+
+* **Moving (Assignment)**: When you assign a `String` to another variable (e.g., `let s2 = s1;`), Rust only copies the stack data, which includes the pointer, length, and capacity [S3]. It does **not** copy the actual data on the heap that the pointer refers to [S3]. Rust does this because automatically making ""deep"" copies of heap data could be very expensive in terms of runtime performance [S2, S3]. 
+* **Cloning**: If you want to deeply copy both the stack data and the heap data of the `String`, you must explicitly call the `clone` method (e.g., `let s2 = s1.clone();`) [S1, S2]. Calling `clone` is a visual indicator that arbitrary, potentially expensive code is being executed to copy the heap data [S1].
+
+*Note: The provided excerpts are incomplete regarding the full mechanics of a ""move,"" as they omit the specific details explaining how the source variable (such as `s1`) is invalidated after the assignment occurs.*",,,,,,,
+rust-mutable-reference-rules-001,budget-blind-a,Rust,What restrictions apply while a mutable Rust reference to a value is active?,Only one active mutable reference is allowed. | Mutable and immutable references to the same value cannot overlap. | The restrictions prevent data races.,"[S1]
+Title: The Rust Programming Language
+Section: References and Borrowing (part 5)
+URL: https://doc.rust-lang.org/stable/book/ch04-02-references-and-borrowing.html
+Content:
+let r1 = &mut s;
+ let r2 = &mut s;
+
+println!(""{r1}, {r2}"");
+}
+```
+
+Here’s the error:
+
+```
+$ cargo run
+ Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0499]: cannot borrow `s` as mutable more than once at a time
+ --> src/main.rs:5:14
+ |
+4 | let r1 = &mut s;
+ | ------ first mutable borrow occurs here
+5 | let r2 = &mut s;
+ | ^^^^^^ second mutable borrow occurs here
+6 |
+7 | println!(""{r1}, {r2}"");
+ | -- first borrow later used here
+
+For more information about this error, try `rustc --explain E0499`.
+error: could not compile `ownership` (bin ""ownership"") due to 1 previous error
+```
+
+This error says that this code is invalid because we cannot borrow s as
+mutable more than once at a time. The first mutable borrow is in r1 and must
+last until it’s used in the println!, but between the creation of that
+mutable reference and its usage, we tried to create another mutable reference
+in r2 that borrows the same data as r1.
+
+The restriction preventing multiple mutable references to the same data at the
+same time allows for mutation but in a very controlled fashion. It’s something
+that new Rustaceans struggle with because most languages let you mutate
+whenever you’d like. The benefit of having this restriction is that Rust can
+prevent data races at compile time. A data race is similar to a race
+condition and happens when these three behaviors occur:
+
+- Two or more pointers access the same data at the same time.
+
+- At least one of the pointers is being used to write to the data.
+
+- There’s no mechanism being used to synchronize access to the data.
+
+Data races cause undefined behavior and can be difficult to diagnose and fix
+when you’re trying to track them down at runtime; Rust prevents this problem by
+refusing to compile code with data races!
+
+---
+
+[S2]
+Title: The Rust Programming Language
+Section: References and Borrowing (part 6)
+URL: https://doc.rust-lang.org/stable/book/ch04-02-references-and-borrowing.html
+Content:
+The restriction preventing multiple mutable references to the same data at the
+same time allows for mutation but in a very controlled fashion. It’s something
+that new Rustaceans struggle with because most languages let you mutate
+whenever you’d like. The benefit of having this restriction is that Rust can
+prevent data races at compile time. A data race is similar to a race
+condition and happens when these three behaviors occur:
+
+- Two or more pointers access the same data at the same time.
+
+- At least one of the pointers is being used to write to the data.
+
+- There’s no mechanism being used to synchronize access to the data.
+
+Data races cause undefined behavior and can be difficult to diagnose and fix
+when you’re trying to track them down at runtime; Rust prevents this problem by
+refusing to compile code with data races!
+
+As always, we can use curly brackets to create a new scope, allowing for
+multiple mutable references, just not simultaneous ones:
+
+```
+fn main() {
+ let mut s = String::from(""hello"");
+
+{
+ let r1 = &mut s;
+ } // r1 goes out of scope here, so we can make a new reference with no problems.
+
+let r2 = &mut s;
+}
+```
+
+Rust enforces a similar rule for combining mutable and immutable references.
+This code results in an error:
+
+```
+fn main() {
+ let mut s = String::from(""hello"");
+
+let r1 = &s; // no problem
+ let r2 = &s; // no problem
+ let r3 = &mut s; // BIG PROBLEM
+
+println!(""{r1}, {r2}, and {r3}"");
+}
+```
+
+Here’s the error:
+
+```
+$ cargo run
+ Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+ --> src/main.rs:6:14
+ |
+4 | let r1 = &s; // no problem
+ | -- immutable borrow occurs here
+5 | let r2 = &s; // no problem
+6 | let r3 = &mut s; // BIG PROBLEM
+ | ^^^^^^ mutable borrow occurs here
+7 |
+8 | println!(""{r1}, {r2}, and {r3}"");
+ | -- immutable borrow later used here
+
+---
+
+[S3]
+Title: The Rust Programming Language
+Section: References and Borrowing (part 4)
+URL: https://doc.rust-lang.org/stable/book/ch04-02-references-and-borrowing.html
+Content:
+```
+$ cargo run
+ Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0596]: cannot borrow `*some_string` as mutable, as it is behind a `&` reference
+ --> src/main.rs:8:5
+ |
+8 | some_string.push_str("", world"");
+ | ^^^^^^^^^^^ `some_string` is a `&` reference, so the data it refers to cannot be borrowed as mutable
+ |
+help: consider changing this to be a mutable reference
+ |
+7 | fn change(some_string: &mut String) {
+ | +++
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `ownership` (bin ""ownership"") due to 1 previous error
+```
+
+Just as variables are immutable by default, so are references. We’re not
+allowed to modify something we have a reference to.
+
+### Mutable References
+
+We can fix the code from Listing 4-6 to allow us to modify a borrowed value
+with just a few small tweaks that use, instead, a mutable reference:
+
+```
+fn main() {
+ let mut s = String::from(""hello"");
+
+change(&mut s);
+}
+
+fn change(some_string: &mut String) {
+ some_string.push_str("", world"");
+}
+```
+
+First, we change s to be mut. Then, we create a mutable reference with
+&mut s where we call the change function and update the function signature
+to accept a mutable reference with some_string: &mut String. This makes it
+very clear that the change function will mutate the value it borrows.
+
+Mutable references have one big restriction: If you have a mutable reference to
+a value, you can have no other references to that value. This code that
+attempts to create two mutable references to s will fail:
+
+```
+fn main() {
+ let mut s = String::from(""hello"");
+
+let r1 = &mut s;
+ let r2 = &mut s;
+
+println!(""{r1}, {r2}"");
+}
+```
+
+Here’s the error:
+
+```
+$ cargo run
+ Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0499]: cannot borrow `s` as mutable more than once at a time
+ --> src/main.rs:5:14
+ |
+4 | let r1 = &mut s;
+ | ------ first mutable borrow occurs here
+5 | let r2 = &mut s;
+ | ^^^^^^ second mutable borrow occurs here
+6 |
+7 | println!(""{r1}, {r2}"");
+ | -- first borrow later used here
+
+---
+
+[S4]
+Title: The Rust Reference
+Section: Pointed-to bytes (part 3)
+URL: https://doc.rust-lang.org/stable/reference/behavior-considered-undefined.html
+Content:
+Breaking the pointer aliasing rules. The exact aliasing rules are not determined yet, but here is an outline of the general principles:
+&T must point to memory that is not mutated while they are live (except for data inside an UnsafeCell<U>),
+and &mut T must point to memory that is not read or written by any pointer not derived from the reference and that no other reference points to while they are live.
+Box<T> is treated similar to &'static mut T for the purpose of these rules.
+The exact liveness duration is not specified, but some bounds exist:
+
+- For references, the liveness duration is upper-bounded by the syntactic
+lifetime assigned by the borrow checker; it cannot be live any longer than that lifetime.
+
+- Each time a reference or box is dereferenced or reborrowed, it is considered live.
+
+- Each time a reference or box is passed to or returned from a function, it is considered live.
+
+- When a reference (but not a Box!) is passed to a function, it is live at least as long as that function call, again except if the &T contains an UnsafeCell<U>.
+
+All this also applies when values of these types are passed in a (nested) field of a compound type, but not behind pointer indirections.
+
+- Mutating immutable bytes.
+All bytes reachable through a const-promoted expression are immutable, as well as bytes reachable through borrows in static and const initializers that have been lifetime-extended to 'static.
+The bytes owned by an immutable binding or immutable static are immutable, unless those bytes are part of an UnsafeCell<U>.
+Moreover, the bytes pointed to by a shared reference, including transitively through other references (both shared and mutable) and Boxes, are immutable; transitivity includes those references stored in fields of compound types.
+A mutation is any write of more than 0 bytes which overlaps with any of the relevant bytes (even if that write does not change the memory contents).","Based on the provided documentation, the following restrictions apply while a mutable reference to a value is active:
+
+* **No other references:** If you have a mutable reference to a value, you can have no other references (either mutable or immutable) to that same value at the same time [S2, S3]. 
+* **No multiple mutable borrows:** You cannot borrow the same data as mutable more than once at a time [S1, S3].
+* **No combining with immutable borrows:** You cannot borrow a value as mutable if it is already borrowed as immutable [S2].
+* **Pointer aliasing and access restrictions:** The mutable reference (`&mut T`) must point to memory that is not read or written by any pointer that is not derived from that reference, and no other reference may point to that memory while the mutable reference is live [S4].",,,,,,,
+rust-mutable-reference-rules-001,budget-blind-b,Rust,What restrictions apply while a mutable Rust reference to a value is active?,Only one active mutable reference is allowed. | Mutable and immutable references to the same value cannot overlap. | The restrictions prevent data races.,"[S1]
+Title: The Rust Programming Language
+Section: References and Borrowing (part 5)
+URL: https://doc.rust-lang.org/stable/book/ch04-02-references-and-borrowing.html
+Content:
+let r1 = &mut s;
+ let r2 = &mut s;
+
+println!(""{r1}, {r2}"");
+}
+```
+
+Here’s the error:
+
+```
+$ cargo run
+ Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0499]: cannot borrow `s` as mutable more than once at a time
+ --> src/main.rs:5:14
+ |
+4 | let r1 = &mut s;
+ | ------ first mutable borrow occurs here
+5 | let r2 = &mut s;
+ | ^^^^^^ second mutable borrow occurs here
+6 |
+7 | println!(""{r1}, {r2}"");
+ | -- first borrow later used here
+
+For more information about this error, try `rustc --explain E0499`.
+error: could not compile `ownership` (bin ""ownership"") due to 1 previous error
+```
+
+This error says that this code is invalid because we cannot borrow s as
+mutable more than once at a time. The first mutable borrow is in r1 and must
+last until it’s used in the println!, but between the creation of that
+mutable reference and its usage, we tried to create another mutable reference
+in r2 that borrows the same data as r1.
+
+The restriction preventing multiple mutable references to the same data at the
+same time allows for mutation but in a very controlled fashion. It’s something
+that new Rustaceans struggle with because most languages let you mutate
+whenever you’d like. The benefit of having this restriction is that Rust can
+prevent data races at compile time. A data race is similar to a race
+condition and happens when these three behaviors occur:
+
+- Two or more pointers access the same data at the same time.
+
+- At least one of the pointers is being used to write to the data.
+
+- There’s no mechanism being used to synchronize access to the data.
+
+Data races cause undefined behavior and can be difficult to diagnose and fix
+when you’re trying to track them down at runtime; Rust prevents this problem by
+refusing to compile code with data races!
+
+---
+
+[S2]
+Title: The Rust Programming Language
+Section: References and Borrowing (part 6)
+URL: https://doc.rust-lang.org/stable/book/ch04-02-references-and-borrowing.html
+Content:
+The restriction preventing multiple mutable references to the same data at the
+same time allows for mutation but in a very controlled fashion. It’s something
+that new Rustaceans struggle with because most languages let you mutate
+whenever you’d like. The benefit of having this restriction is that Rust can
+prevent data races at compile time. A data race is similar to a race
+condition and happens when these three behaviors occur:
+
+- Two or more pointers access the same data at the same time.
+
+- At least one of the pointers is being used to write to the data.
+
+- There’s no mechanism being used to synchronize access to the data.
+
+Data races cause undefined behavior and can be difficult to diagnose and fix
+when you’re trying to track them down at runtime; Rust prevents this problem by
+refusing to compile code with data races!
+
+As always, we can use curly brackets to create a new scope, allowing for
+multiple mutable references, just not simultaneous ones:
+
+```
+fn main() {
+ let mut s = String::from(""hello"");
+
+{
+ let r1 = &mut s;
+ } // r1 goes out of scope here, so we can make a new reference with no problems.
+
+let r2 = &mut s;
+}
+```
+
+Rust enforces a similar rule for combining mutable and immutable references.
+This code results in an error:
+
+```
+fn main() {
+ let mut s = String::from(""hello"");
+
+let r1 = &s; // no problem
+ let r2 = &s; // no problem
+ let r3 = &mut s; // BIG PROBLEM
+
+println!(""{r1}, {r2}, and {r3}"");
+}
+```
+
+Here’s the error:
+
+```
+$ cargo run
+ Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+ --> src/main.rs:6:14
+ |
+4 | let r1 = &s; // no problem
+ | -- immutable borrow occurs here
+5 | let r2 = &s; // no problem
+6 | let r3 = &mut s; // BIG PROBLEM
+ | ^^^^^^ mutable borrow occurs here
+7 |
+8 | println!(""{r1}, {r2}, and {r3}"");
+ | -- immutable borrow later used here
+
+---
+
+[S3]
+Title: The Rust Programming Language
+Section: References and Borrowing (part 4)
+URL: https://doc.rust-lang.org/stable/book/ch04-02-references-and-borrowing.html
+Content:
+```
+$ cargo run
+ Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0596]: cannot borrow `*some_string` as mutable, as it is behind a `&` reference
+ --> src/main.rs:8:5
+ |
+8 | some_string.push_str("", world"");
+ | ^^^^^^^^^^^ `some_string` is a `&` reference, so the data it refers to cannot be borrowed as mutable
+ |
+help: consider changing this to be a mutable reference
+ |
+7 | fn change(some_string: &mut String) {
+ | +++
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `ownership` (bin ""ownership"") due to 1 previous error
+```
+
+Just as variables are immutable by default, so are references. We’re not
+allowed to modify something we have a reference to.
+
+### Mutable References
+
+We can fix the code from Listing 4-6 to allow us to modify a borrowed value
+with just a few small tweaks that use, instead, a mutable reference:
+
+```
+fn main() {
+ let mut s = String::from(""hello"");
+
+change(&mut s);
+}
+
+fn change(some_string: &mut String) {
+ some_string.push_str("", world"");
+}
+```
+
+First, we change s to be mut. Then, we create a mutable reference with
+&mut s where we call the change function and update the function signature
+to accept a mutable reference with some_string: &mut String. This makes it
+very clear that the change function will mutate the value it borrows.
+
+Mutable references have one big restriction: If you have a mutable reference to
+a value, you can have no other references to that value. This code that
+attempts to create two mutable references to s will fail:
+
+```
+fn main() {
+ let mut s = String::from(""hello"");
+
+let r1 = &mut s;
+ let r2 = &mut s;
+
+println!(""{r1}, {r2}"");
+}
+```
+
+Here’s the error:
+
+```
+$ cargo run
+ Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0499]: cannot borrow `s` as mutable more than once at a time
+ --> src/main.rs:5:14
+ |
+4 | let r1 = &mut s;
+ | ------ first mutable borrow occurs here
+5 | let r2 = &mut s;
+ | ^^^^^^ second mutable borrow occurs here
+6 |
+7 | println!(""{r1}, {r2}"");
+ | -- first borrow later used here
+
+---
+
+[S4]
+Title: The Rust Reference
+Section: Pointed-to bytes (part 3)
+URL: https://doc.rust-lang.org/stable/reference/behavior-considered-undefined.html
+Content:
+Breaking the pointer aliasing rules. The exact aliasing rules are not determined yet, but here is an outline of the general principles:
+&T must point to memory that is not mutated while they are live (except for data inside an UnsafeCell<U>),
+and &mut T must point to memory that is not read or written by any pointer not derived from the reference and that no other reference points to while they are live.
+Box<T> is treated similar to &'static mut T for the purpose of these rules.
+The exact liveness duration is not specified, but some bounds exist:
+
+- For references, the liveness duration is upper-bounded by the syntactic
+lifetime assigned by the borrow checker; it cannot be live any longer than that lifetime.
+
+- Each time a reference or box is dereferenced or reborrowed, it is considered live.
+
+- Each time a reference or box is passed to or returned from a function, it is considered live.
+
+- When a reference (but not a Box!) is passed to a function, it is live at least as long as that function call, again except if the &T contains an UnsafeCell<U>.
+
+All this also applies when values of these types are passed in a (nested) field of a compound type, but not behind pointer indirections.
+
+- Mutating immutable bytes.
+All bytes reachable through a const-promoted expression are immutable, as well as bytes reachable through borrows in static and const initializers that have been lifetime-extended to 'static.
+The bytes owned by an immutable binding or immutable static are immutable, unless those bytes are part of an UnsafeCell<U>.
+Moreover, the bytes pointed to by a shared reference, including transitively through other references (both shared and mutable) and Boxes, are immutable; transitivity includes those references stored in fields of compound types.
+A mutation is any write of more than 0 bytes which overlaps with any of the relevant bytes (even if that write does not change the memory contents).","Based on the provided documentation, the following restrictions apply while a mutable reference to a value is active:
+
+* **No other references:** If you have a mutable reference to a value, you can have no other references (either mutable or immutable) to that same value at the same time [S2, S3]. 
+* **No multiple mutable borrows:** You cannot borrow the same data as mutable more than once at a time [S1, S3].
+* **No combining with immutable borrows:** You cannot borrow a value as mutable if it is already borrowed as immutable [S2].
+* **Pointer aliasing and access restrictions:** The mutable reference (`&mut T`) must point to memory that is not read or written by any pointer that is not derived from that reference, and no other reference may point to that memory while the mutable reference is live [S4].",,,,,,,

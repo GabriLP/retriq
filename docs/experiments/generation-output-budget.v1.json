@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "generation-output-budget-v1",
   "title": "Gemini grounded-answer completion at 900 versus 2048 output tokens",
-  "status": "preregistered",
+  "status": "completed",
   "split": "validation",
   "benchmark": "docs/evaluation/generation-benchmark.v1.json",
   "prompt": "docs/evaluation/generation-prompt.v1.json",
@@ -70,6 +70,19 @@
       "decisionImpact": "none"
     }
   ],
+  "execution": {
+    "completedAt": "2026-07-21T08:50:39.455Z",
+    "finalAttemptId": "20260721085039455",
+    "originalProviderCalls": 27,
+    "finalReplayProviderCalls": 0,
+    "generatedCases": 27,
+    "errors": 0,
+    "explicitMaxTokenStops": 0,
+    "observedCostUsd": 0.166626,
+    "selectedRuntimeBudget": 2048,
+    "qualityStatus": "pending-blinded-human-review-or-calibrated-judge",
+    "testSplitTouched": false
+  },
   "reportOutput": "docs/experiment-results/generation-output-budget-v1-validation",
   "reviewOutput": "docs/evaluation/generation-output-budget-human-review-v1.csv"
 }

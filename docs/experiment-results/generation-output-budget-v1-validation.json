@@ -1,0 +1,820 @@
+{
+  "schemaVersion": 1,
+  "id": "generation-output-budget-v1",
+  "attemptId": "20260721085039455",
+  "createdAt": "2026-07-21T08:50:39.455Z",
+  "split": "validation",
+  "testSplitTouched": false,
+  "inputHashes": {
+    "protocol": "f9bbe11095d8b03d5ac62b922d43454f7dbc1ebd1ac1b5236585b43f5a95fdb6",
+    "benchmark": "eb25d5618b0a2ee1cc045bf64e79c214bd40570bf4fbcdc87fa046975a0f4343",
+    "prompt": "0c37022a43375090d05873eb6936146353e8179f1c20a937ee9a8ad0103dbba6",
+    "chunks": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
+    "baselineResults": "c6e2c0fa51725c51a4195af326ab7af0e6e686e986778d6e37cd4ff00f096f89",
+    "humanReview": "793f0b4563459026a09e0fb0117cc8aadc7cf6ee2c6f0f27c7dc70a258e6835b"
+  },
+  "code": {
+    "gitCommit": "fb350a87a539b905fdd0d50a7ce23bb05254ae62",
+    "dirty": true,
+    "gitDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "controls": [
+    "27 answerable benchmark v4 validation cases",
+    "frozen metadata-aware retrieval evidence",
+    "Gemini 3.5 Flash direct provider",
+    "identical grounded-generation prompt v1",
+    "temperature 0",
+    "low reasoning effort",
+    "identical citation format",
+    "judge disabled",
+    "locked test split untouched"
+  ],
+  "estimate": {
+    "providerCalls": 27,
+    "estimatedInputTokens": 47807,
+    "maximumOutputTokens": 55296,
+    "conservativeMaximumCostUsd": 0.569375,
+    "note": "This is a conservative ceiling, not a billing prediction. Actual cost uses provider token metadata and successful responses are content-addressed in the generation cache."
+  },
+  "summaries": [
+    {
+      "variantId": "budget-900-frozen",
+      "maxOutputTokens": 900,
+      "generatedCases": 27,
+      "errors": 0,
+      "finishReasonCoverage": 0,
+      "explicitMaxTokenStops": 0,
+      "humanConfirmedGeneratorFailures": 1,
+      "confirmedNearBudgetAbruptStops": 1,
+      "tokens": {
+        "prompt": 52578,
+        "completion": 5012,
+        "reasoning": 4532,
+        "total": 62122
+      },
+      "costUsd": 0.164763,
+      "latencyMs": {
+        "mean": 1916.77,
+        "median": 1772.89,
+        "p95": 3141.88
+      },
+      "responseCharacters": {
+        "mean": 740.48,
+        "median": 599
+      }
+    },
+    {
+      "variantId": "budget-2048",
+      "maxOutputTokens": 2048,
+      "generatedCases": 27,
+      "errors": 0,
+      "finishReasonCoverage": 27,
+      "explicitMaxTokenStops": 0,
+      "humanConfirmedGeneratorFailures": 0,
+      "confirmedNearBudgetAbruptStops": 0,
+      "tokens": {
+        "prompt": 52578,
+        "completion": 5471,
+        "reasoning": 4280,
+        "total": 62329
+      },
+      "costUsd": 0.166626,
+      "latencyMs": {
+        "mean": 2017.91,
+        "median": 1796.5,
+        "p95": 4235.43
+      },
+      "responseCharacters": {
+        "mean": 809.59,
+        "median": 691
+      }
+    }
+  ],
+  "knownRegression": {
+    "caseId": "rust-ownership-move-clone-001",
+    "baselineAnswerEnd": "e.g., `let s2 = s1;`), Rust copies the stack data, which consists of the pointer, length, and capacity [S3]. It does **not** copy the actual data on the heap that the pointer refers to [S3]. This design choice ensures that automatic copying",
+    "baselineBudgetTokens": 896,
+    "candidateAnswerEnd": "copy the heap data [S1].\n\n*Note: The provided excerpts are incomplete regarding the full mechanics of a \"move,\" as they omit the specific details explaining how the source variable (such as `s1`) is invalidated after the assignment occurs.*",
+    "candidateFinishReason": "STOP",
+    "candidateTruncated": false
+  },
+  "decision": {
+    "status": "accept-2048-for-runtime-reliability",
+    "reliabilityAccepted": true,
+    "knownRegressionComplete": true,
+    "qualitySelectionMade": false,
+    "rationale": "All validation calls stopped naturally, the known 900-token regression completed, and no operational errors occurred. Quality remains a separate pending assessment."
+  },
+  "qualityStatus": "pending-blinded-human-review-or-calibrated-judge",
+  "limitations": [
+    "Legacy provider finish reasons were not stored, so its truncation count is a confirmed lower bound based on human failure labels, near-budget usage, and an abrupt ending.",
+    "Temperature zero does not guarantee byte-identical regeneration across provider revisions.",
+    "Completion reliability, cost, and latency do not establish answer quality.",
+    "The locked test split was not accessed."
+  ],
+  "outputs": [
+    {
+      "caseId": "react-state-snapshot-001",
+      "language": "React",
+      "answer": "Based on the provided documentation, reading a state variable immediately after calling its setter still returns the value from the current render for the following reasons:\n\n* **Setting state only changes it for the next render:** Calling a state setter does not change the state variable you already have in the current execution; instead, it queues a new render and prepares the new value for that next render [S1, S2, S4].\n* **State behaves as a snapshot:** When React calls your component, it provides a \"snapshot\" of the state for that particular render [S2]. The state variable's value is \"fixed\" when React takes this snapshot and never changes within that render, even inside asynchronous code or after a setter is called [S3]. \n\n*(Note: The provided documentation is complete and fully explains this behavior.)*",
+      "responseHash": "971b152773051aa18aadeb96384bac60604966719a7be1974438860b7bff4b24",
+      "result": {
+        "answer": "Based on the provided documentation, reading a state variable immediately after calling its setter still returns the value from the current render for the following reasons:\n\n* **Setting state only changes it for the next render:** Calling a state setter does not change the state variable you already have in the current execution; instead, it queues a new render and prepares the new value for that next render [S1, S2, S4].\n* **State behaves as a snapshot:** When React calls your component, it provides a \"snapshot\" of the state for that particular render [S2]. The state variable's value is \"fixed\" when React takes this snapshot and never changes within that render, even inside asynchronous code or after a setter is called [S3]. \n\n*(Note: The provided documentation is complete and fully explains this behavior.)*",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "hDJfar3KL6eL7M8Py4GdkQo",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2465,
+          "completionTokens": 170,
+          "reasoningTokens": 195,
+          "cachedTokens": 0,
+          "totalTokens": 2830,
+          "costUsd": 0.0069825,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 2594.99,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "react-state-queue-001",
+      "language": "React",
+      "answer": "To increment the same state value three times in a single event handler, you should pass an **updater function** to the state setter instead of passing the next state value directly [S1, S2]. \n\nInstead of calling `setNumber(number + 1)` multiple times (which only increments it once because the state value is fixed during that render) [S3, S4], you pass a function that calculates the next state based on the previous one in the queue [S1, S2].\n\n### Example Implementation\nYou can implement this by calling the state setter three times with an updater function like `n => n + 1` [S1, S2]:\n\n```javascript\nimport { useState } from 'react';\n\nexport default function Counter() {\n  const [number, setNumber] = useState(0);\n\n  return (\n    <>\n      <h1>{number}</h1>\n      <button onClick={() => {\n        setNumber(n => n + 1);\n        setNumber(n => n + 1);\n        setNumber(n => n + 1);\n      }}>+3</button>\n    </>\n  );\n}\n```\n*(Source: [S1, S2])*\n\n### How It Works\n1. **Queueing:** When you pass an updater function (e.g., `n => n + 1`), React queues the function to be processed after all other code in the event handler has run [S1].\n2. **Processing:** During the next render, React goes through the queue [S1]. It passes the previous state value to the first updater function, takes its return value, and passes that return value as the argument to the next updater function in the queue, and so on, resulting in the final updated state [S1].",
+      "responseHash": "7ba53ea7f2e01ac3b8b58278cfab0e34e3e6474b48caf10175869385634254bf",
+      "result": {
+        "answer": "To increment the same state value three times in a single event handler, you should pass an **updater function** to the state setter instead of passing the next state value directly [S1, S2]. \n\nInstead of calling `setNumber(number + 1)` multiple times (which only increments it once because the state value is fixed during that render) [S3, S4], you pass a function that calculates the next state based on the previous one in the queue [S1, S2].\n\n### Example Implementation\nYou can implement this by calling the state setter three times with an updater function like `n => n + 1` [S1, S2]:\n\n```javascript\nimport { useState } from 'react';\n\nexport default function Counter() {\n  const [number, setNumber] = useState(0);\n\n  return (\n    <>\n      <h1>{number}</h1>\n      <button onClick={() => {\n        setNumber(n => n + 1);\n        setNumber(n => n + 1);\n        setNumber(n => n + 1);\n      }}>+3</button>\n    </>\n  );\n}\n```\n*(Source: [S1, S2])*\n\n### How It Works\n1. **Queueing:** When you pass an updater function (e.g., `n => n + 1`), React queues the function to be processed after all other code in the event handler has run [S1].\n2. **Processing:** During the next render, React goes through the queue [S1]. It passes the previous state value to the first updater function, takes its return value, and passes that return value as the argument to the next updater function in the queue, and so on, resulting in the final updated state [S1].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "hjJfauTINtKfkdUPnIymgQg",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2310,
+          "completionTokens": 381,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 2691,
+          "costUsd": 0.006894,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 2070.79,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "react-effects-001",
+      "language": "React",
+      "answer": "Based on the provided documentation, you do not need an Effect to transform data or derive a value for rendering; instead, you should transform all data at the top level of your components so that it automatically re-runs when props or state change [S2]. \n\nAn Effect is appropriate when you need to \"step out\" of your React code to **synchronize with an external system** [S3, S4]. Examples of when an Effect is appropriate include:\n* Synchronizing with browser APIs, third-party widgets (such as keeping a jQuery widget synchronized with React state), or the network [S2, S3].\n* Setting up a server connection [S1, S4].\n* Fetching data (such as synchronizing search results with the current search query) [S2].\n* Sending an analytics log when a component appears on the screen [S4].\n* Controlling a non-React component based on the React state [S4].\n\n*Note: The provided excerpts do not explicitly contrast \"deriving a value\" with \"Effects\" in a single sentence, but they clearly state that data transformation for rendering should be done at the top level of components without Effects, reserving Effects strictly for external synchronization [S2, S3].*",
+      "responseHash": "65e9c1883ed58dde198e0c50e4916327d949bd58257e77255b51abf586c02218",
+      "result": {
+        "answer": "Based on the provided documentation, you do not need an Effect to transform data or derive a value for rendering; instead, you should transform all data at the top level of your components so that it automatically re-runs when props or state change [S2]. \n\nAn Effect is appropriate when you need to \"step out\" of your React code to **synchronize with an external system** [S3, S4]. Examples of when an Effect is appropriate include:\n* Synchronizing with browser APIs, third-party widgets (such as keeping a jQuery widget synchronized with React state), or the network [S2, S3].\n* Setting up a server connection [S1, S4].\n* Fetching data (such as synchronizing search results with the current search query) [S2].\n* Sending an analytics log when a component appears on the screen [S4].\n* Controlling a non-React component based on the React state [S4].\n\n*Note: The provided excerpts do not explicitly contrast \"deriving a value\" with \"Effects\" in a single sentence, but they clearly state that data transformation for rendering should be done at the top level of components without Effects, reserving Effects strictly for external synchronization [S2, S3].*",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "iDJfap34ObT5nsEPt4SVmQg",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2035,
+          "completionTokens": 260,
+          "reasoningTokens": 351,
+          "cachedTokens": 0,
+          "totalTokens": 2646,
+          "costUsd": 0.0085515,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 2839.56,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "react-refs-001",
+      "language": "React",
+      "answer": "A ref is unsuitable for a value that must update what the component displays for the following reasons:\n\n* **Changing a ref does not trigger a re-render:** Unlike state, updating a ref's value does not cause React to re-render the component [S1, S2, S4]. Consequently, the screen or component display will never update to reflect the new value [S1, S2].\n* **React does not track ref changes:** React does not know when `ref.current` changes [S3]. \n* **Reading refs during rendering is unreliable:** Reading or writing `ref.current` during rendering breaks React's expectation that a component behaves like a pure function, leading to unpredictable and unreliable code [S1, S2, S3]. \n\nIf a value is needed to calculate JSX or impact what is displayed on the screen, state should be used instead [S1, S2, S3].\n\n*Note: The provided documentation is complete and unambiguous regarding why refs are unsuitable for rendering values.*",
+      "responseHash": "d73168885487a50ef33fb1bdcc4d14574a12769d8128e71f111e93d68bf5343d",
+      "result": {
+        "answer": "A ref is unsuitable for a value that must update what the component displays for the following reasons:\n\n* **Changing a ref does not trigger a re-render:** Unlike state, updating a ref's value does not cause React to re-render the component [S1, S2, S4]. Consequently, the screen or component display will never update to reflect the new value [S1, S2].\n* **React does not track ref changes:** React does not know when `ref.current` changes [S3]. \n* **Reading refs during rendering is unreliable:** Reading or writing `ref.current` during rendering breaks React's expectation that a component behaves like a pure function, leading to unpredictable and unreliable code [S1, S2, S3]. \n\nIf a value is needed to calculate JSX or impact what is displayed on the screen, state should be used instead [S1, S2, S3].\n\n*Note: The provided documentation is complete and unambiguous regarding why refs are unsuitable for rendering values.*",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "izJfauKAMaWqkdUPkLaLoQQ",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2269,
+          "completionTokens": 214,
+          "reasoningTokens": 304,
+          "cachedTokens": 0,
+          "totalTokens": 2787,
+          "costUsd": 0.0080655,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 2561.47,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "c-standard-purpose-001",
+      "language": "C",
+      "answer": "Based on the provided documentation, the stated purpose of the C language standard (referred to as \"this International Standard\") is to:\n\n* Promote portability, reliability, maintainability, and efficient execution of C language programs on a variety of computing systems [S1].\n* Promote the portability of C programs among a variety of data-processing systems [S2].\n\n*Note: The provided excerpts are complete and unambiguous regarding the stated purpose of the standard.*",
+      "responseHash": "851bb7570ef18a65063265fdf0a497100b9934a675a982489b5e4b1f364e2db1",
+      "result": {
+        "answer": "Based on the provided documentation, the stated purpose of the C language standard (referred to as \"this International Standard\") is to:\n\n* Promote portability, reliability, maintainability, and efficient execution of C language programs on a variety of computing systems [S1].\n* Promote the portability of C programs among a variety of data-processing systems [S2].\n\n*Note: The provided excerpts are complete and unambiguous regarding the stated purpose of the standard.*",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "jjJfasCDFbb1kdUPkcei0As",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1061,
+          "completionTokens": 92,
+          "reasoningTokens": 320,
+          "cachedTokens": 0,
+          "totalTokens": 1473,
+          "costUsd": 0.0052995,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 2209.1,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "java-spec-release-001",
+      "language": "Java",
+      "answer": "Based on the provided documentation, the Java Language Specification identifies the following:\n\n* **Java Release:** Java SE 26 (specifically, March 2026) [S1, S2].\n* **Specification Status:** Final Release [S1, S2].\n* **Specification/Version:** JSR-401 Java SE 26, Version 26 [S1, S2].",
+      "responseHash": "43b713c03eff1fbdbd7815ea43c88ff09bb8a2fcec8893fb7900b7c3266f90c8",
+      "result": {
+        "answer": "Based on the provided documentation, the Java Language Specification identifies the following:\n\n* **Java Release:** Java SE 26 (specifically, March 2026) [S1, S2].\n* **Specification Status:** Final Release [S1, S2].\n* **Specification/Version:** JSR-401 Java SE 26, Version 26 [S1, S2].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "kDJfaoKVIsy5kdUPjMbUgAs",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 756,
+          "completionTokens": 87,
+          "reasoningTokens": 113,
+          "cachedTokens": 0,
+          "totalTokens": 956,
+          "costUsd": 0.002934,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1317.88,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "java-ods-arraystack-amortized-001",
+      "language": "Java",
+      "answer": "An individual `resize()` operation takes linear $O(n)$ time because it must allocate a new array of size $2n$ and copy all $n$ elements from the old array into the new array [S1]. \n\nHowever, this operation adds only a constant $O(1)$ amortized cost per update because:\n* **High frequency of updates between resizes:** Anytime `resize()` is called, the number of `add` or `remove` operations performed since the previous `resize()` is at least $n/2 - 1$ [S1]. \n* **Amortized analysis over a sequence:** Instead of looking at individual operations, amortized analysis considers a sequence of $m$ operations [S1]. For any sequence of $m \\ge 1$ calls to `add(i, x)` and `remove(i)` starting from an empty structure, the total time spent during all calls to `resize()` is $O(m)$ [S1, S2]. \n* **Constant cost per operation:** Because the total cost of all resizing operations over the sequence is $O(m)$, the cost when amortized over all $m$ operations is only $O(1)$ per operation [S3].\n\n*Note: The provided excerpts contain the beginning of the proof for Lemma 2.1 but cut off before completing the full algebraic summation of the sequence.*",
+      "responseHash": "6df9d31499f9eff45413dd7f96d3b8123c29bcd465bb58daed2cddaedf1aca2d",
+      "result": {
+        "answer": "An individual `resize()` operation takes linear $O(n)$ time because it must allocate a new array of size $2n$ and copy all $n$ elements from the old array into the new array [S1]. \n\nHowever, this operation adds only a constant $O(1)$ amortized cost per update because:\n* **High frequency of updates between resizes:** Anytime `resize()` is called, the number of `add` or `remove` operations performed since the previous `resize()` is at least $n/2 - 1$ [S1]. \n* **Amortized analysis over a sequence:** Instead of looking at individual operations, amortized analysis considers a sequence of $m$ operations [S1]. For any sequence of $m \\ge 1$ calls to `add(i, x)` and `remove(i)` starting from an empty structure, the total time spent during all calls to `resize()` is $O(m)$ [S1, S2]. \n* **Constant cost per operation:** Because the total cost of all resizing operations over the sequence is $O(m)$, the cost when amortized over all $m$ operations is only $O(1)$ per operation [S3].\n\n*Note: The provided excerpts contain the beginning of the proof for Lemma 2.1 but cut off before completing the full algebraic summation of the sequence.*",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "kTJfapa4NeLW7M8PmPHY2QY",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1539,
+          "completionTokens": 291,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 1830,
+          "costUsd": 0.0049275,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1721.68,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "java-ods-dual-array-deque-001",
+      "language": "Java",
+      "answer": "Based on the provided documentation, here are the details regarding the balance invariant and the amortized cost of rebalancing in a `DualArrayDeque`:\n\n### 1. Balance Invariant\nThe `DualArrayDeque` maintains a balance invariant to ensure that neither the `front` nor the `back` stack gets too big or too small [S1]. Specifically:\n* Unless there are fewer than 2 elements, each of `front` and `back` must contain at least $n / 4$ elements [S1].\n* In other words, `front.size()` and `back.size()` do not differ by more than a factor of 3 [S3]. This is expressed as:\n  $$3 \\cdot \\text{front.size()} \\ge \\text{back.size()}$$ \n  and \n  $$3 \\cdot \\text{back.size()} \\ge \\text{front.size()}$$ [S3].\n\nIf this invariant is violated, the `balance()` operation is triggered to move elements so that `front` and `back` contain exactly $\\lfloor n / 2 \\rfloor$ and $\\lceil n / 2 \\rceil$ elements, respectively [S1].\n\n### 2. Why the Occasional $O(n)$ Rebalancing remains $O(1)$ Amortized\nAlthough a rebalancing step moves $\\Theta(n)$ elements and takes $O(n)$ time, it occurs infrequently enough that the average time spent per operation is constant ($O(1)$ amortized) [S1]. \n\nThis is proven using the potential method with the potential function defined as:\n$$\\Phi = | \\text{front.size()} - \\text{back.size()} |$$ [S2].\n\n* **Low Potential After Balancing:** Immediately after a `balance()` operation that shifts elements, the potential $\\Phi_0$ is at most 1 (since the elements are split as evenly as possible) [S1, S2].\n* **High Potential Before Balancing:** Immediately before a `balance()` operation is forced to shift elements, the difference between the sizes of the two stacks is large [S2].\n* **Sufficient Operations Between Rebalances:** Because a single `add(i, x)` or `remove(i)` operation that does not trigger balancing can increase the potential by at most 1, the number of operations required to build up the potential from $\\Phi_0$ to the threshold $\\Phi_1$ is at least $n / 2 - 1$ [S2]. \n\nSince at least $n / 2 - 1$ operations must occur between any two consecutive rebalancing steps, the $O(n)$ cost of a rebalance is amortized over $\\Omega(n)$ updates, resulting in an amortized cost of $O(1)$ per update [S1, S2].\n\n***\n\n*Note: The proof in the provided text contains some truncated sentences (e.g., \"the potential, $\\Phi_0$, is at most 1, since\" and \"Notice that, in this case,\") [S2], but the core mathematical argument that at least $n/2 - 1$ operations must occur between rebalances is fully stated [S1, S2].*",
+      "responseHash": "763b1d40c8421d64f5e886bb8d1a5dd2957d9c1e06b4cfdba5df9d9606a581ba",
+      "result": {
+        "answer": "Based on the provided documentation, here are the details regarding the balance invariant and the amortized cost of rebalancing in a `DualArrayDeque`:\n\n### 1. Balance Invariant\nThe `DualArrayDeque` maintains a balance invariant to ensure that neither the `front` nor the `back` stack gets too big or too small [S1]. Specifically:\n* Unless there are fewer than 2 elements, each of `front` and `back` must contain at least $n / 4$ elements [S1].\n* In other words, `front.size()` and `back.size()` do not differ by more than a factor of 3 [S3]. This is expressed as:\n  $$3 \\cdot \\text{front.size()} \\ge \\text{back.size()}$$ \n  and \n  $$3 \\cdot \\text{back.size()} \\ge \\text{front.size()}$$ [S3].\n\nIf this invariant is violated, the `balance()` operation is triggered to move elements so that `front` and `back` contain exactly $\\lfloor n / 2 \\rfloor$ and $\\lceil n / 2 \\rceil$ elements, respectively [S1].\n\n### 2. Why the Occasional $O(n)$ Rebalancing remains $O(1)$ Amortized\nAlthough a rebalancing step moves $\\Theta(n)$ elements and takes $O(n)$ time, it occurs infrequently enough that the average time spent per operation is constant ($O(1)$ amortized) [S1]. \n\nThis is proven using the potential method with the potential function defined as:\n$$\\Phi = | \\text{front.size()} - \\text{back.size()} |$$ [S2].\n\n* **Low Potential After Balancing:** Immediately after a `balance()` operation that shifts elements, the potential $\\Phi_0$ is at most 1 (since the elements are split as evenly as possible) [S1, S2].\n* **High Potential Before Balancing:** Immediately before a `balance()` operation is forced to shift elements, the difference between the sizes of the two stacks is large [S2].\n* **Sufficient Operations Between Rebalances:** Because a single `add(i, x)` or `remove(i)` operation that does not trigger balancing can increase the potential by at most 1, the number of operations required to build up the potential from $\\Phi_0$ to the threshold $\\Phi_1$ is at least $n / 2 - 1$ [S2]. \n\nSince at least $n / 2 - 1$ operations must occur between any two consecutive rebalancing steps, the $O(n)$ cost of a rebalance is amortized over $\\Omega(n)$ updates, resulting in an amortized cost of $O(1)$ per update [S1, S2].\n\n***\n\n*Note: The proof in the provided text contains some truncated sentences (e.g., \"the potential, $\\Phi_0$, is at most 1, since\" and \"Notice that, in this case,\") [S2], but the core mathematical argument that at least $n/2 - 1$ operations must occur between rebalances is fully stated [S1, S2].*",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "kzJfavCfJYeykdUPu-y_mQg",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2293,
+          "completionTokens": 689,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 2982,
+          "costUsd": 0.0096405,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 3408.42,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "java-ods-skiplist-analysis-001",
+      "language": "Java",
+      "answer": "Based on the provided documentation, the expected space (in terms of the number of nodes) and search-path bounds for a skiplist containing $n$ elements are established as follows:\n\n*   **Expected Space (Number of Nodes):** \n    *   The expected number of nodes in a skiplist, not including occurrences of the sentinel, is $2n$ [S3].\n    *   The expected number of nodes including all occurrences of the sentinel is $2n + O(\\log n)$ [S1].\n*   **Expected Search-Path Length:** \n    *   The expected length of a search path for any node in the skiplist is at most $2 \\log n + O(1)$ (which is $O(\\log n)$) [S1, S2].",
+      "responseHash": "c39d0338d10324486b672f236c2ee9c9a8755f7df1f37f24b2050aa6ac1951d9",
+      "result": {
+        "answer": "Based on the provided documentation, the expected space (in terms of the number of nodes) and search-path bounds for a skiplist containing $n$ elements are established as follows:\n\n*   **Expected Space (Number of Nodes):** \n    *   The expected number of nodes in a skiplist, not including occurrences of the sentinel, is $2n$ [S3].\n    *   The expected number of nodes including all occurrences of the sentinel is $2n + O(\\log n)$ [S1].\n*   **Expected Search-Path Length:** \n    *   The expected length of a search path for any node in the skiplist is at most $2 \\log n + O(1)$ (which is $O(\\log n)$) [S1, S2].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "lzJfata2C4XykdUP3eeDyAY",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1938,
+          "completionTokens": 168,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 2106,
+          "costUsd": 0.004418999999999999,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1319.39,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "java-ods-linear-probing-001",
+      "language": "Java",
+      "answer": "Based on the provided documentation, the analysis of the `LinearHashTable` obtains $O(1)$ expected operation time under the following assumptions and conditions:\n\n1. **Ignoring Resize Costs:** The $O(1)$ expected time per operation is obtained by ignoring the cost of calls to the `resize()` operation [S1, S2].\n2. **Hash Value Distribution:** It is assumed that all hash values are independently and uniformly distributed in $\\{0, \\dots, \\text{t.length} - 1\\}$ [S3].\n3. **Table Capacity / Load Factor:** The data structure maintains the invariant that the number of non-null elements $q$ satisfies $q \\le \\text{t.length} / 2$ (meaning at least half of the elements in the table $t$ are null, or $\\text{t.length} \\ge 2q$) [S3, S4].\n4. **Modulo Indexing:** It is assumed that all indices into the positions of $t$ are taken modulo $\\text{t.length}$ [S3].",
+      "responseHash": "8e599ef521f6ef37068cfcf92879bb375c2665cc3451272d5ed87b8593a8ba18",
+      "result": {
+        "answer": "Based on the provided documentation, the analysis of the `LinearHashTable` obtains $O(1)$ expected operation time under the following assumptions and conditions:\n\n1. **Ignoring Resize Costs:** The $O(1)$ expected time per operation is obtained by ignoring the cost of calls to the `resize()` operation [S1, S2].\n2. **Hash Value Distribution:** It is assumed that all hash values are independently and uniformly distributed in $\\{0, \\dots, \\text{t.length} - 1\\}$ [S3].\n3. **Table Capacity / Load Factor:** The data structure maintains the invariant that the number of non-null elements $q$ satisfies $q \\le \\text{t.length} / 2$ (meaning at least half of the elements in the table $t$ are null, or $\\text{t.length} \\ge 2q$) [S3, S4].\n4. **Modulo Indexing:** It is assumed that all indices into the positions of $t$ are taken modulo $\\text{t.length}$ [S3].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "mDJfapG4E5-wkdUPpOSfiQg",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1856,
+          "completionTokens": 227,
+          "reasoningTokens": 276,
+          "cachedTokens": 0,
+          "totalTokens": 2359,
+          "costUsd": 0.007311,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 2352.38,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "java-ods-red-black-tree-001",
+      "language": "Java",
+      "answer": "The correspondence with a 2-4 tree establishes the height bound of a red-black tree through the following steps:\n\n1. **Transformation to a 2-4 Tree:** A red-black tree $T$ with $n$ nodes can be transformed into a tree $T'$ containing only black nodes by removing each red node and connecting its two children directly to its black parent [S2]. Because of the black-height property, every root-to-leaf path in $T'$ has the same length, making $T'$ a 2-4 tree [S2].\n2. **Height of the 2-4 Tree:** The 2-4 tree $T'$ has $n + 1$ leaves corresponding to the $n + 1$ external nodes of the red-black tree, which gives $T'$ a height of $\\log(n + 1)$ [S1, S2].\n3. **Path Correspondence and Node Counting:** Every root-to-leaf path in the 2-4 tree $T'$ corresponds to a path from the root of the red-black tree $T$ to an external node [S1, S2]. In this path, the first and last nodes are black, and at most one out of every two internal nodes is red [S1, S2]. \n4. **Resulting Height Bound:** This path contains at most $\\log(n + 1)$ black nodes and at most $\\log(n + 1) - 1$ red nodes [S1, S2]. This relationship proves that the height of a red-black tree with $n$ nodes is at most $2 \\log n$ [S1].\n\n*Note: The exact mathematical expression for the \"longest path from the root to any internal node in T is at most...\" is cut off in the provided text of the excerpts [S1, S2], but the resulting bound is explicitly stated in Lemma 9.2 as being at most $2 \\log n$ [S1].*",
+      "responseHash": "06d8f3b1a01f31e96a0789a1061a4a6284ead1bb01dd7369277ec8fb8d09aa15",
+      "result": {
+        "answer": "The correspondence with a 2-4 tree establishes the height bound of a red-black tree through the following steps:\n\n1. **Transformation to a 2-4 Tree:** A red-black tree $T$ with $n$ nodes can be transformed into a tree $T'$ containing only black nodes by removing each red node and connecting its two children directly to its black parent [S2]. Because of the black-height property, every root-to-leaf path in $T'$ has the same length, making $T'$ a 2-4 tree [S2].\n2. **Height of the 2-4 Tree:** The 2-4 tree $T'$ has $n + 1$ leaves corresponding to the $n + 1$ external nodes of the red-black tree, which gives $T'$ a height of $\\log(n + 1)$ [S1, S2].\n3. **Path Correspondence and Node Counting:** Every root-to-leaf path in the 2-4 tree $T'$ corresponds to a path from the root of the red-black tree $T$ to an external node [S1, S2]. In this path, the first and last nodes are black, and at most one out of every two internal nodes is red [S1, S2]. \n4. **Resulting Height Bound:** This path contains at most $\\log(n + 1)$ black nodes and at most $\\log(n + 1) - 1$ red nodes [S1, S2]. This relationship proves that the height of a red-black tree with $n$ nodes is at most $2 \\log n$ [S1].\n\n*Note: The exact mathematical expression for the \"longest path from the root to any internal node in T is at most...\" is cut off in the provided text of the excerpts [S1, S2], but the resulting bound is explicitly stated in Lemma 9.2 as being at most $2 \\log n$ [S1].*",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "mjJfaojvKdLl7M8Pr9yvqAo",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2179,
+          "completionTokens": 426,
+          "reasoningTokens": 703,
+          "cachedTokens": 0,
+          "totalTokens": 3308,
+          "costUsd": 0.0134295,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 4298.74,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "postgresql-license-001",
+      "language": "PostgreSQL",
+      "answer": "Based on the provided documentation, permission to use, copy, modify, and distribute the software and its documentation for any purpose, without fee, and without a written agreement is granted under the condition that the copyright notice, the permission paragraph, and the two paragraphs following it appear in all copies [S1].",
+      "responseHash": "7693f7a13ce21afd6749a2db58688218aba7b482a16d1cec34eb543c0dbe49ac",
+      "result": {
+        "answer": "Based on the provided documentation, permission to use, copy, modify, and distribute the software and its documentation for any purpose, without fee, and without a written agreement is granted under the condition that the copyright notice, the permission paragraph, and the two paragraphs following it appear in all copies [S1].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "njJfapuaPPWWkdUP1IeM8Qg",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1854,
+          "completionTokens": 61,
+          "reasoningTokens": 116,
+          "cachedTokens": 0,
+          "totalTokens": 2031,
+          "costUsd": 0.004374,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1182.01,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "cpp-move-constructor-001",
+      "language": "C++",
+      "answer": "Based on the provided documentation, a non-template constructor for a class `X` is a move constructor if:\n* Its first parameter is of type `X&&`, `const X&&`, `volatile X&&`, or `const volatile X&&` [S1].\n* Either there are no other parameters, or all other parameters have default arguments [S1].",
+      "responseHash": "758dbd52726c9344a10c20487f110581d29e854df96d278f5b5eda58af8a5da7",
+      "result": {
+        "answer": "Based on the provided documentation, a non-template constructor for a class `X` is a move constructor if:\n* Its first parameter is of type `X&&`, `const X&&`, `volatile X&&`, or `const volatile X&&` [S1].\n* Either there are no other parameters, or all other parameters have default arguments [S1].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "oDJfapSGCs-fkdUPh9DBiAs",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1809,
+          "completionTokens": 76,
+          "reasoningTokens": 214,
+          "cachedTokens": 0,
+          "totalTokens": 2099,
+          "costUsd": 0.0053235,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1807.54,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "cpp-structured-binding-size-001",
+      "language": "C++",
+      "answer": "If there is no structured binding pack, the constraint is that the number of elements in the `sb-identifier-list` (the names introduced by the structured binding declaration) must be equal to the structured binding size of `E` [S1, S2].",
+      "responseHash": "90c4178f883106083766e709ee92c9d7dafad49f87ff58679707b15ff57ef156",
+      "result": {
+        "answer": "If there is no structured binding pack, the constraint is that the number of elements in the `sb-identifier-list` (the names introduced by the structured binding declaration) must be equal to the structured binding size of `E` [S1, S2].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "oTJfaubDO6z6nsEPkNiA4Qk",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2240,
+          "completionTokens": 54,
+          "reasoningTokens": 145,
+          "cachedTokens": 0,
+          "totalTokens": 2439,
+          "costUsd": 0.005150999999999999,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1387.62,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "javascript-promise-all-001",
+      "language": "JavaScript",
+      "answer": "Based on the provided documentation, `Promise.all` and `Promise.allSettled` differ in the following ways when an input promise rejects:\n\n* **`Promise.all`** rejects immediately with the reason of the first passed promise that rejects [S2].\n* **`Promise.allSettled`** does not reject when an input promise rejects; instead, it returns a promise that is fulfilled with an array of promise state snapshots, but only after all of the original promises have settled (meaning they have either fulfilled or rejected) [S1].",
+      "responseHash": "1267f7b959d6bbeb76fe7270a3e2f5e6d30defe72052b3ccf73d477a7f50cd1a",
+      "result": {
+        "answer": "Based on the provided documentation, `Promise.all` and `Promise.allSettled` differ in the following ways when an input promise rejects:\n\n* **`Promise.all`** rejects immediately with the reason of the first passed promise that rejects [S2].\n* **`Promise.allSettled`** does not reject when an input promise rejects; instead, it returns a promise that is fulfilled with an array of promise state snapshots, but only after all of the original promises have settled (meaning they have either fulfilled or rejected) [S1].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "ozJfas6rFqvonsEPhJ2DsQo",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 878,
+          "completionTokens": 115,
+          "reasoningTokens": 122,
+          "cachedTokens": 0,
+          "totalTokens": 1115,
+          "costUsd": 0.00345,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1521.56,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "javascript-array-filter-holes-001",
+      "language": "JavaScript",
+      "answer": "Based on the provided documentation:\n\n1. **Missing array elements:** No, the callback is not called for missing elements. It is called only for elements of the array that actually exist [S1].\n2. **Elements appended after filtering starts:** No, elements that are appended to the array after the call to `filter` begins will not be visited by the callback [S1, S2].",
+      "responseHash": "a7e250d90f45c838a3439beeabb826db1a07e52a99730a42cd84f6e489a83175",
+      "result": {
+        "answer": "Based on the provided documentation:\n\n1. **Missing array elements:** No, the callback is not called for missing elements. It is called only for elements of the array that actually exist [S1].\n2. **Elements appended after filtering starts:** No, elements that are appended to the array after the call to `filter` begins will not be visited by the callback [S1, S2].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "pDJfauHPNeTrnsEPn93N8Ak",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2012,
+          "completionTokens": 82,
+          "reasoningTokens": 124,
+          "cachedTokens": 0,
+          "totalTokens": 2218,
+          "costUsd": 0.004872,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1796.5,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "kotlin-smart-cast-001",
+      "language": "Kotlin",
+      "answer": "Kotlin smart casts solve the problem of having to write unneeded explicit casts of values in cases where their runtime types are already guaranteed to conform to the expected compile-time types [S1]. \n\nBy introducing a limited form of flow-sensitive typing, Kotlin allows certain expressions to change the compile-time types of variables based on data-flow analysis, thereby avoiding redundant casting [S1].",
+      "responseHash": "8c845fec1a827044fac166efe243ff9bb009c1bfc30ba626799f6c6a3652ae3c",
+      "result": {
+        "answer": "Kotlin smart casts solve the problem of having to write unneeded explicit casts of values in cases where their runtime types are already guaranteed to conform to the expected compile-time types [S1]. \n\nBy introducing a limited form of flow-sensitive typing, Kotlin allows certain expressions to change the compile-time types of variables based on data-flow analysis, thereby avoiding redundant casting [S1].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "pjJfaprsKdKHnsEPqOeKuAw",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1357,
+          "completionTokens": 79,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 1436,
+          "costUsd": 0.0027465,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1108.83,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "kotlin-not-null-assertion-001",
+      "language": "Kotlin",
+      "answer": "When Kotlin's not-null assertion operator (`!!`) is applied to an expression `e` of a nullable type, the following happens:\n\n* **Null Check:** The expression checks whether the evaluation result of `e` is equal to `null` [S1].\n* **If Null:** If the evaluation result is equal to `null`, it throws a runtime exception [S1].\n* **If Not Null:** If the evaluation result is not equal to `null`, the result of the expression `e!!` is the evaluation result of `e` [S1].\n* **Resulting Type:** The type of the resulting not-null assertion expression is the non-nullable variant of the type of `e` [S1].",
+      "responseHash": "3b17eb94378401f48a30ef9f3bf6d53dcc7cf0ebdc9ad0119f5e2702a7d4160e",
+      "result": {
+        "answer": "When Kotlin's not-null assertion operator (`!!`) is applied to an expression `e` of a nullable type, the following happens:\n\n* **Null Check:** The expression checks whether the evaluation result of `e` is equal to `null` [S1].\n* **If Null:** If the evaluation result is equal to `null`, it throws a runtime exception [S1].\n* **If Not Null:** If the evaluation result is not equal to `null`, the result of the expression `e!!` is the evaluation result of `e` [S1].\n* **Resulting Type:** The type of the resulting not-null assertion expression is the non-nullable variant of the type of `e` [S1].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "pzJfavjTL-DZkdUP0sKmqAo",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 987,
+          "completionTokens": 154,
+          "reasoningTokens": 491,
+          "cachedTokens": 0,
+          "totalTokens": 1632,
+          "costUsd": 0.0072854999999999994,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 2838.46,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "bash-pipeline-stderr-001",
+      "language": "Bash",
+      "answer": "Based on the provided documentation:\n\n* **What the `|&` operator does:** The `|&` pipeline operator connects both the standard error and the standard output of the first command (`command1`) to the standard input of the next command (`command2`) through the pipe [S1]. It serves as a shorthand for `2>&1 |` [S1].\n* **When its implicit redirection is applied:** This implicit redirection of the standard error to the standard output is performed *after* any redirections specified by `command1` [S1].",
+      "responseHash": "dfef20b4e6cfe2f9fd9c397a17286ccc9c4d8606abede81854a8600341d83e7b",
+      "result": {
+        "answer": "Based on the provided documentation:\n\n* **What the `|&` operator does:** The `|&` pipeline operator connects both the standard error and the standard output of the first command (`command1`) to the standard input of the next command (`command2`) through the pipe [S1]. It serves as a shorthand for `2>&1 |` [S1].\n* **When its implicit redirection is applied:** This implicit redirection of the standard error to the standard output is performed *after* any redirections specified by `command1` [S1].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "qjJfavDDJuWHnsEP_NDVyAs",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2008,
+          "completionTokens": 116,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 2124,
+          "costUsd": 0.004056,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1252.12,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "bash-heredoc-quoted-delimiter-001",
+      "language": "Bash",
+      "answer": "If any part of the here-document delimiter (`word`) is quoted, the lines in the here-document body are **not expanded** [S1]. \n\nConversely, if the delimiter is unquoted:\n* The here-document body is treated similarly to a double-quoted string, meaning all lines are subjected to parameter expansion, command substitution, and arithmetic expansion [S1].\n* The character sequence `\\<newline>` is treated as a line continuation (the backslash-newline is removed and the lines are joined) [S1]. \n\n*(Note: The provided excerpts are complete regarding how quoting the delimiter affects expansion in the body, though they do not detail other unrelated aspects of quoting outside of these sections.)*",
+      "responseHash": "d68fee43a8070e8e7e136a7de4843b832f6f4d3b14dcd2d04256d866cfb90724",
+      "result": {
+        "answer": "If any part of the here-document delimiter (`word`) is quoted, the lines in the here-document body are **not expanded** [S1]. \n\nConversely, if the delimiter is unquoted:\n* The here-document body is treated similarly to a double-quoted string, meaning all lines are subjected to parameter expansion, command substitution, and arithmetic expansion [S1].\n* The character sequence `\\<newline>` is treated as a line continuation (the backslash-newline is removed and the lines are joined) [S1]. \n\n*(Note: The provided excerpts are complete regarding how quoting the delimiter affects expansion in the body, though they do not detail other unrelated aspects of quoting outside of these sections.)*",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "qzJfav-sNdminsEP_KbRoQk",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2581,
+          "completionTokens": 149,
+          "reasoningTokens": 231,
+          "cachedTokens": 0,
+          "totalTokens": 2961,
+          "costUsd": 0.0072915,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 2005.64,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "go-recover-conditions-001",
+      "language": "Go",
+      "answer": "Based on the provided documentation, here is when Go's `recover` stops a panicking sequence and when it returns `nil`:\n\n### When `recover` stops a panicking sequence\nSuppose a function `G` defers a function `D` that calls `recover`, and a panic occurs in a function on the same goroutine in which `G` is executing [S1, S2]. When the execution of deferred functions reaches `D`, the return value of `D`'s call to `recover` will be the value passed to the call of `panic` [S1, S2]. \n\nThe panicking sequence stops if `D` returns normally, without starting a new panic [S1, S2]. When this happens:\n* The state of functions called between `G` and the call to `panic` is discarded, and normal execution resumes [S1, S2].\n* Any functions deferred by `G` before `D` are then run, and `G`'s execution terminates by returning to its caller [S1, S2].\n\n### When `recover` returns `nil`\nThe return value of `recover` is `nil` in the following situations:\n* When the goroutine is not panicking [S1].\n* When `recover` was not called directly by a deferred function [S1].\n\nConversely, if the goroutine is panicking and `recover` is called directly by a deferred function, the return value is guaranteed not to be `nil` (calling `panic` with a `nil` interface value or an untyped `nil` causes a run-time panic to ensure this) [S1].",
+      "responseHash": "3c6792cdbfae8f9208f35bf485a0ddd231ac9baba4ca74e6aae68a3bcbc51697",
+      "result": {
+        "answer": "Based on the provided documentation, here is when Go's `recover` stops a panicking sequence and when it returns `nil`:\n\n### When `recover` stops a panicking sequence\nSuppose a function `G` defers a function `D` that calls `recover`, and a panic occurs in a function on the same goroutine in which `G` is executing [S1, S2]. When the execution of deferred functions reaches `D`, the return value of `D`'s call to `recover` will be the value passed to the call of `panic` [S1, S2]. \n\nThe panicking sequence stops if `D` returns normally, without starting a new panic [S1, S2]. When this happens:\n* The state of functions called between `G` and the call to `panic` is discarded, and normal execution resumes [S1, S2].\n* Any functions deferred by `G` before `D` are then run, and `G`'s execution terminates by returning to its caller [S1, S2].\n\n### When `recover` returns `nil`\nThe return value of `recover` is `nil` in the following situations:\n* When the goroutine is not panicking [S1].\n* When `recover` was not called directly by a deferred function [S1].\n\nConversely, if the goroutine is panicking and `recover` is called directly by a deferred function, the return value is guaranteed not to be `nil` (calling `panic` with a `nil` interface value or an untyped `nil` causes a run-time panic to ensure this) [S1].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "rTJfasS0NqaqnsEPmJvs6Qg",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1318,
+          "completionTokens": 351,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 1669,
+          "costUsd": 0.005136,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1932.17,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "python-list-comprehension-001",
+      "language": "Python",
+      "answer": "Based on the provided documentation, the main parts and output of a Python list comprehension are:\n\n* **Main Parts:** A list comprehension consists of brackets containing an expression, followed by a `for` clause, and then zero or more `for` or `if` clauses [S1, S3].\n* **What it Produces:** It produces a new list [S1, S3]. This list is the result of evaluating the expression in the context of the `for` and `if` clauses that follow it [S1, S3].",
+      "responseHash": "dec5dfb88e62e43536976ca02c1827a94c93cc9381ad5280bf4a0a8648dc6d68",
+      "result": {
+        "answer": "Based on the provided documentation, the main parts and output of a Python list comprehension are:\n\n* **Main Parts:** A list comprehension consists of brackets containing an expression, followed by a `for` clause, and then zero or more `for` or `if` clauses [S1, S3].\n* **What it Produces:** It produces a new list [S1, S3]. This list is the result of evaluating the expression in the context of the `for` and `if` clauses that follow it [S1, S3].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "rzJfavH_MbOknsEPzLG50Ag",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2789,
+          "completionTokens": 114,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 2903,
+          "costUsd": 0.0052095,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 968.37,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "python-parameter-kinds-001",
+      "language": "Python",
+      "answer": "In a Python function definition, the `/` and `*` symbols divide the parameters as follows:\n\n* **`/` (Forward-slash):** This symbol is used to logically separate positional-only parameters from the rest of the parameters [S1]. \n  * Parameters placed **before** the `/` are **positional-only** [S1].\n  * Parameters following the `/` may be positional-or-keyword or keyword-only [S1].\n* **`*` (Asterisk):** This symbol is used to mark parameters as keyword-only [S1].\n  * Placing an `*` in the arguments list just **before** the first keyword-only parameter indicates that all subsequent parameters must be passed by keyword [S1].\n\n**Combined Structure:**\nWhen both are used, the parameters are divided into three distinct zones [S1, S4]:\n```python\ndef f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):\n```\n* **Positional-only:** Left of the `/` [S1, S4].\n* **Positional-or-keyword:** Between the `/` and the `*` [S1, S4].\n* **Keyword-only:** Right of the `*` [S1, S4].",
+      "responseHash": "719b67452f34703f507a4e5f01a80b219bbd26d0d73f77d0490d8ace93f4eaef",
+      "result": {
+        "answer": "In a Python function definition, the `/` and `*` symbols divide the parameters as follows:\n\n* **`/` (Forward-slash):** This symbol is used to logically separate positional-only parameters from the rest of the parameters [S1]. \n  * Parameters placed **before** the `/` are **positional-only** [S1].\n  * Parameters following the `/` may be positional-or-keyword or keyword-only [S1].\n* **`*` (Asterisk):** This symbol is used to mark parameters as keyword-only [S1].\n  * Placing an `*` in the arguments list just **before** the first keyword-only parameter indicates that all subsequent parameters must be passed by keyword [S1].\n\n**Combined Structure:**\nWhen both are used, the parameters are divided into three distinct zones [S1, S4]:\n```python\ndef f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):\n```\n* **Positional-only:** Left of the `/` [S1, S4].\n* **Positional-or-keyword:** Between the `/` and the `*` [S1, S4].\n* **Keyword-only:** Right of the `*` [S1, S4].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "sDJfauypMKuznsEPpsvywAg",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2647,
+          "completionTokens": 284,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 2931,
+          "costUsd": 0.0065265,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1525.36,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "typescript-conditional-distribution-001",
+      "language": "TypeScript",
+      "answer": "Based on the provided documentation:\n\n### When a Conditional Type Distributes Over a Union\nConditional types become distributive when they act on a generic type and are given a union type [S2]. In these instantiations of a distributive conditional type (`T extends U ? X : Y`), the conditional type is applied to each individual constituent of the union type [S1, S2]. \n\nFor example, if a union type like `string | number` is passed to a generic conditional type `ToArray<Type> = Type extends any ? Type[] : never`, the type distributes and maps over each member, effectively resolving to `ToArray<string> | ToArray<number>` (which results in `string[] | number[]`) [S2].\n\n### How to Prevent Distributivity\nTo avoid or prevent this distributive behavior, you can surround each side of the `extends` keyword with square brackets [S2]. \n\nFor example:\n```typescript\ntype ToArrayNonDist<Type> = [Type] extends [any] ? Type[] : never;\n```\nUsing this syntax, passing a union type like `string | number` will no longer distribute, resulting in `(string | number)[]` instead of a union of arrays [S2].",
+      "responseHash": "b3353836023d315ae9e57802457c5971a697cbf446da7fa845f34652942aa9aa",
+      "result": {
+        "answer": "Based on the provided documentation:\n\n### When a Conditional Type Distributes Over a Union\nConditional types become distributive when they act on a generic type and are given a union type [S2]. In these instantiations of a distributive conditional type (`T extends U ? X : Y`), the conditional type is applied to each individual constituent of the union type [S1, S2]. \n\nFor example, if a union type like `string | number` is passed to a generic conditional type `ToArray<Type> = Type extends any ? Type[] : never`, the type distributes and maps over each member, effectively resolving to `ToArray<string> | ToArray<number>` (which results in `string[] | number[]`) [S2].\n\n### How to Prevent Distributivity\nTo avoid or prevent this distributive behavior, you can surround each side of the `extends` keyword with square brackets [S2]. \n\nFor example:\n```typescript\ntype ToArrayNonDist<Type> = [Type] extends [any] ? Type[] : never;\n```\nUsing this syntax, passing a union type like `string | number` will no longer distribute, resulting in `(string | number)[]` instead of a union of arrays [S2].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "sjJfaoidE4P5nsEPtq_aoAc",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2400,
+          "completionTokens": 261,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 2661,
+          "costUsd": 0.005948999999999999,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1732.3,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "typescript-keyof-001",
+      "language": "TypeScript",
+      "answer": "For an object type, the `keyof` operator produces a **string or numeric literal union of its keys** [S1]. \n\nSpecifically, depending on the properties of the object type:\n* It yields the type of permitted property names for the object [S2].\n* If the object type has a string or number index signature, `keyof` will return those types instead (e.g., returning `number` or `string | number`) [S1].\n* It also supports number and symbol-named keys, meaning it can produce a union containing string literals, numeric literals, and unique symbol types [S3, S4].",
+      "responseHash": "0a66c084e07f049373a8217e65e8ca1d3daf46b9dc8b4764e975abf62e650d3f",
+      "result": {
+        "answer": "For an object type, the `keyof` operator produces a **string or numeric literal union of its keys** [S1]. \n\nSpecifically, depending on the properties of the object type:\n* It yields the type of permitted property names for the object [S2].\n* If the object type has a string or number index signature, `keyof` will return those types instead (e.g., returning `number` or `string | number`) [S1].\n* It also supports number and symbol-named keys, meaning it can produce a union containing string literals, numeric literals, and unique symbol types [S3, S4].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "tDJfauysBYGzkdUP3bjc4Qs",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2341,
+          "completionTokens": 135,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 2476,
+          "costUsd": 0.0047265,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1181.39,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "rust-ownership-move-clone-001",
+      "language": "Rust",
+      "answer": "Based on the provided documentation, the differences between moving (assignment) and cloning a heap-owning value like a `String` are:\n\n* **Moving (Assignment)**: When you assign a `String` to another variable (e.g., `let s2 = s1;`), Rust only copies the stack data, which includes the pointer, length, and capacity [S3]. It does **not** copy the actual data on the heap that the pointer refers to [S3]. Rust does this because automatically making \"deep\" copies of heap data could be very expensive in terms of runtime performance [S2, S3]. \n* **Cloning**: If you want to deeply copy both the stack data and the heap data of the `String`, you must explicitly call the `clone` method (e.g., `let s2 = s1.clone();`) [S1, S2]. Calling `clone` is a visual indicator that arbitrary, potentially expensive code is being executed to copy the heap data [S1].\n\n*Note: The provided excerpts are incomplete regarding the full mechanics of a \"move,\" as they omit the specific details explaining how the source variable (such as `s1`) is invalidated after the assignment occurs.*",
+      "responseHash": "96237f9474e64d1fef0c4d4311e394b117270abec6c4fd57764cf54db51f8752",
+      "result": {
+        "answer": "Based on the provided documentation, the differences between moving (assignment) and cloning a heap-owning value like a `String` are:\n\n* **Moving (Assignment)**: When you assign a `String` to another variable (e.g., `let s2 = s1;`), Rust only copies the stack data, which includes the pointer, length, and capacity [S3]. It does **not** copy the actual data on the heap that the pointer refers to [S3]. Rust does this because automatically making \"deep\" copies of heap data could be very expensive in terms of runtime performance [S2, S3]. \n* **Cloning**: If you want to deeply copy both the stack data and the heap data of the `String`, you must explicitly call the `clone` method (e.g., `let s2 = s1.clone();`) [S1, S2]. Calling `clone` is a visual indicator that arbitrary, potentially expensive code is being executed to copy the heap data [S1].\n\n*Note: The provided excerpts are incomplete regarding the full mechanics of a \"move,\" as they omit the specific details explaining how the source variable (such as `s1`) is invalidated after the assignment occurs.*",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "tTJfapLQGZXdnsEPmvy_uQY",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2240,
+          "completionTokens": 256,
+          "reasoningTokens": 575,
+          "cachedTokens": 0,
+          "totalTokens": 3071,
+          "costUsd": 0.010839,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 4235.43,
+        "cacheHit": true
+      },
+      "error": null
+    },
+    {
+      "caseId": "rust-mutable-reference-rules-001",
+      "language": "Rust",
+      "answer": "Based on the provided documentation, the following restrictions apply while a mutable reference to a value is active:\n\n* **No other references:** If you have a mutable reference to a value, you can have no other references (either mutable or immutable) to that same value at the same time [S2, S3]. \n* **No multiple mutable borrows:** You cannot borrow the same data as mutable more than once at a time [S1, S3].\n* **No combining with immutable borrows:** You cannot borrow a value as mutable if it is already borrowed as immutable [S2].\n* **Pointer aliasing and access restrictions:** The mutable reference (`&mut T`) must point to memory that is not read or written by any pointer that is not derived from that reference, and no other reference may point to that memory while the mutable reference is live [S4].",
+      "responseHash": "ba61873e039931aa2ec42fcef9da110b4d91fd7416340de688ae3d1e8d963e28",
+      "result": {
+        "answer": "Based on the provided documentation, the following restrictions apply while a mutable reference to a value is active:\n\n* **No other references:** If you have a mutable reference to a value, you can have no other references (either mutable or immutable) to that same value at the same time [S2, S3]. \n* **No multiple mutable borrows:** You cannot borrow the same data as mutable more than once at a time [S1, S3].\n* **No combining with immutable borrows:** You cannot borrow a value as mutable if it is already borrowed as immutable [S2].\n* **Pointer aliasing and access restrictions:** The mutable reference (`&mut T`) must point to memory that is not read or written by any pointer that is not derived from that reference, and no other reference may point to that memory while the mutable reference is live [S4].",
+        "responseModel": "gemini-3.5-flash",
+        "responseProvider": "google",
+        "responseId": "uTJfaraQHfDf7M8PqOjeuAs",
+        "finishReason": "STOP",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2416,
+          "completionTokens": 179,
+          "reasoningTokens": 0,
+          "cachedTokens": 0,
+          "totalTokens": 2595,
+          "costUsd": 0.005235,
+          "costSource": "list-price-estimate"
+        },
+        "latencyMs": 1313.8,
+        "cacheHit": true
+      },
+      "error": null
+    }
+  ],
+  "elapsedMs": 143
+}

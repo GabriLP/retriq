@@ -171,6 +171,20 @@
       "decision": "Deploy exact pgvector search on Neon Free. It preserved all 54 frozen validation outputs within a 0.0002 score tolerance, stored 33,079 chunks in 228 MB, reused cached embeddings with zero provider calls, and cost $0 at observation time. HNSW and IVFFlat remain deferred experiments.",
       "limitations": ["One operational latency sample is not a benchmark", "Free compute can cold-start", "Additional corpus or embedding versions require storage monitoring", "The locked test remains untouched"],
       "nextStep": "Collect repeated production latency samples and evaluate HNSW only if exact-search latency becomes materially problematic."
+    },
+    {
+      "order": 13,
+      "id": "generation-output-budget-v1",
+      "thesisSection": "Runtime generation reliability",
+      "researchQuestion": "Does raising Gemini's output ceiling from 900 to 2,048 tokens eliminate observed mid-answer truncation at acceptable incremental cost while keeping every other generation input fixed?",
+      "status": "completed",
+      "variable": "Maximum output-token budget: frozen 900-token baseline versus 2,048-token runtime candidate",
+      "controls": ["27 answerable validation cases", "frozen retrieval evidence", "Gemini 3.5 Flash", "grounded prompt v1", "temperature 0", "low reasoning effort", "judge disabled"],
+      "metrics": ["MAX_TOKENS stop rate", "confirmed abrupt completions", "errors", "completion and reasoning tokens", "cost", "latency", "response length"],
+      "artifacts": ["docs/experiments/generation-output-budget.v1.json", "docs/experiment-results/generation-output-budget-v1-validation.json", "docs/experiment-results/generation-output-budget-v1-validation.md", "docs/experiment-results/generation-output-budget-v1-validation.csv", "docs/evaluation/generation-output-budget-human-review-v1.csv"],
+      "decision": "Use 2,048 tokens for runtime reliability. All 27 validation generations returned STOP with zero errors and zero MAX_TOKENS events; the known 900-token Rust failure completed. Observed cost increased from $0.164763 to $0.166626 (+$0.001863, approximately 1.13%). This is not a quality-selection result.",
+      "limitations": ["Legacy finish reasons were not retained, so the 900-token truncation rate is a confirmed lower bound", "Temperature zero does not guarantee byte-identical regeneration", "Quality comparison remains pending human review or an independently calibrated judge", "The 24-case test remains untouched"],
+      "nextStep": "Retain 2,048 as the runtime ceiling, preserve the blinded quality-review package, and continue with the separately preregistered comparative-query retrieval benchmark before judge calibration."
     }
   ]
 }

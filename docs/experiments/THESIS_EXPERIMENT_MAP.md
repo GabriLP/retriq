@@ -1,8 +1,8 @@
 # Thesis experiment map
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
-- Experiment families: **12**
-- Completed: **8**
+- Experiment families: **13**
+- Completed: **9**
 - Superseded but retained: **1**
 
 This is the narrative index for the thesis. The JSON registry is the source of truth; generated Markdown and CSV provide readable and tabular views. Every experiment records its question, isolated variable, controls, metrics, decision, limitations, and next action.
@@ -21,6 +21,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 10 | Answer generation and LLM-as-a-judge | generation-and-judge-v1 | in-progress | Generator model first; judge model and judge prompt only after human reference labels exist | The 72-row blinded human review selects GLM-5.2 BaseTen FP8 on validation: normalized quality 0.9740, every guardrail passed, and the lowest observed generation cost. Grok 4.5 scored 0.9323 and passed all guardrails. Gemini 3.5 Flash scored 0.9219 but its one human-labelled generator failure produced a 4.17% rate, above the preregistered 2% limit. The locked test remains untouched. |
 | 11 | Agentic RAG | rag-agent-loop-v1 | planned | Single pass versus bounded retrieve-check-rewrite loop | Pending. |
 | 12 | Production retrieval infrastructure | postgres-vector-storage-v1 | completed | Local exhaustive cosine persistence versus exact pgvector execution | Deploy exact pgvector search on Neon Free. It preserved all 54 frozen validation outputs within a 0.0002 score tolerance, stored 33,079 chunks in 228 MB, reused cached embeddings with zero provider calls, and cost $0 at observation time. HNSW and IVFFlat remain deferred experiments. |
+| 13 | Runtime generation reliability | generation-output-budget-v1 | completed | Maximum output-token budget: frozen 900-token baseline versus 2,048-token runtime candidate | Use 2,048 tokens for runtime reliability. All 27 validation generations returned STOP with zero errors and zero MAX_TOKENS events; the known 900-token Rust failure completed. Observed cost increased from $0.164763 to $0.166626 (+$0.001863, approximately 1.13%). This is not a quality-selection result. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
 
@@ -165,3 +166,15 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Decision:** Deploy exact pgvector search on Neon Free. It preserved all 54 frozen validation outputs within a 0.0002 score tolerance, stored 33,079 chunks in 228 MB, reused cached embeddings with zero provider calls, and cost $0 at observation time. HNSW and IVFFlat remain deferred experiments.
 - **Limitations:** One operational latency sample is not a benchmark; Free compute can cold-start; Additional corpus or embedding versions require storage monitoring; The locked test remains untouched
 - **Next step:** Collect repeated production latency samples and evaluate HNSW only if exact-search latency becomes materially problematic.
+
+## 13. Runtime generation reliability: generation-output-budget-v1
+
+- **Research question:** Does raising Gemini's output ceiling from 900 to 2,048 tokens eliminate observed mid-answer truncation at acceptable incremental cost while keeping every other generation input fixed?
+- **Status:** completed
+- **Changed variable:** Maximum output-token budget: frozen 900-token baseline versus 2,048-token runtime candidate
+- **Controls:** 27 answerable validation cases; frozen retrieval evidence; Gemini 3.5 Flash; grounded prompt v1; temperature 0; low reasoning effort; judge disabled
+- **Metrics:** MAX_TOKENS stop rate; confirmed abrupt completions; errors; completion and reasoning tokens; cost; latency; response length
+- **Artifacts:** `docs/experiments/generation-output-budget.v1.json`; `docs/experiment-results/generation-output-budget-v1-validation.json`; `docs/experiment-results/generation-output-budget-v1-validation.md`; `docs/experiment-results/generation-output-budget-v1-validation.csv`; `docs/evaluation/generation-output-budget-human-review-v1.csv`
+- **Decision:** Use 2,048 tokens for runtime reliability. All 27 validation generations returned STOP with zero errors and zero MAX_TOKENS events; the known 900-token Rust failure completed. Observed cost increased from $0.164763 to $0.166626 (+$0.001863, approximately 1.13%). This is not a quality-selection result.
+- **Limitations:** Legacy finish reasons were not retained, so the 900-token truncation rate is a confirmed lower bound; Temperature zero does not guarantee byte-identical regeneration; Quality comparison remains pending human review or an independently calibrated judge; The 24-case test remains untouched
+- **Next step:** Retain 2,048 as the runtime ceiling, preserve the blinded quality-review package, and continue with the separately preregistered comparative-query retrieval benchmark before judge calibration.
