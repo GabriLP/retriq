@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "id": "multi-technology-negative-benchmark-v1",
+  "title": "Validation-only comparative unanswerable cases",
+  "status": "source-verified",
+  "split": "validation",
+  "parentRun": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec",
+  "testSplitTouched": false,
+  "verificationPolicy": "Each absence probe must be absent from the frozen chunks belonging to the two named technologies. Exact absence is a reproducible sanity check; manifest scope remains the primary justification.",
+  "cases": [
+    {
+      "id": "negative-c-rust-kubernetes-pdb",
+      "question": "How do C and Rust configure Kubernetes PodDisruptionBudgets?",
+      "expectedLanguages": ["C", "Rust"],
+      "answerability": "unanswerable",
+      "scopeBasis": "The frozen C and Rust sources document the languages and their standard programming models, not Kubernetes workload policy resources.",
+      "absenceProbes": ["PodDisruptionBudget", "Kubernetes disruption budget"]
+    },
+    {
+      "id": "negative-c-cpp-postgresql-isolation",
+      "question": "How do C and C++ define database transaction isolation levels?",
+      "expectedLanguages": ["C", "C++"],
+      "answerability": "unanswerable",
+      "scopeBasis": "PostgreSQL is present elsewhere in the corpus, but the frozen C and C++ language sources do not define PostgreSQL transaction isolation semantics.",
+      "absenceProbes": ["PostgreSQL transaction isolation", "read committed isolation level"]
+    },
+    {
+      "id": "negative-java-kotlin-css-grid",
+      "question": "How do Java and Kotlin define CSS Grid track sizing?",
+      "expectedLanguages": ["Java", "Kotlin"],
+      "answerability": "unanswerable",
+      "scopeBasis": "The Java and Kotlin specifications do not define browser CSS Grid layout behavior.",
+      "absenceProbes": ["CSS Grid Layout", "grid track sizing"]
+    },
+    {
+      "id": "negative-javascript-typescript-borrow-checker",
+      "question": "How do JavaScript and TypeScript implement ownership-based borrow checking?",
+      "expectedLanguages": ["JavaScript", "TypeScript"],
+      "answerability": "unanswerable",
+      "scopeBasis": "The ECMAScript and TypeScript sources do not specify Rust ownership or borrow-checking rules.",
+      "absenceProbes": ["Rust borrow checker", "borrow checking rules"]
+    },
+    {
+      "id": "negative-python-typescript-jvm-verification",
+      "question": "How do Python and TypeScript configure JVM class-file verification?",
+      "expectedLanguages": ["Python", "TypeScript"],
+      "answerability": "unanswerable",
+      "scopeBasis": "The Python and TypeScript sources do not define JVM class-file verification.",
+      "absenceProbes": ["JVM class-file verification", "class file verifier"]
+    },
+    {
+      "id": "negative-go-rust-react-effect",
+      "question": "How do the Go language and Rust define component effect cleanup semantics?",
+      "expectedLanguages": ["Go", "Rust"],
+      "answerability": "unanswerable",
+      "scopeBasis": "React documentation exists elsewhere in the corpus, but Go and Rust language sources do not define React Effect lifecycle semantics.",
+      "absenceProbes": ["React useEffect", "Effect cleanup function"]
+    },
+    {
+      "id": "negative-java-cpp-bash-trap",
+      "question": "How do Java and C++ configure shell signal trap handlers?",
+      "expectedLanguages": ["Java", "C++"],
+      "answerability": "unanswerable",
+      "scopeBasis": "Bash documentation exists elsewhere in the corpus, but Java and C++ specifications do not define Bash trap behavior.",
+      "absenceProbes": ["Bash trap handler", "trap builtin command"]
+    },
+    {
+      "id": "negative-bash-python-mvcc",
+      "question": "How do Bash and Python define SQL MVCC snapshot isolation?",
+      "expectedLanguages": ["Bash", "Python"],
+      "answerability": "unanswerable",
+      "scopeBasis": "The Bash and Python sources do not define database MVCC or SQL isolation semantics.",
+      "absenceProbes": ["multiversion concurrency control", "MVCC snapshot isolation"]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "id": "comparative-threshold-calibration-v1",
+  "title": "Comparative-query cosine threshold calibration",
+  "status": "preregistered",
+  "split": "validation",
+  "positiveBenchmark": "docs/evaluation/multi-technology-retrieval-benchmark.v1.json",
+  "negativeBenchmark": "docs/evaluation/multi-technology-negative-benchmark.v1.json",
+  "parentRun": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec",
+  "hypothesis": "A comparative-query threshold below 0.68 can recover more two-sided evidence, but it is acceptable only if newly curated comparative negatives continue to abstain.",
+  "thresholds": [0.60, 0.62, 0.64, 0.66, 0.68, 0.70, 0.72, 0.74],
+  "changedVariable": "Minimum cosine similarity for balanced multi-technology retrieval",
+  "controlledVariables": [
+    "frozen 33,079-chunk corpus",
+    "eight source-verified comparative answerable cases",
+    "eight source-verified comparative unanswerable cases",
+    "300-word target chunks with 80-word overlap",
+    "Gemini Embedding 2 at 1,024 dimensions",
+    "exact cosine similarity",
+    "language-balanced ordering",
+    "topK=4",
+    "no reranker",
+    "locked 24-case general test split untouched"
+  ],
+  "selectionRule": {
+    "eligibility": {
+      "noAnswerFalsePositiveRate": 0,
+      "minimumBothLanguageCoverageAt4": 0.625,
+      "minimumBothEvidenceSideCoverageAt4": 0.25,
+      "minimumMeanEvidenceSideRecallAt4": 0.5
+    },
+    "primary": "highest both-evidence-side coverage@4",
+    "tieBreakers": [
+      "highest both-language coverage@4",
+      "highest mean evidence-side recall@4",
+      "highest macro evidence-side MRR",
+      "highest threshold for safer abstention"
+    ],
+    "failurePolicy": "Select no threshold if none satisfies every eligibility condition; do not relax guardrails after observing results."
+  },
+  "metrics": [
+    "comparative no-answer false-positive rate",
+    "both-language coverage@4",
+    "both-evidence-side coverage@4",
+    "mean canonical evidence-side recall@4",
+    "macro evidence-side MRR",
+    "returned chunks",
+    "score separation diagnostics",
+    "embedding cache, provider calls, and estimated cost"
+  ],
+  "reportOutput": "docs/experiment-results/comparative-threshold-calibration-v1-validation"
+}
