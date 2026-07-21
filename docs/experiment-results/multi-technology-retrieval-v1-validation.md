@@ -1,13 +1,14 @@
 # Comparative-query retrieval benchmark
 
-- Protocol/attempt: `multi-technology-retrieval-v1` / `20260721090504704`
+- Protocol/attempt: `multi-technology-retrieval-v1` / `20260721090851613`
 - Parent run: `20260717084956473-e60c88ec`
 - Split: **validation only**; locked test touched: **no**
 - Hypothesis: A union metadata filter avoids dropping one named technology, while balanced multi-technology ordering increases two-sided coverage within topK=4 without reducing canonical evidence coverage.
-- Evaluation commit: `6ee93d0655046885c35a1584acf7ddc9a374ce35`
+- Evaluation commit: `883182f98c5c6aff3bfe79a566b0ebdea0ef7639`
 - Fixed retrieval: Gemini Embedding 2 (1,024d), cosine >= 0.68, topK=4, no reranker
-- Query embedding provider inputs: **8** in **1** request(s), estimated cost **$0.00004080**
-- Cosine scoring time: **277 ms**
+- This replay: **0** provider input(s) in **0** request(s), estimated incremental cost **$0.00000000**
+- Original provider execution: `20260721090504704`, **8** input(s) in **1** request(s), estimated cost **$0.00004080**
+- Cosine scoring time: **271 ms**
 
 | Variant | Both languages @4 | Mean language-side coverage | Both canonical evidence sides @4 | Mean evidence-side recall | Macro side MRR | Returned chunks |
 |---|---:|---:|---:|---:|---:|---:|

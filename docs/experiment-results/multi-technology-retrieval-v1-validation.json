@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
   "id": "multi-technology-retrieval-v1",
-  "attemptId": "20260721090504704",
-  "createdAt": "2026-07-21T09:05:04.704Z",
+  "attemptId": "20260721090851613",
+  "createdAt": "2026-07-21T09:08:51.613Z",
   "parentRunId": "20260717084956473-e60c88ec",
   "hypothesis": "A union metadata filter avoids dropping one named technology, while balanced multi-technology ordering increases two-sided coverage within topK=4 without reducing canonical evidence coverage.",
   "split": "validation",
   "testSplitTouched": false,
   "inputHashes": {
-    "protocol": "acc4632c8fbed095c4603194ccc265c701f0868f3d68f7d1b2f3675f5b82bf50",
+    "protocol": "6ea56123a4337a8acbe9dccef701aed660b28aa71ceb38d02724c5d90d758531",
     "benchmark": "dd38dbb829e24dfd832ed6f2d1cbec71e62134523e43190c64b8a05422d78db9",
     "config": "e7d95b88394a8f87f08a4de9885b8c80cfa70f729e337b5a646e6500b1a40880",
     "chunks": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864"
   },
   "code": {
-    "gitCommit": "6ee93d0655046885c35a1584acf7ddc9a374ce35",
+    "gitCommit": "883182f98c5c6aff3bfe79a566b0ebdea0ef7639",
     "dirty": false,
     "gitDiffHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
@@ -29,15 +29,21 @@
   "cache": {
     "documentHits": 32621,
     "documentMisses": 0,
-    "queryHits": 0,
-    "queryMisses": 8,
+    "queryHits": 8,
+    "queryMisses": 0,
+    "apiInputs": 0,
+    "apiRequests": 0,
+    "estimatedApiTokens": 0,
+    "estimatedApiCostUsd": 0
+  },
+  "originalProviderExecution": {
+    "attemptId": "20260721090504704",
     "apiInputs": 8,
     "apiRequests": 1,
-    "estimatedApiTokens": 204,
-    "estimatedApiCostUsd": 0.0000408
+    "estimatedCostUsd": 0.0000408
   },
   "timingsMs": {
-    "cosineScoring": 277
+    "cosineScoring": 271
   },
   "detection": [
     {
