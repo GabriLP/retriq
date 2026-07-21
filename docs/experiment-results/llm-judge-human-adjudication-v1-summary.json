@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "id": "llm-judge-human-adjudication-v1-summary",
+  "createdAt": "2026-07-21T11:49:32.787Z",
+  "sources": {
+    "completedReview": "docs/evaluation/llm-judge-human-adjudication-v1.completed.csv",
+    "completedReviewSha256": "b8a6e3d2824126bc7952b6861e75d530790f699a64012c703e600c138e6d2b0b",
+    "manifest": "docs/evaluation/llm-judge-human-adjudication.v1.json",
+    "manifestSha256": "f75e18819bb5c8c69de43fd809253328b2526ce708cb446928fc68746dbc1265",
+    "originalJudgeAudit": "docs/experiment-results/llm-judge-calibration-v1.1-disagreement-audit.csv",
+    "originalJudgeAuditSha256": "fba18841519d0e92a0176369711b49f5bfc0e0fb572746c50b6e27191f1cca46"
+  },
+  "review": {
+    "rows": 15,
+    "answerableRows": 12,
+    "unanswerableRows": 3,
+    "decisions": {
+      "confirm-independent": 14,
+      "revise-judge": 1
+    },
+    "phaseOneToFinalChangedRows": 1,
+    "changedRowIds": [
+      "java-ods-dual-array-deque-001::variant-015380ad"
+    ],
+    "completed": true,
+    "protocol": "Blind to stored human/judge references in phase one; reference comparison and explicit adjudication in phase two."
+  },
+  "selectedSetAgreement": {
+    "originalHumanVsJudge": {
+      "rows": 15,
+      "answerableRows": 12,
+      "unanswerableRows": 3,
+      "pooledCoreQuadraticWeightedKappa": 0.19122257053291536,
+      "answerableQualitySpearman": 0.4948277937369176,
+      "binaryPassAgreement": 0.6666666666666666,
+      "exactLabelAgreement": 0.6,
+      "meanReferenceQuality": 0.9739583333333334,
+      "meanPredictedQuality": 0.8541666666666666
+    },
+    "phaseOneVsJudge": {
+      "rows": 15,
+      "answerableRows": 12,
+      "unanswerableRows": 3,
+      "pooledCoreQuadraticWeightedKappa": 0.5555555555555556,
+      "answerableQualitySpearman": 0.9558310013939736,
+      "binaryPassAgreement": 0.7333333333333333,
+      "exactLabelAgreement": 0.6666666666666666,
+      "meanReferenceQuality": 0.9375,
+      "meanPredictedQuality": 0.8541666666666666
+    },
+    "finalVsJudge": {
+      "rows": 15,
+      "answerableRows": 12,
+      "unanswerableRows": 3,
+      "pooledCoreQuadraticWeightedKappa": 0.6407185628742516,
+      "answerableQualitySpearman": 0.9214009305382472,
+      "binaryPassAgreement": 0.8,
+      "exactLabelAgreement": 0.7333333333333333,
+      "meanReferenceQuality": 0.9270833333333334,
+      "meanPredictedQuality": 0.8541666666666666
+    },
+    "phaseOneVsOriginalHuman": {
+      "rows": 15,
+      "answerableRows": 12,
+      "unanswerableRows": 3,
+      "pooledCoreQuadraticWeightedKappa": 0.2682926829268293,
+      "answerableQualitySpearman": 0.5042342703679409,
+      "binaryPassAgreement": 0.9333333333333333,
+      "exactLabelAgreement": 0.6,
+      "meanReferenceQuality": 0.9375,
+      "meanPredictedQuality": 0.9739583333333334
+    },
+    "finalVsOriginalHuman": {
+      "rows": 15,
+      "answerableRows": 12,
+      "unanswerableRows": 3,
+      "pooledCoreQuadraticWeightedKappa": 0.2110726643598616,
+      "answerableQualitySpearman": 0.38467341840488195,
+      "binaryPassAgreement": 0.8666666666666667,
+      "exactLabelAgreement": 0.6,
+      "meanReferenceQuality": 0.9270833333333334,
+      "meanPredictedQuality": 0.9739583333333334
+    }
+  },
+  "recomputedFullAudit": {
+    "policy": "Replace all 12 answerable audit references with final adjudicated labels. Preserve the 12 original unanswerable rows; three unique cases were rechecked and all remained correct abstentions.",
+    "metrics": {
+      "rows": 24,
+      "answerableRows": 12,
+      "unanswerableRows": 12,
+      "pooledCoreQuadraticWeightedKappa": 0.6407185628742516,
+      "answerableQualitySpearman": 0.9214009305382472,
+      "binaryPassAgreement": 0.875,
+      "exactLabelAgreement": 0.8333333333333334,
+      "meanReferenceQuality": 0.9270833333333334,
+      "meanPredictedQuality": 0.8541666666666666
+    },
+    "originalMetrics": {
+      "pooledCoreQuadraticWeightedKappa": 0.19122257053291536,
+      "answerableQualitySpearman": 0.4948277937369176,
+      "binaryPassAgreement": 0.7916666666666666
+    },
+    "providerRequests": 0,
+    "cacheRegenerationRequired": false
+  },
+  "unchangedCalibration": {
+    "metrics": {
+      "pooledCoreQuadraticWeightedKappa": 0.4319526627218935,
+      "answerableQualitySpearman": 0.35703120315793446,
+      "binaryPassAgreement": 0.8333333333333334
+    },
+    "stillFailsFrozenThresholds": true
+  },
+  "interpretation": {
+    "status": "sensitivity-analysis-not-independent-gold-standard",
+    "judgeEligibleForProduction": false,
+    "reason": "The adjudication is useful for correcting rubric interpretation and diagnosing evidence gaps, but it was performed by the same primary reviewer with conversational AI assistance. It cannot replace an independent second-human reference, and the unchanged calibration split still fails its frozen thresholds."
+  },
+  "limitations": [
+    "The same reviewer produced both the original labels and the time-separated adjudication.",
+    "The reviewer consulted Codex for case-by-case scoring guidance during phase one; the result is human-in-the-loop and AI-assisted rather than an independent human replication.",
+    "The held-out audit has now been inspected and must not be used to tune another judge prompt while still being described as held out.",
+    "Only three unique unanswerable cases were rechecked because the original judge had perfect abstention agreement."
+  ]
+}

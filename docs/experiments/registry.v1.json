@@ -275,14 +275,14 @@
       "id": "judge-human-adjudication-v1",
       "thesisSection": "LLM judge reference adjudication",
       "researchQuestion": "Are GPT-5.4 Nano disagreements caused by judge errors, noisy first-pass human labels, or insufficient frozen evidence?",
-      "status": "in-progress",
+      "status": "completed",
       "variable": "Second time-separated review with blind scoring followed by explicit comparison and adjudication",
       "controls": ["All 12 answerable held-out audit rows", "three unique unanswerable controls", "same frozen evidence", "references hidden until every blind score is frozen", "original human and judge artifacts immutable"],
       "metrics": ["Phase-one versus original-human agreement", "phase-one versus judge agreement", "label-change count", "adjudication decision frequencies", "evidence-ambiguity rate", "recomputed cached judge agreement"],
-      "artifacts": ["docs/evaluation/llm-judge-human-adjudication.v1.json", "docs/evaluation/JUDGE_ADJUDICATION_GUIDE_V1.md", "src/app/evaluation/judge-adjudication/page.tsx", "src/components/judge-adjudication-workbench.tsx"],
-      "decision": "Pending the exported 15-row human adjudication CSV.",
-      "limitations": ["The same primary reviewer performs the time-separated adjudication", "Only three unanswerable controls are included because abstention agreement was already perfect", "Reviewing the held-out audit consumes it for future prompt tuning"],
-      "nextStep": "Complete the local two-phase review, import the exported CSV, and recompute Nano metrics from cached outputs without provider calls."
+      "artifacts": ["docs/evaluation/llm-judge-human-adjudication.v1.json", "docs/evaluation/JUDGE_ADJUDICATION_GUIDE_V1.md", "docs/evaluation/llm-judge-human-adjudication-v1.completed.csv", "docs/experiment-results/llm-judge-human-adjudication-v1-summary.json", "docs/experiment-results/llm-judge-human-adjudication-v1-summary.md", "src/app/evaluation/judge-adjudication/page.tsx", "src/components/judge-adjudication-workbench.tsx", "scripts/report-judge-human-adjudication.ts"],
+      "decision": "Treat the completed review as a human-in-the-loop sensitivity analysis, not as an independent replacement gold standard. Fourteen of 15 decisions confirmed the new blind score and one answerable case was revised to the judge after comparison. Replacing the 12 answerable audit labels with the final adjudicated labels raises cached audit QWK from 0.1912 to 0.6407, Spearman from 0.4948 to 0.9214, and binary pass agreement from 0.7917 to 0.8750, crossing every frozen audit threshold without provider calls. GPT-5.4 Nano nevertheless remains ineligible because the unchanged calibration split still fails QWK and Spearman.",
+      "limitations": ["The same primary reviewer produced the original and time-separated adjudicated labels", "The reviewer consulted Codex for case-by-case guidance, so this is AI-assisted human adjudication rather than independent human replication", "Only three unique unanswerable controls are included because abstention agreement was already perfect", "Reviewing the held-out audit consumes it for future prompt tuning"],
+      "nextStep": "Use these results as a documented reference-label sensitivity analysis; before selecting an automatic judge, either obtain a genuinely independent second-human review or preregister a stronger judge and evaluate it on a newly reserved untouched set."
     }
   ]
 }

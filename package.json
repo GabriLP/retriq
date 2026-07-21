@@ -42,6 +42,7 @@
     "judge:split:build": "tsx scripts/build-judge-calibration-split.ts",
     "judge:adjudication:build": "tsx scripts/build-judge-adjudication-set.ts",
     "judge:adjudication:test": "tsx scripts/test-judge-adjudication.ts",
+    "judge:adjudication:report": "tsx scripts/report-judge-human-adjudication.ts",
     "judge:metrics:test": "tsx scripts/test-judge-metrics.ts",
     "judge:provider:test": "tsx scripts/test-judge-provider.ts",
     "experiment:judge": "tsx scripts/evaluate-llm-judge.ts",
