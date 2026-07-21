@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "comparative-query-decomposition-v1",
+  "title": "Frozen per-technology subqueries for comparative retrieval",
+  "status": "source-verified",
+  "split": "validation",
+  "positiveBenchmark": "docs/evaluation/multi-technology-retrieval-benchmark.v1.json",
+  "negativeBenchmark": "docs/evaluation/multi-technology-negative-benchmark.v1.json",
+  "testSplitTouched": false,
+  "constructionRule": "Each subquery preserves the original topic but asks about exactly one expected technology. No expected answer text, source title, section title, or canonical-evidence wording is injected.",
+  "cases": [
+    { "caseId": "compare-c-rust-heap-memory", "subqueries": { "C": "In C, how is heap memory allocated and released?", "Rust": "In Rust, how is heap memory managed and released?" } },
+    { "caseId": "compare-c-cpp-dynamic-deallocation", "subqueries": { "C": "In C, how is dynamically allocated memory released?", "C++": "In C++, how are dynamically allocated objects released?" } },
+    { "caseId": "compare-java-kotlin-nullability", "subqueries": { "Java": "In Java, how are nullable references represented?", "Kotlin": "In Kotlin, how are nullable references represented?" } },
+    { "caseId": "compare-javascript-typescript-type-errors", "subqueries": { "JavaScript": "In JavaScript, when are type mistakes detected?", "TypeScript": "In TypeScript, when are type mistakes detected?" } },
+    { "caseId": "compare-python-typescript-type-annotations", "subqueries": { "Python": "In Python, how are type annotations enforced?", "TypeScript": "In TypeScript, how are type annotations enforced?" } },
+    { "caseId": "compare-go-rust-panic-recovery", "subqueries": { "Go": "In the Go language, how can a program recover from a panic?", "Rust": "In Rust, how is a panic handled or recovered from?" } },
+    { "caseId": "compare-java-cpp-multiple-inheritance", "subqueries": { "Java": "In Java, how can a class inherit from multiple supertypes?", "C++": "In C++, how can a class inherit from multiple supertypes?" } },
+    { "caseId": "compare-bash-python-for-loops", "subqueries": { "Bash": "In Bash, how does a for loop iterate over elements?", "Python": "In Python, how does a for loop iterate over elements?" } },
+    { "caseId": "negative-c-rust-kubernetes-pdb", "subqueries": { "C": "In C, how are Kubernetes PodDisruptionBudgets configured?", "Rust": "In Rust, how are Kubernetes PodDisruptionBudgets configured?" } },
+    { "caseId": "negative-c-cpp-postgresql-isolation", "subqueries": { "C": "In C, how are database transaction isolation levels defined?", "C++": "In C++, how are database transaction isolation levels defined?" } },
+    { "caseId": "negative-java-kotlin-css-grid", "subqueries": { "Java": "In Java, how is CSS Grid track sizing defined?", "Kotlin": "In Kotlin, how is CSS Grid track sizing defined?" } },
+    { "caseId": "negative-javascript-typescript-borrow-checker", "subqueries": { "JavaScript": "In JavaScript, how is ownership-based borrow checking implemented?", "TypeScript": "In TypeScript, how is ownership-based borrow checking implemented?" } },
+    { "caseId": "negative-python-typescript-jvm-verification", "subqueries": { "Python": "In Python, how is JVM class-file verification configured?", "TypeScript": "In TypeScript, how is JVM class-file verification configured?" } },
+    { "caseId": "negative-go-rust-react-effect", "subqueries": { "Go": "In the Go language, how is component effect cleanup defined?", "Rust": "In Rust, how is component effect cleanup defined?" } },
+    { "caseId": "negative-java-cpp-bash-trap", "subqueries": { "Java": "In Java, how are shell signal trap handlers configured?", "C++": "In C++, how are shell signal trap handlers configured?" } },
+    { "caseId": "negative-bash-python-mvcc", "subqueries": { "Bash": "In Bash, how is SQL MVCC snapshot isolation defined?", "Python": "In Python, how is SQL MVCC snapshot isolation defined?" } }
+  ]
+}

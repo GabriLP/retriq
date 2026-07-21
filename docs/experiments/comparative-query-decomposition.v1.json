@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "comparative-query-decomposition-v1",
+  "title": "Per-technology query decomposition and evidence-sufficiency gate",
+  "status": "preregistered",
+  "split": "validation",
+  "positiveBenchmark": "docs/evaluation/multi-technology-retrieval-benchmark.v1.json",
+  "negativeBenchmark": "docs/evaluation/multi-technology-negative-benchmark.v1.json",
+  "decomposition": "docs/evaluation/comparative-query-decomposition.v1.json",
+  "parentRun": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec",
+  "hypothesis": "Technology-specific subqueries improve canonical evidence retrieval, while requiring eligible evidence from both technology sides reduces comparative false positives.",
+  "variants": [
+    { "id": "balanced-single-query", "description": "Current balanced retrieval over one comparative query; answer when any chunk passes." },
+    { "id": "decomposed-any-side", "description": "Retrieve independently with one frozen subquery per technology and retain up to two chunks per side; answer when either side passes." },
+    { "id": "decomposed-both-sides-gate", "description": "Use the same decomposed candidates but return evidence only when both technology sides have at least one chunk above threshold." }
+  ],
+  "changedVariable": "Comparative query execution and evidence-sufficiency decision architecture",
+  "controlledVariables": [
+    "frozen 33,079-chunk corpus",
+    "eight comparative positives and eight comparative negatives",
+    "Gemini Embedding 2 at 1,024 dimensions",
+    "exact cosine similarity",
+    "minimum score 0.68",
+    "maximum four returned chunks",
+    "maximum two chunks per technology for decomposed variants",
+    "no reranker",
+    "no LLM query rewriting",
+    "locked general test split untouched"
+  ],
+  "selectionRule": {
+    "eligibility": {
+      "noAnswerFalsePositiveRate": 0,
+      "minimumBothLanguageCoverageAt4": 0.625,
+      "minimumBothEvidenceSideCoverageAt4": 0.25,
+      "minimumMeanEvidenceSideRecallAt4": 0.5
+    },
+    "primary": "highest both-evidence-side coverage@4",
+    "tieBreakers": ["highest both-language coverage@4", "highest mean evidence-side recall@4", "highest macro evidence-side MRR", "fewest returned chunks", "prefer the simpler architecture"],
+    "failurePolicy": "Select no architecture when no candidate satisfies every guardrail; do not tune subquery wording or the gate after observing results."
+  },
+  "metrics": ["comparative no-answer FPR", "both-language coverage@4", "both-evidence-side coverage@4", "mean evidence-side recall@4", "macro evidence-side MRR", "gate rejection counts", "latency", "embedding calls and cost"],
+  "reportOutput": "docs/experiment-results/comparative-query-decomposition-v1-validation"
+}
