@@ -71,8 +71,9 @@
     }
   ],
   "execution": {
-    "completedAt": "2026-07-21T08:50:39.455Z",
-    "finalAttemptId": "20260721085039455",
+    "completedAt": "2026-07-21T08:52:49.531Z",
+    "finalAttemptId": "20260721085249531",
+    "finalReplayGitCommit": "d2d619677acf2c78d305e91e92ff90f05511ce32",
     "originalProviderCalls": 27,
     "finalReplayProviderCalls": 0,
     "generatedCases": 27,

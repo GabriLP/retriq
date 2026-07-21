@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "id": "generation-output-budget-v1",
-  "attemptId": "20260721085039455",
-  "createdAt": "2026-07-21T08:50:39.455Z",
+  "attemptId": "20260721085249531",
+  "createdAt": "2026-07-21T08:52:49.531Z",
   "split": "validation",
   "testSplitTouched": false,
   "inputHashes": {
-    "protocol": "f9bbe11095d8b03d5ac62b922d43454f7dbc1ebd1ac1b5236585b43f5a95fdb6",
+    "protocol": "71f016dea94443f0e1cb1dd4b25720aaab8556b6c056ad50fe6fe69a0dcadd0d",
     "benchmark": "eb25d5618b0a2ee1cc045bf64e79c214bd40570bf4fbcdc87fa046975a0f4343",
     "prompt": "0c37022a43375090d05873eb6936146353e8179f1c20a937ee9a8ad0103dbba6",
     "chunks": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
@@ -14,8 +14,8 @@
     "humanReview": "793f0b4563459026a09e0fb0117cc8aadc7cf6ee2c6f0f27c7dc70a258e6835b"
   },
   "code": {
-    "gitCommit": "fb350a87a539b905fdd0d50a7ce23bb05254ae62",
-    "dirty": true,
+    "gitCommit": "d2d619677acf2c78d305e91e92ff90f05511ce32",
+    "dirty": false,
     "gitDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   "controls": [
@@ -35,6 +35,11 @@
     "maximumOutputTokens": 55296,
     "conservativeMaximumCostUsd": 0.569375,
     "note": "This is a conservative ceiling, not a billing prediction. Actual cost uses provider token metadata and successful responses are content-addressed in the generation cache."
+  },
+  "execution": {
+    "cacheOnly": true,
+    "providerRequests": 0,
+    "cacheHits": 27
   },
   "summaries": [
     {

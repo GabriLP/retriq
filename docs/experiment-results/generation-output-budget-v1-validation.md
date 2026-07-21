@@ -1,6 +1,6 @@
 # Generation output-budget comparison
 
-- Protocol/attempt: `generation-output-budget-v1` / `20260721085039455`
+- Protocol/attempt: `generation-output-budget-v1` / `20260721085249531`
 - Split: **validation only**
 - Decision: **accept-2048-for-runtime-reliability**
 - Quality status: **pending-blinded-human-review-or-calibrated-judge**
