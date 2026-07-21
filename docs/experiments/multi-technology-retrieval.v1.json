@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "multi-technology-retrieval-v1",
   "title": "Comparative-query retrieval coverage",
-  "status": "preregistered",
+  "status": "completed",
   "split": "validation",
   "benchmark": "docs/evaluation/multi-technology-retrieval-benchmark.v1.json",
   "parentRun": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec",
@@ -54,6 +54,21 @@
       "prefer multi-technology-unbalanced over balanced when every quality metric ties because it is simpler"
     ],
     "scope": "This focused benchmark tests comparative answerable queries only; it does not recalibrate the 0.68 abstention threshold or estimate unanswerable false positives."
+  },
+  "execution": {
+    "completedAt": "2026-07-21T09:05:04.704Z",
+    "attemptId": "20260721090504704",
+    "evaluationGitCommit": "6ee93d0655046885c35a1584acf7ddc9a374ce35",
+    "selectedVariant": "multi-technology-balanced",
+    "bothLanguageCoverageAt4": 0.625,
+    "bothEvidenceSideCoverageAt4": 0.25,
+    "meanEvidenceSideRecallAt4": 0.5,
+    "macroEvidenceSideMrr": 0.3645833333333333,
+    "queryEmbeddingProviderInputs": 8,
+    "queryEmbeddingProviderRequests": 1,
+    "estimatedEmbeddingCostUsd": 0.0000408,
+    "testSplitTouched": false,
+    "interpretation": "Balanced ordering is the best of the preregistered policies for representing both named technologies, but the low canonical two-sided evidence rate shows that the single-technology threshold and top-k policy are not yet sufficient for comparative questions."
   },
   "reportOutput": "docs/experiment-results/multi-technology-retrieval-v1-validation"
 }

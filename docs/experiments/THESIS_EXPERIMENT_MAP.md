@@ -1,8 +1,8 @@
 # Thesis experiment map
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
-- Experiment families: **13**
-- Completed: **9**
+- Experiment families: **14**
+- Completed: **10**
 - Superseded but retained: **1**
 
 This is the narrative index for the thesis. The JSON registry is the source of truth; generated Markdown and CSV provide readable and tabular views. Every experiment records its question, isolated variable, controls, metrics, decision, limitations, and next action.
@@ -22,6 +22,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 11 | Agentic RAG | rag-agent-loop-v1 | planned | Single pass versus bounded retrieve-check-rewrite loop | Pending. |
 | 12 | Production retrieval infrastructure | postgres-vector-storage-v1 | completed | Local exhaustive cosine persistence versus exact pgvector execution | Deploy exact pgvector search on Neon Free. It preserved all 54 frozen validation outputs within a 0.0002 score tolerance, stored 33,079 chunks in 228 MB, reused cached embeddings with zero provider calls, and cost $0 at observation time. HNSW and IVFFlat remain deferred experiments. |
 | 13 | Runtime generation reliability | generation-output-budget-v1 | completed | Maximum output-token budget: frozen 900-token baseline versus 2,048-token runtime candidate | Use 2,048 tokens for runtime reliability. All 27 validation generations returned STOP with zero errors and zero MAX_TOKENS events; the known 900-token Rust failure completed. Observed cost increased from $0.164763 to $0.166626 (+$0.001863, approximately 1.13%). This is not a quality-selection result. |
+| 14 | Comparative-query retrieval | multi-technology-retrieval-v1 | completed | Legacy first-technology filtering versus multi-technology union versus language-balanced union | Retain language-balanced multi-technology ordering among the three preregistered policies. It raises both-language coverage@4 from 0.0000 for legacy first-match and 0.3750 for the unbalanced union to 0.6250. Canonical two-sided evidence coverage remains only 0.2500, however, so this is a retrieval regression fix rather than a complete comparative-query solution. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
 
@@ -178,3 +179,15 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Decision:** Use 2,048 tokens for runtime reliability. All 27 validation generations returned STOP with zero errors and zero MAX_TOKENS events; the known 900-token Rust failure completed. Observed cost increased from $0.164763 to $0.166626 (+$0.001863, approximately 1.13%). This is not a quality-selection result.
 - **Limitations:** Legacy finish reasons were not retained, so the 900-token truncation rate is a confirmed lower bound; Temperature zero does not guarantee byte-identical regeneration; Quality comparison remains pending human review or an independently calibrated judge; The 24-case test remains untouched
 - **Next step:** Retain 2,048 as the runtime ceiling, preserve the blinded quality-review package, and continue with the separately preregistered comparative-query retrieval benchmark before judge calibration.
+
+## 14. Comparative-query retrieval: multi-technology-retrieval-v1
+
+- **Research question:** For questions comparing two programming technologies, which metadata filtering and top-k policy best represents and grounds both sides?
+- **Status:** completed
+- **Changed variable:** Legacy first-technology filtering versus multi-technology union versus language-balanced union
+- **Controls:** Frozen 33,079-chunk corpus; 300-word target chunks; Gemini Embedding 2 at 1,024 dimensions; exact cosine retrieval; threshold 0.68; topK=4; no reranker; eight source-verified validation cases
+- **Metrics:** Both-language coverage@4; mean language-side coverage@4; both-evidence-side coverage@4; canonical evidence-side recall@4; macro evidence-side MRR; latency; embedding cost
+- **Artifacts:** `docs/evaluation/multi-technology-retrieval-benchmark.v1.json`; `docs/experiments/multi-technology-retrieval.v1.json`; `docs/experiment-results/multi-technology-retrieval-v1-validation.json`; `docs/experiment-results/multi-technology-retrieval-v1-validation.md`; `docs/experiment-results/multi-technology-retrieval-v1-validation.csv`
+- **Decision:** Retain language-balanced multi-technology ordering among the three preregistered policies. It raises both-language coverage@4 from 0.0000 for legacy first-match and 0.3750 for the unbalanced union to 0.6250. Canonical two-sided evidence coverage remains only 0.2500, however, so this is a retrieval regression fix rather than a complete comparative-query solution.
+- **Limitations:** Only eight focused answerable validation cases; Canonical evidence is tied to the frozen 300-word chunks; Threshold 0.68 was inherited from the general single-technology benchmark; No comparative unanswerable cases; The locked 24-case test remains untouched
+- **Next step:** Preregister a comparative-query calibration that varies candidate budget or a per-language quota while preserving an explicit abstention rule; do not silently lower the global threshold.

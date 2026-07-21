@@ -48,7 +48,7 @@ type CaseResult = {
   caseId: string;
   expectedLanguages: string[];
   detectedLanguages: string[];
-  retrieved: Array<{ rank: number; chunkId: string; sourceId: string; language: string | null; section: string; score: number }>;
+  retrieved: Array<{ rank: number; chunkId: string; sourceId: string | null; language: string | null; section: string; score: number }>;
   representedLanguages: string[];
   evidenceLanguages: string[];
   languageSideCoverage: number;
@@ -191,7 +191,7 @@ async function main() {
   console.log(`CACHE documents=${documents.cache.cacheHits}/${chunks.length}, queries=${queries.cache.cacheHits}/${benchmark.cases.length}, apiInputs=${artifact.cache.apiInputs}, estimatedCost=$${artifact.cache.estimatedApiCostUsd.toFixed(8)}`);
 }
 
-function evaluateVariant(variant: VariantId, cases: BenchmarkCase[], rankings: ScoredChunk[]): VariantResult {
+function evaluateVariant(variant: VariantId, cases: BenchmarkCase[], rankings: ScoredChunk[][]): VariantResult {
   const evaluated = cases.map((testCase, index) => {
     const eligibleLanguages = variant === "legacy-first-technology" ? [testCase.legacyLanguage] : testCase.expectedLanguages;
     const eligible = rankings[index].filter((chunk) => chunk.language && eligibleLanguages.includes(chunk.language) && chunk.score >= 0.68);
@@ -235,7 +235,7 @@ function evaluateCase(testCase: BenchmarkCase, chunks: ScoredChunk[]): CaseResul
     caseId: testCase.id,
     expectedLanguages: testCase.expectedLanguages,
     detectedLanguages: detectQueryMetadataConstraint(testCase.question)?.databaseLanguages ?? [],
-    retrieved: chunks.map((chunk, index) => ({ rank: index + 1, chunkId: chunk.id, sourceId: chunk.sourceId, language: chunk.language ?? null, section: chunk.section, score: chunk.score })),
+    retrieved: chunks.map((chunk, index) => ({ rank: index + 1, chunkId: chunk.id, sourceId: chunk.sourceId ?? null, language: chunk.language ?? null, section: chunk.section, score: chunk.score })),
     representedLanguages,
     evidenceLanguages,
     languageSideCoverage: representedLanguages.length / testCase.expectedLanguages.length,
@@ -250,7 +250,7 @@ function selectVariant(results: VariantResult[]) {
   const legacy = results.find((item) => item.variant === "legacy-first-technology");
   if (!legacy) throw new Error("Missing legacy variant.");
   const candidates = results.filter((item) => item.variant !== "legacy-first-technology" && item.cases.every((testCase) => sameSet(testCase.detectedLanguages, testCase.expectedLanguages)) && item.metrics.meanEvidenceSideRecallAt4 >= legacy.metrics.meanEvidenceSideRecallAt4 && item.metrics.macroEvidenceSideMrr >= legacy.metrics.macroEvidenceSideMrr);
-  const selected = [...candidates].sort((left, right) => right.metrics.bothEvidenceSideCoverageAt4 - left.metrics.bothEvidenceSideCoverageAt4 || right.metrics.bothLanguageCoverageAt4 - left.metrics.bothLanguageCoverageAt4 || right.metrics.meanEvidenceSideRecallAt4 - left.metrics.meanEvidenceSideRecallAt4 || right.metrics.macroEvidenceSideMrr - left.metrics.macroEvidenceSideMrr || Number(left.variant === "multi-technology-unbalanced") - Number(right.variant === "multi-technology-unbalanced"))[0];
+  const selected = [...candidates].sort((left, right) => right.metrics.bothEvidenceSideCoverageAt4 - left.metrics.bothEvidenceSideCoverageAt4 || right.metrics.bothLanguageCoverageAt4 - left.metrics.bothLanguageCoverageAt4 || right.metrics.meanEvidenceSideRecallAt4 - left.metrics.meanEvidenceSideRecallAt4 || right.metrics.macroEvidenceSideMrr - left.metrics.macroEvidenceSideMrr || Number(right.variant === "multi-technology-unbalanced") - Number(left.variant === "multi-technology-unbalanced"))[0];
   return selected
     ? { selectedVariant: selected.variant, reason: "Selected by the preregistered validation rule." }
     : { selectedVariant: null, reason: "No multi-technology candidate satisfied the preregistered eligibility guardrails." };
@@ -308,7 +308,11 @@ function codeProvenance() {
   return { gitCommit: runCommand("git", ["rev-parse", "HEAD"]) || "unknown", dirty: Boolean(status), gitDiffHash: sha256(diff) };
 }
 
-function sameSet(left: string[], right: string[]) { return left.length === right.length && left.every((item) => right.includes(item)); }
+function sameSet(left: string[], right: string[]) {
+  const leftSet = new Set(left);
+  const rightSet = new Set(right);
+  return leftSet.size === rightSet.size && [...leftSet].every((item) => rightSet.has(item));
+}
 function mean(values: number[]) { return values.length ? values.reduce((total, value) => total + value, 0) / values.length : 0; }
 function sha256(value: string) { return crypto.createHash("sha256").update(value).digest("hex"); }
 function format(value: number) { return value.toFixed(4); }
