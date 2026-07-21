@@ -349,7 +349,7 @@ function summarize(variant: Variant, results: GeneratorResult[], answers: string
     maxOutputTokens: variant.maxOutputTokens,
     generatedCases: results.length,
     errors,
-    finishReasonCoverage: results.filter((item) => item.finishReason !== null).length,
+    finishReasonCoverage: results.filter((item) => typeof item.finishReason === "string").length,
     ...stopCounts,
     tokens: {
       prompt: sum(results.map((item) => item.usage.promptTokens)),

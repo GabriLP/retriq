@@ -61,6 +61,15 @@
     "observedAt": "2026-07-17",
     "creditsAndFreeTiersNotSubtracted": true
   },
+  "amendments": [
+    {
+      "observedAt": "2026-07-21T10:55:00+02:00",
+      "change": "Count finish-reason coverage only when a string-valued provider stop reason is present.",
+      "reason": "The first report incorrectly counted missing legacy fields as covered because undefined is not equal to null. This reporting-only correction makes the frozen 900-token coverage zero, as stated in the preregistered limitation.",
+      "providerCallsAfterChange": 0,
+      "decisionImpact": "none"
+    }
+  ],
   "reportOutput": "docs/experiment-results/generation-output-budget-v1-validation",
   "reviewOutput": "docs/evaluation/generation-output-budget-human-review-v1.csv"
 }
