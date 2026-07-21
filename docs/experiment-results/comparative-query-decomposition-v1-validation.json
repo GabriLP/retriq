@@ -1,0 +1,1444 @@
+{
+  "schemaVersion": 1,
+  "id": "comparative-query-decomposition-v1",
+  "attemptId": "20260721092530477",
+  "createdAt": "2026-07-21T09:25:30.477Z",
+  "parentRunId": "20260717084956473-e60c88ec",
+  "split": "validation",
+  "testSplitTouched": false,
+  "hypothesis": "Technology-specific subqueries improve canonical evidence retrieval, while requiring eligible evidence from both technology sides reduces comparative false positives.",
+  "inputHashes": {
+    "protocol": "299d70ac894c16397937ddd90dbcdb1d2fdfd47f862bdb61605244633e20a680",
+    "positives": "dd38dbb829e24dfd832ed6f2d1cbec71e62134523e43190c64b8a05422d78db9",
+    "negatives": "8e187383bb4494ec5b2e87f40e583e881d8a62b9d0111a3ebf1bf4d29f376b20",
+    "decomposition": "fa82fd2940d64eabef805628ef9363e1c1369e1ab99217f9da6c3a30d2eca0ab",
+    "config": "e7d95b88394a8f87f08a4de9885b8c80cfa70f729e337b5a646e6500b1a40880",
+    "chunks": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864"
+  },
+  "code": {
+    "gitCommit": "9d47585320e42eab40fd7786041a1474d1ef5eee",
+    "dirty": false,
+    "gitDiffHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "controls": {
+    "threshold": 0.68,
+    "topK": 4,
+    "perTechnologyLimit": 2,
+    "embedding": "google/gemini-embedding-2@1024",
+    "reranker": null,
+    "llmRewrite": false
+  },
+  "cache": {
+    "documentHits": 32621,
+    "documentMisses": 0,
+    "originalQueryHits": 16,
+    "originalQueryMisses": 0,
+    "subqueryHits": 0,
+    "subqueryMisses": 32,
+    "apiInputs": 32,
+    "apiRequests": 1,
+    "estimatedApiTokens": 715,
+    "estimatedApiCostUsd": 0.000143
+  },
+  "timingsMs": {
+    "cosineScoring": 1334
+  },
+  "results": [
+    {
+      "variant": "balanced-single-query",
+      "metrics": {
+        "bothLanguageCoverageAt4": 0.625,
+        "meanLanguageSideCoverageAt4": 0.8125,
+        "bothEvidenceSideCoverageAt4": 0.25,
+        "meanEvidenceSideRecallAt4": 0.5,
+        "macroEvidenceSideMrr": 0.3645833333333333,
+        "noAnswerFalsePositiveRate": 0.375,
+        "positiveGateRejections": 0,
+        "negativeGateRejections": 5,
+        "returnedChunks": 39
+      },
+      "positiveCases": [
+        {
+          "caseId": "compare-c-rust-heap-memory",
+          "representedLanguages": [
+            "C",
+            "Rust"
+          ],
+          "evidenceLanguages": [
+            "Rust"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "8238e2e53432bd18",
+              "sourceId": "rust-book",
+              "language": "Rust",
+              "section": "What Is Ownership? (part 9)",
+              "score": 0.7510042964208338
+            },
+            {
+              "rank": 2,
+              "chunkId": "885d375ea9a7664d",
+              "sourceId": "beej-c-tutorial",
+              "language": "C",
+              "section": "Manual Memory Allocation (part 1)",
+              "score": 0.7129723004126346
+            },
+            {
+              "rank": 3,
+              "chunkId": "d2e6b82c3bebee4c",
+              "sourceId": "rust-book",
+              "language": "Rust",
+              "section": "What Is Ownership? (part 1)",
+              "score": 0.734653676454911
+            },
+            {
+              "rank": 4,
+              "chunkId": "ead1311e43db94c9",
+              "sourceId": "rust-book",
+              "language": "Rust",
+              "section": "What Is Ownership? (part 2)",
+              "score": 0.7338034826610366
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-c-cpp-dynamic-deallocation",
+          "representedLanguages": [
+            "C",
+            "C++"
+          ],
+          "evidenceLanguages": [],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "ebd5f7d6ce28eec3",
+              "sourceId": "beej-c-tutorial",
+              "language": "C",
+              "section": "12.1 Allocating and Deallocating, malloc() and free() (part 1)",
+              "score": 0.7248474552616184
+            },
+            {
+              "rank": 2,
+              "chunkId": "402a75a061d344c4",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "[basic.stc.dynamic] (part 1)",
+              "score": 0.6822151443333924
+            },
+            {
+              "rank": 3,
+              "chunkId": "885d375ea9a7664d",
+              "sourceId": "beej-c-tutorial",
+              "language": "C",
+              "section": "Manual Memory Allocation (part 1)",
+              "score": 0.7217490039080185
+            },
+            {
+              "rank": 4,
+              "chunkId": "a7578e6ebf8efe8f",
+              "sourceId": "gnu-c-library-2-42-manual",
+              "language": "C",
+              "section": "3.2.1 Memory Allocation in C Programs",
+              "score": 0.7009778894090178
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-java-kotlin-nullability",
+          "representedLanguages": [
+            "Kotlin"
+          ],
+          "evidenceLanguages": [
+            "Kotlin"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "de8e8d15fe992755",
+              "sourceId": "kotlin-language-specification",
+              "language": "Kotlin",
+              "section": "2.1.8 Nullable types",
+              "score": 0.7295383379276575
+            },
+            {
+              "rank": 2,
+              "chunkId": "7be1556b0f36dcd8",
+              "sourceId": "kotlin-language-specification",
+              "language": "Kotlin",
+              "section": "8.1.7 Null literal",
+              "score": 0.7156678267348515
+            },
+            {
+              "rank": 3,
+              "chunkId": "7a10d737e9d75bdf",
+              "sourceId": "kotlin-language-specification",
+              "language": "Kotlin",
+              "section": "Nullability lozenge (part 1)",
+              "score": 0.71156432358046
+            },
+            {
+              "rank": 4,
+              "chunkId": "30450b4bcd14ca6a",
+              "sourceId": "kotlin-language-specification",
+              "language": "Kotlin",
+              "section": "2.1. TYPE KINDS",
+              "score": 0.7080683549266454
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-javascript-typescript-type-errors",
+          "representedLanguages": [
+            "TypeScript"
+          ],
+          "evidenceLanguages": [
+            "TypeScript"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "7c4ccaa942e40446",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 2)",
+              "score": 0.7667653785995271
+            },
+            {
+              "rank": 2,
+              "chunkId": "1ac6ec3e98653e9b",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 4)",
+              "score": 0.758040306532088
+            },
+            {
+              "rank": 3,
+              "chunkId": "852dee0342e422e3",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 5)",
+              "score": 0.7538862047865231
+            },
+            {
+              "rank": 4,
+              "chunkId": "35a6a9c0a60b152d",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 3)",
+              "score": 0.7485753342427134
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-python-typescript-type-annotations",
+          "representedLanguages": [
+            "TypeScript"
+          ],
+          "evidenceLanguages": [],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "1ac6ec3e98653e9b",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 4)",
+              "score": 0.7004171473124048
+            },
+            {
+              "rank": 2,
+              "chunkId": "ac402a55336257bd",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 11)",
+              "score": 0.7004159862573445
+            },
+            {
+              "rank": 3,
+              "chunkId": "852dee0342e422e3",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 5)",
+              "score": 0.6980048494362578
+            },
+            {
+              "rank": 4,
+              "chunkId": "97c7adbac8777b90",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "The primitives: string, number, and boolean (part 4)",
+              "score": 0.6954392725000156
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-go-rust-panic-recovery",
+          "representedLanguages": [
+            "Go",
+            "Rust"
+          ],
+          "evidenceLanguages": [
+            "Go",
+            "Rust"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "0b279a517bd3b054",
+              "sourceId": "rust-reference",
+              "language": "Rust",
+              "section": "The panic_handler attribute (part 3)",
+              "score": 0.7503221672919693
+            },
+            {
+              "rank": 2,
+              "chunkId": "9cb23ea407465d5c",
+              "sourceId": "go-language-specification",
+              "language": "Go",
+              "section": "Language version go1.26 (Jan 12, 2026) (part 163)",
+              "score": 0.7469966207590047
+            },
+            {
+              "rank": 3,
+              "chunkId": "b1776b1f7794289b",
+              "sourceId": "rust-book",
+              "language": "Rust",
+              "section": "The Rust Programming Language",
+              "score": 0.7423073538549689
+            },
+            {
+              "rank": 4,
+              "chunkId": "6c20e64faa491ac9",
+              "sourceId": "go-language-specification",
+              "language": "Go",
+              "section": "Language version go1.26 (Jan 12, 2026) (part 162)",
+              "score": 0.7173020353936104
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-java-cpp-multiple-inheritance",
+          "representedLanguages": [
+            "Java",
+            "C++"
+          ],
+          "evidenceLanguages": [
+            "C++"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "4ff89fdf16fab7a1",
+              "sourceId": "java-se-26-language-specification",
+              "language": "Java",
+              "section": "Example 8.1.5-3. Illegal Multiple Inheritance of an Interface",
+              "score": 0.7296773834646256
+            },
+            {
+              "rank": 2,
+              "chunkId": "db08ba0a2ea8b691",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "11.7.2 Multiple base classes (part 1)",
+              "score": 0.7183903311865233
+            },
+            {
+              "rank": 3,
+              "chunkId": "8998e0a810bb2795",
+              "sourceId": "java-se-26-language-specification",
+              "language": "Java",
+              "section": "1.1 Organization of the Specification (part 5)",
+              "score": 0.6976874987749979
+            },
+            {
+              "rank": 4,
+              "chunkId": "ba4a3cb800606c07",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "11.7.2 Multiple base classes (part 2)",
+              "score": 0.6934529782513044
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-bash-python-for-loops",
+          "representedLanguages": [
+            "Bash",
+            "Python"
+          ],
+          "evidenceLanguages": [
+            "Bash",
+            "Python"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "a92113350e4536f5",
+              "sourceId": "gnu-bash-5-3-reference-manual",
+              "language": "Bash",
+              "section": "3.2.5.1 Looping Constructs (part 1)",
+              "score": 0.7079072041619695
+            },
+            {
+              "rank": 2,
+              "chunkId": "98e19280456ce52e",
+              "sourceId": "python-tutorial",
+              "language": "Python",
+              "section": "4.1. if Statements¶ (part 2)",
+              "score": 0.6951686096595247
+            },
+            {
+              "rank": 3,
+              "chunkId": "278fd7b1d1c9b3f0",
+              "sourceId": "gnu-bash-5-3-reference-manual",
+              "language": "Bash",
+              "section": "Appendix B Major Differences From The Bourne Shell (part 3)",
+              "score": 0.6969168954574021
+            }
+          ],
+          "gatePassed": true
+        }
+      ],
+      "negativeCases": [
+        {
+          "caseId": "negative-c-rust-kubernetes-pdb",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-c-cpp-postgresql-isolation",
+          "falsePositive": true,
+          "gatePassed": true,
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "46d82cb74ebc57f1",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "17.14.1 General",
+              "score": 0.6805737901278239
+            }
+          ]
+        },
+        {
+          "caseId": "negative-java-kotlin-css-grid",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-javascript-typescript-borrow-checker",
+          "falsePositive": true,
+          "gatePassed": true,
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "69e926e24a512e1e",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 1)",
+              "score": 0.7122334478010942
+            },
+            {
+              "rank": 2,
+              "chunkId": "aa4e6efd9c204155",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Scripts and modules in JavaScript (part 1)",
+              "score": 0.7050671253549583
+            },
+            {
+              "rank": 3,
+              "chunkId": "0c4183bfb626a271",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Scripts and modules in JavaScript (part 2)",
+              "score": 0.704703654711387
+            },
+            {
+              "rank": 4,
+              "chunkId": "ec0f94d1ef9ccc34",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Types (part 8)",
+              "score": 0.7038881294824221
+            }
+          ]
+        },
+        {
+          "caseId": "negative-python-typescript-jvm-verification",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-go-rust-react-effect",
+          "falsePositive": true,
+          "gatePassed": true,
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "7b6b498e601e3352",
+              "sourceId": "rust-reference",
+              "language": "Rust",
+              "section": "Drop scopes (part 1)",
+              "score": 0.6958329510505961
+            },
+            {
+              "rank": 2,
+              "chunkId": "f227f858015e5bfb",
+              "sourceId": "rust-reference",
+              "language": "Rust",
+              "section": "The Rust Reference (part 20)",
+              "score": 0.6922850255745113
+            },
+            {
+              "rank": 3,
+              "chunkId": "2a8076cd81792ae9",
+              "sourceId": "rust-book",
+              "language": "Rust",
+              "section": "Running Code on Cleanup with the Drop Trait (part 1)",
+              "score": 0.6817248433824984
+            }
+          ]
+        },
+        {
+          "caseId": "negative-java-cpp-bash-trap",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-bash-python-mvcc",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        }
+      ]
+    },
+    {
+      "variant": "decomposed-any-side",
+      "metrics": {
+        "bothLanguageCoverageAt4": 1,
+        "meanLanguageSideCoverageAt4": 1,
+        "bothEvidenceSideCoverageAt4": 0.375,
+        "meanEvidenceSideRecallAt4": 0.625,
+        "macroEvidenceSideMrr": 0.4270833333333333,
+        "noAnswerFalsePositiveRate": 0.5,
+        "positiveGateRejections": 0,
+        "negativeGateRejections": 8,
+        "returnedChunks": 39
+      },
+      "positiveCases": [
+        {
+          "caseId": "compare-c-rust-heap-memory",
+          "representedLanguages": [
+            "C",
+            "Rust"
+          ],
+          "evidenceLanguages": [],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "d715b69606a84bb9",
+              "sourceId": "rust-book",
+              "language": "Rust",
+              "section": "What Is Ownership? (part 10)",
+              "score": 0.7723927512107123
+            },
+            {
+              "rank": 2,
+              "chunkId": "885d375ea9a7664d",
+              "sourceId": "beej-c-tutorial",
+              "language": "C",
+              "section": "Manual Memory Allocation (part 1)",
+              "score": 0.7689158232257987
+            },
+            {
+              "rank": 3,
+              "chunkId": "ebd5f7d6ce28eec3",
+              "sourceId": "beej-c-tutorial",
+              "language": "C",
+              "section": "12.1 Allocating and Deallocating, malloc() and free() (part 1)",
+              "score": 0.7598866273182372
+            },
+            {
+              "rank": 4,
+              "chunkId": "79b19f8bf415dd09",
+              "sourceId": "rust-reference",
+              "language": "Rust",
+              "section": "The Rust Reference",
+              "score": 0.7484979121608822
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-c-cpp-dynamic-deallocation",
+          "representedLanguages": [
+            "C",
+            "C++"
+          ],
+          "evidenceLanguages": [
+            "C",
+            "C++"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "ebd5f7d6ce28eec3",
+              "sourceId": "beej-c-tutorial",
+              "language": "C",
+              "section": "12.1 Allocating and Deallocating, malloc() and free() (part 1)",
+              "score": 0.7477740139622387
+            },
+            {
+              "rank": 2,
+              "chunkId": "12d5985b8413700f",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "7.6.2.9 Delete (part 2)",
+              "score": 0.7035352650690553
+            },
+            {
+              "rank": 3,
+              "chunkId": "8d797f1058a89db7",
+              "sourceId": "gnu-c-library-2-42-manual",
+              "language": "C",
+              "section": "3.2.3.3 Freeing Memory Allocated with malloc (part 1)",
+              "score": 0.7378372870520302
+            },
+            {
+              "rank": 4,
+              "chunkId": "402a75a061d344c4",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "[basic.stc.dynamic] (part 1)",
+              "score": 0.6970379059661518
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-java-kotlin-nullability",
+          "representedLanguages": [
+            "Java",
+            "Kotlin"
+          ],
+          "evidenceLanguages": [
+            "Kotlin"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "de8e8d15fe992755",
+              "sourceId": "kotlin-language-specification",
+              "language": "Kotlin",
+              "section": "2.1.8 Nullable types",
+              "score": 0.7795061387096458
+            },
+            {
+              "rank": 2,
+              "chunkId": "b1f16cb1d497436e",
+              "sourceId": "java-se-26-language-specification",
+              "language": "Java",
+              "section": "4.1 The Kinds of Types and Values",
+              "score": 0.7422576447982343
+            },
+            {
+              "rank": 3,
+              "chunkId": "7be1556b0f36dcd8",
+              "sourceId": "kotlin-language-specification",
+              "language": "Kotlin",
+              "section": "8.1.7 Null literal",
+              "score": 0.739489273268044
+            },
+            {
+              "rank": 4,
+              "chunkId": "60f980a9f2a79848",
+              "sourceId": "java-se-26-vm-specification",
+              "language": "Java",
+              "section": "2.4 Reference Types and Values",
+              "score": 0.7251603115848717
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-javascript-typescript-type-errors",
+          "representedLanguages": [
+            "JavaScript",
+            "TypeScript"
+          ],
+          "evidenceLanguages": [
+            "TypeScript"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "852dee0342e422e3",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 5)",
+              "score": 0.775460662223522
+            },
+            {
+              "rank": 2,
+              "chunkId": "1d00bb053a5abf77",
+              "sourceId": "ecmascript-2026-ecma-262",
+              "language": "JavaScript",
+              "section": "17 Error Handling and Language Extensions (part 1)",
+              "score": 0.6883627312809595
+            },
+            {
+              "rank": 3,
+              "chunkId": "7c4ccaa942e40446",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 2)",
+              "score": 0.7732666189764614
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-python-typescript-type-annotations",
+          "representedLanguages": [
+            "Python",
+            "TypeScript"
+          ],
+          "evidenceLanguages": [
+            "Python"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "ac402a55336257bd",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 11)",
+              "score": 0.74574737835874
+            },
+            {
+              "rank": 2,
+              "chunkId": "ad0f48df0b243437",
+              "sourceId": "python-language-reference",
+              "language": "Python",
+              "section": "8.1. The if statement¶ (part 48)",
+              "score": 0.6996082660748221
+            },
+            {
+              "rank": 3,
+              "chunkId": "852dee0342e422e3",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 5)",
+              "score": 0.7391910158303724
+            },
+            {
+              "rank": 4,
+              "chunkId": "a47a161f876ef5cc",
+              "sourceId": "python-language-reference",
+              "language": "Python",
+              "section": "8.1. The if statement¶ (part 47)",
+              "score": 0.6889793833121531
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-go-rust-panic-recovery",
+          "representedLanguages": [
+            "Go",
+            "Rust"
+          ],
+          "evidenceLanguages": [
+            "Go",
+            "Rust"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "0b279a517bd3b054",
+              "sourceId": "rust-reference",
+              "language": "Rust",
+              "section": "The panic_handler attribute (part 3)",
+              "score": 0.7828097869099422
+            },
+            {
+              "rank": 2,
+              "chunkId": "9cb23ea407465d5c",
+              "sourceId": "go-language-specification",
+              "language": "Go",
+              "section": "Language version go1.26 (Jan 12, 2026) (part 163)",
+              "score": 0.7650969205437657
+            },
+            {
+              "rank": 3,
+              "chunkId": "703f3f7be9d3be9d",
+              "sourceId": "rust-reference",
+              "language": "Rust",
+              "section": "The panic_handler attribute (part 2)",
+              "score": 0.7549701128761537
+            },
+            {
+              "rank": 4,
+              "chunkId": "6c20e64faa491ac9",
+              "sourceId": "go-language-specification",
+              "language": "Go",
+              "section": "Language version go1.26 (Jan 12, 2026) (part 162)",
+              "score": 0.7201612754237644
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-java-cpp-multiple-inheritance",
+          "representedLanguages": [
+            "Java",
+            "C++"
+          ],
+          "evidenceLanguages": [
+            "C++"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "4ff89fdf16fab7a1",
+              "sourceId": "java-se-26-language-specification",
+              "language": "Java",
+              "section": "Example 8.1.5-3. Illegal Multiple Inheritance of an Interface",
+              "score": 0.7700307564387079
+            },
+            {
+              "rank": 2,
+              "chunkId": "db08ba0a2ea8b691",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "11.7.2 Multiple base classes (part 1)",
+              "score": 0.7488539324210951
+            },
+            {
+              "rank": 3,
+              "chunkId": "47d85c083a5dbe64",
+              "sourceId": "java-se-26-language-specification",
+              "language": "Java",
+              "section": "Example 8.1.5-1. Illegal Superinterfaces",
+              "score": 0.7381974927122144
+            },
+            {
+              "rank": 4,
+              "chunkId": "41015eb0e16b54f0",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "11.7.1 General (part 2)",
+              "score": 0.7100036390684177
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-bash-python-for-loops",
+          "representedLanguages": [
+            "Bash",
+            "Python"
+          ],
+          "evidenceLanguages": [
+            "Bash",
+            "Python"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "a92113350e4536f5",
+              "sourceId": "gnu-bash-5-3-reference-manual",
+              "language": "Bash",
+              "section": "3.2.5.1 Looping Constructs (part 1)",
+              "score": 0.7328559309832067
+            },
+            {
+              "rank": 2,
+              "chunkId": "98e19280456ce52e",
+              "sourceId": "python-tutorial",
+              "language": "Python",
+              "section": "4.1. if Statements¶ (part 2)",
+              "score": 0.7248437919941814
+            },
+            {
+              "rank": 3,
+              "chunkId": "278fd7b1d1c9b3f0",
+              "sourceId": "gnu-bash-5-3-reference-manual",
+              "language": "Bash",
+              "section": "Appendix B Major Differences From The Bourne Shell (part 3)",
+              "score": 0.709236617476319
+            },
+            {
+              "rank": 4,
+              "chunkId": "73e3852a3c3c4bbf",
+              "sourceId": "python-language-reference",
+              "language": "Python",
+              "section": "8.1. The if statement¶ (part 3)",
+              "score": 0.7076147941474847
+            }
+          ],
+          "gatePassed": true
+        }
+      ],
+      "negativeCases": [
+        {
+          "caseId": "negative-c-rust-kubernetes-pdb",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-c-cpp-postgresql-isolation",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-java-kotlin-css-grid",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-javascript-typescript-borrow-checker",
+          "falsePositive": true,
+          "gatePassed": false,
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "852dee0342e422e3",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 5)",
+              "score": 0.719248363915097
+            },
+            {
+              "rank": 2,
+              "chunkId": "1ac6ec3e98653e9b",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 4)",
+              "score": 0.7168499618727268
+            }
+          ]
+        },
+        {
+          "caseId": "negative-python-typescript-jvm-verification",
+          "falsePositive": true,
+          "gatePassed": false,
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "4644d549c7403e41",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Overview (part 3)",
+              "score": 0.7238012135904707
+            },
+            {
+              "rank": 2,
+              "chunkId": "76b6872f41d44233",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Overview (part 2)",
+              "score": 0.719526952026996
+            }
+          ]
+        },
+        {
+          "caseId": "negative-go-rust-react-effect",
+          "falsePositive": true,
+          "gatePassed": false,
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "7b6b498e601e3352",
+              "sourceId": "rust-reference",
+              "language": "Rust",
+              "section": "Drop scopes (part 1)",
+              "score": 0.6891896320673957
+            },
+            {
+              "rank": 2,
+              "chunkId": "52f1ba32ee3ace13",
+              "sourceId": "rust-book",
+              "language": "Rust",
+              "section": "Running Code on Cleanup with the Drop Trait (part 2)",
+              "score": 0.6870544488453398
+            }
+          ]
+        },
+        {
+          "caseId": "negative-java-cpp-bash-trap",
+          "falsePositive": true,
+          "gatePassed": false,
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "1df2cad668b59f9c",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "17.14.4 Header <csignal> synopsis",
+              "score": 0.6970986108374755
+            },
+            {
+              "rank": 2,
+              "chunkId": "4485907e104a4728",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "17.14.5 Signal handlers",
+              "score": 0.6887100015391608
+            }
+          ]
+        },
+        {
+          "caseId": "negative-bash-python-mvcc",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        }
+      ]
+    },
+    {
+      "variant": "decomposed-both-sides-gate",
+      "metrics": {
+        "bothLanguageCoverageAt4": 1,
+        "meanLanguageSideCoverageAt4": 1,
+        "bothEvidenceSideCoverageAt4": 0.375,
+        "meanEvidenceSideRecallAt4": 0.625,
+        "macroEvidenceSideMrr": 0.4270833333333333,
+        "noAnswerFalsePositiveRate": 0,
+        "positiveGateRejections": 0,
+        "negativeGateRejections": 8,
+        "returnedChunks": 31
+      },
+      "positiveCases": [
+        {
+          "caseId": "compare-c-rust-heap-memory",
+          "representedLanguages": [
+            "C",
+            "Rust"
+          ],
+          "evidenceLanguages": [],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "d715b69606a84bb9",
+              "sourceId": "rust-book",
+              "language": "Rust",
+              "section": "What Is Ownership? (part 10)",
+              "score": 0.7723927512107123
+            },
+            {
+              "rank": 2,
+              "chunkId": "885d375ea9a7664d",
+              "sourceId": "beej-c-tutorial",
+              "language": "C",
+              "section": "Manual Memory Allocation (part 1)",
+              "score": 0.7689158232257987
+            },
+            {
+              "rank": 3,
+              "chunkId": "ebd5f7d6ce28eec3",
+              "sourceId": "beej-c-tutorial",
+              "language": "C",
+              "section": "12.1 Allocating and Deallocating, malloc() and free() (part 1)",
+              "score": 0.7598866273182372
+            },
+            {
+              "rank": 4,
+              "chunkId": "79b19f8bf415dd09",
+              "sourceId": "rust-reference",
+              "language": "Rust",
+              "section": "The Rust Reference",
+              "score": 0.7484979121608822
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-c-cpp-dynamic-deallocation",
+          "representedLanguages": [
+            "C",
+            "C++"
+          ],
+          "evidenceLanguages": [
+            "C",
+            "C++"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "ebd5f7d6ce28eec3",
+              "sourceId": "beej-c-tutorial",
+              "language": "C",
+              "section": "12.1 Allocating and Deallocating, malloc() and free() (part 1)",
+              "score": 0.7477740139622387
+            },
+            {
+              "rank": 2,
+              "chunkId": "12d5985b8413700f",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "7.6.2.9 Delete (part 2)",
+              "score": 0.7035352650690553
+            },
+            {
+              "rank": 3,
+              "chunkId": "8d797f1058a89db7",
+              "sourceId": "gnu-c-library-2-42-manual",
+              "language": "C",
+              "section": "3.2.3.3 Freeing Memory Allocated with malloc (part 1)",
+              "score": 0.7378372870520302
+            },
+            {
+              "rank": 4,
+              "chunkId": "402a75a061d344c4",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "[basic.stc.dynamic] (part 1)",
+              "score": 0.6970379059661518
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-java-kotlin-nullability",
+          "representedLanguages": [
+            "Java",
+            "Kotlin"
+          ],
+          "evidenceLanguages": [
+            "Kotlin"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "de8e8d15fe992755",
+              "sourceId": "kotlin-language-specification",
+              "language": "Kotlin",
+              "section": "2.1.8 Nullable types",
+              "score": 0.7795061387096458
+            },
+            {
+              "rank": 2,
+              "chunkId": "b1f16cb1d497436e",
+              "sourceId": "java-se-26-language-specification",
+              "language": "Java",
+              "section": "4.1 The Kinds of Types and Values",
+              "score": 0.7422576447982343
+            },
+            {
+              "rank": 3,
+              "chunkId": "7be1556b0f36dcd8",
+              "sourceId": "kotlin-language-specification",
+              "language": "Kotlin",
+              "section": "8.1.7 Null literal",
+              "score": 0.739489273268044
+            },
+            {
+              "rank": 4,
+              "chunkId": "60f980a9f2a79848",
+              "sourceId": "java-se-26-vm-specification",
+              "language": "Java",
+              "section": "2.4 Reference Types and Values",
+              "score": 0.7251603115848717
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-javascript-typescript-type-errors",
+          "representedLanguages": [
+            "JavaScript",
+            "TypeScript"
+          ],
+          "evidenceLanguages": [
+            "TypeScript"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "852dee0342e422e3",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 5)",
+              "score": 0.775460662223522
+            },
+            {
+              "rank": 2,
+              "chunkId": "1d00bb053a5abf77",
+              "sourceId": "ecmascript-2026-ecma-262",
+              "language": "JavaScript",
+              "section": "17 Error Handling and Language Extensions (part 1)",
+              "score": 0.6883627312809595
+            },
+            {
+              "rank": 3,
+              "chunkId": "7c4ccaa942e40446",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 2)",
+              "score": 0.7732666189764614
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-python-typescript-type-annotations",
+          "representedLanguages": [
+            "Python",
+            "TypeScript"
+          ],
+          "evidenceLanguages": [
+            "Python"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "ac402a55336257bd",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 11)",
+              "score": 0.74574737835874
+            },
+            {
+              "rank": 2,
+              "chunkId": "ad0f48df0b243437",
+              "sourceId": "python-language-reference",
+              "language": "Python",
+              "section": "8.1. The if statement¶ (part 48)",
+              "score": 0.6996082660748221
+            },
+            {
+              "rank": 3,
+              "chunkId": "852dee0342e422e3",
+              "sourceId": "typescript-handbook",
+              "language": "TypeScript",
+              "section": "Static type-checking (part 5)",
+              "score": 0.7391910158303724
+            },
+            {
+              "rank": 4,
+              "chunkId": "a47a161f876ef5cc",
+              "sourceId": "python-language-reference",
+              "language": "Python",
+              "section": "8.1. The if statement¶ (part 47)",
+              "score": 0.6889793833121531
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-go-rust-panic-recovery",
+          "representedLanguages": [
+            "Go",
+            "Rust"
+          ],
+          "evidenceLanguages": [
+            "Go",
+            "Rust"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "0b279a517bd3b054",
+              "sourceId": "rust-reference",
+              "language": "Rust",
+              "section": "The panic_handler attribute (part 3)",
+              "score": 0.7828097869099422
+            },
+            {
+              "rank": 2,
+              "chunkId": "9cb23ea407465d5c",
+              "sourceId": "go-language-specification",
+              "language": "Go",
+              "section": "Language version go1.26 (Jan 12, 2026) (part 163)",
+              "score": 0.7650969205437657
+            },
+            {
+              "rank": 3,
+              "chunkId": "703f3f7be9d3be9d",
+              "sourceId": "rust-reference",
+              "language": "Rust",
+              "section": "The panic_handler attribute (part 2)",
+              "score": 0.7549701128761537
+            },
+            {
+              "rank": 4,
+              "chunkId": "6c20e64faa491ac9",
+              "sourceId": "go-language-specification",
+              "language": "Go",
+              "section": "Language version go1.26 (Jan 12, 2026) (part 162)",
+              "score": 0.7201612754237644
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-java-cpp-multiple-inheritance",
+          "representedLanguages": [
+            "Java",
+            "C++"
+          ],
+          "evidenceLanguages": [
+            "C++"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "4ff89fdf16fab7a1",
+              "sourceId": "java-se-26-language-specification",
+              "language": "Java",
+              "section": "Example 8.1.5-3. Illegal Multiple Inheritance of an Interface",
+              "score": 0.7700307564387079
+            },
+            {
+              "rank": 2,
+              "chunkId": "db08ba0a2ea8b691",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "11.7.2 Multiple base classes (part 1)",
+              "score": 0.7488539324210951
+            },
+            {
+              "rank": 3,
+              "chunkId": "47d85c083a5dbe64",
+              "sourceId": "java-se-26-language-specification",
+              "language": "Java",
+              "section": "Example 8.1.5-1. Illegal Superinterfaces",
+              "score": 0.7381974927122144
+            },
+            {
+              "rank": 4,
+              "chunkId": "41015eb0e16b54f0",
+              "sourceId": "cpp26-working-draft-n5046",
+              "language": "C++",
+              "section": "11.7.1 General (part 2)",
+              "score": 0.7100036390684177
+            }
+          ],
+          "gatePassed": true
+        },
+        {
+          "caseId": "compare-bash-python-for-loops",
+          "representedLanguages": [
+            "Bash",
+            "Python"
+          ],
+          "evidenceLanguages": [
+            "Bash",
+            "Python"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunkId": "a92113350e4536f5",
+              "sourceId": "gnu-bash-5-3-reference-manual",
+              "language": "Bash",
+              "section": "3.2.5.1 Looping Constructs (part 1)",
+              "score": 0.7328559309832067
+            },
+            {
+              "rank": 2,
+              "chunkId": "98e19280456ce52e",
+              "sourceId": "python-tutorial",
+              "language": "Python",
+              "section": "4.1. if Statements¶ (part 2)",
+              "score": 0.7248437919941814
+            },
+            {
+              "rank": 3,
+              "chunkId": "278fd7b1d1c9b3f0",
+              "sourceId": "gnu-bash-5-3-reference-manual",
+              "language": "Bash",
+              "section": "Appendix B Major Differences From The Bourne Shell (part 3)",
+              "score": 0.709236617476319
+            },
+            {
+              "rank": 4,
+              "chunkId": "73e3852a3c3c4bbf",
+              "sourceId": "python-language-reference",
+              "language": "Python",
+              "section": "8.1. The if statement¶ (part 3)",
+              "score": 0.7076147941474847
+            }
+          ],
+          "gatePassed": true
+        }
+      ],
+      "negativeCases": [
+        {
+          "caseId": "negative-c-rust-kubernetes-pdb",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-c-cpp-postgresql-isolation",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-java-kotlin-css-grid",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-javascript-typescript-borrow-checker",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-python-typescript-jvm-verification",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-go-rust-react-effect",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-java-cpp-bash-trap",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        },
+        {
+          "caseId": "negative-bash-python-mvcc",
+          "falsePositive": false,
+          "gatePassed": false,
+          "retrieved": []
+        }
+      ]
+    }
+  ],
+  "selection": {
+    "selectedVariant": "decomposed-both-sides-gate",
+    "reason": "Selected by the preregistered validation rule."
+  },
+  "limitations": [
+    "Subqueries are manually frozen deterministic rewrites, not generated dynamically.",
+    "The both-sides gate measures score eligibility, not semantic entailment.",
+    "Eight positive and eight negative validation cases remain a focused benchmark.",
+    "Production behavior and the locked general test split remain untouched."
+  ]
+}

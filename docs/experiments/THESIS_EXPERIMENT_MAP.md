@@ -1,8 +1,8 @@
 # Thesis experiment map
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
-- Experiment families: **15**
-- Completed: **11**
+- Experiment families: **16**
+- Completed: **12**
 - Superseded but retained: **1**
 
 This is the narrative index for the thesis. The JSON registry is the source of truth; generated Markdown and CSV provide readable and tabular views. Every experiment records its question, isolated variable, controls, metrics, decision, limitations, and next action.
@@ -24,6 +24,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 13 | Runtime generation reliability | generation-output-budget-v1 | completed | Maximum output-token budget: frozen 900-token baseline versus 2,048-token runtime candidate | Use 2,048 tokens for runtime reliability. All 27 validation generations returned STOP with zero errors and zero MAX_TOKENS events; the known 900-token Rust failure completed. Observed cost increased from $0.164763 to $0.166626 (+$0.001863, approximately 1.13%). This is not a quality-selection result. |
 | 14 | Comparative-query retrieval | multi-technology-retrieval-v1 | completed | Legacy first-technology filtering versus multi-technology union versus language-balanced union | Retain language-balanced multi-technology ordering among the three preregistered policies. It raises both-language coverage@4 from 0.0000 for legacy first-match and 0.3750 for the unbalanced union to 0.6250. Canonical two-sided evidence coverage remains only 0.2500, however, so this is a retrieval regression fix rather than a complete comparative-query solution. |
 | 15 | Comparative-query abstention calibration | comparative-threshold-calibration-v1 | completed | Balanced multi-technology minimum cosine threshold from 0.60 to 0.74 | Select no comparative threshold. Thresholds 0.60 and 0.62 reach 1.0000 both-language coverage but produce 1.0000 negative FPR. Threshold 0.72 reaches zero FPR but only 0.1250 both-language and both-evidence coverage. The maximum negative score (0.7122) exceeds the minimum positive top score (0.7004), while the weakest positive technology side reaches only 0.6441. |
+| 16 | Comparative-query decomposition | comparative-query-decomposition-v1 | completed | Single balanced query versus decomposed per-technology queries, with and without a both-sides gate | Select decomposed retrieval with a both-sides evidence gate. Compared with the balanced single-query baseline, it raises both-language coverage@4 from 0.6250 to 1.0000, both-evidence-side coverage from 0.2500 to 0.3750, evidence-side recall from 0.5000 to 0.6250, and side MRR from 0.3646 to 0.4271. The ungated decomposed variant has 0.5000 negative FPR; the gate reduces this to zero while rejecting no positives. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
 
@@ -204,3 +205,15 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Decision:** Select no comparative threshold. Thresholds 0.60 and 0.62 reach 1.0000 both-language coverage but produce 1.0000 negative FPR. Threshold 0.72 reaches zero FPR but only 0.1250 both-language and both-evidence coverage. The maximum negative score (0.7122) exceeds the minimum positive top score (0.7004), while the weakest positive technology side reaches only 0.6441.
 - **Limitations:** Only eight positive and eight negative validation cases; Exact absence probes are sanity checks rather than semantic proof; Only the threshold changed; The locked general test remains untouched
 - **Next step:** Test an explicit comparative-query architecture such as per-technology query decomposition followed by an answerability or evidence-sufficiency gate; retain 0.68 for ordinary single-technology retrieval.
+
+## 16. Comparative-query decomposition: comparative-query-decomposition-v1
+
+- **Research question:** Can per-technology query decomposition plus a both-sides evidence gate improve comparative retrieval without accepting comparative negatives?
+- **Status:** completed
+- **Changed variable:** Single balanced query versus decomposed per-technology queries, with and without a both-sides gate
+- **Controls:** Frozen 33,079-chunk corpus; eight comparative positives and eight negatives; Gemini Embedding 2 at 1,024 dimensions; cosine threshold 0.68; maximum four chunks; two chunks per technology; no reranker; no LLM rewriting
+- **Metrics:** Comparative no-answer FPR; both-language coverage@4; both-evidence-side coverage@4; canonical evidence-side recall@4; macro evidence-side MRR; gate rejections; cost
+- **Artifacts:** `docs/evaluation/comparative-query-decomposition.v1.json`; `docs/experiments/comparative-query-decomposition.v1.json`; `docs/experiment-results/comparative-query-decomposition-v1-validation.json`; `docs/experiment-results/comparative-query-decomposition-v1-validation.md`; `docs/experiment-results/comparative-query-decomposition-v1-validation.csv`
+- **Decision:** Select decomposed retrieval with a both-sides evidence gate. Compared with the balanced single-query baseline, it raises both-language coverage@4 from 0.6250 to 1.0000, both-evidence-side coverage from 0.2500 to 0.3750, evidence-side recall from 0.5000 to 0.6250, and side MRR from 0.3646 to 0.4271. The ungated decomposed variant has 0.5000 negative FPR; the gate reduces this to zero while rejecting no positives.
+- **Limitations:** Subqueries are manually frozen rather than generated dynamically; The gate measures threshold eligibility rather than semantic entailment; Only eight positive and eight negative validation cases; Production behavior and the locked test remain untouched
+- **Next step:** Benchmark an automatic deterministic or model-based subquery constructor against the frozen rewrites before integrating the selected gate into production.

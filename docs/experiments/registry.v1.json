@@ -213,6 +213,20 @@
       "decision": "Select no comparative threshold. Thresholds 0.60 and 0.62 reach 1.0000 both-language coverage but produce 1.0000 negative FPR. Threshold 0.72 reaches zero FPR but only 0.1250 both-language and both-evidence coverage. The maximum negative score (0.7122) exceeds the minimum positive top score (0.7004), while the weakest positive technology side reaches only 0.6441.",
       "limitations": ["Only eight positive and eight negative validation cases", "Exact absence probes are sanity checks rather than semantic proof", "Only the threshold changed", "The locked general test remains untouched"],
       "nextStep": "Test an explicit comparative-query architecture such as per-technology query decomposition followed by an answerability or evidence-sufficiency gate; retain 0.68 for ordinary single-technology retrieval."
+    },
+    {
+      "order": 16,
+      "id": "comparative-query-decomposition-v1",
+      "thesisSection": "Comparative-query decomposition",
+      "researchQuestion": "Can per-technology query decomposition plus a both-sides evidence gate improve comparative retrieval without accepting comparative negatives?",
+      "status": "completed",
+      "variable": "Single balanced query versus decomposed per-technology queries, with and without a both-sides gate",
+      "controls": ["Frozen 33,079-chunk corpus", "eight comparative positives and eight negatives", "Gemini Embedding 2 at 1,024 dimensions", "cosine threshold 0.68", "maximum four chunks", "two chunks per technology", "no reranker", "no LLM rewriting"],
+      "metrics": ["Comparative no-answer FPR", "both-language coverage@4", "both-evidence-side coverage@4", "canonical evidence-side recall@4", "macro evidence-side MRR", "gate rejections", "cost"],
+      "artifacts": ["docs/evaluation/comparative-query-decomposition.v1.json", "docs/experiments/comparative-query-decomposition.v1.json", "docs/experiment-results/comparative-query-decomposition-v1-validation.json", "docs/experiment-results/comparative-query-decomposition-v1-validation.md", "docs/experiment-results/comparative-query-decomposition-v1-validation.csv"],
+      "decision": "Select decomposed retrieval with a both-sides evidence gate. Compared with the balanced single-query baseline, it raises both-language coverage@4 from 0.6250 to 1.0000, both-evidence-side coverage from 0.2500 to 0.3750, evidence-side recall from 0.5000 to 0.6250, and side MRR from 0.3646 to 0.4271. The ungated decomposed variant has 0.5000 negative FPR; the gate reduces this to zero while rejecting no positives.",
+      "limitations": ["Subqueries are manually frozen rather than generated dynamically", "The gate measures threshold eligibility rather than semantic entailment", "Only eight positive and eight negative validation cases", "Production behavior and the locked test remain untouched"],
+      "nextStep": "Benchmark an automatic deterministic or model-based subquery constructor against the frozen rewrites before integrating the selected gate into production."
     }
   ]
 }

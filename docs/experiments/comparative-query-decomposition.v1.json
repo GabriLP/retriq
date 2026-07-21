@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "comparative-query-decomposition-v1",
   "title": "Per-technology query decomposition and evidence-sufficiency gate",
-  "status": "preregistered",
+  "status": "completed",
   "split": "validation",
   "positiveBenchmark": "docs/evaluation/multi-technology-retrieval-benchmark.v1.json",
   "negativeBenchmark": "docs/evaluation/multi-technology-negative-benchmark.v1.json",
@@ -39,5 +39,23 @@
     "failurePolicy": "Select no architecture when no candidate satisfies every guardrail; do not tune subquery wording or the gate after observing results."
   },
   "metrics": ["comparative no-answer FPR", "both-language coverage@4", "both-evidence-side coverage@4", "mean evidence-side recall@4", "macro evidence-side MRR", "gate rejection counts", "latency", "embedding calls and cost"],
+  "execution": {
+    "completedAt": "2026-07-21T09:25:30.477Z",
+    "attemptId": "20260721092530477",
+    "evaluationGitCommit": "9d47585320e42eab40fd7786041a1474d1ef5eee",
+    "selectedVariant": "decomposed-both-sides-gate",
+    "bothLanguageCoverageAt4": 1.0,
+    "bothEvidenceSideCoverageAt4": 0.375,
+    "meanEvidenceSideRecallAt4": 0.625,
+    "macroEvidenceSideMrr": 0.4270833333333333,
+    "noAnswerFalsePositiveRate": 0,
+    "positiveGateRejections": 0,
+    "negativeGateRejections": 8,
+    "queryEmbeddingProviderInputs": 32,
+    "queryEmbeddingProviderRequests": 1,
+    "estimatedEmbeddingCostUsd": 0.000143,
+    "testSplitTouched": false,
+    "interpretation": "Per-technology decomposition improves two-sided retrieval. The both-sides gate is necessary: without it the same decomposed candidates produce 0.50 negative FPR, while the gate rejects all eight negatives and no positives."
+  },
   "reportOutput": "docs/experiment-results/comparative-query-decomposition-v1-validation"
 }
