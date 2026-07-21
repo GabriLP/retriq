@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "multi-technology-retrieval-benchmark-v1",
+  "title": "Validation-only comparative-query retrieval benchmark",
+  "status": "source-verified",
+  "purpose": "Measure whether top-k retrieval represents and grounds both technologies named in a comparative programming question.",
+  "parentRun": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec",
+  "split": "validation",
+  "testSplitTouched": false,
+  "evidencePolicy": "A technology side is grounded only when at least one retrieved chunk matches both its sourceId and one of its acceptedChunkIds in the frozen parent run.",
+  "cases": [
+    {
+      "id": "compare-c-rust-heap-memory",
+      "question": "How do C and Rust differ in managing and releasing heap memory?",
+      "expectedLanguages": ["C", "Rust"],
+      "legacyLanguage": "Rust",
+      "evidenceByLanguage": {
+        "C": { "sourceId": "gnu-c-library-2-42-manual", "acceptedChunkIds": ["a7578e6ebf8efe8f", "8d797f1058a89db7"] },
+        "Rust": { "sourceId": "rust-book", "acceptedChunkIds": ["d2e6b82c3bebee4c", "67663a716b0dabcd"] }
+      }
+    },
+    {
+      "id": "compare-c-cpp-dynamic-deallocation",
+      "question": "How are dynamically allocated objects released in C and C++?",
+      "expectedLanguages": ["C", "C++"],
+      "legacyLanguage": "C++",
+      "evidenceByLanguage": {
+        "C": { "sourceId": "gnu-c-library-2-42-manual", "acceptedChunkIds": ["8d797f1058a89db7"] },
+        "C++": { "sourceId": "cpp26-working-draft-n5046", "acceptedChunkIds": ["12d5985b8413700f", "4fb52ba10c7d7ea7", "77dee4cfc885af1b"] }
+      }
+    },
+    {
+      "id": "compare-java-kotlin-nullability",
+      "question": "How do Java and Kotlin differ in representing nullable references?",
+      "expectedLanguages": ["Java", "Kotlin"],
+      "legacyLanguage": "Java",
+      "evidenceByLanguage": {
+        "Java": { "sourceId": "java-se-26-language-specification", "acceptedChunkIds": ["74898b841678fb26"] },
+        "Kotlin": { "sourceId": "kotlin-language-specification", "acceptedChunkIds": ["de8e8d15fe992755"] }
+      }
+    },
+    {
+      "id": "compare-javascript-typescript-type-errors",
+      "question": "How do JavaScript and TypeScript differ in when type mistakes are detected?",
+      "expectedLanguages": ["JavaScript", "TypeScript"],
+      "legacyLanguage": "TypeScript",
+      "evidenceByLanguage": {
+        "JavaScript": { "sourceId": "ecmascript-2026-ecma-262", "acceptedChunkIds": ["5ef2748387789efa"] },
+        "TypeScript": { "sourceId": "typescript-handbook", "acceptedChunkIds": ["7c4ccaa942e40446", "35a6a9c0a60b152d", "852dee0342e422e3"] }
+      }
+    },
+    {
+      "id": "compare-python-typescript-type-annotations",
+      "question": "How do Python and TypeScript differ in enforcing type annotations?",
+      "expectedLanguages": ["Python", "TypeScript"],
+      "legacyLanguage": "Python",
+      "evidenceByLanguage": {
+        "Python": { "sourceId": "python-language-reference", "acceptedChunkIds": ["ad0f48df0b243437"] },
+        "TypeScript": { "sourceId": "typescript-handbook", "acceptedChunkIds": ["69e926e24a512e1e", "7c4ccaa942e40446", "35a6a9c0a60b152d", "958a81c8c5895633"] }
+      }
+    },
+    {
+      "id": "compare-go-rust-panic-recovery",
+      "question": "How do the Go language and Rust describe recovering from or handling a panic?",
+      "expectedLanguages": ["Go", "Rust"],
+      "legacyLanguage": "Rust",
+      "evidenceByLanguage": {
+        "Go": { "sourceId": "go-language-specification", "acceptedChunkIds": ["9cb23ea407465d5c"] },
+        "Rust": { "sourceId": "rust-reference", "acceptedChunkIds": ["703f3f7be9d3be9d", "0b279a517bd3b054"] }
+      }
+    },
+    {
+      "id": "compare-java-cpp-multiple-inheritance",
+      "question": "How do Java and C++ support inheritance from multiple supertypes?",
+      "expectedLanguages": ["Java", "C++"],
+      "legacyLanguage": "Java",
+      "evidenceByLanguage": {
+        "Java": { "sourceId": "java-se-26-language-specification", "acceptedChunkIds": ["333c052aaa486547", "05b3b51545c01e14"] },
+        "C++": { "sourceId": "cpp26-working-draft-n5046", "acceptedChunkIds": ["db08ba0a2ea8b691"] }
+      }
+    },
+    {
+      "id": "compare-bash-python-for-loops",
+      "question": "How do Bash and Python iterate over elements with a for loop?",
+      "expectedLanguages": ["Bash", "Python"],
+      "legacyLanguage": "Python",
+      "evidenceByLanguage": {
+        "Bash": { "sourceId": "gnu-bash-5-3-reference-manual", "acceptedChunkIds": ["a92113350e4536f5"] },
+        "Python": { "sourceId": "python-tutorial", "acceptedChunkIds": ["98e19280456ce52e"] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "multi-technology-retrieval-v1",
+  "title": "Comparative-query retrieval coverage",
+  "status": "preregistered",
+  "split": "validation",
+  "benchmark": "docs/evaluation/multi-technology-retrieval-benchmark.v1.json",
+  "parentRun": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec",
+  "hypothesis": "A union metadata filter avoids dropping one named technology, while balanced multi-technology ordering increases two-sided coverage within topK=4 without reducing canonical evidence coverage.",
+  "variants": [
+    {
+      "id": "legacy-first-technology",
+      "description": "Reproduce the former behavior by retaining only the first technology recognized according to the historical detector order."
+    },
+    {
+      "id": "multi-technology-unbalanced",
+      "description": "Search the union of both language partitions and keep the globally highest cosine scores."
+    },
+    {
+      "id": "multi-technology-balanced",
+      "description": "Search the same union, assign a rank within each language, then order by language rank and cosine score as in the production pgvector query."
+    }
+  ],
+  "changedVariable": "Comparative-query metadata filtering and top-k balancing policy",
+  "controlledVariables": [
+    "frozen 33,079-chunk parent corpus",
+    "300-word target chunks with 80-word overlap",
+    "Gemini Embedding 2 at 1,024 dimensions",
+    "QUESTION_ANSWERING query embeddings",
+    "exact dense cosine similarity",
+    "minimum cosine score 0.68",
+    "topK=4",
+    "no reranker",
+    "eight source-verified validation-only comparative questions",
+    "locked 24-case test split untouched"
+  ],
+  "metrics": [
+    "both-language coverage@4",
+    "mean language-side coverage@4",
+    "both-evidence-side coverage@4",
+    "mean canonical evidence-side recall@4",
+    "macro reciprocal rank across evidence sides",
+    "returned chunks",
+    "scoring latency",
+    "embedding cache hits, provider inputs, requests, and estimated cost"
+  ],
+  "decisionRule": {
+    "eligibility": "A candidate must detect exactly both expected technologies for all eight cases and must not reduce mean canonical evidence-side recall or macro evidence-side MRR relative to legacy-first-technology.",
+    "primary": "Choose the eligible candidate with the highest both-evidence-side coverage@4.",
+    "tieBreakers": [
+      "highest both-language coverage@4",
+      "highest mean canonical evidence-side recall@4",
+      "highest macro evidence-side MRR",
+      "prefer multi-technology-unbalanced over balanced when every quality metric ties because it is simpler"
+    ],
+    "scope": "This focused benchmark tests comparative answerable queries only; it does not recalibrate the 0.68 abstention threshold or estimate unanswerable false positives."
+  },
+  "reportOutput": "docs/experiment-results/multi-technology-retrieval-v1-validation"
+}
