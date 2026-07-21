@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { ThinkingLevel } from "@google/genai";
+import { FinishReason, ThinkingLevel } from "@google/genai";
 
 import { getGeminiClient } from "./gemini-client";
 
@@ -34,6 +34,8 @@ export type GeneratorResult = {
   responseModel: string;
   responseProvider: string;
   responseId: string | null;
+  finishReason: string | null;
+  truncated: boolean | null;
   usage: GeneratorUsage;
   latencyMs: number;
   cacheHit: boolean;
@@ -54,7 +56,10 @@ type OpenRouterResponse = {
   id?: string;
   model?: string;
   provider?: string;
-  choices?: Array<{ message?: { content?: string | Array<{ type?: string; text?: string }> } }>;
+  choices?: Array<{
+    finish_reason?: string | null;
+    message?: { content?: string | Array<{ type?: string; text?: string }> };
+  }>;
   usage?: {
     prompt_tokens?: number;
     completion_tokens?: number;
@@ -113,6 +118,8 @@ async function generateWithGoogle(options: GenerateOptions): Promise<GeneratorRe
     responseModel: response.modelVersion ?? options.candidate.model,
     responseProvider: "google",
     responseId: response.responseId ?? null,
+    finishReason: response.candidates?.[0]?.finishReason ?? null,
+    truncated: response.candidates?.[0]?.finishReason === FinishReason.MAX_TOKENS,
     usage: {
       promptTokens,
       completionTokens,
@@ -173,6 +180,8 @@ async function generateWithOpenRouter(options: GenerateOptions): Promise<Generat
     responseModel: payload.model,
     responseProvider: payload.provider ?? options.candidate.providerOrder?.[0] ?? "unknown",
     responseId: payload.id ?? null,
+    finishReason: payload.choices?.[0]?.finish_reason ?? null,
+    truncated: payload.choices?.[0]?.finish_reason === "length",
     usage: {
       promptTokens,
       completionTokens,
@@ -203,7 +212,21 @@ function readOpenRouterText(payload: OpenRouterResponse) {
 
 async function readCache(cachePath: string): Promise<GeneratorResult | null> {
   try {
-    return JSON.parse(await fs.readFile(cachePath, "utf8")) as GeneratorResult;
+    const cached = JSON.parse(await fs.readFile(cachePath, "utf8")) as Partial<GeneratorResult>;
+    if (!cached.answer || !cached.responseModel || !cached.responseProvider || !cached.usage) {
+      throw new Error(`Invalid generator cache entry ${cachePath}.`);
+    }
+    // Cache entries created before stop-reason capture remain usable, but an
+    // absent field is explicitly unknown rather than incorrectly treated as a
+    // natural stop.
+    return {
+      ...cached,
+      responseId: cached.responseId ?? null,
+      finishReason: cached.finishReason ?? null,
+      truncated: cached.truncated ?? null,
+      latencyMs: cached.latencyMs ?? 0,
+      cacheHit: cached.cacheHit ?? false,
+    } as GeneratorResult;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
     throw error;

@@ -29,7 +29,7 @@ async function main() {
       id: "generation-1",
       model: candidate.model,
       provider: "Z.AI",
-      choices: [{ message: { content: "Grounded answer [S1]." } }],
+      choices: [{ finish_reason: "stop", message: { content: "Grounded answer [S1]." } }],
       usage: { prompt_tokens: 100, completion_tokens: 20, total_tokens: 120, cost: 0.000228, completion_tokens_details: { reasoning_tokens: 5 } },
     }), { status: 200, headers: { "Content-Type": "application/json" } });
   };
@@ -38,11 +38,14 @@ async function main() {
   assert.equal(first.cacheHit, false);
   assert.equal(first.usage.costSource, "provider-reported");
   assert.equal(first.usage.reasoningTokens, 5);
+  assert.equal(first.finishReason, "stop");
+  assert.equal(first.truncated, false);
   assert.deepEqual(requestBody.provider, { order: ["z-ai/fp8"], allow_fallbacks: false });
   assert.equal(requestBody.model, candidate.model);
   assert.deepEqual(requestBody.reasoning, { effort: "medium" });
   const second = await generateWithCandidate({ ...options, allowProviderRequests: false });
   assert.equal(second.cacheHit, true);
+  assert.equal(second.finishReason, "stop");
   assert.equal(requests, 1);
 
   await assert.rejects(() => generateWithCandidate({

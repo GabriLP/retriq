@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "generation-output-budget-v1",
+  "title": "Gemini grounded-answer completion at 900 versus 2048 output tokens",
+  "status": "preregistered",
+  "split": "validation",
+  "benchmark": "docs/evaluation/generation-benchmark.v1.json",
+  "prompt": "docs/evaluation/generation-prompt.v1.json",
+  "parentRun": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec",
+  "baselineResults": "docs/experiment-results/generation-model-comparison-v1-validation.json",
+  "humanReview": "docs/evaluation/generation-human-review-v1.completed.csv",
+  "baselineCandidateId": "gemini-3.5-flash-direct",
+  "candidate": {
+    "id": "gemini-3.5-flash-direct",
+    "provider": "google",
+    "model": "gemini-3.5-flash",
+    "reasoningEffort": "low",
+    "inputPriceUsdPerMillionTokens": 1.5,
+    "outputPriceUsdPerMillionTokens": 9
+  },
+  "variants": [
+    {
+      "id": "budget-900-frozen",
+      "maxOutputTokens": 900,
+      "source": "frozen-baseline"
+    },
+    {
+      "id": "budget-2048",
+      "maxOutputTokens": 2048,
+      "source": "new-generation"
+    }
+  ],
+  "changedVariable": "Maximum output-token budget",
+  "controlledVariables": [
+    "27 answerable benchmark v4 validation cases",
+    "frozen metadata-aware retrieval evidence",
+    "Gemini 3.5 Flash direct provider",
+    "identical grounded-generation prompt v1",
+    "temperature 0",
+    "low reasoning effort",
+    "identical citation format",
+    "judge disabled",
+    "locked test split untouched"
+  ],
+  "metrics": [
+    "Explicit MAX_TOKENS stop rate where provider metadata is available",
+    "Human-confirmed near-budget abrupt completion lower bound for the legacy run",
+    "Operational error rate",
+    "Completion and reasoning tokens",
+    "Estimated generation cost",
+    "Latency",
+    "Response length"
+  ],
+  "decisionRule": {
+    "reliability": "Accept 2048 for the runtime only if all 27 calls complete without errors or MAX_TOKENS and the known 900-token Rust regression ends naturally.",
+    "quality": "Do not infer a quality improvement from completion, length, cost, or latency. Preserve a blinded human-review package for the calibration subset and defer broader quality automation until the judge is calibrated.",
+    "historicalResults": "Do not replace or reinterpret the frozen 900-token generator-model comparison. This experiment evaluates an operational runtime budget only."
+  },
+  "pricing": {
+    "inheritedFrom": "docs/experiments/generation-models.v1.json",
+    "observedAt": "2026-07-17",
+    "creditsAndFreeTiersNotSubtracted": true
+  },
+  "reportOutput": "docs/experiment-results/generation-output-budget-v1-validation",
+  "reviewOutput": "docs/evaluation/generation-output-budget-human-review-v1.csv"
+}

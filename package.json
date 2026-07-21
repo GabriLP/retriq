@@ -36,6 +36,7 @@
     "generation:benchmark:build": "tsx scripts/build-generation-benchmark.ts",
     "generation:benchmark:validate": "tsx scripts/validate-generation-benchmark.ts",
     "generation:providers:test": "tsx scripts/test-generator-providers.ts",
+    "generation:budget": "tsx scripts/evaluate-generation-output-budget.ts",
     "generation:review:test": "tsx scripts/test-generation-review.ts",
     "generation:review:report": "tsx scripts/report-generation-human-review.ts",
     "database:migrate": "tsx scripts/migrate-database.ts",
