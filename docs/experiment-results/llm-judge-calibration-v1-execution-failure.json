@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "llm-judge-calibration-v1-execution-failure",
+  "createdAt": "2026-07-21",
+  "protocol": "docs/experiments/llm-judge-calibration.v1.json",
+  "status": "failed-before-agreement-analysis",
+  "lockedGenerationTestTouched": false,
+  "execution": {
+    "attemptedProviderRequests": 3,
+    "validCachedResponses": 2,
+    "knownProviderReportedCostUsd": 0.0031475,
+    "additionalCostWithUnavailableUsage": "One successful HTTP response failed local semantic validation before its usage record was persisted.",
+    "responseModel": "openai/gpt-5.4-nano",
+    "responseProvider": "OpenAI",
+    "validFinishReasons": ["stop", "stop"]
+  },
+  "failure": {
+    "type": "conditional-output-schema-ambiguity",
+    "message": "The third structured response did not satisfy the answerability-specific nullability rule.",
+    "cause": "Prompt v1 used one JSON schema in which score fields were nullable for both task types. Strict JSON syntax was valid, but the schema could not enforce that answerable dimensions are populated only for answerable tasks and correctAbstention only for unanswerable tasks.",
+    "agreementMetricsComputed": false,
+    "humanScoresInspectedForRepair": false
+  },
+  "decision": "Stop v1 without computing agreement. Preserve the two valid cache entries and preregister a new attempt with separate answerable and unanswerable response schemas. Do not reinterpret or repair the invalid model output.",
+  "limitations": [
+    "The third request may have incurred provider cost, but its usage was not persisted because semantic validation failed first.",
+    "The two cached v1 responses cannot be reused by the revised schema because schema identity is part of the cache key."
+  ]
+}

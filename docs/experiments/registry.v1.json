@@ -247,14 +247,14 @@
       "id": "llm-judge-calibration-v1",
       "thesisSection": "LLM-as-a-judge calibration",
       "researchQuestion": "Can one low-cost independent LLM judge reproduce the existing human assessment of frozen RAG answers well enough to support later automatic evaluation?",
-      "status": "preregistered",
+      "status": "failed",
       "variable": "Independent GPT-5.4 Nano judge at medium reasoning with one frozen rubric prompt",
       "controls": ["72 existing blinded human-reference rows", "48-row calibration and 24-row held-out audit split", "frozen evidence", "temperature 0", "OpenAI provider pinned", "OpenRouter fallbacks disabled"],
       "metrics": ["Pooled core quadratic weighted kappa", "answerable quality Spearman correlation", "binary pass agreement", "per-dimension agreement", "latency", "tokens", "cost"],
-      "artifacts": ["docs/experiments/llm-judge-calibration.v1.json", "docs/evaluation/llm-judge-prompt.v1.json", "docs/evaluation/llm-judge-split.v1.json"],
-      "decision": "Pending execution. Prompt, split, model, provider routing, pass rule, and acceptance thresholds were frozen before paid judge calls.",
+      "artifacts": ["docs/experiments/llm-judge-calibration.v1.json", "docs/evaluation/llm-judge-prompt.v1.json", "docs/evaluation/llm-judge-split.v1.json", "docs/experiment-results/llm-judge-calibration-v1-execution-failure.json", "docs/experiment-results/llm-judge-calibration-v1-execution-failure.md"],
+      "decision": "Stop before agreement analysis. The third response exposed an ambiguity in the single nullable JSON schema; two valid responses cost $0.0031475 and one additional request has unavailable usage. No human score was inspected for the repair.",
       "limitations": ["Single quickly completed human reviewer", "No inter-rater reliability estimate", "Low score variance may destabilize correlation metrics", "The internal audit is not the locked generation test"],
-      "nextStep": "Execute the 48 unique judge requests, evaluate calibration and audit separately, and prepare disagreements plus a deterministic agreement sample for secondary human review."
+      "nextStep": "Preregister a successor using separate answerable and unanswerable schemas, with every model and metric control unchanged."
     }
   ]
 }
