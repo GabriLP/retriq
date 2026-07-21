@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "id": "llm-judge-calibration-v2-validation",
+  "createdAt": "2026-07-21T12:05:29.060Z",
+  "protocol": "docs/experiments/llm-judge-calibration.v2.json",
+  "protocolSha256": "b27c86b8ae1da99d3f2cc26eff30e1a8a5366366b392374dc736333cda272802",
+  "prompt": "docs/evaluation/llm-judge-prompt.v1.json",
+  "promptSha256": "e2821fc01079c54a02a5d270e0c157ad618b51d1a137a17289a2d7bca7c1203c",
+  "humanReviewSha256": "793f0b4563459026a09e0fb0117cc8aadc7cf6ee2c6f0f27c7dc70a258e6835b",
+  "split": "calibration-only",
+  "oldAuditTouched": false,
+  "lockedGenerationTestTouched": false,
+  "judge": {
+    "id": "openrouter-gpt-5.4-mini-medium-schema-v1",
+    "model": "openai/gpt-5.4-mini",
+    "expectedResponseModel": "openai/gpt-5.4-mini",
+    "expectedResponseProvider": "OpenAI",
+    "providerOrder": [
+      "openai"
+    ],
+    "reasoningEffort": "medium",
+    "inputPriceUsdPerMillionTokens": 0.75,
+    "outputPriceUsdPerMillionTokens": 4.5
+  },
+  "execution": {
+    "rows": 48,
+    "uniqueRequests": 32,
+    "deduplicatedRows": 16,
+    "providerCallsThisRun": 0,
+    "cacheHitsThisRun": 32,
+    "historicalProviderRequests": 32,
+    "historicalValidResponses": 32,
+    "historicalInvalidResponses": 0,
+    "resumptions": 0,
+    "responseModels": [
+      "openai/gpt-5.4-mini"
+    ],
+    "responseProviders": [
+      "OpenAI"
+    ],
+    "finishReasons": {
+      "stop": 32
+    },
+    "promptTokens": 69511,
+    "completionTokens": 16361,
+    "reasoningTokens": 11392,
+    "totalTokens": 85872,
+    "observedCostUsd": 0.11003295,
+    "latencyMs": {
+      "mean": 6228.977812499999,
+      "median": 4436.14,
+      "p95": 18205.81
+    }
+  },
+  "metrics": {
+    "rows": 48,
+    "answerableRows": 24,
+    "unanswerableRows": 24,
+    "primary": {
+      "pooledCoreQuadraticWeightedKappa": 0.5975155279503106,
+      "answerableQualitySpearman": 0.48929947762223847,
+      "binaryPassAgreement": 0.9375
+    },
+    "scoreBias": {
+      "humanMeanQuality": 0.9270833333333334,
+      "judgeMeanQuality": 0.9557291666666666,
+      "judgeMinusHumanMeanQuality": 0.028645833333333332
+    },
+    "dimensions": {
+      "groundedness": {
+        "quadraticWeightedKappa": 0.5833333333333333,
+        "meanAbsoluteError": 0.125,
+        "exactAgreement": 0.9166666666666666,
+        "withinOneAgreement": 0.9583333333333334
+      },
+      "keyFactCoverage": {
+        "quadraticWeightedKappa": 0.6872964169381108,
+        "meanAbsoluteError": 0.25,
+        "exactAgreement": 0.7916666666666666,
+        "withinOneAgreement": 0.9583333333333334
+      },
+      "citationCorrectness": {
+        "quadraticWeightedKappa": 0.3877551020408163,
+        "meanAbsoluteError": 0.20833333333333334,
+        "exactAgreement": 0.7916666666666666,
+        "withinOneAgreement": 1
+      },
+      "citationCompleteness": {
+        "quadraticWeightedKappa": 0.55,
+        "meanAbsoluteError": 0.2916666666666667,
+        "exactAgreement": 0.75,
+        "withinOneAgreement": 0.9583333333333334
+      },
+      "directness": {
+        "quadraticWeightedKappa": 0.23076923076923073,
+        "meanAbsoluteError": 0.20833333333333334,
+        "exactAgreement": 0.7916666666666666,
+        "withinOneAgreement": 1
+      }
+    },
+    "correctAbstentionAgreement": 1,
+    "flags": {
+      "criticalUnsupportedClaim": {
+        "agreement": 1,
+        "humanPositiveRate": 0,
+        "judgePositiveRate": 0
+      },
+      "contradictsEvidence": {
+        "agreement": 1,
+        "humanPositiveRate": 0,
+        "judgePositiveRate": 0
+      },
+      "invalidCitationLabel": {
+        "agreement": 1,
+        "humanPositiveRate": 0,
+        "judgePositiveRate": 0
+      },
+      "generatorFailure": {
+        "agreement": 1,
+        "humanPositiveRate": 0.020833333333333332,
+        "judgePositiveRate": 0.020833333333333332
+      }
+    },
+    "passConfusion": {
+      "truePositive": 43,
+      "trueNegative": 2,
+      "falsePositive": 2,
+      "falseNegative": 1
+    },
+    "structuredValidityRate": 1,
+    "answerabilityConsistencyRate": 1,
+    "providerErrors": 0,
+    "thresholds": {
+      "minimumPooledCoreQuadraticWeightedKappa": 0.6,
+      "minimumAnswerableQualitySpearman": 0.7,
+      "minimumBinaryPassAgreement": 0.8,
+      "requiredStructuredValidityRate": 1,
+      "requiredAnswerabilityConsistencyRate": 1,
+      "maximumProviderErrors": 0
+    }
+  },
+  "acceptance": {
+    "checks": {
+      "pooledCoreQuadraticWeightedKappa": false,
+      "answerableQualitySpearman": false,
+      "binaryPassAgreement": true,
+      "structuredValidityRate": true,
+      "answerabilityConsistencyRate": true,
+      "providerErrors": true
+    },
+    "allPassed": false,
+    "decision": "Keep automatic judging disabled; do not access an audit set."
+  },
+  "limitations": [
+    "The frozen calibration reference has one human reviewer and no inter-rater reliability estimate.",
+    "The later human adjudication did not independently relabel the calibration rows.",
+    "Passing calibration establishes eligibility for a new audit, not production validity."
+  ]
+}

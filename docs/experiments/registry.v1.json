@@ -289,14 +289,14 @@
       "id": "llm-judge-calibration-v2",
       "thesisSection": "LLM-as-a-judge calibration",
       "researchQuestion": "Can GPT-5.4 Mini reproduce the existing human assessment reliably enough to justify evaluation on a newly reserved untouched audit set?",
-      "status": "preregistered",
+      "status": "failed",
       "variable": "GPT-5.4 Mini replaces GPT-5.4 Nano; every prompt, schema, split, metric, threshold, reasoning, and routing control remains frozen",
       "controls": ["48 frozen calibration rows only", "prompt v1", "answerability-specific schemas", "medium reasoning", "temperature 0", "OpenAI provider pinned", "fallbacks disabled", "old inspected audit inaccessible"],
       "metrics": ["Pooled core quadratic weighted kappa", "answerable quality Spearman correlation", "binary pass agreement", "structured validity", "provider errors", "latency", "tokens", "cost"],
-      "artifacts": ["docs/experiments/llm-judge-calibration.v2.json", "scripts/evaluate-llm-judge-mini.ts"],
-      "decision": "Pending the preregistered 48-row calibration run. The old v1.1 audit and locked generation test must not be accessed.",
+      "artifacts": ["docs/experiments/llm-judge-calibration.v2.json", "scripts/evaluate-llm-judge-mini.ts", "docs/experiment-results/llm-judge-calibration-v2-execution-ledger.json", "docs/experiment-results/llm-judge-calibration-v2-validation.json", "docs/experiment-results/llm-judge-calibration-v2-validation.md", "docs/experiment-results/llm-judge-calibration-v2-predictions.csv"],
+      "decision": "Do not select GPT-5.4 Mini. It improved over Nano on every primary calibration metric: QWK 0.5975 versus 0.4320, Spearman 0.4893 versus 0.3570, and binary pass agreement 0.9375 versus 0.8333. It nevertheless missed the frozen QWK floor of 0.60 by 0.0025 and the Spearman floor of 0.70 materially. All 32 unique responses were valid, provider-pinned, and completed without errors for $0.110033. Per protocol, neither the old inspected audit nor the locked generation test was accessed.",
       "limitations": ["Single human calibration reference", "No independent relabeling of calibration rows", "A calibration pass establishes audit eligibility rather than production validity"],
-      "nextStep": "Commit the preregistration, execute the complete calibration without peeking, and create a new untouched audit only if every frozen threshold passes."
+      "nextStep": "Stop judge-model escalation for the current thesis and report Nano and Mini as negative but informative calibration results; keep automatic judging disabled."
     }
   ]
 }

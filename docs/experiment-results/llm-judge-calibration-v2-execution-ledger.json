@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "experimentId": "llm-judge-calibration-v2",
+  "resumptions": 0,
+  "providerRequests": 32,
+  "validResponses": 32,
+  "invalidResponses": 0,
+  "invalidResponseDetails": [],
+  "validResponseCostUsd": 0.11003295,
+  "invalidResponseCost": "Unavailable when a rejected response does not expose validated usage.",
+  "complete": true
+}
