@@ -283,6 +283,20 @@
       "decision": "Treat the completed review as a human-in-the-loop sensitivity analysis, not as an independent replacement gold standard. Fourteen of 15 decisions confirmed the new blind score and one answerable case was revised to the judge after comparison. Replacing the 12 answerable audit labels with the final adjudicated labels raises cached audit QWK from 0.1912 to 0.6407, Spearman from 0.4948 to 0.9214, and binary pass agreement from 0.7917 to 0.8750, crossing every frozen audit threshold without provider calls. GPT-5.4 Nano nevertheless remains ineligible because the unchanged calibration split still fails QWK and Spearman.",
       "limitations": ["The same primary reviewer produced the original and time-separated adjudicated labels", "The reviewer consulted Codex for case-by-case guidance, so this is AI-assisted human adjudication rather than independent human replication", "Only three unique unanswerable controls are included because abstention agreement was already perfect", "Reviewing the held-out audit consumes it for future prompt tuning"],
       "nextStep": "Use these results as a documented reference-label sensitivity analysis; before selecting an automatic judge, either obtain a genuinely independent second-human review or preregister a stronger judge and evaluate it on a newly reserved untouched set."
+    },
+    {
+      "order": 21,
+      "id": "llm-judge-calibration-v2",
+      "thesisSection": "LLM-as-a-judge calibration",
+      "researchQuestion": "Can GPT-5.4 Mini reproduce the existing human assessment reliably enough to justify evaluation on a newly reserved untouched audit set?",
+      "status": "preregistered",
+      "variable": "GPT-5.4 Mini replaces GPT-5.4 Nano; every prompt, schema, split, metric, threshold, reasoning, and routing control remains frozen",
+      "controls": ["48 frozen calibration rows only", "prompt v1", "answerability-specific schemas", "medium reasoning", "temperature 0", "OpenAI provider pinned", "fallbacks disabled", "old inspected audit inaccessible"],
+      "metrics": ["Pooled core quadratic weighted kappa", "answerable quality Spearman correlation", "binary pass agreement", "structured validity", "provider errors", "latency", "tokens", "cost"],
+      "artifacts": ["docs/experiments/llm-judge-calibration.v2.json", "scripts/evaluate-llm-judge-mini.ts"],
+      "decision": "Pending the preregistered 48-row calibration run. The old v1.1 audit and locked generation test must not be accessed.",
+      "limitations": ["Single human calibration reference", "No independent relabeling of calibration rows", "A calibration pass establishes audit eligibility rather than production validity"],
+      "nextStep": "Commit the preregistration, execute the complete calibration without peeking, and create a new untouched audit only if every frozen threshold passes."
     }
   ]
 }

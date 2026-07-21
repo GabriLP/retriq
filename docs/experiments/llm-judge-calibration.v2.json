@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "llm-judge-calibration-v2",
+  "status": "preregistered",
+  "supersedes": "llm-judge-calibration-v1.1",
+  "changeScope": "Judge model only. Prompt text, task-specific schemas, calibration rows, human labels, metrics, thresholds, routing controls, temperature, and reasoning effort remain frozen.",
+  "hypothesis": "GPT-5.4 Mini at medium reasoning will exceed GPT-5.4 Nano on the frozen 48-row calibration split and meet every preregistered acceptance threshold.",
+  "researchQuestion": "Can GPT-5.4 Mini reproduce the existing human assessment reliably enough to justify evaluation on a newly reserved untouched audit set?",
+  "judge": {
+    "id": "openrouter-gpt-5.4-mini-medium-schema-v1",
+    "provider": "openrouter",
+    "model": "openai/gpt-5.4-mini",
+    "expectedResponseModel": "openai/gpt-5.4-mini",
+    "providerOrder": ["openai"],
+    "expectedResponseProvider": "OpenAI",
+    "allowFallbacks": false,
+    "reasoningEffort": "medium",
+    "temperature": 0,
+    "maxCompletionTokens": 1800,
+    "inputPriceUsdPerMillionTokens": 0.75,
+    "outputPriceUsdPerMillionTokens": 4.5,
+    "priceObservedOn": "2026-07-21",
+    "priceSource": "https://developers.openai.com/api/docs/models/gpt-5.4-mini"
+  },
+  "inputs": {
+    "humanReview": "docs/evaluation/generation-human-review-v1.completed.csv",
+    "split": "docs/evaluation/llm-judge-split.v1.json",
+    "rubricAndPromptText": "docs/evaluation/llm-judge-prompt.v1.json",
+    "calibrationRows": 48,
+    "auditRowsAccessibleToRunner": 0
+  },
+  "independence": {
+    "humanLabelsAreReference": true,
+    "judgeModelWasNotAGeneratorCandidate": true,
+    "judgeInputExcludesHumanScoresNotesReviewerAndGeneratorIdentity": true,
+    "selfJudgingProhibited": true
+  },
+  "acceptanceCriteria": {
+    "minimumPooledCoreQuadraticWeightedKappa": 0.6,
+    "minimumAnswerableQualitySpearman": 0.7,
+    "minimumBinaryPassAgreement": 0.8,
+    "requiredStructuredValidityRate": 1,
+    "requiredAnswerabilityConsistencyRate": 1,
+    "maximumProviderErrors": 0
+  },
+  "passRule": {
+    "answerable": "All four core scores are at least 3 and every binary failure flag is 0.",
+    "unanswerable": "correctAbstention is 1 and every binary failure flag is 0.",
+    "directnessIsDiagnosticOnly": true
+  },
+  "decisionPolicy": {
+    "pass": "Freeze model, prompt, schemas, and thresholds; then create and preregister a new untouched audit set before any further provider evaluation.",
+    "fail": "Keep automatic judging disabled and stop model escalation for the current thesis unless a new protocol is justified before inspecting additional labels.",
+    "oldAuditPolicy": "The v1.1 audit has been inspected during human adjudication and is excluded from v2 selection decisions.",
+    "lockedGenerationTestPolicy": "Do not access the locked generation test during judge selection."
+  },
+  "costGuardrail": {
+    "estimatedUsd": 0.2,
+    "hardStopUsd": 0.5,
+    "policy": "Abort before sending another uncached request when accumulated valid-response cost reaches the hard stop. Costs of rejected provider responses may be unavailable and are reported separately."
+  },
+  "limitations": [
+    "The frozen calibration reference has one human reviewer and no inter-rater reliability estimate.",
+    "The later human adjudication did not independently relabel the calibration rows.",
+    "Passing calibration establishes eligibility for a new audit, not production validity."
+  ]
+}

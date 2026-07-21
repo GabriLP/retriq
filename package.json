@@ -46,6 +46,7 @@
     "judge:metrics:test": "tsx scripts/test-judge-metrics.ts",
     "judge:provider:test": "tsx scripts/test-judge-provider.ts",
     "experiment:judge": "tsx scripts/evaluate-llm-judge.ts",
+    "experiment:judge:mini": "tsx scripts/evaluate-llm-judge-mini.ts",
     "database:migrate": "tsx scripts/migrate-database.ts",
     "database:import": "tsx scripts/import-postgres-corpus.ts",
     "database:inspect": "tsx scripts/inspect-database.ts",
