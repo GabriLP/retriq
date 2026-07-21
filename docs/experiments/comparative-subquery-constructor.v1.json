@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "comparative-subquery-constructor-v1",
   "title": "Automatic deterministic comparative subquery construction",
-  "status": "preregistered",
+  "status": "completed",
   "split": "validation",
   "positiveBenchmark": "docs/evaluation/multi-technology-retrieval-benchmark.v1.json",
   "negativeBenchmark": "docs/evaluation/multi-technology-negative-benchmark.v1.json",
@@ -31,5 +31,20 @@
     "failurePolicy": "Retain the manual frozen reference and select no automatic constructor if neither automatic variant satisfies every guardrail."
   },
   "metrics": ["comparative no-answer FPR", "positive gate rejections", "both-language and canonical-evidence coverage@4", "evidence-side recall and MRR", "parse success and fallback rate", "query characters", "embedding calls and cost", "latency"],
+  "execution": {
+    "completedAt": "2026-07-21T09:37:56.140Z",
+    "attemptId": "20260721093756140",
+    "evaluationGitCommit": "783a6e0ea284882a7365b6e7d924ba5dadf8483f",
+    "selectedVariant": null,
+    "manualReference": { "bothLanguageCoverageAt4": 1.0, "bothEvidenceSideCoverageAt4": 0.375, "meanEvidenceSideRecallAt4": 0.625, "macroEvidenceSideMrr": 0.4270833333333333, "noAnswerFalsePositiveRate": 0 },
+    "automaticFocusOriginal": { "bothLanguageCoverageAt4": 0.75, "bothEvidenceSideCoverageAt4": 0.25, "meanEvidenceSideRecallAt4": 0.4375, "macroEvidenceSideMrr": 0.3125, "noAnswerFalsePositiveRate": 0.125, "positiveGateRejections": 2 },
+    "automaticTopicTemplate": { "bothLanguageCoverageAt4": 1.0, "bothEvidenceSideCoverageAt4": 0.375, "meanEvidenceSideRecallAt4": 0.5625, "macroEvidenceSideMrr": 0.4270833333333333, "noAnswerFalsePositiveRate": 0, "positiveGateRejections": 0, "parseSuccessRate": 1.0 },
+    "failedTopicTemplateCase": "compare-python-typescript-type-annotations",
+    "queryEmbeddingProviderInputs": 64,
+    "queryEmbeddingProviderRequests": 2,
+    "estimatedEmbeddingCostUsd": 0.0003446,
+    "testSplitTouched": false,
+    "interpretation": "The structured deterministic constructor is close to the manual reference but misses the preregistered evidence-side recall floor. It must not be tuned on the observed failure and is not selected for production."
+  },
   "reportOutput": "docs/experiment-results/comparative-subquery-constructor-v1-validation"
 }

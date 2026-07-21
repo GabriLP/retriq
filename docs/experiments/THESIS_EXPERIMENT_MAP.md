@@ -1,8 +1,8 @@
 # Thesis experiment map
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
-- Experiment families: **16**
-- Completed: **12**
+- Experiment families: **17**
+- Completed: **13**
 - Superseded but retained: **1**
 
 This is the narrative index for the thesis. The JSON registry is the source of truth; generated Markdown and CSV provide readable and tabular views. Every experiment records its question, isolated variable, controls, metrics, decision, limitations, and next action.
@@ -25,6 +25,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 14 | Comparative-query retrieval | multi-technology-retrieval-v1 | completed | Legacy first-technology filtering versus multi-technology union versus language-balanced union | Retain language-balanced multi-technology ordering among the three preregistered policies. It raises both-language coverage@4 from 0.0000 for legacy first-match and 0.3750 for the unbalanced union to 0.6250. Canonical two-sided evidence coverage remains only 0.2500, however, so this is a retrieval regression fix rather than a complete comparative-query solution. |
 | 15 | Comparative-query abstention calibration | comparative-threshold-calibration-v1 | completed | Balanced multi-technology minimum cosine threshold from 0.60 to 0.74 | Select no comparative threshold. Thresholds 0.60 and 0.62 reach 1.0000 both-language coverage but produce 1.0000 negative FPR. Threshold 0.72 reaches zero FPR but only 0.1250 both-language and both-evidence coverage. The maximum negative score (0.7122) exceeds the minimum positive top score (0.7004), while the weakest positive technology side reaches only 0.6441. |
 | 16 | Comparative-query decomposition | comparative-query-decomposition-v1 | completed | Single balanced query versus decomposed per-technology queries, with and without a both-sides gate | Select decomposed retrieval with a both-sides evidence gate. Compared with the balanced single-query baseline, it raises both-language coverage@4 from 0.6250 to 1.0000, both-evidence-side coverage from 0.2500 to 0.3750, evidence-side recall from 0.5000 to 0.6250, and side MRR from 0.3646 to 0.4271. The ungated decomposed variant has 0.5000 negative FPR; the gate reduces this to zero while rejecting no positives. |
+| 17 | Automatic comparative-query construction | comparative-subquery-constructor-v1 | completed | Manual subqueries versus focus-original and parsed-topic deterministic constructors | Select no deterministic constructor. Focus-original reduces both-language coverage to 0.7500, evidence-side recall to 0.4375, and introduces 0.1250 negative FPR. The parsed-topic template preserves 1.0000 both-language coverage, 0.3750 both-evidence coverage, 0.4271 side MRR, and zero FPR, but misses the 0.6250 recall floor at 0.5625 because it loses the Python evidence for the type-annotation case. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
 
@@ -217,3 +218,15 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Decision:** Select decomposed retrieval with a both-sides evidence gate. Compared with the balanced single-query baseline, it raises both-language coverage@4 from 0.6250 to 1.0000, both-evidence-side coverage from 0.2500 to 0.3750, evidence-side recall from 0.5000 to 0.6250, and side MRR from 0.3646 to 0.4271. The ungated decomposed variant has 0.5000 negative FPR; the gate reduces this to zero while rejecting no positives.
 - **Limitations:** Subqueries are manually frozen rather than generated dynamically; The gate measures threshold eligibility rather than semantic entailment; Only eight positive and eight negative validation cases; Production behavior and the locked test remain untouched
 - **Next step:** Benchmark an automatic deterministic or model-based subquery constructor against the frozen rewrites before integrating the selected gate into production.
+
+## 17. Automatic comparative-query construction: comparative-subquery-constructor-v1
+
+- **Research question:** Can a deterministic constructor replace manually frozen per-technology subqueries without reducing retrieval quality or abstention?
+- **Status:** completed
+- **Changed variable:** Manual subqueries versus focus-original and parsed-topic deterministic constructors
+- **Controls:** Same 8 positive and 8 negative validation cases; both-sides gate; Gemini Embedding 2 at 1,024 dimensions; threshold 0.68; two chunks per technology; topK=4; no reranker; no LLM rewriting
+- **Metrics:** Comparative no-answer FPR; positive gate rejections; both-language and canonical-evidence coverage@4; evidence-side recall and MRR; parse success; query length; cost
+- **Artifacts:** `src/lib/rag/comparative-query.ts`; `scripts/test-comparative-query.ts`; `docs/experiments/comparative-subquery-constructor.v1.json`; `docs/experiment-results/comparative-subquery-constructor-v1-validation.json`; `docs/experiment-results/comparative-subquery-constructor-v1-validation.md`; `docs/experiment-results/comparative-subquery-constructor-v1-validation.csv`
+- **Decision:** Select no deterministic constructor. Focus-original reduces both-language coverage to 0.7500, evidence-side recall to 0.4375, and introduces 0.1250 negative FPR. The parsed-topic template preserves 1.0000 both-language coverage, 0.3750 both-evidence coverage, 0.4271 side MRR, and zero FPR, but misses the 0.6250 recall floor at 0.5625 because it loses the Python evidence for the type-annotation case.
+- **Limitations:** Parser coverage is limited to benchmarked comparative forms; Manual rewrites are a validation reference rather than a test oracle; The template was intentionally not tuned after observing its failure; Production and the locked test remain untouched
+- **Next step:** Preregister a low-cost model-based subquery constructor against the same frozen reference and deterministic baseline, including rewrite validity, latency, token cost, and retrieval outcomes.

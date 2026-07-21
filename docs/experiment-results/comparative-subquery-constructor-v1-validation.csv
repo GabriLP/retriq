@@ -1,0 +1,4 @@
+variant,both_language_coverage_at_4,both_evidence_side_coverage_at_4,mean_evidence_side_recall_at_4,macro_evidence_side_mrr,no_answer_false_positive_rate,positive_gate_rejections,parse_success_rate,fallback_count,query_characters
+manual-frozen,1,0.375,0.625,0.4270833333333333,0,0,1,0,1726
+automatic-focus-original,0.75,0.25,0.4375,0.3125,0.125,2,1,0,2744
+automatic-topic-template,1,0.375,0.5625,0.4270833333333333,0,0,1,0,1876
