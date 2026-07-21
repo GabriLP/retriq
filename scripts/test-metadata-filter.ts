@@ -9,6 +9,7 @@ const chunks = [
   chunk("react", "React"),
   chunk("c", "C", "N1570 / C11 committee draft"),
   chunk("cpp", "C++", "N5046 / C++26 working draft"),
+  chunk("rust", "Rust"),
 ];
 
 assert.equal(filterChunksByQueryMetadata("What changed in PostgreSQL 19?", chunks).decision.status, "unsupported-version");
@@ -20,6 +21,10 @@ assert.equal(filterChunksByQueryMetadata("Why is state a snapshot?", chunks).chu
 assert.equal(filterChunksByQueryMetadata("Which exceptions exist in C11 array conversion?", chunks).chunks[0]?.id, "c");
 assert.equal(filterChunksByQueryMetadata("What parameter form makes a C++ move constructor?", chunks).decision.requestedTechnology, "cpp");
 assert.equal(filterChunksByQueryMetadata("What parameter form makes a C++ move constructor?", chunks).chunks[0]?.id, "cpp");
+assert.deepEqual(
+  filterChunksByQueryMetadata("Compare memory management in C and Rust", chunks).chunks.map((item) => item.id),
+  ["c", "rust"],
+);
 
 console.log("Metadata filter tests passed.");
 

@@ -70,12 +70,26 @@ export async function searchPostgresChunks(queryEmbedding: number[], topK: numbe
        WHERE v.is_active = true AND v.status = 'ready'
          AND ($4::text[] IS NULL OR c.language = ANY($4::text[]))
          AND ($5::text IS NULL OR c.version ILIKE '%' || $5 || '%')
+     ), eligible AS (
+       SELECT ranked.*,
+         ROW_NUMBER() OVER (PARTITION BY language ORDER BY score DESC, row_ordinal ASC) AS language_rank
+       FROM ranked
+       WHERE score >= $2
      )
-     SELECT * FROM ranked
-     WHERE score >= $2
-     ORDER BY score DESC, row_ordinal ASC
+     SELECT * FROM eligible
+     ORDER BY
+       CASE WHEN $6::boolean THEN language_rank ELSE 1 END ASC,
+       score DESC,
+       row_ordinal ASC
      LIMIT $3`,
-    [vector, ragConfig.minScore, limit, constraint?.databaseLanguages ?? null, constraint?.requestedVersion === null || constraint?.requestedVersion === undefined ? null : String(constraint.requestedVersion)],
+    [
+      vector,
+      ragConfig.minScore,
+      limit,
+      constraint?.databaseLanguages ?? null,
+      constraint?.requestedVersion === null || constraint?.requestedVersion === undefined ? null : String(constraint.requestedVersion),
+      (constraint?.databaseLanguages.length ?? 0) > 1,
+    ],
   ) as unknown as RetrievalRow[];
   return rows.map((row, index) => mapRetrievalRow(row, index + 1));
 }

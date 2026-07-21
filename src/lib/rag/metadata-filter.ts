@@ -10,6 +10,7 @@ export type CompatibilityDecision = {
 
 type TechnologyRule = {
   id: string;
+  corpusSupported: boolean;
   queryPatterns: RegExp[];
   languagePatterns: RegExp[];
   databaseLanguages: string[];
@@ -29,7 +30,7 @@ const RULES: TechnologyRule[] = [
   absent("haskell", [/\bHaskell\b/i, /\bSoftware\s+Transactional\s+Memory\b/i], ["Haskell"]),
   technology("postgresql", [/\bPostgreSQL\b/i], [/PostgreSQL/i], ["PostgreSQL / SQL"], /\bPostgreSQL\s+(\d+(?:\.\d+)*)\b/i, /\b(\d+)(?:\.\d+)?/),
   technology("java", [/\bJava(?:\s+SE)?\b/i], [/^Java$/i], ["Java"], /\bJava(?:\s+SE)?\s+(\d+)\b/i, /Java\s+SE\s+(\d+)/i),
-  technology("react", [/\bReact\b/i], [/^React$/i], ["React"]),
+  technology("react", [/\bReact\b(?!\s+Native\b)/i], [/^React$/i], ["React"]),
   technology("python", [/\bPython\b/i], [/^Python$/i], ["Python"], /\bPython\s+(\d+)(?:\.\d+)?\b/i, /\b(\d+)\.x\b/i),
   technology("kotlin", [/\bKotlin\b/i], [/^Kotlin$/i], ["Kotlin"], /\bKotlin\s+(\d+)(?:\.\d+)?\b/i, /\b(\d+)(?:\.\d+)?/),
   technology("typescript", [/\bTypeScript\b/i], [/^TypeScript$/i], ["TypeScript"]),
@@ -38,40 +39,57 @@ const RULES: TechnologyRule[] = [
   technology("go", [/\bGo\s+(?:language|version|1\.)/i, /\bGolang\b/i], [/^Go$/i], ["Go"], /\bGo(?:lang)?\s+(?:version\s+)?(\d+)(?:\.\d+)?\b/i, /go(\d+)(?:\.\d+)?/i),
   technology("bash", [/\bBash\b/i], [/^Bash$/i], ["Bash"], /\bBash\s+(\d+)(?:\.\d+)?\b/i, /\b(\d+)(?:\.\d+)?/),
   technology("cpp", [/\bC\+\+(?!\w)/i], [/^C\+\+$/i], ["C++"]),
-  technology("c", [/\bC(?:11|17|23|26)?\b/], [/^C$/], ["C"], /\bC(11|17|23|26)\b/, /\bC(11|17|23|26)\b/),
+  technology("c", [/\bC(?!\+\+)(?:11|17|23|26)?\b/], [/^C$/], ["C"], /\bC(11|17|23|26)\b/, /\bC(11|17|23|26)\b/),
 ];
 
 export type QueryMetadataConstraint = { technology: string; databaseLanguages: string[]; requestedVersion: number | null };
 
 export function detectQueryMetadataConstraint(query: string): QueryMetadataConstraint | null {
-  const rule = RULES.find((candidate) => candidate.queryPatterns.some((pattern) => pattern.test(query)));
-  return rule ? { technology: rule.id, databaseLanguages: rule.databaseLanguages, requestedVersion: extractNumber(query, rule.versionPattern) } : null;
+  const rules = matchingRules(query);
+  if (!rules.length) return null;
+  return {
+    technology: rules.map((rule) => rule.id).join("+"),
+    databaseLanguages: [...new Set(rules.flatMap((rule) => rule.databaseLanguages))],
+    requestedVersion: rules.length === 1 ? extractNumber(query, rules[0].versionPattern) : null,
+  };
 }
 
 export function filterChunksByQueryMetadata<T extends DocumentationChunk>(query: string, chunks: T[]) {
-  const rule = RULES.find((candidate) => candidate.queryPatterns.some((pattern) => pattern.test(query)));
-  if (!rule) return { chunks, decision: compatible(null, null, [], "No supported technology or version constraint was detected.") };
-  const requestedVersion = extractNumber(query, rule.versionPattern);
-  const technologyChunks = chunks.filter((chunk) => chunk.language && rule.languagePatterns.some((pattern) => pattern.test(chunk.language!)));
+  const rules = matchingRules(query);
+  if (!rules.length) return { chunks, decision: compatible(null, null, [], "No supported technology or version constraint was detected.") };
+  const requestedTechnology = rules.map((rule) => rule.id).join("+");
+  const requestedVersion = rules.length === 1 ? extractNumber(query, rules[0].versionPattern) : null;
+  const technologyChunks = chunks.filter((chunk) => chunk.language && rules.some((rule) => rule.languagePatterns.some((pattern) => pattern.test(chunk.language!))));
   if (!technologyChunks.length) {
-    return { chunks: [], decision: { status: "unsupported-technology", requestedTechnology: rule.id, requestedVersion, availableVersions: [], reason: `The corpus contains no documentation tagged for '${rule.id}'.` } satisfies CompatibilityDecision };
+    return { chunks: [], decision: { status: "unsupported-technology", requestedTechnology, requestedVersion, availableVersions: [], reason: `The corpus contains no documentation tagged for '${requestedTechnology}'.` } satisfies CompatibilityDecision };
   }
-  const availableVersions = uniqueNumbers(technologyChunks.map((chunk) => extractNumber(chunk.version ?? "", rule.manifestVersionPattern)));
+  const availableVersions = rules.length === 1
+    ? uniqueNumbers(technologyChunks.map((chunk) => extractNumber(chunk.version ?? "", rules[0].manifestVersionPattern)))
+    : [];
   if (requestedVersion !== null && availableVersions.length && !availableVersions.includes(requestedVersion)) {
-    return { chunks: [], decision: { status: "unsupported-version", requestedTechnology: rule.id, requestedVersion, availableVersions, reason: `Requested ${rule.id} version ${requestedVersion}, while indexed version metadata contains ${availableVersions.join(", ")}.` } satisfies CompatibilityDecision };
+    return { chunks: [], decision: { status: "unsupported-version", requestedTechnology, requestedVersion, availableVersions, reason: `Requested ${requestedTechnology} version ${requestedVersion}, while indexed version metadata contains ${availableVersions.join(", ")}.` } satisfies CompatibilityDecision };
   }
   const versionChunks = requestedVersion === null || !availableVersions.length
     ? technologyChunks
-    : technologyChunks.filter((chunk) => extractNumber(chunk.version ?? "", rule.manifestVersionPattern) === requestedVersion);
-  return { chunks: versionChunks, decision: compatible(rule.id, requestedVersion, availableVersions, `Restricted retrieval to ${versionChunks.length} metadata-compatible chunks.`) };
+    : technologyChunks.filter((chunk) => extractNumber(chunk.version ?? "", rules[0].manifestVersionPattern) === requestedVersion);
+  return { chunks: versionChunks, decision: compatible(requestedTechnology, requestedVersion, availableVersions, `Restricted retrieval to ${versionChunks.length} metadata-compatible chunks.`) };
+}
+
+function matchingRules(query: string) {
+  const matches = RULES.filter((candidate) => candidate.queryPatterns.some((pattern) => pattern.test(query)));
+  if (!matches.length) return [];
+  // Preserve the existing conservative behavior for technologies known to be
+  // outside the corpus (for example React Native rather than React).
+  if (!matches[0].corpusSupported) return [matches[0]];
+  return matches.filter((rule) => rule.corpusSupported);
 }
 
 function technology(id: string, queryPatterns: RegExp[], languagePatterns: RegExp[], databaseLanguages: string[], versionPattern?: RegExp, manifestVersionPattern?: RegExp): TechnologyRule {
-  return { id, queryPatterns, languagePatterns, databaseLanguages, versionPattern, manifestVersionPattern };
+  return { id, corpusSupported: true, queryPatterns, languagePatterns, databaseLanguages, versionPattern, manifestVersionPattern };
 }
 
 function absent(id: string, queryPatterns: RegExp[], databaseLanguages: string[]): TechnologyRule {
-  return technology(id, queryPatterns, [new RegExp(`^${escapeRegex(id)}$`, "i")], databaseLanguages);
+  return { ...technology(id, queryPatterns, [new RegExp(`^${escapeRegex(id)}$`, "i")], databaseLanguages), corpusSupported: false };
 }
 
 function compatible(requestedTechnology: string | null, requestedVersion: number | null, availableVersions: number[], reason: string): CompatibilityDecision {
