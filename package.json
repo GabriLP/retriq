@@ -52,6 +52,8 @@
     "experiment:retrieval:multi-technology": "tsx scripts/evaluate-multi-technology-retrieval.ts",
     "experiment:retrieval:comparative-threshold": "tsx scripts/evaluate-comparative-threshold.ts",
     "experiment:retrieval:comparative-decomposition": "tsx scripts/evaluate-comparative-decomposition.ts",
+    "experiment:retrieval:comparative-constructor": "tsx scripts/evaluate-comparative-constructor.ts",
+    "comparative:query:test": "tsx scripts/test-comparative-query.ts",
     "golden:validate": "tsx scripts/validate-golden-set.ts --dataset docs/evaluation/golden-set.v1.json --split docs/evaluation/golden-set-splits.v1.json",
     "golden:validate:v2": "tsx scripts/validate-golden-set.ts --dataset docs/evaluation/golden-set.v2.json --split docs/evaluation/golden-set-splits.v2.json",
     "golden:validate:v3": "tsx scripts/validate-golden-set.ts --dataset docs/evaluation/golden-set.v3.json --split docs/evaluation/golden-set-splits.v3.json",

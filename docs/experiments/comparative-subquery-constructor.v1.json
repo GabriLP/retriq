@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "comparative-subquery-constructor-v1",
+  "title": "Automatic deterministic comparative subquery construction",
+  "status": "preregistered",
+  "split": "validation",
+  "positiveBenchmark": "docs/evaluation/multi-technology-retrieval-benchmark.v1.json",
+  "negativeBenchmark": "docs/evaluation/multi-technology-negative-benchmark.v1.json",
+  "manualReference": "docs/evaluation/comparative-query-decomposition.v1.json",
+  "parentRun": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec",
+  "hypothesis": "A deterministic constructor can reproduce the selected manually frozen decomposition closely enough for runtime use without adding an LLM call.",
+  "variants": [
+    { "id": "manual-frozen", "description": "Previously selected manually frozen per-technology subqueries." },
+    { "id": "automatic-focus-original", "description": "Prefix the unchanged comparative question with an instruction to focus on one technology, then filter retrieval to that language." },
+    { "id": "automatic-topic-template", "description": "Parse the shared topic from supported comparative forms and emit a language-specific documentation query; fall back to focus-original if parsing fails." }
+  ],
+  "changedVariable": "Per-technology subquery construction method",
+  "controlledVariables": ["same 8 positive and 8 negative validation cases", "both-sides evidence gate", "Gemini Embedding 2 at 1,024 dimensions", "cosine threshold 0.68", "two chunks per technology", "topK=4", "no reranker", "no LLM rewriting", "locked general test untouched"],
+  "selectionRule": {
+    "automaticEligibility": {
+      "noAnswerFalsePositiveRate": 0,
+      "positiveGateRejections": 0,
+      "minimumBothLanguageCoverageAt4": 1.0,
+      "minimumBothEvidenceSideCoverageAt4": 0.375,
+      "minimumMeanEvidenceSideRecallAt4": 0.625,
+      "minimumMacroEvidenceSideMrr": 0.4,
+      "requiredParseSuccessRateForTopicTemplate": 1.0
+    },
+    "primary": "highest both-evidence-side coverage@4",
+    "tieBreakers": ["highest mean evidence-side recall@4", "highest macro evidence-side MRR", "fewest query characters", "prefer focus-original when every retrieval and cost metric ties"],
+    "failurePolicy": "Retain the manual frozen reference and select no automatic constructor if neither automatic variant satisfies every guardrail."
+  },
+  "metrics": ["comparative no-answer FPR", "positive gate rejections", "both-language and canonical-evidence coverage@4", "evidence-side recall and MRR", "parse success and fallback rate", "query characters", "embedding calls and cost", "latency"],
+  "reportOutput": "docs/experiment-results/comparative-subquery-constructor-v1-validation"
+}
