@@ -199,6 +199,20 @@
       "decision": "Retain language-balanced multi-technology ordering among the three preregistered policies. It raises both-language coverage@4 from 0.0000 for legacy first-match and 0.3750 for the unbalanced union to 0.6250. Canonical two-sided evidence coverage remains only 0.2500, however, so this is a retrieval regression fix rather than a complete comparative-query solution.",
       "limitations": ["Only eight focused answerable validation cases", "Canonical evidence is tied to the frozen 300-word chunks", "Threshold 0.68 was inherited from the general single-technology benchmark", "No comparative unanswerable cases", "The locked 24-case test remains untouched"],
       "nextStep": "Preregister a comparative-query calibration that varies candidate budget or a per-language quota while preserving an explicit abstention rule; do not silently lower the global threshold."
+    },
+    {
+      "order": 15,
+      "id": "comparative-threshold-calibration-v1",
+      "thesisSection": "Comparative-query abstention calibration",
+      "researchQuestion": "Can a dedicated cosine threshold improve two-sided comparative retrieval while preserving abstention on comparative negatives?",
+      "status": "completed",
+      "variable": "Balanced multi-technology minimum cosine threshold from 0.60 to 0.74",
+      "controls": ["Frozen 33,079-chunk corpus", "eight comparative positives", "eight comparative negatives", "Gemini Embedding 2 at 1,024 dimensions", "language-balanced retrieval", "topK=4", "no reranker"],
+      "metrics": ["Comparative no-answer FPR", "both-language coverage@4", "both-evidence-side coverage@4", "canonical evidence-side recall@4", "macro evidence-side MRR", "score separation", "cost"],
+      "artifacts": ["docs/evaluation/multi-technology-negative-benchmark.v1.json", "docs/evaluation/multi-technology-negative-verification.v1.md", "docs/experiments/comparative-threshold-calibration.v1.json", "docs/experiment-results/comparative-threshold-calibration-v1-validation.json", "docs/experiment-results/comparative-threshold-calibration-v1-validation.md", "docs/experiment-results/comparative-threshold-calibration-v1-validation.csv"],
+      "decision": "Select no comparative threshold. Thresholds 0.60 and 0.62 reach 1.0000 both-language coverage but produce 1.0000 negative FPR. Threshold 0.72 reaches zero FPR but only 0.1250 both-language and both-evidence coverage. The maximum negative score (0.7122) exceeds the minimum positive top score (0.7004), while the weakest positive technology side reaches only 0.6441.",
+      "limitations": ["Only eight positive and eight negative validation cases", "Exact absence probes are sanity checks rather than semantic proof", "Only the threshold changed", "The locked general test remains untouched"],
+      "nextStep": "Test an explicit comparative-query architecture such as per-technology query decomposition followed by an answerability or evidence-sufficiency gate; retain 0.68 for ordinary single-technology retrieval."
     }
   ]
 }

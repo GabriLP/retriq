@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "comparative-threshold-calibration-v1",
   "title": "Comparative-query cosine threshold calibration",
-  "status": "preregistered",
+  "status": "completed",
   "split": "validation",
   "positiveBenchmark": "docs/evaluation/multi-technology-retrieval-benchmark.v1.json",
   "negativeBenchmark": "docs/evaluation/multi-technology-negative-benchmark.v1.json",
@@ -48,5 +48,19 @@
     "score separation diagnostics",
     "embedding cache, provider calls, and estimated cost"
   ],
+  "execution": {
+    "completedAt": "2026-07-21T09:16:27.590Z",
+    "attemptId": "20260721091627590",
+    "evaluationGitCommit": "92e1dfc4b8507bee98cb44942cbd0a62de913a3a",
+    "selectedThreshold": null,
+    "maximumNegativeTopScore": 0.7122334478010942,
+    "minimumPositiveTopScore": 0.7004171473124048,
+    "minimumPositiveSecondLanguageTopScore": 0.6441004363751226,
+    "queryEmbeddingProviderInputs": 8,
+    "queryEmbeddingProviderRequests": 1,
+    "estimatedEmbeddingCostUsd": 0.0000394,
+    "testSplitTouched": false,
+    "interpretation": "No global cosine threshold can satisfy the preregistered abstention and positive-coverage guardrails. Positive and comparative-negative score distributions overlap, so the next experiment must change the retrieval decision architecture rather than silently lowering the threshold."
+  },
   "reportOutput": "docs/experiment-results/comparative-threshold-calibration-v1-validation"
 }

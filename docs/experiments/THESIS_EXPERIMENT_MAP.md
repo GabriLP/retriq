@@ -1,8 +1,8 @@
 # Thesis experiment map
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
-- Experiment families: **14**
-- Completed: **10**
+- Experiment families: **15**
+- Completed: **11**
 - Superseded but retained: **1**
 
 This is the narrative index for the thesis. The JSON registry is the source of truth; generated Markdown and CSV provide readable and tabular views. Every experiment records its question, isolated variable, controls, metrics, decision, limitations, and next action.
@@ -23,6 +23,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 12 | Production retrieval infrastructure | postgres-vector-storage-v1 | completed | Local exhaustive cosine persistence versus exact pgvector execution | Deploy exact pgvector search on Neon Free. It preserved all 54 frozen validation outputs within a 0.0002 score tolerance, stored 33,079 chunks in 228 MB, reused cached embeddings with zero provider calls, and cost $0 at observation time. HNSW and IVFFlat remain deferred experiments. |
 | 13 | Runtime generation reliability | generation-output-budget-v1 | completed | Maximum output-token budget: frozen 900-token baseline versus 2,048-token runtime candidate | Use 2,048 tokens for runtime reliability. All 27 validation generations returned STOP with zero errors and zero MAX_TOKENS events; the known 900-token Rust failure completed. Observed cost increased from $0.164763 to $0.166626 (+$0.001863, approximately 1.13%). This is not a quality-selection result. |
 | 14 | Comparative-query retrieval | multi-technology-retrieval-v1 | completed | Legacy first-technology filtering versus multi-technology union versus language-balanced union | Retain language-balanced multi-technology ordering among the three preregistered policies. It raises both-language coverage@4 from 0.0000 for legacy first-match and 0.3750 for the unbalanced union to 0.6250. Canonical two-sided evidence coverage remains only 0.2500, however, so this is a retrieval regression fix rather than a complete comparative-query solution. |
+| 15 | Comparative-query abstention calibration | comparative-threshold-calibration-v1 | completed | Balanced multi-technology minimum cosine threshold from 0.60 to 0.74 | Select no comparative threshold. Thresholds 0.60 and 0.62 reach 1.0000 both-language coverage but produce 1.0000 negative FPR. Threshold 0.72 reaches zero FPR but only 0.1250 both-language and both-evidence coverage. The maximum negative score (0.7122) exceeds the minimum positive top score (0.7004), while the weakest positive technology side reaches only 0.6441. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
 
@@ -191,3 +192,15 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Decision:** Retain language-balanced multi-technology ordering among the three preregistered policies. It raises both-language coverage@4 from 0.0000 for legacy first-match and 0.3750 for the unbalanced union to 0.6250. Canonical two-sided evidence coverage remains only 0.2500, however, so this is a retrieval regression fix rather than a complete comparative-query solution.
 - **Limitations:** Only eight focused answerable validation cases; Canonical evidence is tied to the frozen 300-word chunks; Threshold 0.68 was inherited from the general single-technology benchmark; No comparative unanswerable cases; The locked 24-case test remains untouched
 - **Next step:** Preregister a comparative-query calibration that varies candidate budget or a per-language quota while preserving an explicit abstention rule; do not silently lower the global threshold.
+
+## 15. Comparative-query abstention calibration: comparative-threshold-calibration-v1
+
+- **Research question:** Can a dedicated cosine threshold improve two-sided comparative retrieval while preserving abstention on comparative negatives?
+- **Status:** completed
+- **Changed variable:** Balanced multi-technology minimum cosine threshold from 0.60 to 0.74
+- **Controls:** Frozen 33,079-chunk corpus; eight comparative positives; eight comparative negatives; Gemini Embedding 2 at 1,024 dimensions; language-balanced retrieval; topK=4; no reranker
+- **Metrics:** Comparative no-answer FPR; both-language coverage@4; both-evidence-side coverage@4; canonical evidence-side recall@4; macro evidence-side MRR; score separation; cost
+- **Artifacts:** `docs/evaluation/multi-technology-negative-benchmark.v1.json`; `docs/evaluation/multi-technology-negative-verification.v1.md`; `docs/experiments/comparative-threshold-calibration.v1.json`; `docs/experiment-results/comparative-threshold-calibration-v1-validation.json`; `docs/experiment-results/comparative-threshold-calibration-v1-validation.md`; `docs/experiment-results/comparative-threshold-calibration-v1-validation.csv`
+- **Decision:** Select no comparative threshold. Thresholds 0.60 and 0.62 reach 1.0000 both-language coverage but produce 1.0000 negative FPR. Threshold 0.72 reaches zero FPR but only 0.1250 both-language and both-evidence coverage. The maximum negative score (0.7122) exceeds the minimum positive top score (0.7004), while the weakest positive technology side reaches only 0.6441.
+- **Limitations:** Only eight positive and eight negative validation cases; Exact absence probes are sanity checks rather than semantic proof; Only the threshold changed; The locked general test remains untouched
+- **Next step:** Test an explicit comparative-query architecture such as per-technology query decomposition followed by an answerability or evidence-sufficiency gate; retain 0.68 for ordinary single-technology retrieval.
