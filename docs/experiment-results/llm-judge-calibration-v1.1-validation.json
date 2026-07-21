@@ -1,0 +1,333 @@
+{
+  "schemaVersion": 1,
+  "id": "llm-judge-calibration-v1.1-validation",
+  "createdAt": "2026-07-21T10:05:26.331Z",
+  "protocol": "docs/experiments/llm-judge-calibration.v1.json",
+  "protocolSha256": "ec9961dcb063c681a160fb9da3826d15f1dcc2e899bf1090ff0493487ffec389",
+  "prompt": "docs/evaluation/llm-judge-prompt.v1.json",
+  "promptSha256": "e2821fc01079c54a02a5d270e0c157ad618b51d1a137a17289a2d7bca7c1203c",
+  "humanReviewSha256": "793f0b4563459026a09e0fb0117cc8aadc7cf6ee2c6f0f27c7dc70a258e6835b",
+  "split": "validation-calibration-plus-held-out-audit",
+  "lockedGenerationTestTouched": false,
+  "judge": {
+    "id": "openrouter-gpt-5.4-nano-medium-schema-v1.1",
+    "model": "openai/gpt-5.4-nano",
+    "expectedResponseModel": "openai/gpt-5.4-nano",
+    "expectedResponseProvider": "OpenAI",
+    "providerOrder": [
+      "openai"
+    ],
+    "reasoningEffort": "medium",
+    "inputPriceUsdPerMillionTokens": 0.2,
+    "outputPriceUsdPerMillionTokens": 1.25
+  },
+  "execution": {
+    "rows": 72,
+    "uniqueRequests": 48,
+    "deduplicatedRows": 24,
+    "providerCallsThisRun": 0,
+    "cacheHitsThisRun": 48,
+    "historicalProviderRequests": 50,
+    "historicalValidResponses": 48,
+    "historicalInvalidResponses": 2,
+    "resumptions": 3,
+    "invalidResponseDetails": [
+      {
+        "afterValidResponse": 29,
+        "reason": "HTTP response omitted model identity and was rejected by the provider-pin check."
+      },
+      {
+        "afterValidResponse": 37,
+        "reason": "HTTP response omitted model identity and was rejected by the provider-pin check."
+      }
+    ],
+    "responseModels": [
+      "openai/gpt-5.4-nano"
+    ],
+    "responseProviders": [
+      "OpenAI"
+    ],
+    "finishReasons": {
+      "stop": 48
+    },
+    "promptTokens": 106101,
+    "completionTokens": 26200,
+    "reasoningTokens": 17065,
+    "totalTokens": 132301,
+    "observedCostUsd": 0.04687387999999999,
+    "latencyMs": {
+      "mean": 4588.264166666667,
+      "median": 3455.29,
+      "p95": 10372.9
+    }
+  },
+  "metrics": {
+    "calibration": {
+      "rows": 48,
+      "answerableRows": 24,
+      "unanswerableRows": 24,
+      "primary": {
+        "pooledCoreQuadraticWeightedKappa": 0.4319526627218935,
+        "answerableQualitySpearman": 0.35703120315793446,
+        "binaryPassAgreement": 0.8333333333333334
+      },
+      "scoreBias": {
+        "humanMeanQuality": 0.9270833333333334,
+        "judgeMeanQuality": 0.921875,
+        "judgeMinusHumanMeanQuality": -0.005208333333333333,
+        "dimensions": {
+          "groundedness": {
+            "humanMean": 3.875,
+            "judgeMean": 3.75,
+            "judgeMinusHuman": -0.125
+          },
+          "keyFactCoverage": {
+            "humanMean": 3.5416666666666665,
+            "judgeMean": 3.4166666666666665,
+            "judgeMinusHuman": -0.125
+          },
+          "citationCorrectness": {
+            "humanMean": 3.7916666666666665,
+            "judgeMean": 3.9166666666666665,
+            "judgeMinusHuman": 0.125
+          },
+          "citationCompleteness": {
+            "humanMean": 3.625,
+            "judgeMean": 3.6666666666666665,
+            "judgeMinusHuman": 0.041666666666666664
+          },
+          "directness": {
+            "humanMean": 1.75,
+            "judgeMean": 1.9583333333333333,
+            "judgeMinusHuman": 0.20833333333333334
+          }
+        }
+      },
+      "dimensions": {
+        "groundedness": {
+          "quadraticWeightedKappa": 0.21739130434782594,
+          "meanAbsoluteError": 0.2916666666666667,
+          "exactAgreement": 0.75,
+          "withinOneAgreement": 0.9583333333333334
+        },
+        "keyFactCoverage": {
+          "quadraticWeightedKappa": 0.5767634854771784,
+          "meanAbsoluteError": 0.4583333333333333,
+          "exactAgreement": 0.6666666666666666,
+          "withinOneAgreement": 0.875
+        },
+        "citationCorrectness": {
+          "quadraticWeightedKappa": -0.08196721311475397,
+          "meanAbsoluteError": 0.2916666666666667,
+          "exactAgreement": 0.7916666666666666,
+          "withinOneAgreement": 0.9166666666666666
+        },
+        "citationCompleteness": {
+          "quadraticWeightedKappa": 0.42105263157894735,
+          "meanAbsoluteError": 0.2916666666666667,
+          "exactAgreement": 0.7916666666666666,
+          "withinOneAgreement": 0.9166666666666666
+        },
+        "directness": {
+          "quadraticWeightedKappa": 0.23076923076923073,
+          "meanAbsoluteError": 0.20833333333333334,
+          "exactAgreement": 0.7916666666666666,
+          "withinOneAgreement": 1
+        }
+      },
+      "correctAbstentionAgreement": 1,
+      "flags": {
+        "criticalUnsupportedClaim": {
+          "agreement": 0.9791666666666666,
+          "humanPositiveRate": 0,
+          "judgePositiveRate": 0.020833333333333332
+        },
+        "contradictsEvidence": {
+          "agreement": 1,
+          "humanPositiveRate": 0,
+          "judgePositiveRate": 0
+        },
+        "invalidCitationLabel": {
+          "agreement": 1,
+          "humanPositiveRate": 0,
+          "judgePositiveRate": 0
+        },
+        "generatorFailure": {
+          "agreement": 1,
+          "humanPositiveRate": 0.020833333333333332,
+          "judgePositiveRate": 0.020833333333333332
+        }
+      },
+      "passConfusion": {
+        "truePositive": 38,
+        "trueNegative": 2,
+        "falsePositive": 2,
+        "falseNegative": 6
+      },
+      "structuredValidityRate": 1,
+      "answerabilityConsistencyRate": 1,
+      "providerErrors": 2,
+      "thresholds": {
+        "appliedSeparatelyToCalibrationAndAudit": true,
+        "minimumPooledCoreQuadraticWeightedKappa": 0.6,
+        "minimumAnswerableQualitySpearman": 0.7,
+        "minimumBinaryPassAgreement": 0.8,
+        "requiredStructuredValidityRate": 1,
+        "requiredAnswerabilityConsistencyRate": 1,
+        "maximumProviderErrors": 0
+      }
+    },
+    "audit": {
+      "rows": 24,
+      "answerableRows": 12,
+      "unanswerableRows": 12,
+      "primary": {
+        "pooledCoreQuadraticWeightedKappa": 0.19122257053291536,
+        "answerableQualitySpearman": 0.4948277937369176,
+        "binaryPassAgreement": 0.7916666666666666
+      },
+      "scoreBias": {
+        "humanMeanQuality": 0.9739583333333334,
+        "judgeMeanQuality": 0.8541666666666666,
+        "judgeMinusHumanMeanQuality": -0.11979166666666667,
+        "dimensions": {
+          "groundedness": {
+            "humanMean": 4,
+            "judgeMean": 3.4166666666666665,
+            "judgeMinusHuman": -0.5833333333333334
+          },
+          "keyFactCoverage": {
+            "humanMean": 3.8333333333333335,
+            "judgeMean": 3.5,
+            "judgeMinusHuman": -0.3333333333333333
+          },
+          "citationCorrectness": {
+            "humanMean": 3.9166666666666665,
+            "judgeMean": 3.25,
+            "judgeMinusHuman": -0.6666666666666666
+          },
+          "citationCompleteness": {
+            "humanMean": 3.8333333333333335,
+            "judgeMean": 3.5,
+            "judgeMinusHuman": -0.3333333333333333
+          },
+          "directness": {
+            "humanMean": 1.5833333333333333,
+            "judgeMean": 2,
+            "judgeMinusHuman": 0.4166666666666667
+          }
+        }
+      },
+      "dimensions": {
+        "groundedness": {
+          "quadraticWeightedKappa": 0,
+          "meanAbsoluteError": 0.5833333333333334,
+          "exactAgreement": 0.6666666666666666,
+          "withinOneAgreement": 0.75
+        },
+        "keyFactCoverage": {
+          "quadraticWeightedKappa": 0.5,
+          "meanAbsoluteError": 0.3333333333333333,
+          "exactAgreement": 0.75,
+          "withinOneAgreement": 0.9166666666666666
+        },
+        "citationCorrectness": {
+          "quadraticWeightedKappa": 0.1515151515151515,
+          "meanAbsoluteError": 0.6666666666666666,
+          "exactAgreement": 0.5833333333333334,
+          "withinOneAgreement": 0.75
+        },
+        "citationCompleteness": {
+          "quadraticWeightedKappa": 0.16666666666666663,
+          "meanAbsoluteError": 0.5,
+          "exactAgreement": 0.6666666666666666,
+          "withinOneAgreement": 0.8333333333333334
+        },
+        "directness": {
+          "quadraticWeightedKappa": 0,
+          "meanAbsoluteError": 0.4166666666666667,
+          "exactAgreement": 0.5833333333333334,
+          "withinOneAgreement": 1
+        }
+      },
+      "correctAbstentionAgreement": 1,
+      "flags": {
+        "criticalUnsupportedClaim": {
+          "agreement": 0.9166666666666666,
+          "humanPositiveRate": 0,
+          "judgePositiveRate": 0.08333333333333333
+        },
+        "contradictsEvidence": {
+          "agreement": 1,
+          "humanPositiveRate": 0,
+          "judgePositiveRate": 0
+        },
+        "invalidCitationLabel": {
+          "agreement": 1,
+          "humanPositiveRate": 0,
+          "judgePositiveRate": 0
+        },
+        "generatorFailure": {
+          "agreement": 1,
+          "humanPositiveRate": 0,
+          "judgePositiveRate": 0
+        }
+      },
+      "passConfusion": {
+        "truePositive": 18,
+        "trueNegative": 1,
+        "falsePositive": 0,
+        "falseNegative": 5
+      },
+      "structuredValidityRate": 1,
+      "answerabilityConsistencyRate": 1,
+      "providerErrors": 2,
+      "thresholds": {
+        "appliedSeparatelyToCalibrationAndAudit": true,
+        "minimumPooledCoreQuadraticWeightedKappa": 0.6,
+        "minimumAnswerableQualitySpearman": 0.7,
+        "minimumBinaryPassAgreement": 0.8,
+        "requiredStructuredValidityRate": 1,
+        "requiredAnswerabilityConsistencyRate": 1,
+        "maximumProviderErrors": 0
+      }
+    }
+  },
+  "acceptance": {
+    "calibration": {
+      "checks": {
+        "pooledCoreQuadraticWeightedKappa": false,
+        "answerableQualitySpearman": false,
+        "binaryPassAgreement": true,
+        "structuredValidityRate": true,
+        "answerabilityConsistencyRate": true,
+        "providerErrors": false
+      },
+      "allPassed": false
+    },
+    "audit": {
+      "checks": {
+        "pooledCoreQuadraticWeightedKappa": false,
+        "answerableQualitySpearman": false,
+        "binaryPassAgreement": false,
+        "structuredValidityRate": true,
+        "answerabilityConsistencyRate": true,
+        "providerErrors": false
+      },
+      "allPassed": false
+    },
+    "allPassed": false,
+    "decision": "Not eligible. Any new prompt or model requires a separate preregistered attempt."
+  },
+  "secondaryHumanAudit": {
+    "file": "docs/experiment-results/llm-judge-calibration-v1.1-disagreement-audit.csv",
+    "disagreementRows": 5,
+    "sampledAgreementRows": 6,
+    "completed": false
+  },
+  "limitations": [
+    "The human reference has one reviewer and no inter-rater reliability estimate.",
+    "The held-out audit is internal to validation and is not the locked generation test.",
+    "Repeated deterministic abstentions share one provider judgment but remain separate generator-level agreement rows."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "experimentId": "llm-judge-calibration-v1.1",
+  "resumptions": 3,
+  "providerRequests": 50,
+  "validResponses": 48,
+  "invalidResponses": 2,
+  "invalidResponseDetails": [
+    { "afterValidResponse": 29, "reason": "HTTP response omitted model identity and was rejected by the provider-pin check." },
+    { "afterValidResponse": 37, "reason": "HTTP response omitted model identity and was rejected by the provider-pin check." }
+  ],
+  "validResponseCostUsd": 0.04687388,
+  "invalidResponseCost": "Unavailable because validation rejected each response before usage was persisted.",
+  "cachePolicy": "Every valid response was persisted immediately; resumptions reused prior responses without new provider calls."
+}

@@ -24,6 +24,7 @@ type Protocol = {
   };
 };
 type SplitManifest = { sourceSha256: string; assignments: Array<{ rowId: string; split: "calibration" | "audit" }> };
+type ExecutionLedger = { resumptions: number; providerRequests: number; validResponses: number; invalidResponses: number; invalidResponseDetails: Array<{ afterValidResponse: number; reason: string }>; validResponseCostUsd: number; invalidResponseCost: string };
 type Evaluated = { row: ReviewCsvRow; rowId: string; split: "calibration" | "audit"; human: JudgeLabel; judge: JudgeLabel; result: JudgeResult };
 
 const coreDimensions = ["groundedness", "keyFactCoverage", "citationCorrectness", "citationCompleteness"] as const;
@@ -37,12 +38,14 @@ async function main() {
   const promptPath = path.resolve("docs/evaluation/llm-judge-prompt.v1.json");
   const protocolPath = path.resolve("docs/experiments/llm-judge-calibration.v1.1.json");
   const splitPath = path.resolve("docs/evaluation/llm-judge-split.v1.json");
+  const ledgerPath = path.resolve("docs/experiment-results/llm-judge-calibration-v1.1-execution-ledger.json");
   const outputBase = path.resolve("docs/experiment-results/llm-judge-calibration-v1.1-validation");
   const inputText = await fs.readFile(inputPath, "utf8");
   const { rows } = parseCsv(inputText);
   const prompt = JSON.parse(await fs.readFile(promptPath, "utf8")) as PromptArtifact;
   const protocol = JSON.parse(await fs.readFile(protocolPath, "utf8")) as Protocol;
   const split = JSON.parse(await fs.readFile(splitPath, "utf8")) as SplitManifest;
+  const ledger = JSON.parse(await fs.readFile(ledgerPath, "utf8")) as ExecutionLedger;
   if (sha256(inputText) !== split.sourceSha256) throw new Error("Human-reference CSV no longer matches the frozen split manifest.");
   const splitByRow = new Map(split.assignments.map((item) => [item.rowId, item.split]));
   validateRows(rows, splitByRow);
@@ -79,7 +82,7 @@ async function main() {
     if (result.output.answerability !== task.row.answerability) throw new Error(`${task.rowId}: judge answerability ${result.output.answerability} differs from task ${task.row.answerability}.`);
     return { row: task.row, rowId: task.rowId, split: task.split, human: humanLabel(task.row), judge: outputLabel(result.output), result };
   });
-  const splitMetrics = Object.fromEntries((["calibration", "audit"] as const).map((name) => [name, summarize(evaluated.filter((item) => item.split === name), protocol)])) as Record<"calibration" | "audit", ReturnType<typeof summarize>>;
+  const splitMetrics = Object.fromEntries((["calibration", "audit"] as const).map((name) => [name, summarize(evaluated.filter((item) => item.split === name), protocol, ledger.invalidResponses)])) as Record<"calibration" | "audit", ReturnType<typeof summarize>>;
   const uniqueResults = [...resultByKey.values()];
   const checks = Object.fromEntries((["calibration", "audit"] as const).map((name) => [name, acceptance(splitMetrics[name], protocol)])) as Record<"calibration" | "audit", ReturnType<typeof acceptance>>;
   const auditRows = buildAuditRows(evaluated.filter((item) => item.split === "audit"));
@@ -101,6 +104,11 @@ async function main() {
       deduplicatedRows: evaluated.length - uniqueTasks.length,
       providerCallsThisRun: uniqueResults.filter((result) => !result.cacheHit).length,
       cacheHitsThisRun: uniqueResults.filter((result) => result.cacheHit).length,
+      historicalProviderRequests: ledger.providerRequests,
+      historicalValidResponses: ledger.validResponses,
+      historicalInvalidResponses: ledger.invalidResponses,
+      resumptions: ledger.resumptions,
+      invalidResponseDetails: ledger.invalidResponseDetails,
       responseModels: [...new Set(uniqueResults.map((result) => result.responseModel))],
       responseProviders: [...new Set(uniqueResults.map((result) => result.responseProvider))],
       finishReasons: frequencies(uniqueResults.map((result) => result.finishReason ?? "unknown")),
@@ -122,7 +130,7 @@ async function main() {
     },
     secondaryHumanAudit: {
       file: "docs/experiment-results/llm-judge-calibration-v1.1-disagreement-audit.csv",
-      disagreementRows: auditRows.filter((row) => row.needs_audit === "yes").length,
+      disagreementRows: auditRows.filter((row) => row.audit_reason !== "" && row.audit_reason !== "deterministic-agreement-sample").length,
       sampledAgreementRows: auditRows.filter((row) => row.audit_reason === "deterministic-agreement-sample").length,
       completed: false,
     },
@@ -139,7 +147,7 @@ async function main() {
   console.log(`Acceptance: ${artifact.acceptance.allPassed ? "PASS" : "FAIL"}. Cost: $${artifact.execution.observedCostUsd.toFixed(6)}.`);
 }
 
-function summarize(items: Evaluated[], protocol: Protocol) {
+function summarize(items: Evaluated[], protocol: Protocol, providerErrors: number) {
   const answerable = items.filter((item) => item.human.answerability === "answerable");
   const humanCore = answerable.flatMap((item) => coreDimensions.map((key) => item.human[key]!));
   const judgeCore = answerable.flatMap((item) => coreDimensions.map((key) => item.judge[key]!));
@@ -153,6 +161,16 @@ function summarize(items: Evaluated[], protocol: Protocol) {
       pooledCoreQuadraticWeightedKappa: quadraticWeightedKappa(humanCore, judgeCore, 4),
       answerableQualitySpearman: spearmanCorrelation(answerable.map((item) => normalizedQuality(item.human)), answerable.map((item) => normalizedQuality(item.judge))),
       binaryPassAgreement: agreement(humanPass, judgePass),
+    },
+    scoreBias: {
+      humanMeanQuality: mean(answerable.map((item) => normalizedQuality(item.human))),
+      judgeMeanQuality: mean(answerable.map((item) => normalizedQuality(item.judge))),
+      judgeMinusHumanMeanQuality: mean(answerable.map((item) => normalizedQuality(item.judge) - normalizedQuality(item.human))),
+      dimensions: Object.fromEntries(allDimensions.map((key) => [key, {
+        humanMean: mean(answerable.map((item) => item.human[key]!)),
+        judgeMean: mean(answerable.map((item) => item.judge[key]!)),
+        judgeMinusHuman: mean(answerable.map((item) => item.judge[key]! - item.human[key]!)),
+      }])),
     },
     dimensions: Object.fromEntries(allDimensions.map((key) => {
       const reference = answerable.map((item) => item.human[key]!);
@@ -177,7 +195,7 @@ function summarize(items: Evaluated[], protocol: Protocol) {
     passConfusion: confusion(humanPass, judgePass),
     structuredValidityRate: 1,
     answerabilityConsistencyRate: 1,
-    providerErrors: 0,
+    providerErrors,
     thresholds: protocol.acceptanceCriteria,
   };
 }
@@ -301,7 +319,7 @@ function renderMarkdown(artifact: {
     const metrics = artifact.metrics[name];
     return `| ${name} | ${metrics.rows} | ${metrics.primary.pooledCoreQuadraticWeightedKappa.toFixed(4)} | ${metrics.primary.answerableQualitySpearman === null ? "n/a" : metrics.primary.answerableQualitySpearman.toFixed(4)} | ${metrics.primary.binaryPassAgreement.toFixed(4)} | ${artifact.acceptance[name].allPassed ? "pass" : "fail"} |`;
   };
-  return `# LLM judge calibration v1.1\n\n- Judge: **${artifact.judge.model}** via **${artifact.execution.responseProviders.join(", ")}**, medium reasoning\n- Human-reference rows: **${artifact.execution.rows}**; unique provider inputs: **${artifact.execution.uniqueRequests}**\n- Locked generation test touched: **no**\n- Observed provider cost: **$${artifact.execution.observedCostUsd.toFixed(6)}**\n\n| Split | Rows | Pooled core QWK | Quality Spearman | Binary pass agreement | Guardrails |\n|---|---:|---:|---:|---:|---|\n${row("calibration")}\n${row("audit")}\n\n## Decision\n\n**${artifact.acceptance.allPassed ? "PASS" : "FAIL"}** — ${artifact.acceptance.decision}\n\nA secondary human audit remains pending for ${artifact.secondaryHumanAudit.disagreementRows} disagreements and ${artifact.secondaryHumanAudit.sampledAgreementRows} deterministically sampled agreements. The judge is not enabled in production.\n\n## Interpretation limits\n\n${artifact.limitations.map((item: string) => `- ${item}`).join("\n")}\n`;
+  return `# LLM judge calibration v1.1\n\n- Judge: **${artifact.judge.model}** via **${artifact.execution.responseProviders.join(", ")}**, medium reasoning\n- Human-reference rows: **${artifact.execution.rows}**; unique provider inputs: **${artifact.execution.uniqueRequests}**\n- Locked generation test touched: **no**\n- Observed valid-response cost: **$${artifact.execution.observedCostUsd.toFixed(6)}**\n\n| Split | Rows | Pooled core QWK | Quality Spearman | Binary pass agreement | Guardrails |\n|---|---:|---:|---:|---:|---|\n${row("calibration")}\n${row("audit")}\n\n## Decision\n\n**${artifact.acceptance.allPassed ? "PASS" : "FAIL"}** — ${artifact.acceptance.decision}\n\nThe judge matched every abstention decision, and its calibration mean quality (${artifact.metrics.calibration.scoreBias.judgeMeanQuality.toFixed(4)}) was close to the human mean (${artifact.metrics.calibration.scoreBias.humanMeanQuality.toFixed(4)}). This did not translate into reliable item ordering: calibration Spearman was only ${artifact.metrics.calibration.primary.answerableQualitySpearman?.toFixed(4)}. On the held-out audit, the judge was materially stricter (mean ${artifact.metrics.audit.scoreBias.judgeMeanQuality.toFixed(4)} versus human ${artifact.metrics.audit.scoreBias.humanMeanQuality.toFixed(4)}) and missed the kappa, correlation, and binary-agreement thresholds. Two intermittent provider responses without model identity were rejected and are recorded in the execution ledger.\n\nA secondary human audit remains pending for ${artifact.secondaryHumanAudit.disagreementRows} disagreements and ${artifact.secondaryHumanAudit.sampledAgreementRows} deterministically sampled agreements. The judge is not enabled in production.\n\n## Interpretation limits\n\n${artifact.limitations.map((item: string) => `- ${item}`).join("\n")}\n`;
 }
 
 function loadLocalEnv() {
