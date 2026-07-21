@@ -255,6 +255,20 @@
       "decision": "Stop before agreement analysis. The third response exposed an ambiguity in the single nullable JSON schema; two valid responses cost $0.0031475 and one additional request has unavailable usage. No human score was inspected for the repair.",
       "limitations": ["Single quickly completed human reviewer", "No inter-rater reliability estimate", "Low score variance may destabilize correlation metrics", "The internal audit is not the locked generation test"],
       "nextStep": "Preregister a successor using separate answerable and unanswerable schemas, with every model and metric control unchanged."
+    },
+    {
+      "order": 19,
+      "id": "llm-judge-calibration-v1.1",
+      "thesisSection": "LLM-as-a-judge calibration",
+      "researchQuestion": "Can GPT-5.4 Nano reproduce the human assessment when task-specific structured schemas remove the v1 ambiguity?",
+      "status": "preregistered",
+      "variable": "Answerability-specific response schema; every scientific and provider control remains identical to v1",
+      "controls": ["GPT-5.4 Nano medium", "same rubric prompt text", "same 48/24 split", "same pass rule and thresholds", "temperature 0", "OpenAI provider pinned", "fallbacks disabled"],
+      "metrics": ["Pooled core quadratic weighted kappa", "answerable quality Spearman correlation", "binary pass agreement", "per-dimension agreement", "latency", "tokens", "cost"],
+      "artifacts": ["docs/experiments/llm-judge-calibration.v1.1.json", "docs/evaluation/llm-judge-prompt.v1.json", "docs/evaluation/llm-judge-split.v1.json"],
+      "decision": "Pending. This is a schema-only repair preregistered without computing v1 agreement or inspecting human scores.",
+      "limitations": ["Single quickly completed human reviewer", "No inter-rater reliability estimate", "Internal audit is not the locked test", "v1 incurred a small separately recorded failed-attempt cost"],
+      "nextStep": "Execute 48 unique requests and report calibration and audit metrics separately."
     }
   ]
 }

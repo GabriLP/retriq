@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { parseCsv, type ReviewCsvRow } from "../src/lib/evaluation/generation-review";
 import { agreement, mean, meanAbsoluteError, normalizedQuality, passesQuality, quadraticWeightedKappa, spearmanCorrelation, type JudgeLabel } from "../src/lib/evaluation/judge-metrics";
-import { judgeCacheKey, judgeWithOpenRouter, type JudgeCandidate, type JudgeOutput, type JudgeResult } from "../src/lib/evaluation/judge-provider";
+import { buildJudgeResponseSchema, judgeCacheKey, judgeWithOpenRouter, type JudgeCandidate, type JudgeOutput, type JudgeResult } from "../src/lib/evaluation/judge-provider";
 
 type PromptArtifact = { systemInstruction: string; scoreAnchors: Record<string, unknown>; responseSchema: Record<string, unknown> };
 type Protocol = {
@@ -35,9 +35,9 @@ async function main() {
   const allowProviderRequests = process.argv.includes("--allow-provider-requests");
   const inputPath = path.resolve("docs/evaluation/generation-human-review-v1.completed.csv");
   const promptPath = path.resolve("docs/evaluation/llm-judge-prompt.v1.json");
-  const protocolPath = path.resolve("docs/experiments/llm-judge-calibration.v1.json");
+  const protocolPath = path.resolve("docs/experiments/llm-judge-calibration.v1.1.json");
   const splitPath = path.resolve("docs/evaluation/llm-judge-split.v1.json");
-  const outputBase = path.resolve("docs/experiment-results/llm-judge-calibration-v1-validation");
+  const outputBase = path.resolve("docs/experiment-results/llm-judge-calibration-v1.1-validation");
   const inputText = await fs.readFile(inputPath, "utf8");
   const { rows } = parseCsv(inputText);
   const prompt = JSON.parse(await fs.readFile(promptPath, "utf8")) as PromptArtifact;
@@ -60,7 +60,7 @@ async function main() {
   const systemInstruction = `${prompt.systemInstruction}\n\nScore anchors:\n${JSON.stringify(prompt.scoreAnchors, null, 2)}`;
   const tasks = rows.map((row) => {
     const userPrompt = buildUserPrompt(row);
-    const options = { candidate, systemInstruction, userPrompt, schema: prompt.responseSchema, maxOutputTokens: protocol.judge.maxCompletionTokens };
+    const options = { candidate, systemInstruction, userPrompt, schema: buildJudgeResponseSchema(prompt.responseSchema, row.answerability as "answerable" | "unanswerable"), maxOutputTokens: protocol.judge.maxCompletionTokens };
     return { row, rowId: rowId(row), split: splitByRow.get(rowId(row))!, userPrompt, cacheKey: judgeCacheKey(options), options };
   });
   const uniqueTasks = [...new Map(tasks.map((task) => [task.cacheKey, task])).values()];
@@ -85,7 +85,7 @@ async function main() {
   const auditRows = buildAuditRows(evaluated.filter((item) => item.split === "audit"));
   const artifact = {
     schemaVersion: 1,
-    id: "llm-judge-calibration-v1-validation",
+    id: "llm-judge-calibration-v1.1-validation",
     createdAt: new Date().toISOString(),
     protocol: "docs/experiments/llm-judge-calibration.v1.json",
     protocolSha256: sha256(await fs.readFile(protocolPath, "utf8")),
@@ -121,7 +121,7 @@ async function main() {
         : "Not eligible. Any new prompt or model requires a separate preregistered attempt.",
     },
     secondaryHumanAudit: {
-      file: "docs/experiment-results/llm-judge-calibration-v1-disagreement-audit.csv",
+      file: "docs/experiment-results/llm-judge-calibration-v1.1-disagreement-audit.csv",
       disagreementRows: auditRows.filter((row) => row.needs_audit === "yes").length,
       sampledAgreementRows: auditRows.filter((row) => row.audit_reason === "deterministic-agreement-sample").length,
       completed: false,
@@ -134,7 +134,7 @@ async function main() {
   };
   await fs.writeFile(`${outputBase}.json`, `${JSON.stringify(artifact, null, 2)}\n`);
   await fs.writeFile(`${outputBase}.md`, renderMarkdown(artifact));
-  await fs.writeFile(path.resolve("docs/experiment-results/llm-judge-calibration-v1-disagreement-audit.csv"), toCsv(auditRows));
+  await fs.writeFile(path.resolve("docs/experiment-results/llm-judge-calibration-v1.1-disagreement-audit.csv"), toCsv(auditRows));
   console.log(`Wrote ${path.relative(process.cwd(), outputBase)}.{json,md} and disagreement audit CSV.`);
   console.log(`Acceptance: ${artifact.acceptance.allPassed ? "PASS" : "FAIL"}. Cost: $${artifact.execution.observedCostUsd.toFixed(6)}.`);
 }
@@ -301,7 +301,7 @@ function renderMarkdown(artifact: {
     const metrics = artifact.metrics[name];
     return `| ${name} | ${metrics.rows} | ${metrics.primary.pooledCoreQuadraticWeightedKappa.toFixed(4)} | ${metrics.primary.answerableQualitySpearman === null ? "n/a" : metrics.primary.answerableQualitySpearman.toFixed(4)} | ${metrics.primary.binaryPassAgreement.toFixed(4)} | ${artifact.acceptance[name].allPassed ? "pass" : "fail"} |`;
   };
-  return `# LLM judge calibration v1\n\n- Judge: **${artifact.judge.model}** via **${artifact.execution.responseProviders.join(", ")}**, medium reasoning\n- Human-reference rows: **${artifact.execution.rows}**; unique provider inputs: **${artifact.execution.uniqueRequests}**\n- Locked generation test touched: **no**\n- Observed provider cost: **$${artifact.execution.observedCostUsd.toFixed(6)}**\n\n| Split | Rows | Pooled core QWK | Quality Spearman | Binary pass agreement | Guardrails |\n|---|---:|---:|---:|---:|---|\n${row("calibration")}\n${row("audit")}\n\n## Decision\n\n**${artifact.acceptance.allPassed ? "PASS" : "FAIL"}** — ${artifact.acceptance.decision}\n\nA secondary human audit remains pending for ${artifact.secondaryHumanAudit.disagreementRows} disagreements and ${artifact.secondaryHumanAudit.sampledAgreementRows} deterministically sampled agreements. The judge is not enabled in production.\n\n## Interpretation limits\n\n${artifact.limitations.map((item: string) => `- ${item}`).join("\n")}\n`;
+  return `# LLM judge calibration v1.1\n\n- Judge: **${artifact.judge.model}** via **${artifact.execution.responseProviders.join(", ")}**, medium reasoning\n- Human-reference rows: **${artifact.execution.rows}**; unique provider inputs: **${artifact.execution.uniqueRequests}**\n- Locked generation test touched: **no**\n- Observed provider cost: **$${artifact.execution.observedCostUsd.toFixed(6)}**\n\n| Split | Rows | Pooled core QWK | Quality Spearman | Binary pass agreement | Guardrails |\n|---|---:|---:|---:|---:|---|\n${row("calibration")}\n${row("audit")}\n\n## Decision\n\n**${artifact.acceptance.allPassed ? "PASS" : "FAIL"}** — ${artifact.acceptance.decision}\n\nA secondary human audit remains pending for ${artifact.secondaryHumanAudit.disagreementRows} disagreements and ${artifact.secondaryHumanAudit.sampledAgreementRows} deterministically sampled agreements. The judge is not enabled in production.\n\n## Interpretation limits\n\n${artifact.limitations.map((item: string) => `- ${item}`).join("\n")}\n`;
 }
 
 function loadLocalEnv() {

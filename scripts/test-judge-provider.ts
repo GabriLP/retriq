@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { judgeWithOpenRouter, validateJudgeOutput, type JudgeCandidate } from "../src/lib/evaluation/judge-provider";
+import { buildJudgeResponseSchema, judgeWithOpenRouter, validateJudgeOutput, type JudgeCandidate } from "../src/lib/evaluation/judge-provider";
 
 const candidate: JudgeCandidate = {
   id: "test-judge",
@@ -25,6 +25,12 @@ const output = {
 };
 validateJudgeOutput(output);
 assert.throws(() => validateJudgeOutput({ ...output, scores: { ...output.scores, groundedness: 5 } }));
+const baseSchema = { properties: { answerability: {}, scores: { properties: Object.fromEntries(Object.keys(output.scores).map((key) => [key, {}])) } } };
+const answerableSchema = buildJudgeResponseSchema(baseSchema, "answerable") as typeof baseSchema;
+assert.deepEqual(answerableSchema.properties.answerability, { type: "string", const: "answerable" });
+assert.deepEqual(answerableSchema.properties.scores.properties.correctAbstention, { type: "null" });
+const unanswerableSchema = buildJudgeResponseSchema(baseSchema, "unanswerable") as typeof baseSchema;
+assert.deepEqual(unanswerableSchema.properties.scores.properties.groundedness, { type: "null" });
 
 async function main() {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), "retriq-judge-test-"));

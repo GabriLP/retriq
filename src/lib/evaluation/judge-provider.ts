@@ -167,6 +167,27 @@ export function judgeCacheKey(options: Pick<Options, "candidate" | "systemInstru
   }));
 }
 
+export function buildJudgeResponseSchema(baseSchema: Record<string, unknown>, answerability: "answerable" | "unanswerable") {
+  const schema = structuredClone(baseSchema) as {
+    properties: {
+      answerability: Record<string, unknown>;
+      scores: { properties: Record<keyof JudgeScores, Record<string, unknown>> };
+    };
+  };
+  schema.properties.answerability = { type: "string", const: answerability };
+  const maxima: Record<keyof JudgeScores, number> = {
+    groundedness: 4, keyFactCoverage: 4, citationCorrectness: 4,
+    citationCompleteness: 4, directness: 2, correctAbstention: 1,
+  };
+  for (const [key, maximum] of Object.entries(maxima) as Array<[keyof JudgeScores, number]>) {
+    const applicable = answerability === "answerable" ? key !== "correctAbstention" : key === "correctAbstention";
+    schema.properties.scores.properties[key] = applicable
+      ? { type: "integer", minimum: 0, maximum }
+      : { type: "null" };
+  }
+  return schema as unknown as Record<string, unknown>;
+}
+
 export function validateJudgeOutput(value: unknown): JudgeOutput {
   if (!value || typeof value !== "object") throw new Error("Judge output must be an object.");
   const output = value as JudgeOutput;
