@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "id": "llm-judge-calibration-v1",
+  "status": "preregistered",
+  "researchQuestion": "Can one low-cost independent LLM judge reproduce the existing human assessment of frozen RAG answers well enough to support later automatic evaluation?",
+  "hypothesis": "GPT-5.4 Nano at medium reasoning will meet all agreement thresholds on both the calibration and held-out audit subsets while producing valid structured outputs for every item.",
+  "independence": {
+    "humanLabelsAreReference": true,
+    "judgeModelWasNotAGeneratorCandidate": true,
+    "generatorCandidatesExcluded": ["Gemini 3.5 Flash", "GLM-5.2", "Grok 4.5"],
+    "judgeInputExcludesHumanScoresNotesReviewerAndGeneratorIdentity": true,
+    "selfJudgingProhibited": true
+  },
+  "judge": {
+    "id": "openrouter-gpt-5.4-nano-medium",
+    "provider": "openrouter",
+    "model": "openai/gpt-5.4-nano",
+    "expectedResponseModel": "openai/gpt-5.4-nano",
+    "providerOrder": ["openai"],
+    "expectedResponseProvider": "OpenAI",
+    "allowFallbacks": false,
+    "reasoningEffort": "medium",
+    "temperature": 0,
+    "maxCompletionTokens": 1800,
+    "inputPriceUsdPerMillionTokens": 0.2,
+    "outputPriceUsdPerMillionTokens": 1.25,
+    "priceObservedOn": "2026-07-21",
+    "priceSources": [
+      "https://openrouter.ai/openai/gpt-5.4-nano/performance",
+      "https://artificialanalysis.ai/models/gpt-5-4-nano-medium"
+    ]
+  },
+  "inputs": {
+    "humanReview": "docs/evaluation/generation-human-review-v1.completed.csv",
+    "split": "docs/evaluation/llm-judge-split.v1.json",
+    "rubric": "docs/evaluation/generation-human-rubric.v1.json",
+    "prompt": "docs/evaluation/llm-judge-prompt.v1.json",
+    "rows": 72,
+    "expectedUniqueRequests": 48,
+    "deduplication": "Identical unanswerable task inputs are judged once and reused across the three blinded generator rows."
+  },
+  "splitPolicy": {
+    "calibrationRows": 48,
+    "auditRows": 24,
+    "calibrationRole": "Measure agreement and diagnose the frozen judge; no audit labels may be used to edit prompt v1 or thresholds.",
+    "auditRole": "One-time held-out validation audit after prompt v1 and acceptance criteria are frozen.",
+    "lockedGenerationTestTouched": false
+  },
+  "primaryMetrics": {
+    "pooledCoreQuadraticWeightedKappa": "Flatten groundedness, key-fact coverage, citation correctness, and citation completeness over answerable rows; score range 0-4.",
+    "answerableQualitySpearman": "Spearman correlation between human and judge normalized four-dimension quality over answerable rows.",
+    "binaryPassAgreement": "Exact agreement under the frozen answer-level pass rule over all rows."
+  },
+  "passRule": {
+    "answerable": "All four core scores are at least 3 and every binary failure flag is 0.",
+    "unanswerable": "correctAbstention is 1 and every binary failure flag is 0.",
+    "directnessIsDiagnosticOnly": true
+  },
+  "acceptanceCriteria": {
+    "appliedSeparatelyToCalibrationAndAudit": true,
+    "minimumPooledCoreQuadraticWeightedKappa": 0.6,
+    "minimumAnswerableQualitySpearman": 0.7,
+    "minimumBinaryPassAgreement": 0.8,
+    "requiredStructuredValidityRate": 1,
+    "requiredAnswerabilityConsistencyRate": 1,
+    "maximumProviderErrors": 0
+  },
+  "diagnostics": [
+    "Per-dimension QWK, MAE, exact agreement, and within-one agreement",
+    "Flag agreement and prevalence",
+    "Pass/fail confusion matrix",
+    "Provider model, provider, finish reason, latency, token usage, cache hits, and cost",
+    "Every pass mismatch, score delta of at least two, or flag mismatch",
+    "A deterministic random sample of six audit agreements for secondary human review"
+  ],
+  "decisionPolicy": {
+    "pass": "Freeze GPT-5.4 Nano and prompt v1 for later automatic evaluation, subject to secondary human disagreement audit.",
+    "fail": "Do not silently change models or prompt. Document the failure; any prompt v2 or GPT-5.4 Mini attempt must be separately preregistered and may use calibration labels only.",
+    "testPolicy": "Do not use the locked 24-case generation test until judge selection and disagreement audit are complete."
+  },
+  "limitations": [
+    "The human reference was produced quickly by one reviewer, so it is not ground truth and has no inter-rater reliability estimate.",
+    "Kappa and correlation may be unstable when human scores have low variance.",
+    "Repeated deterministic abstentions count as separate generator rows in agreement metrics but use one deduplicated judge request.",
+    "Provider availability, routing labels, and prices can change."
+  ]
+}

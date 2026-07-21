@@ -43,6 +43,7 @@ yarn-error.log*
 /data/embedding-cache/*
 /data/reranker-cache/*
 /data/generation-cache/*
+/data/judge-cache/*
 !/data/vector-store.json
 !/data/.gitkeep
 !/data/source/.gitkeep

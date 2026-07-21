@@ -1,0 +1,528 @@
+{
+  "schemaVersion": 1,
+  "id": "retriq-llm-judge-split-v1",
+  "source": "docs/evaluation/generation-human-review-v1.completed.csv",
+  "sourceSha256": "793f0b4563459026a09e0fb0117cc8aadc7cf6ee2c6f0f27c7dc70a258e6835b",
+  "algorithm": "SHA-256 order with fixed salt; answerable rows stratified 8/4 by blind variant; unanswerable cases grouped before an 8/4 split so repeated deterministic answers cannot cross splits.",
+  "salt": "retriq-llm-judge-calibration-v1",
+  "counts": {
+    "calibration": {
+      "rows": 48,
+      "answerableRows": 24,
+      "unanswerableRows": 24,
+      "uniqueUnanswerableCases": 8
+    },
+    "audit": {
+      "rows": 24,
+      "answerableRows": 12,
+      "unanswerableRows": 12,
+      "uniqueUnanswerableCases": 4
+    }
+  },
+  "assignments": [
+    {
+      "rowId": "bash-fish-argparse-001::variant-015380ad",
+      "caseId": "bash-fish-argparse-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "bash-fish-argparse-001::variant-20c2ee7c",
+      "caseId": "bash-fish-argparse-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "bash-fish-argparse-001::variant-cff457f4",
+      "caseId": "bash-fish-argparse-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "c-msvc-sal-annotations-001::variant-015380ad",
+      "caseId": "c-msvc-sal-annotations-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "c-msvc-sal-annotations-001::variant-20c2ee7c",
+      "caseId": "c-msvc-sal-annotations-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "c-msvc-sal-annotations-001::variant-cff457f4",
+      "caseId": "c-msvc-sal-annotations-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "c-standard-purpose-001::variant-015380ad",
+      "caseId": "c-standard-purpose-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "c-standard-purpose-001::variant-20c2ee7c",
+      "caseId": "c-standard-purpose-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "c-standard-purpose-001::variant-cff457f4",
+      "caseId": "c-standard-purpose-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "cpp-cmake-targets-001::variant-015380ad",
+      "caseId": "cpp-cmake-targets-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "cpp-cmake-targets-001::variant-20c2ee7c",
+      "caseId": "cpp-cmake-targets-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "cpp-cmake-targets-001::variant-cff457f4",
+      "caseId": "cpp-cmake-targets-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "cpp-move-constructor-001::variant-015380ad",
+      "caseId": "cpp-move-constructor-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "cpp-move-constructor-001::variant-20c2ee7c",
+      "caseId": "cpp-move-constructor-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "cpp-move-constructor-001::variant-cff457f4",
+      "caseId": "cpp-move-constructor-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "java-android-activity-lifecycle-001::variant-015380ad",
+      "caseId": "java-android-activity-lifecycle-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "java-android-activity-lifecycle-001::variant-20c2ee7c",
+      "caseId": "java-android-activity-lifecycle-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "java-android-activity-lifecycle-001::variant-cff457f4",
+      "caseId": "java-android-activity-lifecycle-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "java-ods-dual-array-deque-001::variant-015380ad",
+      "caseId": "java-ods-dual-array-deque-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "java-ods-dual-array-deque-001::variant-20c2ee7c",
+      "caseId": "java-ods-dual-array-deque-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "java-ods-dual-array-deque-001::variant-cff457f4",
+      "caseId": "java-ods-dual-array-deque-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "java-ods-red-black-tree-001::variant-015380ad",
+      "caseId": "java-ods-red-black-tree-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "java-ods-red-black-tree-001::variant-20c2ee7c",
+      "caseId": "java-ods-red-black-tree-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "java-ods-red-black-tree-001::variant-cff457f4",
+      "caseId": "java-ods-red-black-tree-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "java-spec-release-001::variant-015380ad",
+      "caseId": "java-spec-release-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "java-spec-release-001::variant-20c2ee7c",
+      "caseId": "java-spec-release-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "java-spec-release-001::variant-cff457f4",
+      "caseId": "java-spec-release-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "javascript-array-filter-holes-001::variant-015380ad",
+      "caseId": "javascript-array-filter-holes-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "javascript-array-filter-holes-001::variant-20c2ee7c",
+      "caseId": "javascript-array-filter-holes-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "javascript-array-filter-holes-001::variant-cff457f4",
+      "caseId": "javascript-array-filter-holes-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "javascript-promise-all-001::variant-015380ad",
+      "caseId": "javascript-promise-all-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "javascript-promise-all-001::variant-20c2ee7c",
+      "caseId": "javascript-promise-all-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "javascript-promise-all-001::variant-cff457f4",
+      "caseId": "javascript-promise-all-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "kotlin-gradle-plugin-001::variant-015380ad",
+      "caseId": "kotlin-gradle-plugin-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "kotlin-gradle-plugin-001::variant-20c2ee7c",
+      "caseId": "kotlin-gradle-plugin-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "kotlin-gradle-plugin-001::variant-cff457f4",
+      "caseId": "kotlin-gradle-plugin-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "postgresql-19-release-001::variant-015380ad",
+      "caseId": "postgresql-19-release-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "postgresql-19-release-001::variant-20c2ee7c",
+      "caseId": "postgresql-19-release-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "postgresql-19-release-001::variant-cff457f4",
+      "caseId": "postgresql-19-release-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "python-parameter-kinds-001::variant-015380ad",
+      "caseId": "python-parameter-kinds-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "python-parameter-kinds-001::variant-20c2ee7c",
+      "caseId": "python-parameter-kinds-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "python-parameter-kinds-001::variant-cff457f4",
+      "caseId": "python-parameter-kinds-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "react-effects-001::variant-015380ad",
+      "caseId": "react-effects-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "react-effects-001::variant-20c2ee7c",
+      "caseId": "react-effects-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "react-effects-001::variant-cff457f4",
+      "caseId": "react-effects-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "react-out-of-scope-001::variant-015380ad",
+      "caseId": "react-out-of-scope-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "react-out-of-scope-001::variant-20c2ee7c",
+      "caseId": "react-out-of-scope-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "react-out-of-scope-001::variant-cff457f4",
+      "caseId": "react-out-of-scope-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "react-state-queue-001::variant-015380ad",
+      "caseId": "react-state-queue-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "react-state-queue-001::variant-20c2ee7c",
+      "caseId": "react-state-queue-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "react-state-queue-001::variant-cff457f4",
+      "caseId": "react-state-queue-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "ruby-activerecord-callbacks-001::variant-015380ad",
+      "caseId": "ruby-activerecord-callbacks-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "ruby-activerecord-callbacks-001::variant-20c2ee7c",
+      "caseId": "ruby-activerecord-callbacks-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "ruby-activerecord-callbacks-001::variant-cff457f4",
+      "caseId": "ruby-activerecord-callbacks-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "rust-diesel-querydsl-001::variant-015380ad",
+      "caseId": "rust-diesel-querydsl-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "rust-diesel-querydsl-001::variant-20c2ee7c",
+      "caseId": "rust-diesel-querydsl-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "rust-diesel-querydsl-001::variant-cff457f4",
+      "caseId": "rust-diesel-querydsl-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "rust-mutable-reference-rules-001::variant-015380ad",
+      "caseId": "rust-mutable-reference-rules-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "rust-mutable-reference-rules-001::variant-20c2ee7c",
+      "caseId": "rust-mutable-reference-rules-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "rust-mutable-reference-rules-001::variant-cff457f4",
+      "caseId": "rust-mutable-reference-rules-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "rust-ownership-move-clone-001::variant-015380ad",
+      "caseId": "rust-ownership-move-clone-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "answerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "rust-ownership-move-clone-001::variant-20c2ee7c",
+      "caseId": "rust-ownership-move-clone-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "rust-ownership-move-clone-001::variant-cff457f4",
+      "caseId": "rust-ownership-move-clone-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "answerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "swift-sendable-actors-001::variant-015380ad",
+      "caseId": "swift-sendable-actors-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "swift-sendable-actors-001::variant-20c2ee7c",
+      "caseId": "swift-sendable-actors-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "swift-sendable-actors-001::variant-cff457f4",
+      "caseId": "swift-sendable-actors-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "audit"
+    },
+    {
+      "rowId": "typescript-angular-onpush-001::variant-015380ad",
+      "caseId": "typescript-angular-onpush-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "typescript-angular-onpush-001::variant-20c2ee7c",
+      "caseId": "typescript-angular-onpush-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "typescript-angular-onpush-001::variant-cff457f4",
+      "caseId": "typescript-angular-onpush-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "typescript-prisma-transaction-001::variant-015380ad",
+      "caseId": "typescript-prisma-transaction-001",
+      "blindVariantId": "variant-015380ad",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "typescript-prisma-transaction-001::variant-20c2ee7c",
+      "caseId": "typescript-prisma-transaction-001",
+      "blindVariantId": "variant-20c2ee7c",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    },
+    {
+      "rowId": "typescript-prisma-transaction-001::variant-cff457f4",
+      "caseId": "typescript-prisma-transaction-001",
+      "blindVariantId": "variant-cff457f4",
+      "answerability": "unanswerable",
+      "split": "calibration"
+    }
+  ]
+}

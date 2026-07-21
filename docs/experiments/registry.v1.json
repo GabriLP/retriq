@@ -241,6 +241,20 @@
       "decision": "Select no deterministic constructor. Focus-original reduces both-language coverage to 0.7500, evidence-side recall to 0.4375, and introduces 0.1250 negative FPR. The parsed-topic template preserves 1.0000 both-language coverage, 0.3750 both-evidence coverage, 0.4271 side MRR, and zero FPR, but misses the 0.6250 recall floor at 0.5625 because it loses the Python evidence for the type-annotation case.",
       "limitations": ["Parser coverage is limited to benchmarked comparative forms", "Manual rewrites are a validation reference rather than a test oracle", "The template was intentionally not tuned after observing its failure", "Production and the locked test remain untouched"],
       "nextStep": "Preregister a low-cost model-based subquery constructor against the same frozen reference and deterministic baseline, including rewrite validity, latency, token cost, and retrieval outcomes."
+    },
+    {
+      "order": 18,
+      "id": "llm-judge-calibration-v1",
+      "thesisSection": "LLM-as-a-judge calibration",
+      "researchQuestion": "Can one low-cost independent LLM judge reproduce the existing human assessment of frozen RAG answers well enough to support later automatic evaluation?",
+      "status": "preregistered",
+      "variable": "Independent GPT-5.4 Nano judge at medium reasoning with one frozen rubric prompt",
+      "controls": ["72 existing blinded human-reference rows", "48-row calibration and 24-row held-out audit split", "frozen evidence", "temperature 0", "OpenAI provider pinned", "OpenRouter fallbacks disabled"],
+      "metrics": ["Pooled core quadratic weighted kappa", "answerable quality Spearman correlation", "binary pass agreement", "per-dimension agreement", "latency", "tokens", "cost"],
+      "artifacts": ["docs/experiments/llm-judge-calibration.v1.json", "docs/evaluation/llm-judge-prompt.v1.json", "docs/evaluation/llm-judge-split.v1.json"],
+      "decision": "Pending execution. Prompt, split, model, provider routing, pass rule, and acceptance thresholds were frozen before paid judge calls.",
+      "limitations": ["Single quickly completed human reviewer", "No inter-rater reliability estimate", "Low score variance may destabilize correlation metrics", "The internal audit is not the locked generation test"],
+      "nextStep": "Execute the 48 unique judge requests, evaluate calibration and audit separately, and prepare disagreements plus a deterministic agreement sample for secondary human review."
     }
   ]
 }
