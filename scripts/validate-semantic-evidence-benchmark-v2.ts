@@ -53,7 +53,7 @@ async function main() {
   for (const chunk of chunks) chunksById.set(chunk.id, [...(chunksById.get(chunk.id) ?? []), chunk]);
 
   if (benchmark.id !== "semantic-evidence-benchmark-v2") errors.push("Unexpected benchmark id.");
-  if (protocol.id !== "agentic-semantic-assessor-v2" || protocol.status !== "awaiting-blinded-human-review") errors.push("Protocol is not frozen at the human-review gate.");
+  if (protocol.id !== "agentic-semantic-assessor-v2" || !["awaiting-blinded-human-review", "human-reference-frozen", "completed"].includes(protocol.status)) errors.push("Protocol is not at a valid frozen benchmark stage.");
   if (protocol.benchmark.seedSha256 !== sha256(seedRaw) || protocol.benchmark.packetsSha256 !== sha256(benchmarkRaw)) errors.push("Protocol benchmark hashes do not match frozen artifacts.");
   if (protocol.benchmark.states !== 24 || protocol.benchmark.uniqueQuestions !== 12 || protocol.benchmark.chunksPerPacket !== 2) errors.push("Protocol sample controls do not match the validator.");
   if (benchmark.lockedTestTouched) errors.push("Locked test must remain untouched.");

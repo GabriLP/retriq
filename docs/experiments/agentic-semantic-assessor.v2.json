@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "agentic-semantic-assessor-v2",
-  "status": "awaiting-blinded-human-review",
+  "status": "human-reference-frozen",
   "createdAt": "2026-07-22T10:00:00+02:00",
   "researchQuestion": "Does GPT-5.4 Mini generalize as an evidence-sufficiency assessor on newly curated question-evidence packets that were not used in the v1 error analysis?",
   "hypothesis": "Because the v1 disagreements were caused by strict canonical-chunk labels, a semantic assessor will outperform the score-and-language gate on human-reviewed packets containing valid alternative evidence while maintaining at most one false positive among twelve insufficient packets.",
@@ -19,8 +19,19 @@
     "chunksPerPacket": 2,
     "lockedTestTouched": false,
     "overlapPolicy": "No state id or complete question-evidence packet may occur in agentic-semantic-assessor-v1. Golden-set test cases and the locked 24-case test split are excluded.",
-    "referencePolicy": "A blinded human review of all 24 packets is frozen before either assessor is executed. Intended construction labels are not treated as gold labels.",
+    "referencePolicy": "All 24 packet labels are frozen before either assessor is executed. The review began in the blinded interface but was completed with case-level Codex assistance, so the resulting reference is explicitly AI-assisted and is not treated as an independent human validation.",
     "constructionCategories": ["direct-complete", "alternative-complete", "related-incomplete", "distractor-insufficient"]
+  },
+  "humanReference": {
+    "path": "docs/evaluation/semantic-evidence-benchmark-v2-human-review.completed.csv",
+    "sha256": "3ed845ecd747fcc4e3490812be6491f1a62330eb76d66db13eabd5622e596e8e",
+    "rows": 24,
+    "sufficient": 12,
+    "insufficient": 12,
+    "reviewedBy": "Gabriele",
+    "provenance": "ai-assisted-human-review",
+    "independent": false,
+    "disclosure": "The thesis author entered every final label after consulting Codex case by case. These labels are suitable for an engineering comparison against a frozen assisted reference, but not for a claim of independent human agreement."
   },
   "candidate": {
     "id": "openrouter-gpt-5.4-mini-medium-semantic-evidence-v2",
@@ -71,6 +82,7 @@
   "limitations": [
     "Twenty-four packets support a bounded component check, not a high-powered population estimate.",
     "Questions and evidence are curated from the existing corpus and therefore measure in-domain generalization.",
-    "The primary reviewer is also the thesis author; this does not estimate inter-rater reliability."
+    "The primary reviewer is also the thesis author; this does not estimate inter-rater reliability.",
+    "The frozen reference was completed with case-level AI assistance and therefore cannot establish independent human validity."
   ]
 }

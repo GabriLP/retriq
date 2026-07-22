@@ -301,16 +301,16 @@
     {
       "order": 22,
       "id": "agentic-semantic-assessor-v2",
-      "thesisSection": "Independent evidence-sufficiency validation",
+      "thesisSection": "AI-assisted evidence-sufficiency validation",
       "researchQuestion": "Does GPT-5.4 Mini generalize as an evidence-sufficiency assessor on newly curated question-evidence packets that were not used in the v1 error analysis?",
       "status": "in-progress",
       "variable": "Deterministic score-and-language gate versus GPT-5.4 Mini semantic assessment on identical frozen evidence packets",
-      "controls": ["12 newly frozen questions", "24 packets", "one intended-complete and one intended-incomplete packet per question", "two chunks per packet", "fixed opaque review order", "all 24 human labels frozen before model execution", "GPT-5.4 Mini medium", "OpenAI provider pinned", "locked test untouched"],
+      "controls": ["12 newly frozen questions", "24 packets", "one intended-complete and one intended-incomplete packet per question", "two chunks per packet", "fixed opaque review order", "all 24 AI-assisted human labels frozen before model execution", "GPT-5.4 Mini medium", "OpenAI provider pinned", "locked test untouched"],
       "metrics": ["Accuracy", "balanced accuracy", "precision", "recall", "specificity", "false-positive rate", "Cohen's kappa", "provider errors", "latency", "tokens", "cost"],
-      "artifacts": ["docs/evaluation/semantic-evidence-benchmark.v2.seed.json", "docs/evaluation/semantic-evidence-benchmark.v2.json", "docs/experiments/agentic-semantic-assessor.v2.json", "scripts/validate-semantic-evidence-benchmark-v2.ts", "src/app/evaluation/semantic-evidence-benchmark-v2-review/page.tsx", "src/components/semantic-evidence-review-workbench.tsx", "src/lib/evaluation/semantic-evidence-review.ts"],
-      "decision": "The protocol, twelve questions, and 24 evidence packets are frozen. Validation confirms a 12/12 intended construction balance, two excerpts per packet, no v1 state overlap, and no locked-test overlap. Assessor execution is blocked until all 24 packets receive blinded human labels.",
-      "limitations": ["Twenty-four packets provide a bounded component check rather than a high-powered population estimate", "Questions and evidence are curated from the existing corpus", "The thesis author remains the primary human reviewer", "Construction labels are design metadata and cannot replace blinded human reference labels"],
-      "nextStep": "Complete and freeze the 24-row blinded human review, then execute both frozen assessors once without prompt or threshold changes."
+      "artifacts": ["docs/evaluation/semantic-evidence-benchmark.v2.seed.json", "docs/evaluation/semantic-evidence-benchmark.v2.json", "docs/evaluation/semantic-evidence-benchmark-v2-human-review.completed.csv", "docs/experiments/agentic-semantic-assessor.v2.json", "scripts/validate-semantic-evidence-benchmark-v2.ts", "src/app/evaluation/semantic-evidence-benchmark-v2-review/page.tsx", "src/components/semantic-evidence-review-workbench.tsx", "src/lib/evaluation/semantic-evidence-review.ts"],
+      "decision": "The protocol, twelve questions, 24 evidence packets, and 24-row AI-assisted human reference are frozen before assessor execution. The reference supports an engineering comparison but not a claim of independent human agreement.",
+      "limitations": ["Twenty-four packets provide a bounded component check rather than a high-powered population estimate", "Questions and evidence are curated from the existing corpus", "The thesis author remains the primary human reviewer", "The reviewer consulted Codex case by case, so the frozen reference is AI-assisted rather than independent"],
+      "nextStep": "Execute both frozen assessors once without prompt or threshold changes, preserving all predictions, costs, and failures."
     }
   ]
 }
