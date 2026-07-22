@@ -56,7 +56,7 @@
   "primaryMetrics": ["general Recall@4", "general MRR", "general nDCG@4", "comparative both-evidence-side coverage@4", "comparative mean evidence-side recall@4", "unanswerable false-positive rate"],
   "guardrails": ["planner structured validity rate", "maximum-attempt termination rate", "mean and p95 incremental latency", "planner tokens", "planner cost", "provider errors"],
   "selectionRule": {
-    "requiredGeneralRecallAt4": 0.963,
+    "requiredGeneralRecallAt4": 0.9629629629629629,
     "requiredGeneralMrr": 0.94,
     "requiredGeneralNdcgAt4": 0.94,
     "requiredUnanswerableFalsePositiveRate": 0,
@@ -68,6 +68,16 @@
     "maximumP95IncrementalLatencyMs": 15000,
     "decision": "Select the agentic variant only if every threshold and guardrail passes; otherwise retain the single-pass baseline without tuning on observed failures."
   },
+  "preregistrationAmendments": [
+    {
+      "recordedAt": "2026-07-22",
+      "beforeAnyPlannerProviderOutput": true,
+      "field": "selectionRule.requiredGeneralRecallAt4",
+      "previousValue": 0.963,
+      "correctedValue": 0.9629629629629629,
+      "reason": "The intended non-inferiority guardrail is the exact frozen baseline value (26/27). The rounded value 0.963 was microscopically stricter and would incorrectly reject an identical result."
+    }
+  ],
   "artifacts": ["src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/test-agentic-retrieval.ts", "scripts/test-agentic-policy.ts"],
   "limitations": ["The validation and focused comparative sets have already informed earlier retrieval experiments.", "Language coverage is a proxy for evidence sufficiency rather than semantic entailment.", "This experiment evaluates retrieval behavior, not final generated-answer quality.", "Gemini planner list-price cost is estimated from provider token metadata."]
 }
