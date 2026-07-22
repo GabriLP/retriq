@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-semantic-assessor-v1",
+  "status": "preregistered",
+  "researchQuestion": "Can an independent semantic evidence assessor distinguish genuinely sufficient frozen retrieval evidence from plausible but irrelevant evidence better than the v3 deterministic score-and-language gate?",
+  "hypothesis": "GPT-5.4 Mini will eliminate the deterministic assessor's false-positive evidence decisions while preserving at least 0.90 recall on canonically sufficient evidence states.",
+  "role": "Offline component selection before any new end-to-end Agentic RAG integration.",
+  "sourceTrace": "docs/experiment-results/agentic-rag-planner-v3-validation.json",
+  "split": "validation",
+  "lockedTestTouched": false,
+  "expectedStates": 110,
+  "expectedProviderEligibleStates": 48,
+  "labels": {
+    "generalAnswerable": "Sufficient only when at least one retrieved chunk matches frozen golden evidence.",
+    "generalUnanswerable": "Always insufficient.",
+    "focusedComparativePositive": "Sufficient only when canonical evidence for every expected technology side is present.",
+    "focusedComparativeNegative": "Always insufficient.",
+    "modelVisibility": "The assessor receives the original question and retrieved excerpts, never the expected label, golden answer, or accepted chunk ids."
+  },
+  "candidate": {
+    "id": "openrouter-gpt-5.4-mini-medium-semantic-evidence-v1",
+    "model": "openai/gpt-5.4-mini",
+    "expectedResponseModel": "openai/gpt-5.4-mini",
+    "expectedResponseProvider": "OpenAI",
+    "providerOrder": ["openai"],
+    "reasoningEffort": "medium",
+    "maxOutputTokens": 1000,
+    "inputPriceUsdPerMillionTokens": 0.75,
+    "outputPriceUsdPerMillionTokens": 4.5,
+    "priceObservedOn": "2026-07-21",
+    "priceSource": "https://developers.openai.com/api/docs/models/gpt-5.4-mini"
+  },
+  "singleChangedVariable": "Deterministic score-and-language evidence assessment versus GPT-5.4 Mini semantic assessment on identical frozen retrieval states.",
+  "selectionRule": {
+    "minimumAccuracy": 0.9,
+    "minimumRecall": 0.9,
+    "requiredFalsePositiveRate": 0,
+    "mustExceedDeterministicAccuracy": true,
+    "mustReduceDeterministicFalsePositiveRate": true,
+    "maximumProviderErrors": 0,
+    "maximumCostUsd": 0.5,
+    "maximumP95LatencyMs": 25000,
+    "decision": "Integrate the semantic assessor into a separately preregistered end-to-end Agentic RAG experiment only if every check passes. This experiment alone cannot enable production."
+  },
+  "priorEvidence": {
+    "v3Failure": "The deterministic policy accepted three plausible but irrelevant general-negative retrievals and produced general FPR 0.1111.",
+    "judgeCalibrationCaveat": "GPT-5.4 Mini failed the ordinal generation-judge calibration but achieved 0.9375 binary pass agreement; this binary evidence-sufficiency task is separately evaluated rather than assumed valid."
+  },
+  "artifacts": ["src/lib/rag/semantic-evidence-assessor.ts", "scripts/test-semantic-evidence-assessor.ts", "scripts/evaluate-semantic-evidence-assessor.ts"],
+  "limitations": [
+    "Canonical-evidence labels may mark alternative but genuinely sufficient excerpts as insufficient.",
+    "The source states come from a validation trace already inspected during v3 diagnosis.",
+    "Selection qualifies a component for another validation experiment, not for production or locked-test execution."
+  ]
+}

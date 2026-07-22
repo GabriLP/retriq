@@ -40,7 +40,7 @@
     "selectionPolicy": "Must be preregistered before any validation execution. Production remains disabled until a variant passes every retrieval and safety guardrail."
   },
   "selectedProtocolForExecution": "docs/experiments/agentic-rag-planner.v1.json",
-  "nextProtocolForExecution": null,
+  "nextProtocolForExecution": "docs/experiments/agentic-semantic-assessor.v1.json",
   "latestOutcome": {
     "status": "planner-v3-completed-not-selected",
     "reason": "The 512-token budget completed all 70 validation cases with perfect structured validity, but general unanswerable FPR rose from 0 to 0.1111 and focused evidence-side recall fell from 0.5625 to 0.3125.",
