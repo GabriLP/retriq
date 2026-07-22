@@ -6,9 +6,26 @@ import ReactMarkdown from "react-markdown";
 
 import { exportSemanticEvidenceReviewCsv, type SemanticEvidenceReviewEntry, type SemanticEvidenceReviewTask } from "@/lib/evaluation/semantic-evidence-review";
 
-const storageKey = "retriq:semantic-evidence-review:v1";
+type StudySettings = {
+  eyebrow: string;
+  heading: string;
+  storageKey: string;
+  sourceExperiment: string;
+  exportFileName: string;
+  backupFileName: string;
+};
 
-export function SemanticEvidenceReviewWorkbench({ tasks }: { tasks: SemanticEvidenceReviewTask[] }) {
+const defaultStudy: StudySettings = {
+  eyebrow: "Retriq · evidence study",
+  heading: "Alternative evidence audit",
+  storageKey: "retriq:semantic-evidence-review:v1",
+  sourceExperiment: "agentic-semantic-assessor-v1",
+  exportFileName: "semantic-evidence-human-review-v1.completed.csv",
+  backupFileName: "semantic-evidence-human-review-v1.progress.json",
+};
+
+export function SemanticEvidenceReviewWorkbench({ tasks, study }: { tasks: SemanticEvidenceReviewTask[]; study?: Partial<StudySettings> }) {
+  const settings = { ...defaultStudy, ...study };
   const [reviewer, setReviewer] = useState("Gabriele");
   const [reviews, setReviews] = useState<Record<string, SemanticEvidenceReviewEntry>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -20,15 +37,15 @@ export function SemanticEvidenceReviewWorkbench({ tasks }: { tasks: SemanticEvid
 
   useEffect(() => {
     try {
-      const value = JSON.parse(localStorage.getItem(storageKey) ?? "null") as { reviewer?: string; reviews?: Record<string, SemanticEvidenceReviewEntry>; currentTaskId?: string } | null;
+      const value = JSON.parse(localStorage.getItem(settings.storageKey) ?? "null") as { reviewer?: string; reviews?: Record<string, SemanticEvidenceReviewEntry>; currentTaskId?: string } | null;
       if (value) {
         setReviewer(value.reviewer || "Gabriele"); setReviews(value.reviews ?? {});
         const index = tasks.findIndex((item) => item.id === value.currentTaskId); if (index >= 0) setCurrentIndex(index);
       }
     } finally { setHydrated(true); }
-  }, [tasks]);
+  }, [settings.storageKey, tasks]);
 
-  useEffect(() => { if (hydrated && task) localStorage.setItem(storageKey, JSON.stringify({ reviewer, reviews, currentTaskId: task.id, savedAt: new Date().toISOString() })); }, [hydrated, reviewer, reviews, task]);
+  useEffect(() => { if (hydrated && task) localStorage.setItem(settings.storageKey, JSON.stringify({ reviewer, reviews, currentTaskId: task.id, savedAt: new Date().toISOString() })); }, [hydrated, reviewer, reviews, settings.storageKey, task]);
   useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [currentIndex]);
   if (!task) return <main className="p-10">Nessun caso da revisionare.</main>;
   if (!hydrated) return <ReviewLoadingState />;
@@ -36,14 +53,14 @@ export function SemanticEvidenceReviewWorkbench({ tasks }: { tasks: SemanticEvid
   function decide(sufficient: boolean) { setReviews((current) => ({ ...current, [task.id]: { ...current[task.id], sufficient, reviewedAt: new Date().toISOString() } })); }
   function note(notes: string) { setReviews((current) => ({ ...current, [task.id]: { ...current[task.id], notes } })); }
   function move(delta: number) { setCurrentIndex((value) => Math.max(0, Math.min(tasks.length - 1, value + delta))); }
-  function downloadCsv() { if (!ready) return; download("semantic-evidence-human-review-v1.completed.csv", exportSemanticEvidenceReviewCsv({ tasks, reviews, reviewer: reviewer.trim(), exportedAt: new Date().toISOString() }), "text/csv;charset=utf-8"); }
-  function backup() { download("semantic-evidence-human-review-v1.progress.json", `${JSON.stringify({ schemaVersion: 1, reviewer, reviews, exportedAt: new Date().toISOString() }, null, 2)}\n`, "application/json"); }
-  function reset() { if (!window.confirm("Eliminare i tre giudizi salvati in questo browser?")) return; localStorage.removeItem(storageKey); setReviews({}); setCurrentIndex(0); }
+  function downloadCsv() { if (!ready) return; download(settings.exportFileName, exportSemanticEvidenceReviewCsv({ tasks, reviews, reviewer: reviewer.trim(), exportedAt: new Date().toISOString(), sourceExperiment: settings.sourceExperiment }), "text/csv;charset=utf-8"); }
+  function backup() { download(settings.backupFileName, `${JSON.stringify({ schemaVersion: 1, sourceExperiment: settings.sourceExperiment, reviewer, reviews, exportedAt: new Date().toISOString() }, null, 2)}\n`, "application/json"); }
+  function reset() { if (!window.confirm(`Eliminare i ${tasks.length} giudizi salvati in questo browser?`)) return; localStorage.removeItem(settings.storageKey); setReviews({}); setCurrentIndex(0); }
 
   return <main className="min-h-screen bg-[#f1ecdf] text-[#171815]">
     <header className="sticky top-0 z-30 border-b border-black/15 bg-[#f1ecdf]/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1540px] flex-wrap items-center justify-between gap-4 px-5 py-4 lg:px-8">
-        <div className="flex items-center gap-3"><span className="grid size-11 place-items-center rounded-full bg-[#dd4f36] text-white"><ShieldQuestion className="size-5" /></span><div><p className="font-mono text-[9px] uppercase tracking-[.24em] text-[#b93927]">Retriq · evidence study</p><h1 className="font-serif text-xl font-semibold">Alternative evidence audit</h1></div></div>
+        <div className="flex items-center gap-3"><span className="grid size-11 place-items-center rounded-full bg-[#dd4f36] text-white"><ShieldQuestion className="size-5" /></span><div><p className="font-mono text-[9px] uppercase tracking-[.24em] text-[#b93927]">{settings.eyebrow}</p><h1 className="font-serif text-xl font-semibold">{settings.heading}</h1></div></div>
         <div className="flex min-w-[280px] flex-1 items-center gap-3 lg:max-w-xl"><span className="font-mono text-[10px] uppercase tracking-widest text-black/45">Cieco</span><div className="h-1.5 flex-1 bg-black/10"><div className="h-full bg-[#dd4f36] transition-all" style={{ width: `${completed / tasks.length * 100}%` }} /></div><span className="font-mono text-xs">{completed}/{tasks.length}</span></div>
         <span className="flex items-center gap-2 text-xs text-black/45"><Save className="size-3.5" />{hydrated ? "Salvato localmente" : "Caricamento…"}</span>
       </div>
@@ -52,8 +69,8 @@ export function SemanticEvidenceReviewWorkbench({ tasks }: { tasks: SemanticEvid
     <div className="mx-auto grid max-w-[1540px] lg:grid-cols-[270px_minmax(0,1fr)]">
       <aside className="border-r border-black/15 p-5 lg:min-h-[calc(100vh-76px)] lg:p-7">
         <label className="font-mono text-[9px] uppercase tracking-[.2em] text-black/40">Revisore</label><input value={reviewer} onChange={(event) => setReviewer(event.target.value)} className="w-full border-b border-black/20 bg-transparent py-2 font-serif text-xl outline-none focus:border-[#dd4f36]" />
-        <p className="mt-8 font-mono text-[9px] uppercase tracking-[.2em] text-black/40">Tre dossier</p>
-        <div className="mt-3 space-y-2">{tasks.map((item, index) => { const done = reviews[item.id]?.sufficient !== undefined; return <button type="button" key={item.id} onClick={() => setCurrentIndex(index)} className={`flex w-full items-center gap-3 border p-3 text-left transition ${index === currentIndex ? "border-[#dd4f36] bg-[#dd4f36] text-white" : done ? "border-[#1e5949] bg-[#1e5949] text-white" : "border-black/10 bg-white/40 hover:border-black/35"}`}><span className="font-mono text-xs">0{index + 1}</span><span className="min-w-0 truncate text-xs">{item.caseId}</span>{done ? <Check className="ml-auto size-3.5" /> : null}</button>; })}</div>
+        <p className="mt-8 font-mono text-[9px] uppercase tracking-[.2em] text-black/40">{tasks.length} dossier</p>
+        <div className="mt-3 space-y-2">{tasks.map((item, index) => { const done = reviews[item.id]?.sufficient !== undefined; return <button type="button" key={item.id} onClick={() => setCurrentIndex(index)} className={`flex w-full items-center gap-3 border p-3 text-left transition ${index === currentIndex ? "border-[#dd4f36] bg-[#dd4f36] text-white" : done ? "border-[#1e5949] bg-[#1e5949] text-white" : "border-black/10 bg-white/40 hover:border-black/35"}`}><span className="font-mono text-xs">{String(index + 1).padStart(2, "0")}</span><span className="min-w-0 truncate text-xs">{item.displayLabel ?? item.caseId}</span>{done ? <Check className="ml-auto size-3.5" /> : null}</button>; })}</div>
         <div className="mt-7 border-l-2 border-[#dd4f36] bg-white/45 p-4 text-xs leading-5 text-black/60"><CircleHelp className="mb-2 size-4 text-[#dd4f36]" /><strong className="text-black/80">Un solo criterio.</strong><br />Gli estratti bastano, da soli, per formulare una risposta completa e corretta?</div>
         <div className="mt-5 space-y-2"><button type="button" disabled={!ready} onClick={downloadCsv} className="flex w-full items-center justify-center gap-2 bg-[#171815] px-3 py-3 text-sm text-white disabled:opacity-25"><Download className="size-4" />Esporta CSV finale</button><SideAction icon={Save} onClick={backup}>Backup progresso</SideAction><SideAction icon={RotateCcw} onClick={reset} muted>Azzera revisione</SideAction></div>
       </aside>

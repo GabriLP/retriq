@@ -1,13 +1,16 @@
 {
   "schemaVersion": 1,
   "id": "agentic-semantic-assessor-v2",
-  "status": "benchmark-construction",
+  "status": "awaiting-blinded-human-review",
   "createdAt": "2026-07-22T10:00:00+02:00",
   "researchQuestion": "Does GPT-5.4 Mini generalize as an evidence-sufficiency assessor on newly curated question-evidence packets that were not used in the v1 error analysis?",
   "hypothesis": "Because the v1 disagreements were caused by strict canonical-chunk labels, a semantic assessor will outperform the score-and-language gate on human-reviewed packets containing valid alternative evidence while maintaining at most one false positive among twelve insufficient packets.",
   "singleChangedVariable": "Deterministic score-and-language sufficiency assessment versus GPT-5.4 Mini semantic assessment on the same frozen evidence packets.",
   "benchmark": {
     "seed": "docs/evaluation/semantic-evidence-benchmark.v2.seed.json",
+    "seedSha256": "6ef6bb133bf75718d0996a1c0b6d8e9382e31c7e8ff5f61571479ff55058626a",
+    "packets": "docs/evaluation/semantic-evidence-benchmark.v2.json",
+    "packetsSha256": "360747f48dbbeb157c657daf94e80d7a174c78f36a031074ebc05d17dbcdad8c",
     "states": 24,
     "uniqueQuestions": 12,
     "packetsPerQuestion": 2,
@@ -58,7 +61,12 @@
   ],
   "artifacts": [
     "docs/evaluation/semantic-evidence-benchmark.v2.seed.json",
-    "docs/experiments/agentic-semantic-assessor.v2.json"
+    "docs/evaluation/semantic-evidence-benchmark.v2.json",
+    "docs/experiments/agentic-semantic-assessor.v2.json",
+    "scripts/validate-semantic-evidence-benchmark-v2.ts",
+    "src/app/evaluation/semantic-evidence-benchmark-v2-review/page.tsx",
+    "src/components/semantic-evidence-review-workbench.tsx",
+    "src/lib/evaluation/semantic-evidence-review.ts"
   ],
   "limitations": [
     "Twenty-four packets support a bounded component check, not a high-powered population estimate.",

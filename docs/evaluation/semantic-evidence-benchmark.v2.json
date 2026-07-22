@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 1,
+  "id": "semantic-evidence-benchmark-v2",
+  "status": "awaiting-blinded-human-review",
+  "createdAt": "2026-07-22T10:15:00+02:00",
+  "sourceSeed": "docs/evaluation/semantic-evidence-benchmark.v2.seed.json",
+  "lockedTestTouched": false,
+  "scoreProvenance": "Gemini Embedding 2 at 1024 dimensions against the active 2026-07-22 Neon corpus; scores rounded to four decimals. Evidence packets are curated from the ranked candidates and are not claimed to be natural top-2 retrieval outputs.",
+  "candidateAcquisition": {
+    "technicalFailuresBeforeProviderInvocation": 1,
+    "successfulRuns": 2,
+    "queryEmbeddingInputs": 14,
+    "estimatedInputTokens": 332,
+    "tokenEstimation": "1327 question characters divided by four and rounded up",
+    "estimatedCostUsd": 0.0000664,
+    "priceUsdPerMillionInputTokens": 0.2,
+    "notes": "The first successful run embedded all twelve frozen questions at the production threshold. A second two-query run lowered only the candidate-discovery threshold for C++ and Go; it did not alter production retrieval."
+  },
+  "reviewOrder": [
+    "evidence-v2-javascript-promise-all::incomplete",
+    "evidence-v2-rust-refcell-runtime::complete",
+    "evidence-v2-postgresql-where-having::incomplete",
+    "evidence-v2-react-stable-list-keys::complete",
+    "evidence-v2-go-defer-evaluation::incomplete",
+    "evidence-v2-java-checked-exceptions::complete",
+    "evidence-v2-python-generator-suspension::incomplete",
+    "evidence-v2-c-realloc-failure::complete",
+    "evidence-v2-kotlin-safe-call::incomplete",
+    "evidence-v2-typescript-discriminated-union::complete",
+    "evidence-v2-bash-at-star::incomplete",
+    "evidence-v2-cpp-virtual-destructor::complete",
+    "evidence-v2-react-stable-list-keys::incomplete",
+    "evidence-v2-javascript-promise-all::complete",
+    "evidence-v2-java-checked-exceptions::incomplete",
+    "evidence-v2-go-defer-evaluation::complete",
+    "evidence-v2-cpp-virtual-destructor::incomplete",
+    "evidence-v2-postgresql-where-having::complete",
+    "evidence-v2-rust-refcell-runtime::incomplete",
+    "evidence-v2-bash-at-star::complete",
+    "evidence-v2-c-realloc-failure::incomplete",
+    "evidence-v2-kotlin-safe-call::complete",
+    "evidence-v2-typescript-discriminated-union::incomplete",
+    "evidence-v2-python-generator-suspension::complete"
+  ],
+  "states": [
+    {
+      "id": "evidence-v2-react-stable-list-keys::complete",
+      "caseId": "evidence-v2-react-stable-list-keys",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "ea9a0988e8a0fecc", "sourceId": null, "score": 0.7963, "rank": 1 },
+        { "id": "d2850d211b077c7d", "sourceId": null, "score": 0.7681, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-react-stable-list-keys::incomplete",
+      "caseId": "evidence-v2-react-stable-list-keys",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "0b74e6ca0ee5d732", "sourceId": null, "score": 0.7220, "rank": 1 },
+        { "id": "5e9398f3a96b5d9f", "sourceId": null, "score": 0.7200, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-postgresql-where-having::complete",
+      "caseId": "evidence-v2-postgresql-where-having",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "e17a4d761fb2052a", "sourceId": "postgresql-18-manual", "score": 0.7978, "rank": 1 },
+        { "id": "6900cfffa71cca5e", "sourceId": "postgresql-18-manual", "score": 0.7829, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-postgresql-where-having::incomplete",
+      "caseId": "evidence-v2-postgresql-where-having",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "fa8c06164a1c5a22", "sourceId": "postgresql-18-manual", "score": 0.7427, "rank": 1 },
+        { "id": "73a1a9e4149305d5", "sourceId": "postgresql-18-manual", "score": 0.6987, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-java-checked-exceptions::complete",
+      "caseId": "evidence-v2-java-checked-exceptions",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "6d0787f1b77e5a39", "sourceId": "java-se-26-language-specification", "score": 0.7615, "rank": 1 },
+        { "id": "c6a06d3eae448e4d", "sourceId": "java-se-26-language-specification", "score": 0.7551, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-java-checked-exceptions::incomplete",
+      "caseId": "evidence-v2-java-checked-exceptions",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "c6a06d3eae448e4d", "sourceId": "java-se-26-language-specification", "score": 0.7551, "rank": 1 },
+        { "id": "bb23743a742add08", "sourceId": "java-se-26-language-specification", "score": 0.6893, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-c-realloc-failure::complete",
+      "caseId": "evidence-v2-c-realloc-failure",
+      "constructionCategory": "alternative-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "3d15d4f9f3c9c651", "sourceId": "c11-working-draft-n1570", "score": 0.7609, "rank": 1 },
+        { "id": "020c6d441ebd9142", "sourceId": "c11-working-draft-n1570", "score": 0.6954, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-c-realloc-failure::incomplete",
+      "caseId": "evidence-v2-c-realloc-failure",
+      "constructionCategory": "distractor-insufficient",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "4eac370b588cbd12", "sourceId": "beej-c-library-reference", "score": 0.6882, "rank": 1 },
+        { "id": "a4d25d814465e969", "sourceId": "c11-working-draft-n1570", "score": 0.6882, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-cpp-virtual-destructor::complete",
+      "caseId": "evidence-v2-cpp-virtual-destructor",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "1935ade9c3bf8922", "sourceId": "cpp26-working-draft-n5046", "score": 0.6972, "rank": 1 },
+        { "id": "12d5985b8413700f", "sourceId": "cpp26-working-draft-n5046", "score": 0.6956, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-cpp-virtual-destructor::incomplete",
+      "caseId": "evidence-v2-cpp-virtual-destructor",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "8067325bcb4a89cc", "sourceId": "cpp26-working-draft-n5046", "score": 0.6889, "rank": 1 },
+        { "id": "f0a0c65e7c3f72c1", "sourceId": "cpp26-working-draft-n5046", "score": 0.6721, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-javascript-promise-all::complete",
+      "caseId": "evidence-v2-javascript-promise-all",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "51b0124babe774ef", "sourceId": "ecmascript-2026-ecma-262", "score": 0.7211, "rank": 1 },
+        { "id": "912dea91ba39e30b", "sourceId": "ecmascript-2026-ecma-262", "score": 0.6959, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-javascript-promise-all::incomplete",
+      "caseId": "evidence-v2-javascript-promise-all",
+      "constructionCategory": "distractor-insufficient",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "8a30e186ac0e05cd", "sourceId": "ecmascript-2026-ecma-262", "score": 0.7092, "rank": 1 },
+        { "id": "4d1abb74f415b533", "sourceId": "ecmascript-2026-ecma-262", "score": 0.6907, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-kotlin-safe-call::complete",
+      "caseId": "evidence-v2-kotlin-safe-call",
+      "constructionCategory": "alternative-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "d08840d67f98cbfc", "sourceId": "kotlin-language-specification", "score": 0.7484, "rank": 1 },
+        { "id": "1377ce297aa955e4", "sourceId": "kotlin-language-specification", "score": 0.7181, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-kotlin-safe-call::incomplete",
+      "caseId": "evidence-v2-kotlin-safe-call",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "81caad20a3e827ae", "sourceId": "kotlin-language-specification", "score": 0.7027, "rank": 1 },
+        { "id": "780e8e185605a424", "sourceId": "kotlin-language-specification", "score": 0.6984, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-bash-at-star::complete",
+      "caseId": "evidence-v2-bash-at-star",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "1462b3503c9fe47b", "sourceId": "gnu-bash-5-3-reference-manual", "score": 0.8146, "rank": 1 },
+        { "id": "4f76cf88e67467e2", "sourceId": "gnu-bash-5-3-reference-manual", "score": 0.7735, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-bash-at-star::incomplete",
+      "caseId": "evidence-v2-bash-at-star",
+      "constructionCategory": "distractor-insufficient",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "a2dbc66d29b6992a", "sourceId": "gnu-bash-5-3-reference-manual", "score": 0.7043, "rank": 1 },
+        { "id": "b4e1e618412f3277", "sourceId": "gnu-bash-5-3-reference-manual", "score": 0.6982, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-python-generator-suspension::complete",
+      "caseId": "evidence-v2-python-generator-suspension",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "cf3260cc4c84011c", "sourceId": "python-language-reference", "score": 0.7389, "rank": 1 },
+        { "id": "1c745930f5e2a46f", "sourceId": "python-language-reference", "score": 0.7036, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-python-generator-suspension::incomplete",
+      "caseId": "evidence-v2-python-generator-suspension",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "1c745930f5e2a46f", "sourceId": "python-language-reference", "score": 0.7036, "rank": 1 },
+        { "id": "a0c0bf5eeef0208f", "sourceId": "python-language-reference", "score": 0.7031, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-typescript-discriminated-union::complete",
+      "caseId": "evidence-v2-typescript-discriminated-union",
+      "constructionCategory": "alternative-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "90fe7fe08289d3e4", "sourceId": "typescript-handbook", "score": 0.7722, "rank": 1 },
+        { "id": "72665883de3477c2", "sourceId": "typescript-handbook", "score": 0.7677, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-typescript-discriminated-union::incomplete",
+      "caseId": "evidence-v2-typescript-discriminated-union",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "16eebabe9ebff640", "sourceId": "typescript-handbook", "score": 0.7274, "rank": 1 },
+        { "id": "9df124d2077583b5", "sourceId": "typescript-handbook", "score": 0.7272, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-rust-refcell-runtime::complete",
+      "caseId": "evidence-v2-rust-refcell-runtime",
+      "constructionCategory": "alternative-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "e35658a5e9af77fb", "sourceId": "rust-book", "score": 0.8061, "rank": 1 },
+        { "id": "39f2bbc69d476d8c", "sourceId": "rust-book", "score": 0.7975, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-rust-refcell-runtime::incomplete",
+      "caseId": "evidence-v2-rust-refcell-runtime",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "39f2bbc69d476d8c", "sourceId": "rust-book", "score": 0.7975, "rank": 1 },
+        { "id": "427c5b30a82aae71", "sourceId": "rust-book", "score": 0.7740, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-go-defer-evaluation::complete",
+      "caseId": "evidence-v2-go-defer-evaluation",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "evidence": [
+        { "id": "e6e509da5df1b502", "sourceId": "go-language-specification", "score": 0.7077, "rank": 1 },
+        { "id": "63469c12a737345a", "sourceId": "go-language-specification", "score": 0.6882, "rank": 2 }
+      ]
+    },
+    {
+      "id": "evidence-v2-go-defer-evaluation::incomplete",
+      "caseId": "evidence-v2-go-defer-evaluation",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "evidence": [
+        { "id": "e6e509da5df1b502", "sourceId": "go-language-specification", "score": 0.7077, "rank": 1 },
+        { "id": "0fb1cadb036b3aaa", "sourceId": "go-language-specification", "score": 0.6691, "rank": 2 }
+      ]
+    }
+  ]
+}
