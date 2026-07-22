@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 
-import { assessEvidenceCoverage, mergeRankings, retrieveWithAgenticLoop, type EvidenceAssessment, type QueryRewrite } from "../src/lib/rag/agentic-retrieval";
+import { assessEvidenceCoverage, mergeAccumulatedEvidenceByLanguage, mergeRankings, retrieveWithAgenticLoop, type EvidenceAssessment, type QueryRewrite } from "../src/lib/rag/agentic-retrieval";
+import { detectQueryMetadataConstraint } from "../src/lib/rag/metadata-filter";
 import type { RetrievalResult } from "../src/lib/rag/types";
 
 async function main() {
@@ -12,6 +13,9 @@ async function main() {
   await rejectsOversizedRewritePlans();
   testsCoverageAssessment();
   testsStableMerging();
+  await preservesDefaultReplacementBehavior();
+  await accumulatesWithLanguageQuotas();
+  testsAccumulationDeduplicationAndFallback();
   console.log("VALID agentic retrieval state machine, traces, evidence gates, and loop protections.");
 }
 
@@ -99,6 +103,39 @@ function testsStableMerging() {
     [chunk("shared", 2, 0.75, "C"), chunk("rust", 1, 0.8, "Rust")],
   ], 3);
   assert.deepEqual(merged.map((item) => [item.id, item.rank, item.score]), [["rust", 1, 0.8], ["shared", 2, 0.75], ["c", 3, 0.7]]);
+}
+
+async function preservesDefaultReplacementBehavior() {
+  let assessment = 0;
+  const result = await retrieveWithAgenticLoop("Compare C and C++ memory", {
+    retrieve: async (query) => query.startsWith("Compare") ? [chunk("c", 1, .72, "C")] : [chunk("cpp", 1, .76, "C++")],
+    assess: async () => (++assessment === 1 ? { sufficient: false, reason: "Missing C++.", missingAspects: ["C++"] } : { sufficient: true, reason: "Current attempt accepted.", missingAspects: [] }),
+    rewrite: async () => ({ strategy: "cpp", queries: ["C++ memory"], rationale: "Recover C++." }),
+  });
+  assert.deepEqual(result.chunks.map((item) => item.id), ["cpp"]);
+}
+
+async function accumulatesWithLanguageQuotas() {
+  const result = await retrieveWithAgenticLoop("Compare C and C++ memory", {
+    retrieve: async (query) => query.startsWith("Compare")
+      ? [chunk("c-canonical", 1, .72, "C"), chunk("c-related", 2, .71, "C")]
+      : [chunk("cpp-canonical", 1, .78, "C++"), chunk("cpp-related", 2, .77, "C++")],
+    assess: async ({ chunks }) => chunks.some((item) => item.language === "C") && chunks.some((item) => item.language === "C++") ? { sufficient: true, reason: "Both sides.", missingAspects: [] } : { sufficient: false, reason: "Missing one side.", missingAspects: ["comparison-side"] },
+    rewrite: async () => ({ strategy: "cpp", queries: ["C++ memory"], rationale: "Recover C++." }),
+    accumulate: ({ question, previous, current, topK }) => mergeAccumulatedEvidenceByLanguage({ previous, current, requiredLanguages: detectQueryMetadataConstraint(question)?.databaseLanguages ?? [], topK }),
+  }, { topK: 4 });
+  assert.equal(result.sufficient, true);
+  assert.equal(result.chunks.filter((item) => item.language === "C").length, 2);
+  assert.equal(result.chunks.filter((item) => item.language === "C++").length, 2);
+  assert.equal(result.trace.find((step) => step.attempt === 2 && step.action === "retrieve")?.newlyRetrieved?.length, 2);
+}
+
+function testsAccumulationDeduplicationAndFallback() {
+  const deduplicated = mergeAccumulatedEvidenceByLanguage({ previous: [chunk("shared", 1, .7, "C"), chunk("c", 2, .69, "C")], current: [chunk("shared", 2, .75, "C"), chunk("cpp", 1, .74, "C++")], requiredLanguages: ["C", "C++"], topK: 4 });
+  assert.equal(deduplicated.filter((item) => item.id === "shared").length, 1);
+  assert.equal(deduplicated.find((item) => item.id === "shared")?.score, .75);
+  const fallback = mergeAccumulatedEvidenceByLanguage({ previous: [chunk("old", 1, .7, "Rust")], current: [chunk("new", 1, .8, "Rust")], requiredLanguages: ["Rust"], topK: 1 });
+  assert.deepEqual(fallback.map((item) => item.id), ["new"]);
 }
 
 function dependencies(options: { assessment: EvidenceAssessment; rewrite: QueryRewrite | null }) {

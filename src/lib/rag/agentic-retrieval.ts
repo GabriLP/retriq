@@ -27,6 +27,7 @@ export type AgenticTraceStep = {
   durationMs: number;
   queries?: string[];
   retrieved?: Array<{ id: string; rank: number; score: number; language?: string }>;
+  newlyRetrieved?: Array<{ id: string; rank: number; score: number; language?: string }>;
   assessment?: EvidenceAssessment;
   rewrite?: QueryRewrite;
   stopReason?: AgenticStopReason;
@@ -50,6 +51,13 @@ export type AgenticRetrievalConfig = {
 export type AgenticRetrievalDependencies = {
   retrieve: (query: string, topK: number) => Promise<RetrievalResult[]>;
   merge?: (rankings: RetrievalResult[][], topK: number) => RetrievalResult[];
+  accumulate?: (input: {
+    question: string;
+    previous: RetrievalResult[];
+    current: RetrievalResult[];
+    attempt: number;
+    topK: number;
+  }) => RetrievalResult[];
   assess: (input: {
     question: string;
     queries: string[];
@@ -93,7 +101,11 @@ export async function retrieveWithAgenticLoop(
     seenPlans.add(planKey);
     const retrievalStarted = now();
     const rankings = await Promise.all(queries.map((query) => dependencies.retrieve(query, config.topK)));
-    chunks = (dependencies.merge ?? mergeRankings)(rankings, config.topK);
+    const current = (dependencies.merge ?? mergeRankings)(rankings, config.topK);
+    const previous = chunks;
+    chunks = attempt > 1 && dependencies.accumulate
+      ? dependencies.accumulate({ question: normalizedQuestion, previous, current, attempt, topK: config.topK })
+      : current;
     trace.push({
       sequence: trace.length + 1,
       attempt,
@@ -101,6 +113,7 @@ export async function retrieveWithAgenticLoop(
       durationMs: elapsed(retrievalStarted, now()),
       queries: [...queries],
       retrieved: chunks.map((chunk) => ({ id: chunk.id, rank: chunk.rank, score: chunk.score, language: chunk.language })),
+      ...(dependencies.accumulate && attempt > 1 ? { newlyRetrieved: current.map((chunk) => ({ id: chunk.id, rank: chunk.rank, score: chunk.score, language: chunk.language })) } : {}),
     });
 
     const assessmentStarted = now();
@@ -156,6 +169,34 @@ export function mergeRankings(rankings: RetrievalResult[][], topK: number) {
     .map((chunk, index) => ({ ...chunk, rank: index + 1 }));
 }
 
+export function mergeAccumulatedEvidenceByLanguage(input: {
+  previous: RetrievalResult[];
+  current: RetrievalResult[];
+  requiredLanguages: string[];
+  topK: number;
+}) {
+  const languages = [...new Set(input.requiredLanguages.map(normalizeLanguage).filter(Boolean))];
+  const all = mergeRankings([input.previous, input.current], input.previous.length + input.current.length);
+  if (languages.length <= 1) return rerank(all.slice(0, input.topK));
+  const quota = Math.floor(input.topK / languages.length);
+  const selected: RetrievalResult[] = [];
+  const selectedIds = new Set<string>();
+  for (const language of languages) {
+    for (const chunk of all.filter((item) => normalizeLanguage(item.language ?? "") === language).slice(0, quota)) {
+      selected.push(chunk);
+      selectedIds.add(chunk.id);
+    }
+  }
+  for (const chunk of all) {
+    if (selected.length >= input.topK) break;
+    if (!selectedIds.has(chunk.id)) {
+      selected.push(chunk);
+      selectedIds.add(chunk.id);
+    }
+  }
+  return rerank(selected.slice(0, input.topK));
+}
+
 function finish(stopReason: AgenticStopReason, sufficient: boolean, attempts: number, question: string, chunks: RetrievalResult[], trace: AgenticTraceStep[]): AgenticRetrievalResult {
   trace.push({ sequence: trace.length + 1, attempt: attempts, action: "stop", durationMs: 0, stopReason });
   return { question, chunks, sufficient, attempts, stopReason, trace };
@@ -181,4 +222,5 @@ function normalizeQueries(queries: string[], maximum: number) {
 
 function queryPlanKey(queries: string[]) { return [...queries].map((query) => query.toLocaleLowerCase()).sort().join("\n"); }
 function normalizeLanguage(value: string) { return value.trim().toLocaleLowerCase(); }
+function rerank(chunks: RetrievalResult[]) { return chunks.map((chunk, index) => ({ ...chunk, rank: index + 1 })); }
 function elapsed(started: number, finished: number) { return Number(Math.max(0, finished - started).toFixed(2)); }

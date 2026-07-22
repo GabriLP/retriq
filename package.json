@@ -40,6 +40,7 @@
     "experiment:agentic:semantic-assessor:v2": "tsx scripts/evaluate-semantic-evidence-assessor-v2.ts",
     "experiment:agentic:semantic-gate": "tsx scripts/evaluate-agentic-semantic-gate.ts",
     "agentic:semantic-gate:test": "tsx scripts/test-agentic-semantic-gate.ts",
+    "experiment:agentic:cross-attempt-merge": "tsx scripts/evaluate-agentic-cross-attempt-merge.ts",
     "experiment:agentic": "tsx scripts/evaluate-agentic-rag.ts",
     "experiment:agentic:v2": "tsx scripts/evaluate-agentic-rag.ts --protocol docs/experiments/agentic-rag-planner.v2.json",
     "experiment:agentic:v3": "tsx scripts/evaluate-agentic-rag.ts --protocol docs/experiments/agentic-rag-planner.v3.json",
