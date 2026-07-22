@@ -33,6 +33,8 @@
     "retrieval:strategies:test": "tsx scripts/test-retrieval-strategies.ts",
     "agentic:retrieval:test": "tsx scripts/test-agentic-retrieval.ts",
     "agentic:policy:test": "tsx scripts/test-agentic-policy.ts",
+    "agentic:semantic-assessor:test": "tsx scripts/test-semantic-evidence-assessor.ts",
+    "experiment:agentic:semantic-assessor": "tsx scripts/evaluate-semantic-evidence-assessor.ts",
     "experiment:agentic": "tsx scripts/evaluate-agentic-rag.ts",
     "experiment:agentic:v2": "tsx scripts/evaluate-agentic-rag.ts --protocol docs/experiments/agentic-rag-planner.v2.json",
     "experiment:agentic:v3": "tsx scripts/evaluate-agentic-rag.ts --protocol docs/experiments/agentic-rag-planner.v3.json",
