@@ -2,7 +2,7 @@
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
 - Experiment families: **25**
-- Completed: **15**
+- Completed: **16**
 - Superseded but retained: **1**
 
 This is the narrative index for the thesis. The JSON registry is the source of truth; generated Markdown and CSV provide readable and tabular views. Every experiment records its question, isolated variable, controls, metrics, decision, limitations, and next action.
@@ -33,7 +33,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 22 | AI-assisted evidence-sufficiency validation | agentic-semantic-assessor-v2 | failed | Deterministic score-and-language gate versus GPT-5.4 Mini semantic assessment on identical frozen evidence packets | Do not qualify GPT-5.4 Mini under the frozen rule. It improved accuracy from 0.5000 to 0.8750 and FPR from 1.0000 to 0.2500, with recall 1.0000 and kappa 0.7500, but missed the 0.9167 accuracy floor and 0.0833 FPR ceiling. All 24 provider calls succeeded for $0.047516. A post-result audit found that all three disagreements appear semantically sufficient despite their frozen insufficient labels, making the measured FPR reference-sensitive; labels remain unchanged to avoid circular post-hoc correction. |
 | 23 | Exploratory agentic RAG integration | agentic-rag-semantic-gate-v1 | failed | Deterministic score-and-language assessment versus GPT-5.4 Mini semantic assessment inside the otherwise identical agentic loop | Do not advance the current semantic-gated agentic architecture. It preserved general Recall@4 0.9630, MRR 0.9444, and nDCG@4 0.9493 while reducing general and focused negative FPR to zero. However, comparative both-evidence coverage remained 0.2500 and evidence-side recall 0.3750, below the frozen 0.3750 and 0.6250 requirements. All 39 second attempts failed to recover additional cases, so retry planning added 39 planner calls, latency, and cost without retrieval benefit. The run completed without provider errors for $0.203783 plus $0.000181 estimated embedding cost. |
 | 24 | Final agentic RAG merge-policy experiment | agentic-rag-cross-attempt-merge-v1 | failed | Replace previous-attempt evidence versus accumulate it with a per-requested-technology quota | Do not select cross-attempt accumulation and stop Agentic RAG development for the current thesis. General Recall@4 0.9630, MRR 0.9444, nDCG@4 0.9493, and zero general FPR were preserved. The policy recovered three positive comparisons, but canonical both-evidence coverage remained 0.2500, side recall reached only 0.5000, and negative-go-rust-react-effect became a false positive, raising focused FPR to 0.1250. It therefore failed three frozen checks. Six new assessor calls cost $0.019962; all 39 planner rewrites were exact cache hits. |
-| 25 | Final locked retrieval verification | baseline-final-test-v1 | in-progress | Evaluation split changes from validation to the locked test; every retrieval parameter remains frozen | Preregistered; no test metric has been computed. The locked configuration will be evaluated once without post-result tuning. |
+| 25 | Final locked retrieval verification | baseline-final-test-v1 | completed | Evaluation split changes from validation to the locked test; every retrieval parameter remains frozen | Retain the selected single-pass baseline. Its sole locked-test execution passed every frozen check: Recall@4 1.0000, Precision@4 0.6667, MRR 0.9375, nDCG@4 0.9526, and unanswerable FPR 0.0833. All 12 answerable cases had full canonical-evidence coverage, although the Java overload case first retrieved canonical evidence at rank four. One of 12 negatives, the pg_partman retention case, was falsely accepted, placing FPR exactly at the allowed boundary. One provider request cost an estimated $0.000145. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
 
@@ -326,11 +326,11 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 ## 25. Final locked retrieval verification: baseline-final-test-v1
 
 - **Research question:** Does the validation-selected single-pass retrieval baseline retain retrieval quality and abstention on the untouched v4 test split?
-- **Status:** in-progress
+- **Status:** completed
 - **Changed variable:** Evaluation split changes from validation to the locked test; every retrieval parameter remains frozen
 - **Controls:** 24 frozen test cases: 12 answerable and 12 unanswerable; 300-word chunks with 80-word overlap; Gemini Embedding 2 at 1,024 dimensions; dense cosine retrieval with metadata filtering; threshold 0.68; topK=4; no reranker; no agentic loop; single execution
 - **Metrics:** Recall@4; Precision@4; MRR; nDCG@4; unanswerable false-positive rate; full canonical-evidence coverage; any canonical-evidence hit rate; Wilson 95% intervals; provider errors; cost
-- **Artifacts:** `docs/experiments/baseline-final-test.v1.json`
-- **Decision:** Preregistered; no test metric has been computed. The locked configuration will be evaluated once without post-result tuning.
+- **Artifacts:** `docs/experiments/baseline-final-test.v1.json`; `scripts/evaluate-final-baseline-test.ts`; `docs/experiment-results/baseline-final-test-v1.json`; `docs/experiment-results/baseline-final-test-v1.md`; `docs/experiment-results/baseline-final-test-v1.csv`
+- **Decision:** Retain the selected single-pass baseline. Its sole locked-test execution passed every frozen check: Recall@4 1.0000, Precision@4 0.6667, MRR 0.9375, nDCG@4 0.9526, and unanswerable FPR 0.0833. All 12 answerable cases had full canonical-evidence coverage, although the Java overload case first retrieved canonical evidence at rank four. One of 12 negatives, the pg_partman retention case, was falsely accepted, placing FPR exactly at the allowed boundary. One provider request cost an estimated $0.000145.
 - **Limitations:** Only 12 cases per answerability class; Benchmark approval state is pending-confirmation and AI-assisted rather than independently human-validated; Retrieval-only verification
-- **Next step:** Commit the dedicated integrity-checking runner, execute the test once, and report the result regardless of whether the frozen guardrails pass.
+- **Next step:** Freeze retrieval development for the current thesis, report the confidence intervals and provisional-label limitation alongside the point estimates, and move to thesis synthesis and any separately scoped final generation verification.

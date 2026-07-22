@@ -345,14 +345,14 @@
       "id": "baseline-final-test-v1",
       "thesisSection": "Final locked retrieval verification",
       "researchQuestion": "Does the validation-selected single-pass retrieval baseline retain retrieval quality and abstention on the untouched v4 test split?",
-      "status": "in-progress",
+      "status": "completed",
       "variable": "Evaluation split changes from validation to the locked test; every retrieval parameter remains frozen",
       "controls": ["24 frozen test cases: 12 answerable and 12 unanswerable", "300-word chunks with 80-word overlap", "Gemini Embedding 2 at 1,024 dimensions", "dense cosine retrieval with metadata filtering", "threshold 0.68", "topK=4", "no reranker", "no agentic loop", "single execution"],
       "metrics": ["Recall@4", "Precision@4", "MRR", "nDCG@4", "unanswerable false-positive rate", "full canonical-evidence coverage", "any canonical-evidence hit rate", "Wilson 95% intervals", "provider errors", "cost"],
-      "artifacts": ["docs/experiments/baseline-final-test.v1.json"],
-      "decision": "Preregistered; no test metric has been computed. The locked configuration will be evaluated once without post-result tuning.",
+      "artifacts": ["docs/experiments/baseline-final-test.v1.json", "scripts/evaluate-final-baseline-test.ts", "docs/experiment-results/baseline-final-test-v1.json", "docs/experiment-results/baseline-final-test-v1.md", "docs/experiment-results/baseline-final-test-v1.csv"],
+      "decision": "Retain the selected single-pass baseline. Its sole locked-test execution passed every frozen check: Recall@4 1.0000, Precision@4 0.6667, MRR 0.9375, nDCG@4 0.9526, and unanswerable FPR 0.0833. All 12 answerable cases had full canonical-evidence coverage, although the Java overload case first retrieved canonical evidence at rank four. One of 12 negatives, the pg_partman retention case, was falsely accepted, placing FPR exactly at the allowed boundary. One provider request cost an estimated $0.000145.",
       "limitations": ["Only 12 cases per answerability class", "Benchmark approval state is pending-confirmation and AI-assisted rather than independently human-validated", "Retrieval-only verification"],
-      "nextStep": "Commit the dedicated integrity-checking runner, execute the test once, and report the result regardless of whether the frozen guardrails pass."
+      "nextStep": "Freeze retrieval development for the current thesis, report the confidence intervals and provisional-label limitation alongside the point estimates, and move to thesis synthesis and any separately scoped final generation verification."
     }
   ]
 }

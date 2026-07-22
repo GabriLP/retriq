@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "baseline-final-test-v1",
   "title": "Locked final test of the selected single-pass retrieval baseline",
-  "status": "preregistered",
+  "status": "completed",
   "preregisteredAt": "2026-07-22",
   "researchQuestion": "Does the validation-selected single-pass retrieval configuration retain strong canonical-evidence retrieval and abstention on the untouched v4 test split?",
   "hypothesis": "The selected baseline generalizes to the locked test split with high Recall@4, MRR, and nDCG@4 while producing at most one false positive among twelve unanswerable cases.",
@@ -74,6 +74,30 @@
     "docs/experiment-results/baseline-final-test-v1.md",
     "docs/experiment-results/baseline-final-test-v1.csv"
   ],
+  "observedResult": {
+    "executedAt": "2026-07-22T11:12:52.389Z",
+    "executionCommit": "7ad83fbd96bc205142b041347a8831c85eb564ee",
+    "executionCount": 1,
+    "passedAllFrozenChecks": true,
+    "metrics": {
+      "recallAtK": 1.0,
+      "precisionAtK": 0.6666666666666666,
+      "mrr": 0.9375,
+      "ndcgAtK": 0.9525563798394495,
+      "noAnswerFalsePositiveRate": 0.08333333333333333
+    },
+    "fullCanonicalCoverage": { "count": 12, "total": 12, "wilson95": [0.7575, 1.0] },
+    "falsePositives": { "count": 1, "total": 12, "caseIds": ["postgresql-pg-partman-retention-001"], "wilson95": [0.0149, 0.3539] },
+    "lowestRankedCanonicalHit": { "caseId": "java-overload-resolution-001", "rank": 4 },
+    "providerRequests": 1,
+    "estimatedCostUsd": 0.0001452,
+    "interpretation": "The selected baseline passed every preregistered replication check. The result supports retention of the single-pass configuration, but the FPR is exactly at its allowed boundary and its 12-case Wilson interval is wide; this is evidence of successful bounded replication, not proof of a zero-error production rate."
+  },
+  "outputIntegrity": {
+    "jsonSha256": "d9141676de4ab057ede266f04edccdc714ff81dcfc6386d1bf1afcb1eac93f4d",
+    "markdownSha256": "d13048668b9f88ea5ebacbe6aa4438302a1ec6354fa9d8f4f095bfbf55eef6f5",
+    "csvSha256": "8aa980d730af48361844bfb41b8f5411ae5814f89b7d5867b147e082ed8161f2"
+  },
   "limitations": [
     "Only twelve answerable and twelve unanswerable cases are available, so uncertainty intervals will be wide.",
     "Approval labels remain pending confirmation and were not produced by an independent second reviewer.",

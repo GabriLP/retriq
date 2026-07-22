@@ -1,0 +1,1043 @@
+{
+  "schemaVersion": 1,
+  "id": "baseline-final-test-v1",
+  "createdAt": "2026-07-22T11:12:52.389Z",
+  "split": "test",
+  "executionNumber": 1,
+  "configuration": {
+    "corpusRun": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec",
+    "corpusChunks": 33079,
+    "chunking": {
+      "strategy": "word-window",
+      "targetWords": 300,
+      "minWords": 200,
+      "overlapWords": 80
+    },
+    "embedding": {
+      "provider": "google",
+      "model": "gemini-embedding-2",
+      "outputDimensionality": 1024,
+      "documentTask": "RETRIEVAL_DOCUMENT",
+      "queryTask": "QUESTION_ANSWERING"
+    },
+    "retrieval": {
+      "strategy": "dense-cosine",
+      "metadataFiltering": true,
+      "minScore": 0.68,
+      "topK": 4,
+      "reranker": null,
+      "agenticLoop": false
+    }
+  },
+  "metrics": {
+    "evaluatedCases": 24,
+    "answerableCases": 12,
+    "unanswerableCases": 12,
+    "recallAtK": 1,
+    "precisionAtK": 0.6666666666666666,
+    "mrr": 0.9375,
+    "ndcgAtK": 0.9525563798394495,
+    "noAnswerFalsePositiveRate": 0.08333333333333333
+  },
+  "intervals": {
+    "fullCanonicalCoverage": {
+      "numerator": 12,
+      "denominator": 12,
+      "rate": 1,
+      "lower": 0.7575059933447592,
+      "upper": 1
+    },
+    "anyCanonicalHit": {
+      "numerator": 12,
+      "denominator": 12,
+      "rate": 1,
+      "lower": 0.7575059933447592,
+      "upper": 1
+    },
+    "falsePositive": {
+      "numerator": 1,
+      "denominator": 12,
+      "rate": 0.08333333333333333,
+      "lower": 0.014865094404917095,
+      "upper": 0.35387991114111694
+    }
+  },
+  "checks": {
+    "recallAtK": true,
+    "mrr": true,
+    "ndcgAtK": true,
+    "falsePositiveRate": true,
+    "providerErrors": true,
+    "costCeiling": true
+  },
+  "passedAllChecks": true,
+  "cases": [
+    {
+      "caseId": "c-array-decay-001",
+      "answerability": "answerable",
+      "retrievedCount": 4,
+      "relevantRetrieved": 3,
+      "recallAtK": 1,
+      "precisionAtK": 0.75,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7395418317145006,
+          "chunkId": "52a682760b6caf3a",
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "pageStart": 72,
+          "pageEnd": 73,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "score": 0.7324025831984288,
+          "chunkId": "ab594b848b5ff45b",
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "pageStart": 72,
+          "pageEnd": 73,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "score": 0.7091543240316526,
+          "chunkId": "b97e34da0ee00a0c",
+          "sourceId": "beej-c-tutorial",
+          "sourceUrl": "https://beej.us/guide/bgc/pdf/bgc_usl_bw_1.pdf",
+          "pageStart": 55,
+          "pageEnd": 56,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "score": 0.7013368486761226,
+          "chunkId": "1f4ebdd818a9b73e",
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "pageStart": 72,
+          "pageEnd": 73,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "caseId": "java-overload-resolution-001",
+      "answerability": "answerable",
+      "retrievedCount": 4,
+      "relevantRetrieved": 1,
+      "recallAtK": 1,
+      "precisionAtK": 0.25,
+      "reciprocalRank": 0.25,
+      "ndcgAtK": 0.43067655807339306,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.788183111332833,
+          "chunkId": "ed676fe3142356f8",
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "pageStart": 647,
+          "pageEnd": 649,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "score": 0.7879365087572558,
+          "chunkId": "eaf73f78a485ee16",
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "pageStart": 647,
+          "pageEnd": 649,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "score": 0.7750819542091342,
+          "chunkId": "b5a541b5783bb9fe",
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "pageStart": 647,
+          "pageEnd": 649,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "score": 0.7359741119678969,
+          "chunkId": "4de9d4cb58944d09",
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "pageStart": 656,
+          "pageEnd": 657,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "caseId": "postgresql-transaction-001",
+      "answerability": "answerable",
+      "retrievedCount": 4,
+      "relevantRetrieved": 3,
+      "recallAtK": 1,
+      "precisionAtK": 0.75,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7814423970105833,
+          "chunkId": "12c9386468fc695d",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 57,
+          "pageEnd": 58,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "score": 0.7625910482046976,
+          "chunkId": "8b6ad4a73f951f50",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 57,
+          "pageEnd": 58,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "score": 0.7619345699841237,
+          "chunkId": "50e27c551a4ecc9d",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 1763,
+          "pageEnd": 1763,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "score": 0.757740925952369,
+          "chunkId": "13c79618e0416c98",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 57,
+          "pageEnd": 58,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "caseId": "c-cuda-unified-memory-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    },
+    {
+      "caseId": "java-hibernate-lazyinit-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    },
+    {
+      "caseId": "postgresql-pg-partman-retention-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 1,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": true,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7008686646450265,
+          "chunkId": "0038b8d70a4ade60",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 138,
+          "pageEnd": 140,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "caseId": "cpp-range-for-lookup-001",
+      "answerability": "answerable",
+      "retrievedCount": 4,
+      "relevantRetrieved": 2,
+      "recallAtK": 1,
+      "precisionAtK": 0.5,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7634029914097968,
+          "chunkId": "d4d98ba26fe9fbc3",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 206,
+          "pageEnd": 207,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "score": 0.762689281913414,
+          "chunkId": "012560a1b059e8db",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 206,
+          "pageEnd": 207,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "score": 0.7260158417476191,
+          "chunkId": "7f2470d6499bb554",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 1264,
+          "pageEnd": 1264,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "score": 0.711625279998407,
+          "chunkId": "a5fc29b8f2f3c3ea",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 1265,
+          "pageEnd": 1265,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "caseId": "javascript-promise-any-001",
+      "answerability": "answerable",
+      "retrievedCount": 4,
+      "relevantRetrieved": 2,
+      "recallAtK": 1,
+      "precisionAtK": 0.5,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7505686513447272,
+          "chunkId": "fd6bbcac85cf6733",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 774,
+          "pageEnd": 775,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "score": 0.7415400451091904,
+          "chunkId": "01e9225c22d7f2e2",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 775,
+          "pageEnd": 775,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "score": 0.695173627259135,
+          "chunkId": "2297f3f3443384c7",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 776,
+          "pageEnd": 777,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "score": 0.6944253164490982,
+          "chunkId": "51b0124babe774ef",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 771,
+          "pageEnd": 772,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "caseId": "kotlin-elvis-lazy-001",
+      "answerability": "answerable",
+      "retrievedCount": 4,
+      "relevantRetrieved": 1,
+      "recallAtK": 1,
+      "precisionAtK": 0.25,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.8119688788726613,
+          "chunkId": "d08840d67f98cbfc",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 186,
+          "pageEnd": 186,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "score": 0.7034788397439714,
+          "chunkId": "28d637b8f836927c",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 192,
+          "pageEnd": 192,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "score": 0.7003719905270923,
+          "chunkId": "e09b14fc707f4e33",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 198,
+          "pageEnd": 199,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "score": 0.6954784841699919,
+          "chunkId": "556afb09644215e2",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 176,
+          "pageEnd": 178,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "caseId": "bash-pipefail-status-001",
+      "answerability": "answerable",
+      "retrievedCount": 4,
+      "relevantRetrieved": 2,
+      "recallAtK": 1,
+      "precisionAtK": 0.5,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7756268990628015,
+          "chunkId": "7732c1555b61ac8f",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 16,
+          "pageEnd": 16,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "score": 0.7261830838918453,
+          "chunkId": "66953a0908363e47",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 80,
+          "pageEnd": 81,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "score": 0.7148270921318439,
+          "chunkId": "95a19230dad8d21d",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 81,
+          "pageEnd": 84,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "score": 0.7142412681388184,
+          "chunkId": "416d83385eea32ee",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 16,
+          "pageEnd": 16,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "caseId": "go-defer-order-001",
+      "answerability": "answerable",
+      "retrievedCount": 2,
+      "relevantRetrieved": 2,
+      "recallAtK": 1,
+      "precisionAtK": 1,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7109690253270076,
+          "chunkId": "e6e509da5df1b502",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "score": 0.6862101351707639,
+          "chunkId": "63469c12a737345a",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "caseId": "go-method-set-pointer-001",
+      "answerability": "answerable",
+      "retrievedCount": 4,
+      "relevantRetrieved": 4,
+      "recallAtK": 1,
+      "precisionAtK": 1,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7163721634435032,
+          "chunkId": "01d6d5bfda9faa30",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "score": 0.7003795653228,
+          "chunkId": "2b9598f188328359",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "score": 0.6933930399107775,
+          "chunkId": "0368f342bf9d95b6",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "score": 0.6914930744144296,
+          "chunkId": "f8c411fcefee19cb",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "caseId": "cpp-qt-signals-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    },
+    {
+      "caseId": "javascript-node-fs-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    },
+    {
+      "caseId": "kotlin-compose-effects-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    },
+    {
+      "caseId": "python-numpy-broadcast-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    },
+    {
+      "caseId": "rust-tokio-tasks-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    },
+    {
+      "caseId": "go-client-kubernetes-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    },
+    {
+      "caseId": "python-default-argument-once-001",
+      "answerability": "answerable",
+      "retrievedCount": 1,
+      "relevantRetrieved": 1,
+      "recallAtK": 1,
+      "precisionAtK": 1,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7147453877799902,
+          "chunkId": "8a2bd8e70ad29454",
+          "sourceId": "python-tutorial",
+          "sourceUrl": "https://docs.python.org/3/tutorial/controlflow.html",
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "caseId": "typescript-discriminated-union-001",
+      "answerability": "answerable",
+      "retrievedCount": 4,
+      "relevantRetrieved": 2,
+      "recallAtK": 1,
+      "precisionAtK": 0.5,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7711501931743319,
+          "chunkId": "90fe7fe08289d3e4",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html",
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "score": 0.7669622069043486,
+          "chunkId": "8d6af18ae1a35fda",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html",
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "score": 0.7669622069043486,
+          "chunkId": "8d6af18ae1a35fda",
+          "sourceId": "typescript-everyday-types",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html",
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "score": 0.7610170196743756,
+          "chunkId": "72665883de3477c2",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html",
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "caseId": "rust-question-mark-result-001",
+      "answerability": "answerable",
+      "retrievedCount": 4,
+      "relevantRetrieved": 4,
+      "recallAtK": 1,
+      "precisionAtK": 1,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1,
+      "falsePositive": null,
+      "rankedChunks": [
+        {
+          "rank": 1,
+          "score": 0.7615690000313778,
+          "chunkId": "f8f52c14c3241b4b",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch09-02-recoverable-errors-with-result.html",
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "score": 0.7559216600125724,
+          "chunkId": "d6cdec70b78bec04",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch09-02-recoverable-errors-with-result.html",
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "score": 0.7557255567929005,
+          "chunkId": "bb9e2f095e1cb8a5",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch09-02-recoverable-errors-with-result.html",
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "score": 0.7480582757080417,
+          "chunkId": "7a7faa88c08e8baa",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch09-02-recoverable-errors-with-result.html",
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "caseId": "python-sqlalchemy-async-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    },
+    {
+      "caseId": "typescript-deno-permissions-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    },
+    {
+      "caseId": "rust-axum-state-001",
+      "answerability": "unanswerable",
+      "retrievedCount": 0,
+      "relevantRetrieved": 0,
+      "recallAtK": null,
+      "precisionAtK": null,
+      "reciprocalRank": null,
+      "ndcgAtK": null,
+      "falsePositive": false,
+      "rankedChunks": []
+    }
+  ],
+  "compatibilityDecisions": [
+    {
+      "caseId": "c-array-decay-001",
+      "status": "compatible",
+      "requestedTechnology": "c",
+      "requestedVersion": null,
+      "availableVersions": [
+        11
+      ],
+      "reason": "Restricted retrieval to 9222 metadata-compatible chunks.",
+      "compatibleChunks": 9222
+    },
+    {
+      "caseId": "java-overload-resolution-001",
+      "status": "compatible",
+      "requestedTechnology": "java",
+      "requestedVersion": null,
+      "availableVersions": [
+        26
+      ],
+      "reason": "Restricted retrieval to 2448 metadata-compatible chunks.",
+      "compatibleChunks": 2448
+    },
+    {
+      "caseId": "postgresql-transaction-001",
+      "status": "compatible",
+      "requestedTechnology": "postgresql",
+      "requestedVersion": null,
+      "availableVersions": [
+        18
+      ],
+      "reason": "Restricted retrieval to 7758 metadata-compatible chunks.",
+      "compatibleChunks": 7758
+    },
+    {
+      "caseId": "c-cuda-unified-memory-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "java-hibernate-lazyinit-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "postgresql-pg-partman-retention-001",
+      "status": "compatible",
+      "requestedTechnology": "postgresql",
+      "requestedVersion": null,
+      "availableVersions": [
+        18
+      ],
+      "reason": "Restricted retrieval to 7758 metadata-compatible chunks.",
+      "compatibleChunks": 7758
+    },
+    {
+      "caseId": "cpp-range-for-lookup-001",
+      "status": "compatible",
+      "requestedTechnology": "cpp",
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "Restricted retrieval to 5964 metadata-compatible chunks.",
+      "compatibleChunks": 5964
+    },
+    {
+      "caseId": "javascript-promise-any-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "kotlin-elvis-lazy-001",
+      "status": "compatible",
+      "requestedTechnology": "kotlin",
+      "requestedVersion": null,
+      "availableVersions": [
+        1
+      ],
+      "reason": "Restricted retrieval to 500 metadata-compatible chunks.",
+      "compatibleChunks": 500
+    },
+    {
+      "caseId": "bash-pipefail-status-001",
+      "status": "compatible",
+      "requestedTechnology": "bash",
+      "requestedVersion": null,
+      "availableVersions": [
+        5
+      ],
+      "reason": "Restricted retrieval to 688 metadata-compatible chunks.",
+      "compatibleChunks": 688
+    },
+    {
+      "caseId": "go-defer-order-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "go-method-set-pointer-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "cpp-qt-signals-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "javascript-node-fs-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "kotlin-compose-effects-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "python-numpy-broadcast-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "rust-tokio-tasks-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "go-client-kubernetes-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "python-default-argument-once-001",
+      "status": "compatible",
+      "requestedTechnology": "python",
+      "requestedVersion": null,
+      "availableVersions": [
+        3
+      ],
+      "reason": "Restricted retrieval to 510 metadata-compatible chunks.",
+      "compatibleChunks": 510
+    },
+    {
+      "caseId": "typescript-discriminated-union-001",
+      "status": "compatible",
+      "requestedTechnology": "typescript",
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "Restricted retrieval to 607 metadata-compatible chunks.",
+      "compatibleChunks": 607
+    },
+    {
+      "caseId": "rust-question-mark-result-001",
+      "status": "compatible",
+      "requestedTechnology": "rust",
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "Restricted retrieval to 1549 metadata-compatible chunks.",
+      "compatibleChunks": 1549
+    },
+    {
+      "caseId": "python-sqlalchemy-async-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "typescript-deno-permissions-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    },
+    {
+      "caseId": "rust-axum-state-001",
+      "status": "compatible",
+      "requestedTechnology": null,
+      "requestedVersion": null,
+      "availableVersions": [],
+      "reason": "No supported technology or version constraint was detected.",
+      "compatibleChunks": 33079
+    }
+  ],
+  "cache": {
+    "documentHits": 32621,
+    "documentMisses": 0,
+    "queryHits": 0,
+    "queryMisses": 24,
+    "apiInputs": 24,
+    "apiRequests": 1,
+    "cacheWrites": 24
+  },
+  "cost": {
+    "estimatedUsd": 0.0001452,
+    "ceilingUsd": 0.01,
+    "priceUsdPerMillionInputTokens": 0.2
+  },
+  "timingMs": 3868,
+  "provenance": {
+    "gitCommit": "7ad83fbd96bc205142b041347a8831c85eb564ee",
+    "protocolSha256": "e1d85cdd4e550521063a2887f81b7abc8767b189cfac8e33cf5844639468d225",
+    "runnerSha256": "69518354bcd92c995cb4694cbd7efb8cf874bd384bf6ec4b623056c99acc2909",
+    "benchmarkApprovalState": "pending-confirmation",
+    "independentlyHumanApproved": false,
+    "priorScoredArtifactMatches": 0
+  },
+  "interpretation": "The locked result is retained regardless of pass/fail. It verifies retrieval only and does not authorize post-result tuning."
+}
