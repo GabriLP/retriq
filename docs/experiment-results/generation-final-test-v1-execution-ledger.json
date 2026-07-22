@@ -1,0 +1,631 @@
+{
+  "schemaVersion": 1,
+  "protocolId": "generation-final-test-v1",
+  "startedAt": "2026-07-22T11:28:01.321Z",
+  "executionNumber": 1,
+  "protocolCommit": "abc1549c32380f7af3794dbdc42a3a5be453953a",
+  "status": "completed",
+  "outputs": [
+    {
+      "caseId": "c-array-decay-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "According to the provided documentation, an expression that has type \"array of type\" is not converted to a pointer to its first element in the following contexts:\n\n1. When it is the operand of the `sizeof` operator [S1, S2].\n2. When it is the operand of the `_Alignof` operator [S1, S2].\n3. When it is the operand of the unary `&` operator [S1, S2].\n4. When it is a string literal used to initialize an array [S1, S2].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "According to the provided documentation, an expression that has type \"array of type\" is not converted to a pointer to its first element in the following contexts:\n\n1. When it is the operand of the `sizeof` operator [S1, S2].\n2. When it is the operand of the `_Alignof` operator [S1, S2].\n3. When it is the operand of the unary `&` operator [S1, S2].\n4. When it is a string literal used to initialize an array [S1, S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719681-D8F1xdyAvOe8plAfKFEY",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2047,
+          "completionTokens": 459,
+          "reasoningTokens": 344,
+          "cachedTokens": 0,
+          "totalTokens": 2506,
+          "costUsd": 0.0048854,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 5859.08,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "java-overload-resolution-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "Java uses three phases to determine whether a method is applicable during overload resolution [S1, S3]:\n\n1. **Strict invocation (first phase):** Performs overload resolution without permitting boxing or unboxing conversion, or the use of variable arity method invocation. A variable arity method is treated as a fixed arity method in this phase [S2, S3]. If no applicable method is found, processing continues to the second phase [S2, S4].\n2. **Loose invocation (second phase):** Performs overload resolution while allowing boxing and unboxing, but still precludes the use of variable arity method invocation [S2, S3]. If no applicable method is found, processing continues to the third phase [S2].\n3. **Variable arity invocation (third phase):** Allows overloading to be combined with variable arity methods, boxing, and unboxing [S2, S3].\n\nIf several applicable methods are identified during one of these three phases, the most specific one is chosen [S1, S3].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "Java uses three phases to determine whether a method is applicable during overload resolution [S1, S3]:\n\n1. **Strict invocation (first phase):** Performs overload resolution without permitting boxing or unboxing conversion, or the use of variable arity method invocation. A variable arity method is treated as a fixed arity method in this phase [S2, S3]. If no applicable method is found, processing continues to the second phase [S2, S4].\n2. **Loose invocation (second phase):** Performs overload resolution while allowing boxing and unboxing, but still precludes the use of variable arity method invocation [S2, S3]. If no applicable method is found, processing continues to the third phase [S2].\n3. **Variable arity invocation (third phase):** Allows overloading to be combined with variable arity methods, boxing, and unboxing [S2, S3].\n\nIf several applicable methods are identified during one of these three phases, the most specific one is chosen [S1, S3].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719687-iBeyzKy1Fts4wj8FNa0O",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1998,
+          "completionTokens": 347,
+          "reasoningTokens": 138,
+          "cachedTokens": 96,
+          "totalTokens": 2345,
+          "costUsd": 0.00420304,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3023.58,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "postgresql-transaction-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "PostgreSQL guarantees that statements enclosed by BEGIN and COMMIT are bundled into a single, all-or-nothing operation [S4]. From the point of view of other transactions, the transaction either happens completely or not at all [S2, S4]. If a failure occurs that prevents the transaction from completing, none of the steps affect the database at all [S4]. Additionally, the intermediate states between the steps are not visible to other concurrent transactions; the updates made by the open transaction are invisible until it completes, at which point all updates become visible simultaneously [S1, S2, S4]. If a ROLLBACK is issued instead of a COMMIT, all updates made so far are canceled [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "PostgreSQL guarantees that statements enclosed by BEGIN and COMMIT are bundled into a single, all-or-nothing operation [S4]. From the point of view of other transactions, the transaction either happens completely or not at all [S2, S4]. If a failure occurs that prevents the transaction from completing, none of the steps affect the database at all [S4]. Additionally, the intermediate states between the steps are not visible to other concurrent transactions; the updates made by the open transaction are invisible until it completes, at which point all updates become visible simultaneously [S1, S2, S4]. If a ROLLBACK is issued instead of a COMMIT, all updates made so far are canceled [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719690-SNRoq8Emv16FooRYtg2U",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1660,
+          "completionTokens": 558,
+          "reasoningTokens": 413,
+          "cachedTokens": 96,
+          "totalTokens": 2218,
+          "costUsd": 0.00465824,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 5513.33,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "c-cuda-unified-memory-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "java-hibernate-lazyinit-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "postgresql-pg-partman-retention-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "The provided documentation does not contain information about pg_partman's `create_parent` function or how it configures retention and automatic partition detachment [S1].\n\nThe excerpts only describe PostgreSQL's native partition maintenance options, such as dropping partitions with `DROP TABLE` or detaching them with `ALTER TABLE ... DETACH PARTITION` (optionally `CONCURRENTLY`), which require different lock levels and allow further operations on the detached data before dropping it [S1].\n\nNote: The answer cannot be fully determined from the provided documentation because no pg_partman-specific material is included.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 1,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "The provided documentation does not contain information about pg_partman's `create_parent` function or how it configures retention and automatic partition detachment [S1].\n\nThe excerpts only describe PostgreSQL's native partition maintenance options, such as dropping partitions with `DROP TABLE` or detaching them with `ALTER TABLE ... DETACH PARTITION` (optionally `CONCURRENTLY`), which require different lock levels and allow further operations on the detached data before dropping it [S1].\n\nNote: The answer cannot be fully determined from the provided documentation because no pg_partman-specific material is included.",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719696-Y1cx0OfDn1aWFQLMoQeI",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 631,
+          "completionTokens": 192,
+          "reasoningTokens": 75,
+          "cachedTokens": 96,
+          "totalTokens": 823,
+          "costUsd": 0.00160724,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 2636.14,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "cpp-range-for-lookup-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "The range-based for statement determines `begin-expr` and `end-expr` using the following rules, applied to the variable `range` (defined as `auto && range = for-range-initializer`) [S1]:\n\n1. **Arrays**: If the type of `range` is a reference to an array type `R`, then `begin-expr` is `range` and `end-expr` is `range + N`, where `N` is the array bound. If `R` is an array of unknown bound or an array of incomplete type, the program is ill-formed [S1].\n\n2. **Class types with member begin/end**: If the type of `range` is a reference to a class type `C`, and searches in the scope of `C` for the names `begin` and `end` each find at least one declaration, then `begin-expr` is `range.begin()` and `end-expr` is `range.end()` [S1].\n\n3. **Otherwise (free functions via ADL)**: `begin-expr` and `end-expr` are `begin(range)` and `end(range)`, respectively, where `begin` and `end` undergo argument-dependent lookup. Ordinary unqualified lookup is not performed [S1].\n\nThe loop itself is equivalent to:\n```\n{\n  auto && range = for-range-initializer;\n  auto begin = begin-expr;\n  auto end = end-expr;\n  for ( ; begin != end; ++begin ) {\n    for-range-declaration = *begin;\n    statement\n  }\n}\n```\nwhere `range`, `begin`, and `end` are variables defined for exposition only [S1].\n\nNote: The excerpts also describe `ranges::begin` as a separate customization point object with its own rules (e.g., checking `enable_borrowed_range` and preferring `t.begin()` over ADL `begin(t)`) [S3, S4], but those rules apply to `ranges::begin(E)` specifically, not directly to the range-based for loop's `begin-expr`/`end-expr` determination as specified in [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "The range-based for statement determines `begin-expr` and `end-expr` using the following rules, applied to the variable `range` (defined as `auto && range = for-range-initializer`) [S1]:\n\n1. **Arrays**: If the type of `range` is a reference to an array type `R`, then `begin-expr` is `range` and `end-expr` is `range + N`, where `N` is the array bound. If `R` is an array of unknown bound or an array of incomplete type, the program is ill-formed [S1].\n\n2. **Class types with member begin/end**: If the type of `range` is a reference to a class type `C`, and searches in the scope of `C` for the names `begin` and `end` each find at least one declaration, then `begin-expr` is `range.begin()` and `end-expr` is `range.end()` [S1].\n\n3. **Otherwise (free functions via ADL)**: `begin-expr` and `end-expr` are `begin(range)` and `end(range)`, respectively, where `begin` and `end` undergo argument-dependent lookup. Ordinary unqualified lookup is not performed [S1].\n\nThe loop itself is equivalent to:\n```\n{\n  auto && range = for-range-initializer;\n  auto begin = begin-expr;\n  auto end = end-expr;\n  for ( ; begin != end; ++begin ) {\n    for-range-declaration = *begin;\n    statement\n  }\n}\n```\nwhere `range`, `begin`, and `end` are variables defined for exposition only [S1].\n\nNote: The excerpts also describe `ranges::begin` as a separate customization point object with its own rules (e.g., checking `enable_borrowed_range` and preferring `t.begin()` over ADL `begin(t)`) [S3, S4], but those rules apply to `ranges::begin(E)` specifically, not directly to the range-based for loop's `begin-expr`/`end-expr` determination as specified in [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719698-UdZI6Z0BWSr4O4z5xKBo",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2954,
+          "completionTokens": 899,
+          "reasoningTokens": 453,
+          "cachedTokens": 96,
+          "totalTokens": 3853,
+          "costUsd": 0.00797024,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 9712.21,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "javascript-promise-any-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "`Promise.any` rejects when **all of the given promises are rejected** [S1]. In that case, it is rejected with an **AggregateError** holding the rejection reasons [S1].\n\nSpecifically, the AggregateError has an `\"errors\"` property whose value is an array created from a list of the individual rejection reasons collected during iteration [S2]. This AggregateError is passed to the result capability’s reject function [S2].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "`Promise.any` rejects when **all of the given promises are rejected** [S1]. In that case, it is rejected with an **AggregateError** holding the rejection reasons [S1].\n\nSpecifically, the AggregateError has an `\"errors\"` property whose value is an array created from a list of the individual rejection reasons collected during iteration [S2]. This AggregateError is passed to the result capability’s reject function [S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719708-cdXn91KIPVM2Dg7PjEny",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1579,
+          "completionTokens": 103,
+          "reasoningTokens": 13,
+          "cachedTokens": 96,
+          "totalTokens": 1682,
+          "costUsd": 0.00254284,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3085.66,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "kotlin-elvis-lazy-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "The Elvis operator (`?:`) evaluates its operands as follows:\n\n1. It first checks whether the left-hand side expression is reference equal to `null` [S1].\n2. If the left-hand side expression is reference equal to `null`, it evaluates and returns the right-hand side expression [S1].\n3. If the left-hand side expression is not reference equal to `null`, the operator is lazy and does not evaluate the right-hand side expression [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "The Elvis operator (`?:`) evaluates its operands as follows:\n\n1. It first checks whether the left-hand side expression is reference equal to `null` [S1].\n2. If the left-hand side expression is reference equal to `null`, it evaluates and returns the right-hand side expression [S1].\n3. If the left-hand side expression is not reference equal to `null`, the operator is lazy and does not evaluate the right-hand side expression [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719734-JBOhzs2PUScd6nhyLhul",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1442,
+          "completionTokens": 251,
+          "reasoningTokens": 155,
+          "cachedTokens": 96,
+          "totalTokens": 1693,
+          "costUsd": 0.00300224,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 4682.17,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "bash-pipefail-status-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "By default, the exit status of a pipeline is the exit status of the last command in the pipeline [S1]. When the `pipefail` option is enabled, the pipeline’s return status becomes the value of the last (rightmost) command in the pipeline to exit with a non-zero status, or zero if all commands in the pipeline exit successfully [S1, S3]. This option is disabled by default [S3].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "By default, the exit status of a pipeline is the exit status of the last command in the pipeline [S1]. When the `pipefail` option is enabled, the pipeline’s return status becomes the value of the last (rightmost) command in the pipeline to exit with a non-zero status, or zero if all commands in the pipeline exit successfully [S1, S3]. This option is disabled by default [S3].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719749-a7eicmXVh1N97893v3Cm",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2238,
+          "completionTokens": 115,
+          "reasoningTokens": 26,
+          "cachedTokens": 96,
+          "totalTokens": 2353,
+          "costUsd": 0.00351824,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 1485.7,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "go-defer-order-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "Arguments to a deferred Go call (the function value and parameters) are evaluated as usual each time the `defer` statement executes, and saved anew, but the actual function is not invoked at that time [S2]. \n\nMultiple deferred calls are invoked immediately before the surrounding function returns, in the reverse order they were deferred [S2].",
+      "answerStatus": "grounded",
+      "evidenceCount": 2,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "Arguments to a deferred Go call (the function value and parameters) are evaluated as usual each time the `defer` statement executes, and saved anew, but the actual function is not invoked at that time [S2]. \n\nMultiple deferred calls are invoked immediately before the surrounding function returns, in the reverse order they were deferred [S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719759-5wZ1RPXrIIhGIL0Q2cYg",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1092,
+          "completionTokens": 239,
+          "reasoningTokens": 170,
+          "cachedTokens": 96,
+          "totalTokens": 1331,
+          "costUsd": 0.00245944,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3375.4,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "go-method-set-pointer-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "The method set of a defined type `T` consists of all methods declared with receiver type `T` [S3]. The method set of a pointer to a defined type `T` (where `T` is neither a pointer nor an interface) consists of all methods declared with receiver type `*T` or `T` [S3]. Therefore, the method set of `*T` includes both the methods of `T` and the methods specific to `*T`.",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "The method set of a defined type `T` consists of all methods declared with receiver type `T` [S3]. The method set of a pointer to a defined type `T` (where `T` is neither a pointer nor an interface) consists of all methods declared with receiver type `*T` or `T` [S3]. Therefore, the method set of `*T` includes both the methods of `T` and the methods specific to `*T`.",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719763-7LMJHfzyWItZp91CMyn9",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2306,
+          "completionTokens": 219,
+          "reasoningTokens": 120,
+          "cachedTokens": 96,
+          "totalTokens": 2525,
+          "costUsd": 0.00407104,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3582.99,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "cpp-qt-signals-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "javascript-node-fs-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "kotlin-compose-effects-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "python-numpy-broadcast-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "rust-tokio-tasks-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "go-client-kubernetes-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "python-default-argument-once-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "Using a mutable object as a Python default argument can cause values to persist across calls because the default value is evaluated only once [S1]. When the default is a mutable object such as a list, dictionary, or instances of most classes, modifications made to that object during a function call are retained in subsequent calls, causing the function to accumulate arguments passed to it over time [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 1,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "Using a mutable object as a Python default argument can cause values to persist across calls because the default value is evaluated only once [S1]. When the default is a mutable object such as a list, dictionary, or instances of most classes, modifications made to that object during a function call are retained in subsequent calls, causing the function to accumulate arguments passed to it over time [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719766-o7d0QipidO9Dm68PjEUe",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 837,
+          "completionTokens": 208,
+          "reasoningTokens": 129,
+          "cachedTokens": 96,
+          "totalTokens": 1045,
+          "costUsd": 0.00196604,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 2952.39,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "typescript-discriminated-union-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "When every type in a union contains a common property with literal types, TypeScript considers it a discriminated union, and that common property acts as a discriminant [S1, S4]. \n\nBy checking the value of this discriminant property, TypeScript narrows out the members of the union that do not have a matching literal type [S1]. For example, if a union has a `kind` property with literal types `\"circle\"` and `\"square\"`, checking `shape.kind === \"circle\"` removes every type in the union whose `kind` property is not `\"circle\"`, narrowing the variable down to the specific matching type (in this case, `Circle`) [S1]. This narrowing behavior works with both `if` statements and `switch` statements [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "When every type in a union contains a common property with literal types, TypeScript considers it a discriminated union, and that common property acts as a discriminant [S1, S4]. \n\nBy checking the value of this discriminant property, TypeScript narrows out the members of the union that do not have a matching literal type [S1]. For example, if a union has a `kind` property with literal types `\"circle\"` and `\"square\"`, checking `shape.kind === \"circle\"` removes every type in the union whose `kind` property is not `\"circle\"`, narrowing the variable down to the specific matching type (in this case, `Circle`) [S1]. This narrowing behavior works with both `if` statements and `switch` statements [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719769-RRMe0xkwgFaN6NeAdY3O",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2121,
+          "completionTokens": 350,
+          "reasoningTokens": 191,
+          "cachedTokens": 96,
+          "totalTokens": 2471,
+          "costUsd": 0.00438844,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 5450.65,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "rust-question-mark-result-001",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "When applied to a `Result`, the `?` operator works as follows:\n- If the value of the `Result` is an `Ok`, the value inside the `Ok` is returned from the expression, and the program continues [S2, S3].\n- If the value is an `Err`, the `Err` is returned early from the whole function as if the `return` keyword had been used, propagating the error value to the calling code [S2, S3].\n- Error values that have the `?` operator called on them go through the `from` function (defined in the `From` trait) to convert the received error type into the error type defined in the current function's return type [S2, S3].\n- The `?` operator can only be used in a function that returns `Result`, `Option`, or another type that implements `FromResidual` [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "When applied to a `Result`, the `?` operator works as follows:\n- If the value of the `Result` is an `Ok`, the value inside the `Ok` is returned from the expression, and the program continues [S2, S3].\n- If the value is an `Err`, the `Err` is returned early from the whole function as if the `return` keyword had been used, propagating the error value to the calling code [S2, S3].\n- Error values that have the `?` operator called on them go through the `from` function (defined in the `From` trait) to convert the received error type into the error type defined in the current function's return type [S2, S3].\n- The `?` operator can only be used in a function that returns `Result`, `Option`, or another type that implements `FromResidual` [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784719775-mrBmhUOU5uTNnT4HpUNU",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2205,
+          "completionTokens": 381,
+          "reasoningTokens": 190,
+          "cachedTokens": 96,
+          "totalTokens": 2586,
+          "costUsd": 0.00464244,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3924.63,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "python-sqlalchemy-async-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "typescript-deno-permissions-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "rust-axum-state-001",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    }
+  ],
+  "events": [
+    {
+      "at": "2026-07-22T11:28:01.346Z",
+      "type": "started",
+      "detail": "Single locked generation execution."
+    },
+    {
+      "at": "2026-07-22T11:28:07.208Z",
+      "type": "provider-success",
+      "caseId": "c-array-decay-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:28:10.234Z",
+      "type": "provider-success",
+      "caseId": "java-overload-resolution-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:28:15.749Z",
+      "type": "provider-success",
+      "caseId": "postgresql-transaction-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:28:18.389Z",
+      "type": "provider-success",
+      "caseId": "postgresql-pg-partman-retention-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:28:28.103Z",
+      "type": "provider-success",
+      "caseId": "cpp-range-for-lookup-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:28:31.190Z",
+      "type": "provider-success",
+      "caseId": "javascript-promise-any-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:28:31.374Z",
+      "type": "technical-failure",
+      "caseId": "kotlin-elvis-lazy-001",
+      "detail": "OpenRouter 429 for glm-5.2-openrouter-baseten-fp8: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"z-ai/glm-5.2 is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"BaseTen\",\"is_byok\":false}},\"user_id\":\"user_3B4XldGEXtsuU5RXSYhGVj6St2W\"}"
+    },
+    {
+      "at": "2026-07-22T11:28:54.514Z",
+      "type": "resume",
+      "detail": "Cache-preserving technical recovery."
+    },
+    {
+      "at": "2026-07-22T11:28:59.199Z",
+      "type": "provider-success",
+      "caseId": "kotlin-elvis-lazy-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:28:59.378Z",
+      "type": "technical-failure",
+      "caseId": "bash-pipefail-status-001",
+      "detail": "OpenRouter 429 for glm-5.2-openrouter-baseten-fp8: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"z-ai/glm-5.2 is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"BaseTen\",\"is_byok\":false}},\"user_id\":\"user_3B4XldGEXtsuU5RXSYhGVj6St2W\"}"
+    },
+    {
+      "at": "2026-07-22T11:29:09.211Z",
+      "type": "resume",
+      "detail": "Cache-preserving technical recovery."
+    },
+    {
+      "at": "2026-07-22T11:29:10.700Z",
+      "type": "provider-success",
+      "caseId": "bash-pipefail-status-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:29:10.904Z",
+      "type": "technical-failure",
+      "caseId": "go-defer-order-001",
+      "detail": "OpenRouter 429 for glm-5.2-openrouter-baseten-fp8: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"z-ai/glm-5.2 is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"BaseTen\",\"is_byok\":false}},\"user_id\":\"user_3B4XldGEXtsuU5RXSYhGVj6St2W\"}"
+    },
+    {
+      "at": "2026-07-22T11:29:19.361Z",
+      "type": "resume",
+      "detail": "Cache-preserving technical recovery."
+    },
+    {
+      "at": "2026-07-22T11:29:22.739Z",
+      "type": "provider-success",
+      "caseId": "go-defer-order-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:29:26.324Z",
+      "type": "provider-success",
+      "caseId": "go-method-set-pointer-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:29:29.283Z",
+      "type": "provider-success",
+      "caseId": "python-default-argument-once-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:29:34.736Z",
+      "type": "provider-success",
+      "caseId": "typescript-discriminated-union-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:29:38.662Z",
+      "type": "provider-success",
+      "caseId": "rust-question-mark-result-001",
+      "detail": "z-ai/glm-5.2/BaseTen; finish=stop"
+    },
+    {
+      "at": "2026-07-22T11:29:38.666Z",
+      "type": "completed",
+      "detail": "Automatic checks passed; semantic quality awaits human review."
+    }
+  ]
+}

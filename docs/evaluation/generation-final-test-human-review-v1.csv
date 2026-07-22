@@ -1,0 +1,1638 @@
+case_id,blind_variant_id,answerability,language,question,expected_key_facts,frozen_evidence,candidate_answer,groundedness_0_4,key_fact_coverage_0_4,citation_correctness_0_4,citation_completeness_0_4,directness_0_2,correct_abstention_0_1,critical_unsupported_claim_0_1,contradicts_evidence_0_1,invalid_citation_label_0_1,generator_failure_0_1,reviewer_notes
+c-array-decay-001,selected-generator-hidden,answerable,C,In which expression contexts does a C array expression not get converted to a pointer to its first element?,"The exceptions are sizeof, _Alignof, and unary &. | A string literal used to initialize an array is also exempt. | Otherwise the result points to the initial array element and is not an lvalue.","[S1]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: 6.3.2.1  Lvalues, arrays, and function designators (part 2)
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+2 Except when it is the operand of the sizeof operator, the _Alignof operator, the unary & operator, the ++ operator, the --operator, or the left operand of the . operator or an assignment operator, an lvalue that does not have array type is converted to the value stored in the designated object (and is no longer an lvalue); this is called lvalue conversion . If the lvalue has qualified type, the value has the unqualified version of the type of the lvalue; additionally, if the lvalue has atomic type, the value has the non-atomic version of the type of the lvalue; otherwise, the value has the type of the lvalue. If the lvalue has an incomplete type and does not have array type, the behavior is undefined. If the lvalue designates an object of automatic storage duration that could have been declared with the register storage class (never had its address taken), and that object is uninitialized (not declared with an initializer and no assignment to it has been performed prior to use), the behavior is undefined.
+
+3 Except when it is the operand of the sizeof operator, the _Alignof operator, or the unary & operator, or is a string literal used to initialize an array, an expression that has type ''array of type '' is converted to an expression with type ''pointer to type '' that points to the initial element of the array object and is not an lvalue. If the array object has register storage class, the behavior is undefined.
+
+4 A function designator is an expression that has function type. Except when it is the operand of the sizeof operator, the _Alignof operator, 65) or the unary & operator, a function designator with type ''function returning type '' is converted to an expression that
+
+64) The name ''lvalue'' comes originally from the assignment expression E1 = E2 , in which the left operand E1 is required to be a (modifiable) lvalue. It is perhaps better considered as representing an object ''locator value''. What is sometimes called ''rvalue'' is in this International Standard described as the ''value of an expression''.
+
+---
+
+[S2]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: 6.3.2.1  Lvalues, arrays, and function designators (part 1)
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+## 6.3.2.1 Lvalues, arrays, and function designators
+
+1 An lvalue is an expression (with an object type other than void ) that potentially designates an object; 64) if an lvalue does not designate an object when it is evaluated, the behavior is undefined. When an object is said to have a particular type, the type is specified by the lvalue used to designate the object. A modifiable lvalue is an lvalue that does not have array type, does not have an incomplete type, does not have a constqualified type, and if it is a structure or union, does not have any member (including, recursively, any member or element of all contained aggregates or unions) with a constqualified type.
+
+2 Except when it is the operand of the sizeof operator, the _Alignof operator, the unary & operator, the ++ operator, the --operator, or the left operand of the . operator or an assignment operator, an lvalue that does not have array type is converted to the value stored in the designated object (and is no longer an lvalue); this is called lvalue conversion . If the lvalue has qualified type, the value has the unqualified version of the type of the lvalue; additionally, if the lvalue has atomic type, the value has the non-atomic version of the type of the lvalue; otherwise, the value has the type of the lvalue. If the lvalue has an incomplete type and does not have array type, the behavior is undefined. If the lvalue designates an object of automatic storage duration that could have been declared with the register storage class (never had its address taken), and that object is uninitialized (not declared with an initializer and no assignment to it has been performed prior to use), the behavior is undefined.
+
+3 Except when it is the operand of the sizeof operator, the _Alignof operator, or the unary & operator, or is a string literal used to initialize an array, an expression that has type ''array of type '' is converted to an expression with type ''pointer to type '' that points to the initial element of the array object and is not an lvalue. If the array object has register storage class, the behavior is undefined.
+
+---
+
+[S3]
+Title: Beej’s Guide to C Programming
+Section: 6.6.1 Getting a Pointer to an Array
+URL: https://beej.us/guide/bgc/pdf/bgc_usl_bw_1.pdf
+Content:
+## 6.6.1 Getting a Pointer to an Array
+
+I want to tell you a secret. Generally speaking, when a C programmer talks about a pointer to an array, they're talking about a pointer to the first element of the array 8 .
+
+So let's get a pointer to the first element of an array.
+
+#include <stdio.h> int main(void) { int a[5] = {11, 22, 33, 44, 55}; int *p; p = &a[0]; // p points to the array // Well, to the first element, actually printf(""%d\n"", *p); // Prints ""11"" }
+
+This is so common to do in C that the language allows us a shorthand:
+
+p = &a[0]; // p points to the array // is the same as: p = a; // p points to the array, but much nicer-looking!
+
+8 This is technically incorrect, as a pointer to an array and a pointer to the first element of an array have different types. But we can burn that bridge when we get to it.
+
+Just referring to the array name in isolation is the same as getting a pointer to the first element of the array! We're going to use this extensively in the upcoming examples.
+
+But hold on a second-isn't p an int* ? And *p gives us 11 , same as a[0] ? Yessss. You're starting to get a glimpse of how arrays and pointers are related in C. (We'll talk about this a lot more in the Pointers II chapter, under Array/Pointer Equivalence.)
+
+---
+
+[S4]
+Title: ISO/IEC 9899:201x - WG14 N1570 working draft
+Section: 6.3.2.1  Lvalues, arrays, and function designators (part 3)
+URL: https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
+Content:
+4 A function designator is an expression that has function type. Except when it is the operand of the sizeof operator, the _Alignof operator, 65) or the unary & operator, a function designator with type ''function returning type '' is converted to an expression that
+
+64) The name ''lvalue'' comes originally from the assignment expression E1 = E2 , in which the left operand E1 is required to be a (modifiable) lvalue. It is perhaps better considered as representing an object ''locator value''. What is sometimes called ''rvalue'' is in this International Standard described as the ''value of an expression''.
+
+An obvious example of an lvalue is an identifier of an object. As a further example, if E is a unary expression that is a pointer to an object, *E is an lvalue that designates the object to which E points.
+
+65) Because this conversion does not occur, the operand of the sizeof or _Alignof operator remains a function designator and violates the constraints in 6.5.3.4.
+
+has type ''pointer to function returning type ''.
+
+Forward references: address and indirection operators (6.5.3.2), assignment operators (6.5.16), common definitions <stddef.h> (7.19), initialization (6.7.9), postfix increment and decrement operators (6.5.2.4), prefix increment and decrement operators (6.5.3.1), the sizeof and _Alignof operators (6.5.3.4), structure and union members (6.5.2.3).","According to the provided documentation, an expression that has type ""array of type"" is not converted to a pointer to its first element in the following contexts:
+
+1. When it is the operand of the `sizeof` operator [S1, S2].
+2. When it is the operand of the `_Alignof` operator [S1, S2].
+3. When it is the operand of the unary `&` operator [S1, S2].
+4. When it is a string literal used to initialize an array [S1, S2].",,,,,,,,,,,
+java-overload-resolution-001,selected-generator-hidden,answerable,Java,What are the main phases used by Java to determine whether a method is applicable during overload resolution?,Phase 1 tests strict invocation. | Phase 2 tests loose invocation only if phase 1 finds no applicable method. | Phase 3 tests variable arity only if phase 2 finds none. | A successful phase selects the most specific method without proceeding to later phases.,"[S1]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: 15.12.2 Compile-Time Step 2: Determine Method Signature (part 3)
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+A method is applicable if it is applicable by one of strict invocation (the first phase, §15.12.2.2), loose invocation (the second phase, §15.12.2.3), or variable arity invocation (the third phase, §15.12.2.4). Deciding whether a method is applicable will, in the case of generic methods (§8.4.4), require an analysis of the type arguments. Type arguments may be passed explicitly or implicitly; if they are passed implicitly, then bounds of the type arguments must be inferred from the argument expressions (§18 ( Type Inference )).
+
+If several applicable methods have been identified during one of the three phases of applicability testing, then the most specific one is chosen, as specified in §15.12.2.5.
+
+To check for applicability, the types of an invocation's arguments cannot, in general, be inputs to the analysis. This is because:
+
+The arguments to a method invocation may be poly expressions.
+
+Poly expressions cannot be typed in the absence of a target type.
+
+Overload resolution has to be completed before the arguments' target types will be known.
+
+Instead, the input to the applicability check is a list of the arguments themselves. The arguments can be checked for compatibility with potential target types, even if the ultimate types of the arguments are unknown.
+
+Note that overload resolution is independent of a target type. This is for two reasons:
+
+First, it makes the user model more accessible and less error-prone. The meaning of a method name (i.e., the declaration corresponding to the name) is too fundamental to the meaning of a program to depend on subtle contextual hints. (In contrast, other poly expressions may have different behavior depending on a target type; but the variation in behavior is always limited and essentially equivalent, while no such guarantees can be made about the behavior of an arbitrary set of methods that share a name and arity.)
+
+---
+
+[S2]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: 15.12.2 Compile-Time Step 2: Determine Method Signature (part 1)
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+## 15.12.2 Compile-Time Step 2: Determine Method Signature
+
+The second step searches the type determined in the previous step for member methods. This step uses the name of the method and the argument expressions to locate methods that are both accessible and applicable , that is, declarations that can be correctly invoked on the given arguments.
+
+There may be more than one such method, in which case the most specific one is chosen. The descriptor (signature plus return type) of the most specific method is the one used at run time to perform the method dispatch.
+
+Certain argument expressions that contain implicitly typed lambda expressions (§15.27.1) or inexact method references (§15.13.1) are ignored by the applicability tests, because their meaning cannot be determined until the invocation's target type is selected. On the other hand, it is only argument expressions not the invocation's target type - that influence the applicability tests, even if the method invocation expression is a poly expression.
+
+The process of determining applicability begins by determining the potentially applicable methods (§15.12.2.1). Then, to ensure compatibility with the Java programming language prior to Java SE 5.0, the process continues in three phases:
+
+The first phase performs overload resolution without permitting boxing or unboxing conversion, or the use of variable arity method invocation. If no applicable method is found during this phase then processing continues to the second phase.
+
+This guarantees that any calls that were valid in the Java programming language before Java SE 5.0 are not considered ambiguous as the result of the introduction of variable arity methods, implicit boxing and/or unboxing. However, the declaration of a variable arity method (§8.4.1) can change the method chosen for a given method invocation expression, because a variable arity method is treated as a fixed arity method in the first phase. For example, declaring m(Object...) in a class which already declares m(Object) causes m(Object) to no longer be chosen for some invocation expressions (such as m(null) ), as m(Object[]) is more specific.
+
+---
+
+[S3]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: 15.12.2 Compile-Time Step 2: Determine Method Signature (part 2)
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+This guarantees that any calls that were valid in the Java programming language before Java SE 5.0 are not considered ambiguous as the result of the introduction of variable arity methods, implicit boxing and/or unboxing. However, the declaration of a variable arity method (§8.4.1) can change the method chosen for a given method invocation expression, because a variable arity method is treated as a fixed arity method in the first phase. For example, declaring m(Object...) in a class which already declares m(Object) causes m(Object) to no longer be chosen for some invocation expressions (such as m(null) ), as m(Object[]) is more specific.
+
+The second phase performs overload resolution while allowing boxing and unboxing, but still precludes the use of variable arity method invocation. If no applicable method is found during this phase then processing continues to the third phase.
+
+This ensures that a method is never chosen through variable arity method invocation if it is applicable through fixed arity method invocation.
+
+The third phase allows overloading to be combined with variable arity methods, boxing, and unboxing.
+
+A method is applicable if it is applicable by one of strict invocation (the first phase, §15.12.2.2), loose invocation (the second phase, §15.12.2.3), or variable arity invocation (the third phase, §15.12.2.4). Deciding whether a method is applicable will, in the case of generic methods (§8.4.4), require an analysis of the type arguments. Type arguments may be passed explicitly or implicitly; if they are passed implicitly, then bounds of the type arguments must be inferred from the argument expressions (§18 ( Type Inference )).
+
+If several applicable methods have been identified during one of the three phases of applicability testing, then the most specific one is chosen, as specified in §15.12.2.5.
+
+To check for applicability, the types of an invocation's arguments cannot, in general, be inputs to the analysis. This is because:
+
+---
+
+[S4]
+Title: The Java Language Specification, Java SE 26 Edition
+Section: 15.12.2.2 Phase 1: Identify Matching Arity Methods Applicable by Strict Invocation (part 2)
+URL: https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf
+Content:
+If m is a generic method and the method invocation provides explicit type arguments, then let R1 , ..., Rp ( p ≥ 1) be the type parameters of m , let Bl be the declared bound of Rl (1 ≤ l ≤ p ), and let U1 , ..., Up be the explicit type arguments given in the method invocation. Then m is applicable by strict invocation if both of the following are true:
+
+For 1 ≤ i ≤ n , if ei is pertinent to applicability then ei is compatible in a strict invocation context with Fi [ R1 := U1 , ..., Rp := Up ] (§5.3).
+
+For 1 ≤ l ≤ p , Ul <: Bl [ R1 := U1 , ..., Rp := Up ] .
+
+If m is not a generic method, then m is applicable by strict invocation if, for 1 ≤ i ≤ n , either ei is compatible in a strict invocation context with Fi (§5.3) or ei is not pertinent to applicability.
+
+If no method applicable by strict invocation is found, the search for applicable methods continues with phase 2 (§15.12.2.3).
+
+Otherwise, the most specific method (§15.12.2.5) is chosen among the methods that are applicable by strict invocation.
+
+The meaning of an implicitly typed lambda expression or an inexact method reference expression is sufficiently vague prior to resolving a target type that arguments containing these expressions are not considered pertinent to applicability ; they are simply ignored (except for their expected arity) until overload resolution is finished.","Java uses three phases to determine whether a method is applicable during overload resolution [S1, S3]:
+
+1. **Strict invocation (first phase):** Performs overload resolution without permitting boxing or unboxing conversion, or the use of variable arity method invocation. A variable arity method is treated as a fixed arity method in this phase [S2, S3]. If no applicable method is found, processing continues to the second phase [S2, S4].
+2. **Loose invocation (second phase):** Performs overload resolution while allowing boxing and unboxing, but still precludes the use of variable arity method invocation [S2, S3]. If no applicable method is found, processing continues to the third phase [S2].
+3. **Variable arity invocation (third phase):** Allows overloading to be combined with variable arity methods, boxing, and unboxing [S2, S3].
+
+If several applicable methods are identified during one of these three phases, the most specific one is chosen [S1, S3].",,,,,,,,,,,
+postgresql-transaction-001,selected-generator-hidden,answerable,PostgreSQL,What atomicity guarantee does PostgreSQL provide for the statements enclosed by BEGIN and COMMIT?,The transaction is all-or-nothing. | Intermediate states are invisible to concurrent transactions. | COMMIT completes the transaction; ROLLBACK cancels updates made so far.,"[S1]
+Title: PostgreSQL 18.4 Documentation
+Section: 3.4. Transactions (part 3)
+URL: https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf
+Content:
+Another important property of transactional databases is closely related to the notion of atomic updates: when multiple transactions are running concurrently, each one should not be able to see the incomplete changes made by others. For example, if one transaction is busy totalling all the branch balances, it would not do for it to include the debit from Alice's branch but not the credit to Bob's branch, nor vice versa. So transactions must be all-or-nothing not only in terms of their permanent effect on the database, but also in terms of their visibility as they happen. The updates made so far by an open transaction are invisible to other transactions until the transaction completes, whereupon all the updates become visible simultaneously.
+
+In PostgreSQL, a transaction is set up by surrounding the SQL commands of the transaction with BEGIN and COMMIT commands. So our banking transaction would actually look like:
+
+BEGIN; UPDATE accounts SET balance = balance - 100.00 WHERE name = 'Alice'; -- etc etc COMMIT;
+
+If, partway through the transaction, we decide we do not want to commit (perhaps we just noticed that Alice's balance went negative), we can issue the command ROLLBACK instead of COMMIT , and all our updates so far will be canceled.
+
+PostgreSQL actually treats every SQL statement as being executed within a transaction. If you do not issue a BEGIN command, then each individual statement has an implicit BEGIN and (if successful) COMMIT wrapped around it. A group of statements surrounded by BEGIN and COMMIT is sometimes called a transaction block .
+
+---
+
+[S2]
+Title: PostgreSQL 18.4 Documentation
+Section: 3.4. Transactions (part 2)
+URL: https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf
+Content:
+The details of these commands are not important here; the important point is that there are several separate updates involved to accomplish this rather simple operation. Our bank's officers will want to be assured that either all these updates happen, or none of them happen. It would certainly not do for a system failure to result in Bob receiving $100.00 that was not debited from Alice. Nor would Alice long remain a happy customer if she was debited without Bob being credited. We need a guarantee that if something goes wrong partway through the operation, none of the steps executed so far will take effect. Grouping the updates into a transaction gives us this guarantee. A transaction is said to be atomic : from the point of view of other transactions, it either happens completely or not at all.
+
+We also want a guarantee that once a transaction is completed and acknowledged by the database system, it has indeed been permanently recorded and won't be lost even if a crash ensues shortly thereafter. For example, if we are recording a cash withdrawal by Bob, we do not want any chance that the debit to his account will disappear in a crash just after he walks out the bank door. A transactional database guarantees that all the updates made by a transaction are logged in permanent storage (i.e., on disk) before the transaction is reported complete.
+
+Another important property of transactional databases is closely related to the notion of atomic updates: when multiple transactions are running concurrently, each one should not be able to see the incomplete changes made by others. For example, if one transaction is busy totalling all the branch balances, it would not do for it to include the debit from Alice's branch but not the credit to Bob's branch, nor vice versa. So transactions must be all-or-nothing not only in terms of their permanent effect on the database, but also in terms of their visibility as they happen. The updates made so far by an open transaction are invisible to other transactions until the transaction completes, whereupon all the updates become visible simultaneously.
+
+---
+
+[S3]
+Title: PostgreSQL 18.4 Documentation
+Section: Description
+URL: https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf
+Content:
+## Description
+
+BEGIN initiates a transaction block, that is, all statements after a BEGIN command will be executed in a single transaction until an explicit COMMIT or ROLLBACK is given. By default (without BEGIN ), PostgreSQL executes transactions in 'autocommit' mode, that is, each statement is executed in its own transaction and a commit is implicitly performed at the end of the statement (if execution was successful, otherwise a rollback is done).
+
+Statements are executed more quickly in a transaction block, because transaction start/commit requires significant CPU and disk activity. Execution of multiple statements inside a transaction is also useful to ensure consistency when making several related changes: other sessions will be unable to see the intermediate states wherein not all the related updates have been done.
+
+If the isolation level, read/write mode, or deferrable mode is specified, the new transaction has those characteristics, as if SET TRANSACTION was executed.
+
+---
+
+[S4]
+Title: PostgreSQL 18.4 Documentation
+Section: 3.4. Transactions (part 1)
+URL: https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf
+Content:
+## 3.4. Transactions
+
+Transactions are a fundamental concept of all database systems. The essential point of a transaction is that it bundles multiple steps into a single, all-or-nothing operation. The intermediate states between the steps are not visible to other concurrent transactions, and if some failure occurs that prevents the transaction from completing, then none of the steps affect the database at all.
+
+For example, consider a bank database that contains balances for various customer accounts, as well as total deposit balances for branches. Suppose that we want to record a payment of $100.00 from Alice's account to Bob's account. Simplifying outrageously, the SQL commands for this might look like:
+
+UPDATE accounts SET balance = balance - 100.00 WHERE name = 'Alice'; UPDATE branches SET balance = balance - 100.00 WHERE name = (SELECT branch_name FROM accounts WHERE name = 'Alice'); UPDATE accounts SET balance = balance + 100.00 WHERE name = 'Bob'; UPDATE branches SET balance = balance + 100.00 WHERE name = (SELECT branch_name FROM accounts WHERE name = 'Bob');
+
+The details of these commands are not important here; the important point is that there are several separate updates involved to accomplish this rather simple operation. Our bank's officers will want to be assured that either all these updates happen, or none of them happen. It would certainly not do for a system failure to result in Bob receiving $100.00 that was not debited from Alice. Nor would Alice long remain a happy customer if she was debited without Bob being credited. We need a guarantee that if something goes wrong partway through the operation, none of the steps executed so far will take effect. Grouping the updates into a transaction gives us this guarantee. A transaction is said to be atomic : from the point of view of other transactions, it either happens completely or not at all.","PostgreSQL guarantees that statements enclosed by BEGIN and COMMIT are bundled into a single, all-or-nothing operation [S4]. From the point of view of other transactions, the transaction either happens completely or not at all [S2, S4]. If a failure occurs that prevents the transaction from completing, none of the steps affect the database at all [S4]. Additionally, the intermediate states between the steps are not visible to other concurrent transactions; the updates made by the open transaction are invisible until it completes, at which point all updates become visible simultaneously [S1, S2, S4]. If a ROLLBACK is issued instead of a COMMIT, all updates made so far are canceled [S1].",,,,,,,,,,,
+c-cuda-unified-memory-001,selected-generator-hidden,unanswerable,C,How do cudaMemPrefetchAsync and cudaMemAdvise control placement of CUDA Unified Memory allocated with cudaMallocManaged?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,
+java-hibernate-lazyinit-001,selected-generator-hidden,unanswerable,Java,When does Hibernate throw LazyInitializationException while traversing a lazily loaded association?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,
+postgresql-pg-partman-retention-001,selected-generator-hidden,unanswerable,PostgreSQL,How does pg_partman create_parent configure retention and automatically detach old PostgreSQL partitions?,,"[S1]
+Title: PostgreSQL 18.4 Documentation
+Section: 5.12.2.2. Partition Maintenance (part 1)
+URL: https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf
+Content:
+## 5.12.2.2. Partition Maintenance
+
+Normally the set of partitions established when initially defining the table is not intended to remain static. It is common to want to remove partitions holding old data and periodically add new partitions for new data. One of the most important advantages of partitioning is precisely that it allows this otherwise painful task to be executed nearly instantaneously by manipulating the partition structure, rather than physically moving large amounts of data around.
+
+The simplest option for removing old data is to drop the partition that is no longer necessary:
+
+DROP TABLE measurement_y2006m02;
+
+This can very quickly delete millions of records because it doesn't have to individually delete every record. Note however that the above command requires taking an ACCESS EXCLUSIVE lock on the parent table.
+
+Another option that is often preferable is to remove the partition from the partitioned table but retain access to it as a table in its own right. This has two forms:
+
+ALTER TABLE measurement DETACH PARTITION measurement_y2006m02; ALTER TABLE measurement DETACH PARTITION measurement_y2006m02 CONCURRENTLY;
+
+These allow further operations to be performed on the data before it is dropped. For example, this is often a useful time to back up the data using COPY , pg_dump, or similar tools. It might also be a useful time to aggregate data into smaller formats, perform other data manipulations, or run reports. The first form of the command requires an ACCESS EXCLUSIVE lock on the parent table. Adding the CONCURRENTLY qualifier as in the second form allows the detach operation to require only SHARE UPDATE EXCLUSIVE lock on the parent table, but see ALTER TABLE ... DETACH PARTITION for details on the restrictions.
+
+Similarly we can add a new partition to handle new data. We can create an empty partition in the partitioned table just as the original partitions were created above:","The provided documentation does not contain information about pg_partman's `create_parent` function or how it configures retention and automatic partition detachment [S1].
+
+The excerpts only describe PostgreSQL's native partition maintenance options, such as dropping partitions with `DROP TABLE` or detaching them with `ALTER TABLE ... DETACH PARTITION` (optionally `CONCURRENTLY`), which require different lock levels and allow further operations on the detached data before dropping it [S1].
+
+Note: The answer cannot be fully determined from the provided documentation because no pg_partman-specific material is included.",,,,,,,,,,,
+cpp-range-for-lookup-001,selected-generator-hidden,answerable,C++,"How does a C++ range-based for loop determine its begin and end expressions for arrays, class types, and other ranges?","Arrays use range and range plus the array bound. | A class with both member names uses range.begin() and range.end(). | Other ranges use begin(range) and end(range) with argument-dependent lookup, not ordinary unqualified lookup.","[S1]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: 1 The range-based for statement for ( init-statement opt for-range-declaration : for-range-initializer ) statement is equivalent to { init-statement opt auto && range = for-range-initializer ; auto begin = begin-expr ; auto end = end-expr ; for ( ; begin != end ; ++ begin ) { for-range-declaration = * begin ; statement } } where -(1.1) if the for-range-initializer is an expression , it is regarded as if it were surrounded by parentheses (so that a comma operator cannot be reinterpreted as delimiting two init-declarator s); -(1.2) range , begin , and end are variables defined for exposition only; and -(1.3) begin-expr and end-expr are determined as follows: -(1.3.1) if the type of range is a reference to an array type R , begin-expr and end-expr are range and range + N , respectively, where N is the array bound. If R is an array of unknown bound or an array of incomplete type, the program is ill-formed; -(1.3.2) if the type of range is a reference to a class type C , and searches in the scope of C (6.5.2) for the names begin and end each find at least one declaration, begin-expr and end-expr are range .begin() and range .end() , respectively; -(1.3.3) otherwise, begin-expr and end-expr are begin( range ) and end( range ) , respectively, where begin and end undergo argument-dependent lookup (6.5.4). [ Note 1 : Ordinary unqualified lookup (6.5.3) is not performed. -end note ] [ Example 1 : int array[5] = { 1, 2, 3, 4, 5 }; for (int& x : array) x *= 2; -end example ] [ Note 2 : The lifetime of some temporaries in the for-range-initializer is extended to cover the entire loop (6.8.7). -end note ] [ Example 2 : using T = std::list<int>; const T& f1(const T& t) { return t; } const T& f2(T t) { return t; } T g(); void foo() { for (auto e : f1(g())) {} // OK, lifetime of return value of g() extended for (auto e : f2(g())) {} // undefined behavior } -end example ] 8.7 Expansion statements [stmt.expand] (part 1)
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+## 1 The range-based for statement for ( init-statement opt for-range-declaration : for-range-initializer ) statement is equivalent to { init-statement opt auto && range = for-range-initializer ; auto begin = begin-expr ; auto end = end-expr ; for ( ; begin != end ; ++ begin ) { for-range-declaration = * begin ; statement } } where -(1.1) if the for-range-initializer is an expression , it is regarded as if it were surrounded by parentheses (so that a comma operator cannot be reinterpreted as delimiting two init-declarator s); -(1.2) range , begin , and end are variables defined for exposition only; and -(1.3) begin-expr and end-expr are determined as follows: -(1.3.1) if the type of range is a reference to an array type R , begin-expr and end-expr are range and range + N , respectively, where N is the array bound. If R is an array of unknown bound or an array of incomplete type, the program is ill-formed; -(1.3.2) if the type of range is a reference to a class type C , and searches in the scope of C (6.5.2) for the names begin and end each find at least one declaration, begin-expr and end-expr are range .begin() and range .end() , respectively; -(1.3.3) otherwise, begin-expr and end-expr are begin( range ) and end( range ) , respectively, where begin and end undergo argument-dependent lookup (6.5.4). [ Note 1 : Ordinary unqualified lookup (6.5.3) is not performed. -end note ] [ Example 1 : int array[5] = { 1, 2, 3, 4, 5 }; for (int& x : array) x *= 2; -end example ] [ Note 2 : The lifetime of some temporaries in the for-range-initializer is extended to cover the entire loop (6.8.7). -end note ] [ Example 2 : using T = std::list<int>; const T& f1(const T& t) { return t; } const T& f2(T t) { return t; } T g(); void foo() { for (auto e : f1(g())) {} // OK, lifetime of return value of g() extended for (auto e : f2(g())) {} // undefined behavior } -end example ] 8.7 Expansion statements [stmt.expand]
+
+---
+
+[S2]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: 1 The range-based for statement for ( init-statement opt for-range-declaration : for-range-initializer ) statement is equivalent to { init-statement opt auto && range = for-range-initializer ; auto begin = begin-expr ; auto end = end-expr ; for ( ; begin != end ; ++ begin ) { for-range-declaration = * begin ; statement } } where -(1.1) if the for-range-initializer is an expression , it is regarded as if it were surrounded by parentheses (so that a comma operator cannot be reinterpreted as delimiting two init-declarator s); -(1.2) range , begin , and end are variables defined for exposition only; and -(1.3) begin-expr and end-expr are determined as follows: -(1.3.1) if the type of range is a reference to an array type R , begin-expr and end-expr are range and range + N , respectively, where N is the array bound. If R is an array of unknown bound or an array of incomplete type, the program is ill-formed; -(1.3.2) if the type of range is a reference to a class type C , and searches in the scope of C (6.5.2) for the names begin and end each find at least one declaration, begin-expr and end-expr are range .begin() and range .end() , respectively; -(1.3.3) otherwise, begin-expr and end-expr are begin( range ) and end( range ) , respectively, where begin and end undergo argument-dependent lookup (6.5.4). [ Note 1 : Ordinary unqualified lookup (6.5.3) is not performed. -end note ] [ Example 1 : int array[5] = { 1, 2, 3, 4, 5 }; for (int& x : array) x *= 2; -end example ] [ Note 2 : The lifetime of some temporaries in the for-range-initializer is extended to cover the entire loop (6.8.7). -end note ] [ Example 2 : using T = std::list<int>; const T& f1(const T& t) { return t; } const T& f2(T t) { return t; } T g(); void foo() { for (auto e : f1(g())) {} // OK, lifetime of return value of g() extended for (auto e : f2(g())) {} // undefined behavior } -end example ] 8.7 Expansion statements [stmt.expand] (part 2)
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+1 Expansion statements specify repeated instantiations (13.7.1) of their substatement.
+
+expansion-statement : template for ( init-statement opt for-range-declaration : expansion-initializer )
+
+compound-statement
+
+expansion-initializer : expression expansion-init-list expansion-init-list : { expression-list , opt } { }
+
+2 The compound-statement of an expansion-statement is a control-flow-limited statement (8.2).
+
+3 For an expression E , let the expressions begin-expr and end-expr be determined as specified in 8.6.5. An expression is expansion-iterable if it does not have array type and either
+
+-(3.1) begin-expr and end-expr are of the form E.begin() and E.end() , or
+
+-(3.2) argument-dependent lookups for begin(E) and for end(E) each find at least one viable candidate (12.2.3).
+
+4 An expansion statement is
+
+-(4.1) an enumerating expansion statement if its expansion-initializer is of the form expansion-init-list ;
+
+-(4.2) otherwise, an iterating expansion statement if its expansion-initializer is an expansion-iterable expression;
+
+-(4.3) otherwise, a destructuring expansion statement .
+
+5 An expansion statement S is equivalent to a compound-statement containing instantiations of the for-rangedeclaration (including its implied initialization), together with the compound-statement of S , as follows:
+
+-(5.1) If S is an enumerating expansion statement, S is equivalent to: { init-statement S 0 . . . S N -1 } where N is the number of elements in the expression-list , S i is { for-range-declaration = E i ; compound-statement } and E i is the i th element of the expression-list . -(5.2) Otherwise, if S is an iterating expansion statement, S is equivalent to: { init-statement constexpr opt decltype(auto) range = ( expansion-initializer ); constexpr opt auto begin = begin-expr ; // see 8.6.5 S 0 . . . S N -1 } where N is the result of evaluating the expression [&] consteval { std::ptrdiff_t result = 0; auto b = begin-expr ; auto e = end-expr ; for (; b != e; ++b) ++result; return result; // distance from begin to end }() and S i is { constexpr opt auto iter = begin + decltype(begin -begin){ i }; for-range-declaration = * iter ;
+
+---
+
+[S3]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: 25.3.2 ranges::begin
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+## 25.3.2 ranges::begin
+
+1 The name ranges::begin denotes a customization point object (16.3.3.3.5).
+
+2 Given a subexpression E with type T , let t be an lvalue that denotes the reified object for E . Then:
+
+-(2.1) If E is an rvalue and enable_borrowed_range<remove_cv_t<T>> is false , ranges::begin(E) is illformed.
+
+-(2.2) Otherwise, if T is an array type (9.3.4.5) and remove_all_extents_t<T> is an incomplete type, ranges::begin(E) is ill-formed with no diagnostic required.
+
+-(2.3) Otherwise, if T is an array type, ranges::begin(E) is expression-equivalent to t + 0 .
+
+-(2.4) Otherwise, if auto(t.begin()) is a valid expression whose type models input_or_output_iterator , ranges::begin(E) is expression-equivalent to auto(t.begin()) .
+
+[range.access.begin]
+
+---
+
+[S4]
+Title: Working Draft, Programming Languages - C++ (N5046)
+Section: N5046
+URL: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf
+Content:
+## N5046
+
+-(2.5) Otherwise, if T is a class or enumeration type and auto(begin(t)) is a valid expression whose type models input_or_output_iterator where the meaning of begin is established as-if by performing argument-dependent lookup only (6.5.4), then ranges::begin(E) is expression-equivalent to that expression.
+
+-(2.6) Otherwise, ranges::begin(E) is ill-formed.
+
+3 [ Note 1 : Diagnosable ill-formed cases above result in substitution failure when ranges::begin(E) appears in the immediate context of a template instantiation. -end note ]
+
+4 [ Note 2 : Whenever ranges::begin(E) is a valid expression, its type models input_or_output_iterator . -end note ]","The range-based for statement determines `begin-expr` and `end-expr` using the following rules, applied to the variable `range` (defined as `auto && range = for-range-initializer`) [S1]:
+
+1. **Arrays**: If the type of `range` is a reference to an array type `R`, then `begin-expr` is `range` and `end-expr` is `range + N`, where `N` is the array bound. If `R` is an array of unknown bound or an array of incomplete type, the program is ill-formed [S1].
+
+2. **Class types with member begin/end**: If the type of `range` is a reference to a class type `C`, and searches in the scope of `C` for the names `begin` and `end` each find at least one declaration, then `begin-expr` is `range.begin()` and `end-expr` is `range.end()` [S1].
+
+3. **Otherwise (free functions via ADL)**: `begin-expr` and `end-expr` are `begin(range)` and `end(range)`, respectively, where `begin` and `end` undergo argument-dependent lookup. Ordinary unqualified lookup is not performed [S1].
+
+The loop itself is equivalent to:
+```
+{
+  auto && range = for-range-initializer;
+  auto begin = begin-expr;
+  auto end = end-expr;
+  for ( ; begin != end; ++begin ) {
+    for-range-declaration = *begin;
+    statement
+  }
+}
+```
+where `range`, `begin`, and `end` are variables defined for exposition only [S1].
+
+Note: The excerpts also describe `ranges::begin` as a separate customization point object with its own rules (e.g., checking `enable_borrowed_range` and preferring `t.begin()` over ADL `begin(t)`) [S3, S4], but those rules apply to `ranges::begin(E)` specifically, not directly to the range-based for loop's `begin-expr`/`end-expr` determination as specified in [S1].",,,,,,,,,,,
+javascript-promise-any-001,selected-generator-hidden,answerable,JavaScript,"When does Promise.any reject, and what does its rejection contain?",It fulfills with the first fulfilled input. | It rejects only when every input rejects. | The rejection is an AggregateError holding the rejection reasons.,"[S1]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 27.2.4.3 Promise.any ( iterable )
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 27.2.4.3 Promise.any ( iterable )
+
+This function returns a promise that is fulfilled by the first given promise to be fulfilled, or rejected with an AggregateError holding the rejection reasons if all of the given promises are rejected. It resolves all elements of the passed iterable to promises as it runs this algorithm.
+
+Let C be the this value.
+
+Let promiseCapability be ? NewPromiseCapability( C ).
+
+Let promiseResolve be Completion(GetPromiseResolve( C )).
+
+IfAbruptRejectPromise( promiseResolve , promiseCapability ).
+
+Let iteratorRecord be Completion(GetIterator( iterable , SYNC )).
+
+IfAbruptRejectPromise( iteratorRecord , promiseCapability ).
+
+Let result be Completion(PerformPromiseAny( iteratorRecord , C , promiseCapability , promiseResolve )).
+
+If result is an abrupt completion, then
+
+If iteratorRecord .[[Done]] is false , set result to Completion(IteratorClose( iteratorRecord , result )).
+
+IfAbruptRejectPromise( result , promiseCapability ).
+
+Return ! result .
+
+NOTE This function requires its this value to be a constructor function that supports the parameter conventions of the Promise constructor.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+---
+
+[S2]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 27.2.4.3.1 PerformPromiseAny ( iteratorRecord , constructor , resultCapability , promiseResolve ) (part 1)
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 27.2.4.3.1 PerformPromiseAny ( iteratorRecord , constructor , resultCapability , promiseResolve )
+
+The abstract operation PerformPromiseAny takes arguments iteratorRecord (an Iterator Record), constructor (a constructor), resultCapability (a PromiseCapability Record), and promiseResolve (a function object) and returns either a normal completion containing an ECMAScript language value or a throw completion. It performs the following steps when called:
+
+Let errors be a new empty List.
+
+NOTE: remainingElementsCount starts at 1 instead of 0 to ensure resultCapability .[[Reject]] is only called once, even in the presence of a misbehaving ""then"" which calls the passed callback before the input iterator is exhausted.
+
+Let remainingElementsCount be the Record { [[Value]]: 1 }.
+
+Let index be 0 .
+
+Repeat,
+
+Let next be ? IteratorStepValue( iteratorRecord ).
+
+If next is DONE , then
+
+Set remainingElementsCount .[[Value]] to remainingElementsCount .[[Value]] - 1.
+
+If remainingElementsCount .[[Value]] = 0 , then
+
+Let aggregateError be a newly created AggregateError object.
+
+Perform ! DefinePropertyOrThrow( aggregateError , ""errors"" , PropertyDescriptor { [[Configurable]]: true , [[Enumerable]]: false , [[Writable]]: true , [[Value]]: CreateArrayFromList( errors ) }).
+
+Perform ? Call( resultCapability .[[Reject]], undefined , « aggregateError »).
+
+Return resultCapability .[[Promise]].
+
+Append undefined to errors .
+
+Let nextPromise be ? Call( promiseResolve , constructor , « next »).
+
+Let rejectedSteps be a new Abstract Closure with parameters ( error ) that captures errors , resultCapability , and remainingElementsCount and performs the following steps when called:
+
+Let F be the active function object.
+
+If F .[[AlreadyCalled]] is true , return undefined .
+
+Set F .[[AlreadyCalled]] to true .
+
+Let thisIndex be F .[[Index]].
+
+Set errors [ thisIndex ] to error .
+
+Set remainingElementsCount .[[Value]] to remainingElementsCount .[[Value]] - 1.
+
+If remainingElementsCount .[[Value]] = 0 , then
+
+Let aggregateError be a newly created AggregateError object.
+
+Perform ! DefinePropertyOrThrow( aggregateError , ""errors"" , PropertyDescriptor { [[Configurable]]: true , [[Enumerable]]: false , [[Writable]]: true , [[Value]]: CreateArrayFromList( errors ) }).
+
+---
+
+[S3]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 27.2.4.6 Promise.reject ( r )
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 27.2.4.6 Promise.reject ( r )
+
+This function returns a new promise rejected with the passed argument.
+
+Let C be the this value.
+
+Let promiseCapability be ? NewPromiseCapability( C ).
+
+Perform ? Call( promiseCapability .[[Reject]], undefined , « r »).
+
+Return promiseCapability .[[Promise]].
+
+NOTE This function expects its this value to be a constructor function that supports the parameter conventions of the Promise constructor.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->
+
+---
+
+[S4]
+Title: ECMAScript 2026 Language Specification, ECMA-262 17th Edition
+Section: 27.2.4.1 Promise.all ( iterable )
+URL: https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf
+Content:
+## 27.2.4.1 Promise.all ( iterable )
+
+This function returns a new promise which is fulfilled with an array of fulfillment values for the passed promises, or rejects with the reason of the first passed promise that rejects. It resolves all elements of the passed iterable to promises as it runs this algorithm.
+
+Let C be the this value.
+
+Let promiseCapability be ? NewPromiseCapability( C ).
+
+Let promiseResolve be Completion(GetPromiseResolve( C )).
+
+IfAbruptRejectPromise( promiseResolve , promiseCapability ).
+
+Let iteratorRecord be Completion(GetIterator( iterable , SYNC )).
+
+IfAbruptRejectPromise( iteratorRecord , promiseCapability ).
+
+Let result be Completion(PerformPromiseAll( iteratorRecord , C , promiseCapability , promiseResolve )).
+
+If result is an abrupt completion, then
+
+If iteratorRecord .[[Done]] is false , set result to Completion(IteratorClose( iteratorRecord , result )).
+
+IfAbruptRejectPromise( result , promiseCapability ).
+
+Return ! result .
+
+NOTE This function requires its this value to be a constructor function that supports the parameter conventions of the Promise constructor.
+
+<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->","`Promise.any` rejects when **all of the given promises are rejected** [S1]. In that case, it is rejected with an **AggregateError** holding the rejection reasons [S1].
+
+Specifically, the AggregateError has an `""errors""` property whose value is an array created from a list of the individual rejection reasons collected during iteration [S2]. This AggregateError is passed to the result capability’s reject function [S2].",,,,,,,,,,,
+kotlin-elvis-lazy-001,selected-generator-hidden,answerable,Kotlin,How does Kotlin's Elvis operator evaluate its two operands?,The operator tests whether the left operand is null. | The right operand is evaluated only for a null left operand. | A non-null left operand is returned directly.,"[S1]
+Title: Kotlin Language Specification
+Section: 8.12 Elvis operator expressions
+URL: https://kotlinlang.org/spec/pdf/kotlin-spec.pdf
+Content:
+## 8.12 Elvis operator expressions
+
+elvisExpression : infixFunctionCall {{ NL } elvis { NL } infixFunctionCall }
+
+An elvis operator expression is a binary expression which uses an elvis operator ( ?: ). It checks whether the left-hand side expression is reference equal to null , and, if it is, evaluates and return the right-hand side expression.
+
+This operator is lazy , meaning that if the left-hand side expression is not reference equal to null , the right-hand side expression is not evaluated.
+
+The type of elvis operator expression is the least upper bound of the non-nullable variant of the type of the left-hand side expression and the type of the right-hand side expression.
+
+---
+
+[S2]
+Title: Kotlin Language Specification
+Section: 8.19 Not-null assertion expressions
+URL: https://kotlinlang.org/spec/pdf/kotlin-spec.pdf
+Content:
+## 8.19 Not-null assertion expressions
+
+A not-null assertion expression is a postfix expression which uses an operator !! . For an expression e!! , if the type of e is nullable, a not-null assertion expression checks whether the evaluation result of e is equal to null and, if it is, throws a runtime exception. If the evaluation result of e is not equal to null , the result of e!! is the evaluation result of e .
+
+If the type of e is non-nullable, not-null assertion expression e!! has no effect.
+
+The type of not-null assertion expression is the non-nullable variant of the type of e .
+
+Note: this type may be non-denotable in Kotlin and, as such, may be approximated in some situations with the help of type inference.
+
+---
+
+[S3]
+Title: Kotlin Language Specification
+Section: 8.21.4 Function calls and property access (part 2)
+URL: https://kotlinlang.org/spec/pdf/kotlin-spec.pdf
+Content:
+The evaluation of a function call begins with the evaluation of its explicit receiver, if it is present. Function arguments are then evaluated in the order of their appearance in the function call left-to-right, with no consideration on how the parameters of the function were specified during function declaration. This means that, even if the order at declaration-site was different, arguments at callsite are evaluated in the order they are given. Default arguments not specified in the call are all evaluated after all provided arguments, in the order of their appearance in function declaration. Afterwards, the function itself is invoked.
+
+Note: this means default argument expressions which are used (i.e., for which the call-site does not provide explicit arguments) are reevaluated at every such call-site. Default argument expressions which are not used (i.e., for which the call-site provides explicit arguments) are not evaluated at such call-sites.
+
+Examples: we use a notation similar to the control-flow section to illustrate the evaluation order.
+
+fun f(x: Int = h(), y: Int = g()) ... f() // $1 = h(); $2 = g(); $result = f($1, $2) f(m(), n()) // $1 = m(); $2 = n(); $result = f($1, $2) f(y = n(), x = m()) // $1 = n(); $2 = m(); $result = f($2, $1) f(y = n()) // $1 = n(); $2 = h(); $result = f($2, $1) fun f(x: Int = h(), y: () -> Int) ... f(y = {2}) // $1 = {2}; $2 = h(); $result = f($2, $1) f { 2 } // $1 = {2}; $2 = h(); $result = f($2, $1) f(m()) { 2 } // $1 = m(); $2 = {2}; $result = f($1, $2)
+
+Operator calls work in a similar way: every operator evaluates in the same order as its expansion does, unless specified otherwise.
+
+---
+
+[S4]
+Title: Kotlin Language Specification
+Section: 8.6 When expressions (part 2)
+URL: https://kotlinlang.org/spec/pdf/kotlin-spec.pdf
+Content:
+When expression without bound value (the form where the expression enclosed in parentheses after the when keyword is absent) evaluates one of the different CSBs based on its condition from the when entry . Each when entry consists of a boolean condition (or a special else condition) and its corresponding CSB. When entries are checked and evaluated in their order of appearance. If the condition evaluates to true , the corresponding CSB is evaluated and the value of when expression is the same as the value of the CSB. All remaining conditions and expressions are not evaluated.
+
+The else condition is a special condition which evaluates to true if none of the branches above it evaluated to true . The else condition must also be in the last when entry of when expression, otherwise it is a compile-time error.
+
+Note: informally, you can always replace the else condition with an alwaystrue condition (e.g., boolean literal true ) with no changes to the result of when expression.
+
+When expression with bound value (the form where the expression enclosed in parentheses after the when keyword is present) is similar to the form without bound value, but uses a different syntax and semantics for conditions. In fact, it supports four different condition forms:
+
+Type test condition : type checking operator followed by a type ( is T or !is T ). The resulting condition is a type check expression of the form boundValue is T or boundValue !is T .
+
+Contains test condition : containment operator followed by an expression ( in Expr or !in Expr ). The resulting condition is a containment check expression of the form boundValue in Expr or boundValue !in Expr .
+
+Any other applicable expression ( Expr ) The resulting condition is an equality check of the form boundValue == Expr .","The Elvis operator (`?:`) evaluates its operands as follows:
+
+1. It first checks whether the left-hand side expression is reference equal to `null` [S1].
+2. If the left-hand side expression is reference equal to `null`, it evaluates and returns the right-hand side expression [S1].
+3. If the left-hand side expression is not reference equal to `null`, the operator is lazy and does not evaluate the right-hand side expression [S1].",,,,,,,,,,,
+bash-pipefail-status-001,selected-generator-hidden,answerable,Bash,How does enabling pipefail change a Bash pipeline's exit status?,"Without pipefail, the last command determines status. | With pipefail, the rightmost non-zero status is used. | The status is zero if all commands succeed.","[S1]
+Title: GNU Bash Reference Manual
+Section: 3.2.3 Pipelines (part 2)
+URL: https://www.gnu.org/software/bash/manual/bash.pdf
+Content:
+If the reserved word time precedes the pipeline, Bash prints timing statistics for the pipeline once it finishes. The statistics currently consist of elapsed (wall-clock) time and user and system time consumed by the command's execution. The -p option changes the output format to that specified by posix . When the shell is in posix mode (see Section 6.11 [Bash POSIX Mode], page 116), it does not recognize time as a reserved word if the next token begins with a ' -'. The value of the TIMEFORMAT variable is a format string that specifies how the timing information should be displayed. See Section 5.2 [Bash Variables], page 87, for a description of the available formats. Providing time as a reserved word permits the timing of shell builtins, shell functions, and pipelines. An external time command cannot time these easily.
+
+When the shell is in posix mode (see Section 6.11 [Bash POSIX Mode], page 116), you can use time by itself as a simple command. In this case, the shell displays the total user and system time consumed by the shell and its children. The TIMEFORMAT variable specifies the format of the time information.
+
+If a pipeline is not executed asynchronously (see Section 3.2.4 [Lists], page 11), the shell waits for all commands in the pipeline to complete.
+
+Each command in a multi-command pipeline, where pipes are created, is executed in its own subshell , which is a separate process (see Section 3.7.3 [Command Execution Environment], page 46). If the lastpipe option is enabled using the shopt builtin (see Section 4.3.2 [The Shopt Builtin], page 78), and job control is not active, the last element of a pipeline may be run by the shell process.
+
+The exit status of a pipeline is the exit status of the last command in the pipeline, unless the pipefail option is enabled (see Section 4.3.1 [The Set Builtin], page 74). If pipefail is enabled, the pipeline's return status is the value of the last (rightmost) command to exit with a non-zero status, or zero if all commands exit successfully. If the reserved word ' ! ' precedes the pipeline, the exit status is the logical negation of the exit status as described above. If a pipeline is not executed asynchronously (see Section 3.2.4 [Lists], page 11), the shell waits for all commands in the pipeline to terminate before returning a value. The return status of an asynchronous pipeline is 0.
+
+---
+
+[S2]
+Title: GNU Bash Reference Manual
+Section: 4.3.1 The Set Builtin (part 2)
+URL: https://www.gnu.org/software/bash/manual/bash.pdf
+Content:
+-e Exit immediately if a pipeline (see Section 3.2.3 [Pipelines], page 10), which may consist of a single simple command (see Section 3.2.2 [Simple Commands], page 9), a list (see Section 3.2.4 [Lists], page 11), or a compound command (see Section 3.2.5 [Compound Commands], page 11) returns a non-zero status. The shell does not exit if the command that fails is part of the command list immediately following a while or until reserved word, part of the test in an if statement, part of any command executed in a && or || list except the command following the final && or || , any command in a pipeline but the last (subject to the state of the pipefail shell option), or if the command's return status is being inverted with ! . If a compound command other than a subshell returns a non-zero status because a command failed while -e was being ignored, the shell does not exit. A trap on ERR , if set, is executed before the shell exits.
+
+This option applies to the shell environment and each subshell environment separately (see Section 3.7.3 [Command Execution Environment], page 46), and may cause subshells to exit before executing all the commands in the subshell.
+
+If a compound command or shell function executes in a context where -e is being ignored, none of the commands executed within the compound command or function body will be affected by the -e setting, even if -e is set and a command returns a failure status. If a compound command or shell function sets -e while executing in a context where -e is ignored, that setting will not have any effect until the compound command or the command containing the function call completes.
+
+-f Disable filename expansion (globbing).
+
+-h Locate and remember (hash) commands as they are looked up for execution. This option is enabled by default.
+
+---
+
+[S3]
+Title: GNU Bash Reference Manual
+Section: braceexpand (part 1)
+URL: https://www.gnu.org/software/bash/manual/bash.pdf
+Content:
+### braceexpand
+
+Same as -B .
+
+emacs
+
+Use an emacs -style line editing interface (see Chapter 8 [Command Line Editing], page 130). This also affects the editing interface used for read -e .
+
+errexit Same as -e .
+
+errtrace
+
+Same as -E .
+
+functrace
+
+Same as -T .
+
+hashall Same as -h .
+
+histexpand
+
+Same as -H .
+
+-p
+
+history
+
+Enable command history, as described in Section 9.1 [Bash History Facilities], page 168. This option is on by default in interactive shells.
+
+ignoreeof
+
+An interactive shell will not exit upon reading EOF.
+
+keyword
+
+Same as -k .
+
+monitor
+
+Same as -m .
+
+noclobber
+
+Same as -C .
+
+noexec
+
+Same as -n .
+
+noglob
+
+Same as -f .
+
+nolog
+
+Currently ignored.
+
+notify
+
+Same as -b .
+
+nounset
+
+Same as -u .
+
+onecmd
+
+Same as -t .
+
+physical
+
+Same as -P .
+
+pipefail
+
+If set, the return value of a pipeline is the value of the last (rightmost) command to exit with a non-zero status, or zero if all commands in the pipeline exit suc- cessfully. This option is disabled by default.
+
+posix
+
+Enable posix mode; change the behavior of Bash where the default operation differs from the posix standard to match the standard (see Section 6.11 [Bash POSIX Mode], page 116). This is intended to make Bash be- have as a strict superset of that standard.
+
+privileged
+
+Same as -p .
+
+verbose
+
+Same as -v .
+
+vi
+
+Use a vi -style line editing interface. This also affects the editing interface used for read -e .
+
+verbose
+
+Same as -v .
+
+vi
+
+Use a vi -style line editing interface. This also affects the editing interface used for read -e .
+
+xtrace
+
+Same as -x .
+
+Turn on privileged mode. In this mode, the $BASH_ENV and $ENV files are not processed, shell functions are not inherited from the environment, and the SHELLOPTS , BASHOPTS , CDPATH and GLOBIGNORE variables, if they appear in the environment, are ignored. If the shell is started with the effective user (group) id not equal to the real user (group) id, and the -p option is not supplied, these actions are taken and the effective user id is set to the real user id. If the -p option is supplied at startup, the effective user id is not reset.
+
+---
+
+[S4]
+Title: GNU Bash Reference Manual
+Section: 3.2.3 Pipelines (part 1)
+URL: https://www.gnu.org/software/bash/manual/bash.pdf
+Content:
+## 3.2.3 Pipelines
+
+A pipeline is a sequence of one or more commands separated by one of the control operators ' | ' or ' |& '.
+
+The format for a pipeline is
+
+[time [-p]] [!] command1 [ | or |& command2 ] ...
+
+The output of each command in the pipeline is connected via a pipe to the input of the next command. That is, each command reads the previous command's output. This connection is performed before any redirections specified by command1 .
+
+If ' |& ' is the pipeline operator, command1 's standard error, in addition to its standard output, is connected to command2 's standard input through the pipe; it is shorthand for 2>&1 | . This implicit redirection of the standard error to the standard output is performed after any redirections specified by command1 , consistent with that shorthand.
+
+If the reserved word time precedes the pipeline, Bash prints timing statistics for the pipeline once it finishes. The statistics currently consist of elapsed (wall-clock) time and user and system time consumed by the command's execution. The -p option changes the output format to that specified by posix . When the shell is in posix mode (see Section 6.11 [Bash POSIX Mode], page 116), it does not recognize time as a reserved word if the next token begins with a ' -'. The value of the TIMEFORMAT variable is a format string that specifies how the timing information should be displayed. See Section 5.2 [Bash Variables], page 87, for a description of the available formats. Providing time as a reserved word permits the timing of shell builtins, shell functions, and pipelines. An external time command cannot time these easily.
+
+When the shell is in posix mode (see Section 6.11 [Bash POSIX Mode], page 116), you can use time by itself as a simple command. In this case, the shell displays the total user and system time consumed by the shell and its children. The TIMEFORMAT variable specifies the format of the time information.","By default, the exit status of a pipeline is the exit status of the last command in the pipeline [S1]. When the `pipefail` option is enabled, the pipeline’s return status becomes the value of the last (rightmost) command in the pipeline to exit with a non-zero status, or zero if all commands in the pipeline exit successfully [S1, S3]. This option is disabled by default [S3].",,,,,,,,,,,
+go-defer-order-001,selected-generator-hidden,answerable,Go,"When are arguments to a deferred Go call evaluated, and in what order are multiple deferred calls invoked?",Function value and arguments are evaluated at the defer statement. | Execution is delayed until the surrounding function returns or panics. | Deferred calls run in reverse order.,"[S1]
+Title: The Go Programming Language Specification
+Section: Language version go1.26 (Jan 12, 2026) (part 152)
+URL: https://go.dev/ref/spec
+Content:
+For instance, if the deferred function is
+a function literal and the surrounding
+function has named result parameters that
+are in scope within the literal, the deferred function may access and modify
+the result parameters before they are returned.
+If the deferred function has any return values, they are discarded when
+the function completes.
+(See also the section on handling panics.)
+
+```
+lock(l)
+defer unlock(l) // unlocking happens before surrounding function returns
+
+// prints 3 2 1 0 before surrounding function returns
+for i := 0; i <= 3; i++ {
+ defer fmt.Print(i)
+}
+
+// f returns 42
+func f() (result int) {
+ defer func() {
+ // result is accessed after it was set to 6 by the return statement
+ result *= 7
+ }()
+ return 6
+}
+```
+
+## Built-in functions
+
+Built-in functions are
+predeclared.
+They are called like any other function but some of them
+accept a type instead of an expression as the first argument.
+
+The built-in functions do not have standard Go types,
+so they can only appear in call expressions;
+they cannot be used as function values.
+
+### Appending to and copying slices
+
+The built-in functions append and copy assist in
+common slice operations.
+For both functions, the result is independent of whether the memory referenced
+by the arguments overlaps.
+
+The variadic function append
+appends zero or more values x to a slice s of
+type S and returns the resulting slice, also of type
+S.
+The values x are passed to a parameter of type ...E
+where E is the element type of S
+and the respective parameter
+passing rules apply.
+As a special case, append also accepts a slice whose type is assignable to
+type []byte with a second argument of string type followed by
+....
+This form appends the bytes of the string.
+
+---
+
+[S2]
+Title: The Go Programming Language Specification
+Section: Language version go1.26 (Jan 12, 2026) (part 151)
+URL: https://go.dev/ref/spec
+Content:
+A ""fallthrough"" statement transfers control to the first statement of the
+next case clause in an expression ""switch"" statement.
+It may be used only as the final non-empty statement in such a clause.
+
+```
+FallthroughStmt = ""fallthrough"" .
+```
+
+### Defer statements
+
+A ""defer"" statement invokes a function whose execution is deferred
+to the moment the surrounding function returns, either because the
+surrounding function executed a return statement,
+reached the end of its function body,
+or because the corresponding goroutine is panicking.
+
+```
+DeferStmt = ""defer"" Expression .
+```
+
+The expression must be a function or method call; it cannot be parenthesized.
+Calls of built-in functions are restricted as for
+expression statements.
+
+Each time a ""defer"" statement
+executes, the function value and parameters to the call are
+evaluated as usual
+and saved anew but the actual function is not invoked.
+Instead, deferred functions are invoked immediately before
+the surrounding function returns, in the reverse order
+they were deferred. That is, if the surrounding function
+returns through an explicit return statement,
+deferred functions are executed after any result parameters are set
+by that return statement but before the function returns to its caller.
+If a deferred function value evaluates
+to nil, execution panics
+when the function is invoked, not when the ""defer"" statement is executed.
+
+For instance, if the deferred function is
+a function literal and the surrounding
+function has named result parameters that
+are in scope within the literal, the deferred function may access and modify
+the result parameters before they are returned.
+If the deferred function has any return values, they are discarded when
+the function completes.
+(See also the section on handling panics.)
+
+```
+lock(l)
+defer unlock(l) // unlocking happens before surrounding function returns
+
+// prints 3 2 1 0 before surrounding function returns
+for i := 0; i <= 3; i++ {
+ defer fmt.Print(i)
+}","Arguments to a deferred Go call (the function value and parameters) are evaluated as usual each time the `defer` statement executes, and saved anew, but the actual function is not invoked at that time [S2]. 
+
+Multiple deferred calls are invoked immediately before the surrounding function returns, in the reverse order they were deferred [S2].",,,,,,,,,,,
+go-method-set-pointer-001,selected-generator-hidden,answerable,Go,How do the method sets of a defined Go type T and a pointer *T differ?,T includes methods with receiver T. | *T includes methods with receiver T. | *T also includes methods with receiver *T.,"[S1]
+Title: The Go Programming Language Specification
+Section: Language version go1.26 (Jan 12, 2026) (part 72)
+URL: https://go.dev/ref/spec
+Content:
+p.M0() // ((*p).T0).M0() M0 expects *T0 receiver
+p.M1() // ((*p).T1).M1() M1 expects T1 receiver
+p.M2() // p.M2() M2 expects *T2 receiver
+t.M2() // (&t).M2() M2 expects *T2 receiver, see section on Calls
+```
+
+but the following is invalid:
+
+```
+q.M0() // (*q).M0 is valid but not a field selector
+```
+
+### Method expressions
+
+If M is in the method set of type T,
+T.M is a function that is callable as a regular function
+with the same arguments as M prefixed by an additional
+argument that is the receiver of the method.
+
+```
+MethodExpr = ReceiverType ""."" MethodName .
+ReceiverType = Type .
+```
+
+Consider a struct type T with two methods,
+Mv, whose receiver is of type T, and
+Mp, whose receiver is of type *T.
+
+```
+type T struct {
+ a int
+}
+func (tv T) Mv(a int) int { return 0 } // value receiver
+func (tp *T) Mp(f float32) float32 { return 1 } // pointer receiver
+
+var t T
+```
+
+The expression
+
+```
+T.Mv
+```
+
+yields a function equivalent to Mv but
+with an explicit receiver as its first argument; it has signature
+
+```
+func(tv T, a int) int
+```
+
+That function may be called normally with an explicit receiver, so
+these five invocations are equivalent:
+
+```
+t.Mv(7)
+T.Mv(t, 7)
+(T).Mv(t, 7)
+f1 := T.Mv; f1(t, 7)
+f2 := (T).Mv; f2(t, 7)
+```
+
+Similarly, the expression
+
+```
+(*T).Mp
+```
+
+yields a function value representing Mp with signature
+
+```
+func(tp *T, f float32) float32
+```
+
+For a method with a value receiver, one can derive a function
+with an explicit pointer receiver, so
+
+```
+(*T).Mv
+```
+
+yields a function value representing Mv with signature
+
+```
+func(tv *T, a int) int
+```
+
+Such a function indirects through the receiver to create a value
+to pass as the receiver to the underlying method;
+the method does not overwrite the value whose address is passed in
+the function call.
+
+---
+
+[S2]
+Title: The Go Programming Language Specification
+Section: Language version go1.26 (Jan 12, 2026) (part 61)
+URL: https://go.dev/ref/spec
+Content:
+The receiver is specified via an extra parameter section preceding the method
+name. That parameter section must declare a single non-variadic parameter, the receiver.
+Its type must be a defined type T or a
+pointer to a defined type T, possibly followed by a list of type parameter
+names [P1, P2, …] enclosed in square brackets.
+T is called the receiver base type. A receiver base type cannot be
+a pointer or interface type and it must be defined in the same package as the method.
+The method is said to be bound to its receiver base type and the method name
+is visible only within selectors for type T
+or *T.
+
+A non-blank receiver identifier must be
+unique in the method signature.
+If the receiver's value is not referenced inside the body of the method,
+its identifier may be omitted in the declaration. The same applies in
+general to parameters of functions and methods.
+
+For a base type, the non-blank names of methods bound to it must be unique.
+If the base type is a struct type,
+the non-blank method and field names must be distinct.
+
+Given defined type Point the declarations
+
+```
+func (p *Point) Length() float64 {
+ return math.Sqrt(p.x * p.x + p.y * p.y)
+}
+
+func (p *Point) Scale(factor float64) {
+ p.x *= factor
+ p.y *= factor
+}
+```
+
+bind the methods Length and Scale,
+with receiver type *Point,
+to the base type Point.
+
+If the receiver base type is a generic type, the
+receiver specification must declare corresponding type parameters for the method
+to use. This makes the receiver type parameters available to the method.
+Syntactically, this type parameter declaration looks like an
+instantiation of the receiver base type: the type
+arguments must be identifiers denoting the type parameters being declared, one
+for each type parameter of the receiver base type.
+The type parameter names do not need to match their corresponding parameter names in the
+receiver base type definition, and all non-blank parameter names must be unique in the
+receiver parameter section and the method signature.
+The receiver type parameter constraints are implied by the receiver base type definition:
+corresponding type parameters have corresponding constraints.
+
+---
+
+[S3]
+Title: The Go Programming Language Specification
+Section: Language version go1.26 (Jan 12, 2026) (part 43)
+URL: https://go.dev/ref/spec
+Content:
+0 bool 0 is not in the set of boolean values
+'a' string 'a' is a rune, it is not in the set of string values
+1024 byte 1024 is not in the set of unsigned 8-bit integers
+-1 uint16 -1 is not in the set of unsigned 16-bit integers
+1.1 int 1.1 is not an integer value
+42i float32 (0 + 42i) is not in the set of float32 values
+1e1000 float64 1e1000 overflows to IEEE +Inf after rounding
+```
+
+### Method sets
+
+The method set of a type determines the methods that can be
+called on an operand of that type.
+Every type has a (possibly empty) method set associated with it:
+
+- The method set of a defined type T consists of all
+methods declared with receiver type T.
+
+- The method set of a pointer to a defined type T
+(where T is neither a pointer nor an interface)
+is the set of all methods declared with receiver *T or T.
+
+- The method set of an interface type is the intersection
+of the method sets of each type in the interface's type set
+(the resulting method set is usually just the set of declared methods in the interface).
+
+Further rules apply to structs (and pointer to structs) containing embedded fields,
+as described in the section on struct types.
+Any other type has an empty method set.
+
+In a method set, each method must have a
+unique
+non-blank method name.
+
+## Blocks
+
+A block is a possibly empty sequence of declarations and statements
+within matching brace brackets.
+
+```
+Block = ""{"" StatementList ""}"" .
+StatementList = { Statement "";"" } .
+```
+
+In addition to explicit blocks in the source code, there are implicit blocks:
+
+- The universe block encompasses all Go source text.
+
+- Each package has a package block containing all
+ Go source text for that package.
+
+---
+
+[S4]
+Title: The Go Programming Language Specification
+Section: Language version go1.26 (Jan 12, 2026) (part 71)
+URL: https://go.dev/ref/spec
+Content:
+- For a value x of type I where I
+is an interface type, x.f denotes the actual method with name
+f of the dynamic value of x.
+If there is no method with name f in the
+method set of I, the selector
+expression is illegal.
+
+- As an exception, if the type of x is a defined
+pointer type and (*x).f is a valid selector expression denoting a field
+(but not a method), x.f is shorthand for (*x).f.
+
+- In all other cases, x.f is illegal.
+
+- If x is of pointer type and has the value
+nil and x.f denotes a struct field,
+assigning to or evaluating x.f
+causes a run-time panic.
+
+- If x is of interface type and has the value
+nil, calling or
+evaluating the method x.f
+causes a run-time panic.
+
+For example, given the declarations:
+
+```
+type T0 struct {
+ x int
+}
+
+func (*T0) M0()
+
+type T1 struct {
+ y int
+}
+
+func (T1) M1()
+
+type T2 struct {
+ z int
+ T1
+ *T0
+}
+
+func (*T2) M2()
+
+type Q *T2
+
+var t T2 // with t.T0 != nil
+var p *T2 // with p != nil and (*p).T0 != nil
+var q Q = p
+```
+
+one may write:
+
+```
+t.z // t.z
+t.y // t.T1.y
+t.x // (*t.T0).x
+
+p.z // (*p).z
+p.y // (*p).T1.y
+p.x // (*(*p).T0).x
+
+q.x // (*(*q).T0).x (*q).x is a valid field selector
+
+p.M0() // ((*p).T0).M0() M0 expects *T0 receiver
+p.M1() // ((*p).T1).M1() M1 expects T1 receiver
+p.M2() // p.M2() M2 expects *T2 receiver
+t.M2() // (&t).M2() M2 expects *T2 receiver, see section on Calls
+```
+
+but the following is invalid:
+
+```
+q.M0() // (*q).M0 is valid but not a field selector
+```
+
+### Method expressions
+
+If M is in the method set of type T,
+T.M is a function that is callable as a regular function
+with the same arguments as M prefixed by an additional
+argument that is the receiver of the method.","The method set of a defined type `T` consists of all methods declared with receiver type `T` [S3]. The method set of a pointer to a defined type `T` (where `T` is neither a pointer nor an interface) consists of all methods declared with receiver type `*T` or `T` [S3]. Therefore, the method set of `*T` includes both the methods of `T` and the methods specific to `*T`.",,,,,,,,,,,
+cpp-qt-signals-001,selected-generator-hidden,unanswerable,C++,How do QObject::connect and Qt::QueuedConnection deliver a signal across threads?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,
+javascript-node-fs-001,selected-generator-hidden,unanswerable,JavaScript,How do fs.promises.readFile and AbortSignal interact in Node.js?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,
+kotlin-compose-effects-001,selected-generator-hidden,unanswerable,Kotlin,When should Jetpack Compose use LaunchedEffect instead of rememberCoroutineScope?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,
+python-numpy-broadcast-001,selected-generator-hidden,unanswerable,Python,How do numpy.broadcast_to and numpy.einsum apply NumPy broadcasting rules?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,
+rust-tokio-tasks-001,selected-generator-hidden,unanswerable,Rust,How do tokio::spawn and JoinSet propagate task cancellation and panics?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,
+go-client-kubernetes-001,selected-generator-hidden,unanswerable,Go,How does client-go build a Kubernetes client with rest.InClusterConfig and a shared informer?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,
+python-default-argument-once-001,selected-generator-hidden,answerable,Python,Why can using a mutable object as a Python default argument cause values to persist across calls?,Defaults are evaluated at function definition time. | The same mutable object is reused across calls. | Mutations can therefore accumulate between calls.,"[S1]
+Title: The Python Tutorial
+Section: 4.1. if Statements¶ (part 19)
+URL: https://docs.python.org/3/tutorial/controlflow.html
+Content:
+Important warning: The default value is evaluated only once. This makes a
+difference when the default is a mutable object such as a list, dictionary, or
+instances of most classes. For example, the following function accumulates the
+arguments passed to it on subsequent calls:
+
+```
+def f(a, L=[]):
+ L.append(a)
+ return L
+
+print(f(1))
+print(f(2))
+print(f(3))
+```
+
+This will print
+
+```
+[1]
+[1, 2]
+[1, 2, 3]
+```
+
+If you don’t want the default to be shared between subsequent calls, you can
+write the function like this instead:
+
+```
+def f(a, L=None):
+ if L is None:
+ L = []
+ L.append(a)
+ return L
+```
+
+### 4.9.2. Keyword Arguments¶
+
+Functions can also be called using keyword arguments
+of the form kwarg=value. For instance, the following function:
+
+```
+def parrot(voltage, state='a stiff', action='voom', type='Norwegian Blue'):
+ print(""-- This parrot wouldn't"", action, end=' ')
+ print(""if you put"", voltage, ""volts through it."")
+ print(""-- Lovely plumage, the"", type)
+ print(""-- It's"", state, ""!"")
+```
+
+accepts one required argument (voltage) and three optional arguments
+(state, action, and type). This function can be called in any
+of the following ways:
+
+```
+parrot(1000) # 1 positional argument
+parrot(voltage=1000) # 1 keyword argument
+parrot(voltage=1000000, action='VOOOOOM') # 2 keyword arguments
+parrot(action='VOOOOOM', voltage=1000000) # 2 keyword arguments
+parrot('a million', 'bereft of life', 'jump') # 3 positional arguments
+parrot('a thousand', state='pushing up the daisies') # 1 positional, 1 keyword
+```
+
+but all the following calls would be invalid:
+
+```
+parrot() # required argument missing
+parrot(voltage=5.0, 'dead') # non-keyword argument after a keyword argument
+parrot(110, voltage=220) # duplicate value for the same argument
+parrot(actor='John Cleese') # unknown keyword argument
+```
+
+In a function call, keyword arguments must follow positional arguments.
+All the keyword arguments passed must match one of the arguments
+accepted by the function (e.g. actor is not a valid argument for the
+parrot function), and their order is not important. This also includes
+non-optional arguments (e.g. parrot(voltage=1000) is valid too).
+No argument may receive a value more than once.
+Here’s an example that fails due to this restriction:","Using a mutable object as a Python default argument can cause values to persist across calls because the default value is evaluated only once [S1]. When the default is a mutable object such as a list, dictionary, or instances of most classes, modifications made to that object during a function call are retained in subsequent calls, causing the function to accumulate arguments passed to it over time [S1].",,,,,,,,,,,
+typescript-discriminated-union-001,selected-generator-hidden,answerable,TypeScript,How does a common literal discriminant let TypeScript narrow a union?,Union members share a discriminant property. | The discriminant uses distinct literal types. | Checking it narrows the value to the compatible member.,"[S1]
+Title: The TypeScript Handbook
+Section: typeof type guards (part 16)
+URL: https://www.typescriptlang.org/docs/handbook/2/narrowing.html
+Content:
+Like with our first definition of Shape, this is still an error.
+When radius was optional, we got an error (with strictNullChecks enabled) because TypeScript couldn’t tell whether the property was present.
+Now that Shape is a union, TypeScript is telling us that shape might be a Square, and Squares don’t have radius defined on them!
+Both interpretations are correct, but only the union encoding of Shape will cause an error regardless of how strictNullChecks is configured.
+
+But what if we tried checking the kind property again?
+
+```
+tsfunction getArea(shape: Shape) { if (shape.kind === ""circle"") { return Math.PI * shape.radius ** 2; (parameter) shape: Circle }}Try
+```
+
+That got rid of the error!
+When every type in a union contains a common property with literal types, TypeScript considers that to be a discriminated union, and can narrow out the members of the union.
+
+In this case, kind was that common property (which is what’s considered a discriminant property of Shape).
+Checking whether the kind property was ""circle"" got rid of every type in Shape that didn’t have a kind property with the type ""circle"".
+That narrowed shape down to the type Circle.
+
+The same checking works with switch statements as well.
+Now we can try to write our complete getArea without any pesky ! non-null assertions.
+
+```
+tsfunction getArea(shape: Shape) { switch (shape.kind) { case ""circle"": return Math.PI * shape.radius ** 2; (parameter) shape: Circle case ""square"": return shape.sideLength ** 2; (parameter) shape: Square }}Try
+```
+
+The important thing here was the encoding of Shape.
+Communicating the right information to TypeScript - that Circle and Square were really two separate types with specific kind fields - was crucial.
+Doing that lets us write type-safe TypeScript code that looks no different than the JavaScript we would’ve written otherwise.
+From there, the type system was able to do the “right” thing and figure out the types in each branch of our switch statement.
+
+---
+
+[S2]
+Title: TypeScript Handbook — Everyday Types
+Section: The primitives: string, number, and boolean (part 9)
+URL: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html
+Content:
+The solution is to narrow the union with code, the same as you would in JavaScript without type annotations.
+Narrowing occurs when TypeScript can deduce a more specific type for a value based on the structure of the code.
+
+For example, TypeScript knows that only a string value will have a typeof value ""string"":
+
+```
+tsfunction printId(id: number | string) { if (typeof id === ""string"") { // In this branch, id is of type 'string' console.log(id.toUpperCase()); } else { // Here, id is of type 'number' console.log(id); }}Try
+```
+
+Another example is to use a function like Array.isArray:
+
+```
+tsfunction welcomePeople(x: string[] | string) { if (Array.isArray(x)) { // Here: 'x' is 'string[]' console.log(""Hello, "" + x.join("" and "")); } else { // Here: 'x' is 'string' console.log(""Welcome lone traveler "" + x); }}Try
+```
+
+Notice that in the else branch, we don’t need to do anything special - if x wasn’t a string[], then it must have been a string.
+
+Sometimes you’ll have a union where all the members have something in common.
+For example, both arrays and strings have a slice method.
+If every member in a union has a property in common, you can use that property without narrowing:
+
+```
+ts// Return type is inferred as number[] | stringfunction getFirstThree(x: number[] | string) { return x.slice(0, 3);}Try
+```
+
+It might be confusing that a union of types appears to have the intersection of those types’ properties.
+This is not an accident - the name union comes from type theory.
+The union number | string is composed by taking the union of the values from each type.
+Notice that given two sets with corresponding facts about each set, only the intersection of those facts applies to the union of the sets themselves.
+For example, if we had a room of tall people wearing hats, and another room of Spanish speakers wearing hats, after combining those rooms, the only thing we know about every person is that they must be wearing a hat.
+
+---
+
+[S3]
+Title: TypeScript Handbook — Everyday Types
+Section: The primitives: string, number, and boolean (part 9)
+URL: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html
+Content:
+The solution is to narrow the union with code, the same as you would in JavaScript without type annotations.
+Narrowing occurs when TypeScript can deduce a more specific type for a value based on the structure of the code.
+
+For example, TypeScript knows that only a string value will have a typeof value ""string"":
+
+```
+tsfunction printId(id: number | string) { if (typeof id === ""string"") { // In this branch, id is of type 'string' console.log(id.toUpperCase()); } else { // Here, id is of type 'number' console.log(id); }}Try
+```
+
+Another example is to use a function like Array.isArray:
+
+```
+tsfunction welcomePeople(x: string[] | string) { if (Array.isArray(x)) { // Here: 'x' is 'string[]' console.log(""Hello, "" + x.join("" and "")); } else { // Here: 'x' is 'string' console.log(""Welcome lone traveler "" + x); }}Try
+```
+
+Notice that in the else branch, we don’t need to do anything special - if x wasn’t a string[], then it must have been a string.
+
+Sometimes you’ll have a union where all the members have something in common.
+For example, both arrays and strings have a slice method.
+If every member in a union has a property in common, you can use that property without narrowing:
+
+```
+ts// Return type is inferred as number[] | stringfunction getFirstThree(x: number[] | string) { return x.slice(0, 3);}Try
+```
+
+It might be confusing that a union of types appears to have the intersection of those types’ properties.
+This is not an accident - the name union comes from type theory.
+The union number | string is composed by taking the union of the values from each type.
+Notice that given two sets with corresponding facts about each set, only the intersection of those facts applies to the union of the sets themselves.
+For example, if we had a room of tall people wearing hats, and another room of Spanish speakers wearing hats, after combining those rooms, the only thing we know about every person is that they must be wearing a hat.
+
+---
+
+[S4]
+Title: The TypeScript Handbook
+Section: typeof type guards (part 15)
+URL: https://www.typescriptlang.org/docs/handbook/2/narrowing.html
+Content:
+The problem with this encoding of Shape is that the type-checker doesn’t have any way to know whether or not radius or sideLength are present based on the kind property.
+We need to communicate what we know to the type checker.
+With that in mind, let’s take another swing at defining Shape.
+
+```
+tsinterface Circle { kind: ""circle""; radius: number;} interface Square { kind: ""square""; sideLength: number;} type Shape = Circle | Square;Try
+```
+
+Here, we’ve properly separated Shape out into two types with different values for the kind property, but radius and sideLength are declared as required properties in their respective types.
+
+Let’s see what happens here when we try to access the radius of a Shape.
+
+```
+tsfunction getArea(shape: Shape) { return Math.PI * shape.radius ** 2;Property 'radius' does not exist on type 'Shape'.
+ Property 'radius' does not exist on type 'Square'.2339Property 'radius' does not exist on type 'Shape'.
+ Property 'radius' does not exist on type 'Square'.}Try
+```
+
+Like with our first definition of Shape, this is still an error.
+When radius was optional, we got an error (with strictNullChecks enabled) because TypeScript couldn’t tell whether the property was present.
+Now that Shape is a union, TypeScript is telling us that shape might be a Square, and Squares don’t have radius defined on them!
+Both interpretations are correct, but only the union encoding of Shape will cause an error regardless of how strictNullChecks is configured.
+
+But what if we tried checking the kind property again?
+
+```
+tsfunction getArea(shape: Shape) { if (shape.kind === ""circle"") { return Math.PI * shape.radius ** 2; (parameter) shape: Circle }}Try
+```
+
+That got rid of the error!
+When every type in a union contains a common property with literal types, TypeScript considers that to be a discriminated union, and can narrow out the members of the union.","When every type in a union contains a common property with literal types, TypeScript considers it a discriminated union, and that common property acts as a discriminant [S1, S4]. 
+
+By checking the value of this discriminant property, TypeScript narrows out the members of the union that do not have a matching literal type [S1]. For example, if a union has a `kind` property with literal types `""circle""` and `""square""`, checking `shape.kind === ""circle""` removes every type in the union whose `kind` property is not `""circle""`, narrowing the variable down to the specific matching type (in this case, `Circle`) [S1]. This narrowing behavior works with both `if` statements and `switch` statements [S1].",,,,,,,,,,,
+rust-question-mark-result-001,selected-generator-hidden,answerable,Rust,What does Rust's ? operator do when applied to a Result?,Ok values are unwrapped for continued execution. | Err causes an early return. | The error may be converted through From and the function return type must be compatible.,"[S1]
+Title: The Rust Programming Language
+Section: Recoverable Errors with Result (part 14)
+URL: https://doc.rust-lang.org/stable/book/ch09-02-recoverable-errors-with-result.html
+Content:
+```
+$ cargo run
+ Compiling error-handling v0.1.0 (file:///projects/error-handling)
+error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
+ --> src/main.rs:4:48
+ |
+3 | fn main() {
+ | --------- this function should return `Result` or `Option` to accept `?`
+4 | let greeting_file = File::open(""hello.txt"")?;
+ | ^ cannot use the `?` operator in a function that returns `()`
+ |
+help: consider adding return type
+ |
+3 ~ fn main() -> Result<(), Box<dyn std::error::Error>> {
+4 | let greeting_file = File::open(""hello.txt"")?;
+5 + Ok(())
+ |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `error-handling` (bin ""error-handling"") due to 1 previous error
+```
+
+This error points out that we’re only allowed to use the ? operator in a
+function that returns Result, Option, or another type that implements
+FromResidual.
+
+To fix the error, you have two choices. One choice is to change the return type
+of your function to be compatible with the value you’re using the ? operator
+on as long as you have no restrictions preventing that. The other choice is to
+use a match or one of the Result<T, E> methods to handle the Result<T, E>
+in whatever way is appropriate.
+
+The error message also mentioned that ? can be used with Option<T> values
+as well. As with using ? on Result, you can only use ? on Option in a
+function that returns an Option. The behavior of the ? operator when called
+on an Option<T> is similar to its behavior when called on a Result<T, E>:
+If the value is None, the None will be returned early from the function at
+that point. If the value is Some, the value inside the Some is the
+resultant value of the expression, and the function continues. Listing 9-11 has
+an example of a function that finds the last character of the first line in the
+given text.
+
+---
+
+[S2]
+Title: The Rust Programming Language
+Section: Recoverable Errors with Result (part 10)
+URL: https://doc.rust-lang.org/stable/book/ch09-02-recoverable-errors-with-result.html
+Content:
+This pattern of propagating errors is so common in Rust that Rust provides the
+question mark operator ? to make this easier.
+
+#### The ? Operator Shortcut
+
+Listing 9-7 shows an implementation of read_username_from_file that has the
+same functionality as in Listing 9-6, but this implementation uses the ?
+operator.
+
+```
+#![allow(unused)]
+fn main() {
+use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -> Result<String, io::Error> {
+ let mut username_file = File::open(""hello.txt"")?;
+ let mut username = String::new();
+ username_file.read_to_string(&mut username)?;
+ Ok(username)
+}
+}
+```
+
+The ? placed after a Result value is defined to work in almost the same way
+as the match expressions that we defined to handle the Result values in
+Listing 9-6. If the value of the Result is an Ok, the value inside the Ok
+will get returned from this expression, and the program will continue. If the
+value is an Err, the Err will be returned from the whole function as if we
+had used the return keyword so that the error value gets propagated to the
+calling code.
+
+There is a difference between what the match expression from Listing 9-6 does
+and what the ? operator does: Error values that have the ? operator called
+on them go through the from function, defined in the From trait in the
+standard library, which is used to convert values from one type into another.
+When the ? operator calls the from function, the error type received is
+converted into the error type defined in the return type of the current
+function. This is useful when a function returns one error type to represent
+all the ways a function might fail, even if parts might fail for many different
+reasons.
+
+For example, we could change the read_username_from_file function in Listing
+9-7 to return a custom error type named OurError that we define. If we also
+define impl From<io::Error> for OurError to construct an instance of
+OurError from an io::Error, then the ? operator calls in the body of
+read_username_from_file will call from and convert the error types without
+needing to add any more code to the function.
+
+---
+
+[S3]
+Title: The Rust Programming Language
+Section: Recoverable Errors with Result (part 11)
+URL: https://doc.rust-lang.org/stable/book/ch09-02-recoverable-errors-with-result.html
+Content:
+There is a difference between what the match expression from Listing 9-6 does
+and what the ? operator does: Error values that have the ? operator called
+on them go through the from function, defined in the From trait in the
+standard library, which is used to convert values from one type into another.
+When the ? operator calls the from function, the error type received is
+converted into the error type defined in the return type of the current
+function. This is useful when a function returns one error type to represent
+all the ways a function might fail, even if parts might fail for many different
+reasons.
+
+For example, we could change the read_username_from_file function in Listing
+9-7 to return a custom error type named OurError that we define. If we also
+define impl From<io::Error> for OurError to construct an instance of
+OurError from an io::Error, then the ? operator calls in the body of
+read_username_from_file will call from and convert the error types without
+needing to add any more code to the function.
+
+In the context of Listing 9-7, the ? at the end of the File::open call will
+return the value inside an Ok to the variable username_file. If an error
+occurs, the ? operator will return early out of the whole function and give
+any Err value to the calling code. The same thing applies to the ? at the
+end of the read_to_string call.
+
+The ? operator eliminates a lot of boilerplate and makes this function’s
+implementation simpler. We could even shorten this code further by chaining
+method calls immediately after the ?, as shown in Listing 9-8.
+
+```
+#![allow(unused)]
+fn main() {
+use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -> Result<String, io::Error> {
+ let mut username = String::new();
+
+File::open(""hello.txt"")?.read_to_string(&mut username)?;
+
+Ok(username)
+}
+}
+```
+
+---
+
+[S4]
+Title: The Rust Programming Language
+Section: Recoverable Errors with Result (part 9)
+URL: https://doc.rust-lang.org/stable/book/ch09-02-recoverable-errors-with-result.html
+Content:
+So, if we have a file handle in username_file, the function then creates a
+new String in variable username and calls the read_to_string method on
+the file handle in username_file to read the contents of the file into
+username. The read_to_string method also returns a Result because it
+might fail, even though File::open succeeded. So, we need another match to
+handle that Result: If read_to_string succeeds, then our function has
+succeeded, and we return the username from the file that’s now in username
+wrapped in an Ok. If read_to_string fails, we return the error value in the
+same way that we returned the error value in the match that handled the
+return value of File::open. However, we don’t need to explicitly say
+return, because this is the last expression in the function.
+
+The code that calls this code will then handle getting either an Ok value
+that contains a username or an Err value that contains an io::Error. It’s
+up to the calling code to decide what to do with those values. If the calling
+code gets an Err value, it could call panic! and crash the program, use a
+default username, or look up the username from somewhere other than a file, for
+example. We don’t have enough information on what the calling code is actually
+trying to do, so we propagate all the success or error information upward for
+it to handle appropriately.
+
+This pattern of propagating errors is so common in Rust that Rust provides the
+question mark operator ? to make this easier.
+
+#### The ? Operator Shortcut
+
+Listing 9-7 shows an implementation of read_username_from_file that has the
+same functionality as in Listing 9-6, but this implementation uses the ?
+operator.
+
+```
+#![allow(unused)]
+fn main() {
+use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -> Result<String, io::Error> {
+ let mut username_file = File::open(""hello.txt"")?;
+ let mut username = String::new();
+ username_file.read_to_string(&mut username)?;
+ Ok(username)
+}
+}
+```","When applied to a `Result`, the `?` operator works as follows:
+- If the value of the `Result` is an `Ok`, the value inside the `Ok` is returned from the expression, and the program continues [S2, S3].
+- If the value is an `Err`, the `Err` is returned early from the whole function as if the `return` keyword had been used, propagating the error value to the calling code [S2, S3].
+- Error values that have the `?` operator called on them go through the `from` function (defined in the `From` trait) to convert the received error type into the error type defined in the current function's return type [S2, S3].
+- The `?` operator can only be used in a function that returns `Result`, `Option`, or another type that implements `FromResidual` [S1].",,,,,,,,,,,
+python-sqlalchemy-async-001,selected-generator-hidden,unanswerable,Python,How should SQLAlchemy AsyncSession combine selectinload with an asynchronous transaction?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,
+typescript-deno-permissions-001,selected-generator-hidden,unanswerable,TypeScript,How does Deno.serve behave when network permission has not been granted?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,
+rust-axum-state-001,selected-generator-hidden,unanswerable,Rust,How does axum::Router extract shared State and convert handler failures into IntoResponse?,,,The retrieved documentation does not contain enough information to answer this question.,,,,,,,,,,,

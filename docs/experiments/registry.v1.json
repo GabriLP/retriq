@@ -363,10 +363,10 @@
       "variable": "Evaluation split changes from validation to the locked test; the selected model, evidence, prompt, provider route, and generation controls remain frozen",
       "controls": ["GLM-5.2 BaseTen FP8", "OpenRouter fallbacks disabled", "low reasoning", "temperature 0", "900 output tokens", "prompt v1", "24 locked retrieval-test cases", "retrieval rank citations", "judge disabled", "single cache-preserving execution"],
       "metrics": ["Human normalized grounded quality", "groundedness", "key-fact coverage", "citation correctness and completeness", "correct abstention", "critical unsupported claims", "generator failures", "provider errors", "truncations", "latency", "tokens", "cost"],
-      "artifacts": ["docs/experiments/generation-final-test.v1.json"],
-      "decision": "Preregistered. Automatic execution can establish operational reliability, but final semantic confirmation remains pending until the 24-row thesis-author review is completed.",
+      "artifacts": ["docs/experiments/generation-final-test.v1.json", "scripts/evaluate-final-generation-test.ts", "docs/experiment-results/generation-final-test-v1.json", "docs/experiment-results/generation-final-test-v1.md", "docs/experiment-results/generation-final-test-v1-execution-ledger.json", "docs/evaluation/generation-final-test-human-review-v1.csv", "src/app/evaluation/final-generation-review/page.tsx"],
+      "decision": "Automatic final-test checks passed: 13 GLM-5.2 generations and 11 deterministic abstentions completed with zero final errors, zero explicit truncations, zero invalid citation labels, and $0.049915 provider-reported cost. Three BaseTen 429s required cache-preserving single-case recoveries and remain recorded. The pg_partman retrieval false positive elicited an explicit insufficiency response. Final semantic confirmation remains pending the frozen 24-row human review.",
       "limitations": ["One human reviewer", "AI-assisted pending-confirmation benchmark labels", "One retrieval false positive intentionally reaches the generator", "The selected GLM budget remains 900 tokens"],
-      "nextStep": "Commit the final-test runner, execute it once, complete the dedicated human review, and then freeze the end-to-end conclusion."
+      "nextStep": "Complete the dedicated human review at /evaluation/final-generation-review, import its CSV, apply the frozen rubric once, and then freeze the end-to-end conclusion."
     }
   ]
 }

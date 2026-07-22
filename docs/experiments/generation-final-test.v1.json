@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "generation-final-test-v1",
   "title": "Locked final test of the validation-selected grounded generator",
-  "status": "preregistered",
+  "status": "outputs-generated-awaiting-human-review",
   "preregisteredAt": "2026-07-22",
   "researchQuestion": "Does validation-selected GLM-5.2 retain grounded answer quality, citation reliability, abstention, and operational reliability on evidence returned by the single locked retrieval-test execution?",
   "hypothesis": "GLM-5.2 will complete every evidence-bearing test case without truncation or provider mismatch and will retain the frozen human-quality guardrails.",
@@ -81,6 +81,31 @@
     "report": "docs/experiment-results/generation-final-test-v1.md",
     "reviewWorksheet": "docs/evaluation/generation-final-test-human-review-v1.csv",
     "executionLedger": "docs/experiment-results/generation-final-test-v1-execution-ledger.json"
+  },
+  "execution": {
+    "completedAt": "2026-07-22T11:29:38.667Z",
+    "executionCommit": "abc1549",
+    "logicalExecutionCount": 1,
+    "providerCalls": 13,
+    "deterministicAbstentions": 11,
+    "technicalRecoveries": 3,
+    "technicalRecoveryReason": "Three BaseTen upstream 429 responses were recorded; each resume retained completed outputs and retried only the failed case.",
+    "finalErrors": 0,
+    "explicitTruncations": 0,
+    "invalidCitationLabelCases": 0,
+    "tokens": { "prompt": 23110, "completion": 4321, "reasoning": 2417, "total": 27431 },
+    "costUsd": 0.04991488,
+    "medianLatencyMs": 3582.99,
+    "p95LatencyMs": 9712.21,
+    "automaticChecksPassed": true,
+    "semanticQualityStatus": "pending-required-human-review",
+    "notableEndToEndCase": "The pg_partman retrieval false positive reached GLM-5.2, which explicitly abstained because the excerpt lacked pg_partman-specific information; this remains subject to the frozen human rubric."
+  },
+  "outputIntegrity": {
+    "resultSha256": "2300932196bcb652fcc402a179fced18cd31408496e2926cd16b96dfd759c02f",
+    "reportSha256": "b1c682823b83c0f3326461a1d1abe73da509acf8481917bb7a724ae88f16e2a7",
+    "executionLedgerSha256": "cacb16306e53f297f765b537c04ef3fa7e89a7d20e8cb88f91074b1ec8842c2d",
+    "reviewWorksheetSha256": "ca0a4d6201d0d873ba3ce903b6c4d22c22aa5c49e2294e39e9e6ed72d9216baf"
   },
   "limitations": [
     "The final human review has one thesis-author reviewer and does not estimate inter-rater reliability.",
