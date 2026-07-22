@@ -31,6 +31,7 @@
     "benchmark:compare": "tsx scripts/report-benchmark-preparation.ts",
     "benchmark:test": "tsx scripts/test-benchmark-suite.ts",
     "retrieval:strategies:test": "tsx scripts/test-retrieval-strategies.ts",
+    "agentic:retrieval:test": "tsx scripts/test-agentic-retrieval.ts",
     "rerankers:test": "tsx scripts/test-rerankers.ts",
     "experiment:reranking": "tsx scripts/evaluate-reranking.ts",
     "generation:benchmark:build": "tsx scripts/build-generation-benchmark.ts",

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "rag-agent-loop-v1",
+  "status": "foundation-implemented-awaiting-preregistration",
+  "researchQuestion": "Can a bounded retrieval-assessment-rewrite loop improve evidence coverage over the frozen single-pass RAG baseline without unacceptable false positives, latency, or cost?",
+  "baseline": {
+    "pipeline": "src/lib/rag/pipeline.ts",
+    "retrieval": "single dense query with metadata filtering",
+    "embedding": "google/gemini-embedding-2@1024",
+    "chunking": "300 words",
+    "threshold": 0.68,
+    "topK": 4,
+    "reranker": null
+  },
+  "foundation": {
+    "controller": "src/lib/rag/agentic-retrieval.ts",
+    "defaultMaximumRetrievalAttempts": 2,
+    "defaultMaximumQueriesPerAttempt": 2,
+    "hardMaximumRetrievalAttempts": 3,
+    "hardMaximumQueriesPerAttempt": 4,
+    "terminalStates": ["sufficient-evidence", "maximum-attempts", "no-rewrite-available", "repeated-query-plan"],
+    "traceActions": ["retrieve", "assess", "rewrite", "stop"],
+    "productionEnabled": false
+  },
+  "safetyAndReproducibility": [
+    "The existing production baseline is unchanged.",
+    "Every retrieval query, compact ranked result, assessment, rewrite, duration, attempt, and stop reason is recorded.",
+    "Repeated normalized query plans terminate the loop.",
+    "Invalid empty or oversized rewrite plans fail validation.",
+    "The controller is dependency-injected so planner variants can be compared without changing orchestration.",
+    "Ranking-merge policies are injectable and the deterministic highest-score merge is only the default foundation behavior.",
+    "No prior non-selected comparative rewrite is enabled by default."
+  ],
+  "plannedBenchmark": {
+    "split": "validation only",
+    "testSplitTouched": false,
+    "singleChangedVariable": "single-pass retrieval versus bounded agentic retrieval",
+    "primaryMetrics": ["Recall@4", "MRR", "nDCG@4", "both-side evidence coverage for comparative cases", "unanswerable false-positive rate"],
+    "guardrails": ["mean and p95 latency", "embedding and planner calls", "token usage", "USD cost", "maximum-attempt termination rate"],
+    "selectionPolicy": "Must be preregistered before any validation execution. Production remains disabled until a variant passes every retrieval and safety guardrail."
+  },
+  "knownLimitations": [
+    "The foundation does not select an assessor or rewrite model.",
+    "Score and language coverage gates measure evidence availability, not semantic entailment.",
+    "Agentic generation and final answer quality are outside this foundation commit."
+  ]
+}
