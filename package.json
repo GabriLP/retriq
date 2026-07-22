@@ -33,6 +33,7 @@
     "retrieval:strategies:test": "tsx scripts/test-retrieval-strategies.ts",
     "agentic:retrieval:test": "tsx scripts/test-agentic-retrieval.ts",
     "agentic:policy:test": "tsx scripts/test-agentic-policy.ts",
+    "experiment:agentic": "tsx scripts/evaluate-agentic-rag.ts",
     "rerankers:test": "tsx scripts/test-rerankers.ts",
     "experiment:reranking": "tsx scripts/evaluate-reranking.ts",
     "generation:benchmark:build": "tsx scripts/build-generation-benchmark.ts",
