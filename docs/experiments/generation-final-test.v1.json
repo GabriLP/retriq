@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "id": "generation-final-test-v1",
+  "title": "Locked final test of the validation-selected grounded generator",
+  "status": "preregistered",
+  "preregisteredAt": "2026-07-22",
+  "researchQuestion": "Does validation-selected GLM-5.2 retain grounded answer quality, citation reliability, abstention, and operational reliability on evidence returned by the single locked retrieval-test execution?",
+  "hypothesis": "GLM-5.2 will complete every evidence-bearing test case without truncation or provider mismatch and will retain the frozen human-quality guardrails.",
+  "selectionEvidence": {
+    "protocol": "docs/experiments/generation-models.v1.json",
+    "humanReviewSummary": "docs/experiment-results/generation-human-review-v1-summary.json",
+    "selectedCandidate": "glm-5.2-openrouter-baseten-fp8",
+    "validationNormalizedQuality": 0.9739583333333334,
+    "judgeEligibility": "disabled: neither GPT-5.4 Nano nor GPT-5.4 Mini satisfied the frozen calibration rule"
+  },
+  "lockedInputs": {
+    "retrievalResult": "docs/experiment-results/baseline-final-test-v1.json",
+    "goldenSet": "docs/evaluation/golden-set.v4.json",
+    "splitManifest": "docs/evaluation/golden-set-splits.v4.json",
+    "chunks": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec/chunks.json",
+    "prompt": "docs/evaluation/generation-prompt.v1.json",
+    "humanRubric": "docs/evaluation/generation-human-rubric.v1.json",
+    "cases": 24,
+    "answerableCases": 12,
+    "unanswerableCases": 12,
+    "expectedProviderCalls": 13,
+    "reasonForThirteenCalls": "All twelve answerable cases and the single retrieval false positive carry evidence; the remaining eleven negatives use the frozen deterministic no-evidence response."
+  },
+  "candidate": {
+    "id": "glm-5.2-openrouter-baseten-fp8",
+    "provider": "openrouter",
+    "model": "z-ai/glm-5.2-20260616",
+    "expectedResponseModel": "z-ai/glm-5.2",
+    "expectedResponseProvider": "BaseTen",
+    "providerOrder": ["baseten/fp8"],
+    "allowFallbacks": false,
+    "reasoningEffort": "low",
+    "inputPriceUsdPerMillionTokens": 1.4,
+    "outputPriceUsdPerMillionTokens": 4.4
+  },
+  "generationControls": {
+    "temperature": 0,
+    "maxOutputTokens": 900,
+    "promptVersion": "retriq-grounded-generation-prompt-v1@1.0.0",
+    "citationLabels": "retrieval rank labels S1-S4",
+    "noEvidencePolicy": "deterministic abstention without a provider call",
+    "judgeEnabled": false
+  },
+  "executionPolicy": "Commit this protocol and the integrity-checking runner before one execution. A cache-preserving recovery may retry only technical failures and must retain the execution ledger; completed successful cases must never be regenerated.",
+  "automaticChecks": {
+    "providerErrorsMaximum": 0,
+    "providerOrModelMismatchesMaximum": 0,
+    "explicitTruncationsMaximum": 0,
+    "invalidCitationLabelRateMaximum": 0,
+    "costCeilingUsd": 0.15
+  },
+  "humanConfirmation": {
+    "required": true,
+    "reviewer": "thesis author",
+    "rows": 24,
+    "primaryMetric": "mean normalized grounded answer quality over the twelve answerable cases",
+    "primaryMinimum": 0.9,
+    "guardrails": {
+      "criticalUnsupportedClaimRateMaximum": 0,
+      "meanCitationCorrectnessMinimum": 3.6,
+      "correctAbstentionRateMinimum": 1,
+      "generatorFailureRateMaximum": 0.02
+    },
+    "decisionRule": "Final generation confirmation requires the primary minimum and every guardrail. Automatic checks alone cannot establish semantic answer quality."
+  },
+  "integrity": {
+    "retrievalResultSha256": "d9141676de4ab057ede266f04edccdc714ff81dcfc6386d1bf1afcb1eac93f4d",
+    "promptSha256": "0c37022a43375090d05873eb6936146353e8179f1c20a937ee9a8ad0103dbba6",
+    "rubricSha256": "e556f7619268398672e3c9dc9bfe1529491cd6676063f8d9ab88130bd66e198c",
+    "selectionProtocolSha256": "87925d50cfbbbb12275b05c07c446fe3a2d2f2cd36430ed1d7948be94862ce01",
+    "chunksSha256": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
+    "preregistrationParentCommit": "f2de0fc"
+  },
+  "plannedOutputs": {
+    "result": "docs/experiment-results/generation-final-test-v1.json",
+    "report": "docs/experiment-results/generation-final-test-v1.md",
+    "reviewWorksheet": "docs/evaluation/generation-final-test-human-review-v1.csv",
+    "executionLedger": "docs/experiment-results/generation-final-test-v1-execution-ledger.json"
+  },
+  "limitations": [
+    "The final human review has one thesis-author reviewer and does not estimate inter-rater reliability.",
+    "The benchmark approval state is pending confirmation and AI-assisted rather than independently human-validated.",
+    "One negative receives an LLM answer because retrieval falsely supplied adjacent PostgreSQL evidence; this intentionally measures end-to-end abstention behavior.",
+    "The 900-token budget preserves the selected GLM comparison configuration; the separate 2,048-token runtime reliability result evaluated Gemini rather than GLM."
+  ]
+}

@@ -1,7 +1,7 @@
 # Thesis experiment map
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
-- Experiment families: **25**
+- Experiment families: **26**
 - Completed: **16**
 - Superseded but retained: **1**
 
@@ -34,6 +34,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 23 | Exploratory agentic RAG integration | agentic-rag-semantic-gate-v1 | failed | Deterministic score-and-language assessment versus GPT-5.4 Mini semantic assessment inside the otherwise identical agentic loop | Do not advance the current semantic-gated agentic architecture. It preserved general Recall@4 0.9630, MRR 0.9444, and nDCG@4 0.9493 while reducing general and focused negative FPR to zero. However, comparative both-evidence coverage remained 0.2500 and evidence-side recall 0.3750, below the frozen 0.3750 and 0.6250 requirements. All 39 second attempts failed to recover additional cases, so retry planning added 39 planner calls, latency, and cost without retrieval benefit. The run completed without provider errors for $0.203783 plus $0.000181 estimated embedding cost. |
 | 24 | Final agentic RAG merge-policy experiment | agentic-rag-cross-attempt-merge-v1 | failed | Replace previous-attempt evidence versus accumulate it with a per-requested-technology quota | Do not select cross-attempt accumulation and stop Agentic RAG development for the current thesis. General Recall@4 0.9630, MRR 0.9444, nDCG@4 0.9493, and zero general FPR were preserved. The policy recovered three positive comparisons, but canonical both-evidence coverage remained 0.2500, side recall reached only 0.5000, and negative-go-rust-react-effect became a false positive, raising focused FPR to 0.1250. It therefore failed three frozen checks. Six new assessor calls cost $0.019962; all 39 planner rewrites were exact cache hits. |
 | 25 | Final locked retrieval verification | baseline-final-test-v1 | completed | Evaluation split changes from validation to the locked test; every retrieval parameter remains frozen | Retain the selected single-pass baseline. Its sole locked-test execution passed every frozen check: Recall@4 1.0000, Precision@4 0.6667, MRR 0.9375, nDCG@4 0.9526, and unanswerable FPR 0.0833. All 12 answerable cases had full canonical-evidence coverage, although the Java overload case first retrieved canonical evidence at rank four. One of 12 negatives, the pg_partman retention case, was falsely accepted, placing FPR exactly at the allowed boundary. One provider request cost an estimated $0.000145. |
+| 26 | Final locked generation verification | generation-final-test-v1 | in-progress | Evaluation split changes from validation to the locked test; the selected model, evidence, prompt, provider route, and generation controls remain frozen | Preregistered. Automatic execution can establish operational reliability, but final semantic confirmation remains pending until the 24-row thesis-author review is completed. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
 
@@ -334,3 +335,15 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Decision:** Retain the selected single-pass baseline. Its sole locked-test execution passed every frozen check: Recall@4 1.0000, Precision@4 0.6667, MRR 0.9375, nDCG@4 0.9526, and unanswerable FPR 0.0833. All 12 answerable cases had full canonical-evidence coverage, although the Java overload case first retrieved canonical evidence at rank four. One of 12 negatives, the pg_partman retention case, was falsely accepted, placing FPR exactly at the allowed boundary. One provider request cost an estimated $0.000145.
 - **Limitations:** Only 12 cases per answerability class; Benchmark approval state is pending-confirmation and AI-assisted rather than independently human-validated; Retrieval-only verification
 - **Next step:** Freeze retrieval development for the current thesis, report the confidence intervals and provisional-label limitation alongside the point estimates, and move to thesis synthesis and any separately scoped final generation verification.
+
+## 26. Final locked generation verification: generation-final-test-v1
+
+- **Research question:** Does validation-selected GLM-5.2 retain grounded answer quality and reliability on the locked retrieval-test evidence?
+- **Status:** in-progress
+- **Changed variable:** Evaluation split changes from validation to the locked test; the selected model, evidence, prompt, provider route, and generation controls remain frozen
+- **Controls:** GLM-5.2 BaseTen FP8; OpenRouter fallbacks disabled; low reasoning; temperature 0; 900 output tokens; prompt v1; 24 locked retrieval-test cases; retrieval rank citations; judge disabled; single cache-preserving execution
+- **Metrics:** Human normalized grounded quality; groundedness; key-fact coverage; citation correctness and completeness; correct abstention; critical unsupported claims; generator failures; provider errors; truncations; latency; tokens; cost
+- **Artifacts:** `docs/experiments/generation-final-test.v1.json`
+- **Decision:** Preregistered. Automatic execution can establish operational reliability, but final semantic confirmation remains pending until the 24-row thesis-author review is completed.
+- **Limitations:** One human reviewer; AI-assisted pending-confirmation benchmark labels; One retrieval false positive intentionally reaches the generator; The selected GLM budget remains 900 tokens
+- **Next step:** Commit the final-test runner, execute it once, complete the dedicated human review, and then freeze the end-to-end conclusion.
