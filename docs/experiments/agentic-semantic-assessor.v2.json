@@ -75,6 +75,7 @@
     "docs/evaluation/semantic-evidence-benchmark.v2.json",
     "docs/experiments/agentic-semantic-assessor.v2.json",
     "scripts/validate-semantic-evidence-benchmark-v2.ts",
+    "scripts/evaluate-semantic-evidence-assessor-v2.ts",
     "src/app/evaluation/semantic-evidence-benchmark-v2-review/page.tsx",
     "src/components/semantic-evidence-review-workbench.tsx",
     "src/lib/evaluation/semantic-evidence-review.ts"
