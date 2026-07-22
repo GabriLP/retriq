@@ -70,6 +70,7 @@
     "experiment:registry:report": "tsx scripts/report-experiment-registry.ts",
     "metadata:filter:test": "tsx scripts/test-metadata-filter.ts",
     "experiment:metadata:filter": "tsx scripts/evaluate-metadata-filter.ts",
+    "experiment:baseline:final-test": "tsx scripts/evaluate-final-baseline-test.ts",
     "experiment:retrieval:multi-technology": "tsx scripts/evaluate-multi-technology-retrieval.ts",
     "experiment:retrieval:comparative-threshold": "tsx scripts/evaluate-comparative-threshold.ts",
     "experiment:retrieval:comparative-decomposition": "tsx scripts/evaluate-comparative-decomposition.ts",
