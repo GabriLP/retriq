@@ -42,8 +42,8 @@
   "selectedProtocolForExecution": "docs/experiments/agentic-rag-planner.v1.json",
   "nextProtocolForExecution": null,
   "latestOutcome": {
-    "status": "semantic-assessor-completed-not-selected",
-    "reason": "GPT-5.4 Mini improved frozen evidence-state accuracy from 0.9545 to 0.9727 and reduced FPR from 0.0610 to 0.0366, but missed the preregistered zero-FPR requirement. Its three disagreements appear semantically plausible and require separate human adjudication.",
+    "status": "semantic-assessor-human-review-completed",
+    "reason": "The frozen canonical result remains not selected. A subsequent blinded review judged all three semantic disagreements sufficient, yielding 1.0000 semantic accuracy and zero FPR in a post-hoc sensitivity analysis. This supports a new preregistered end-to-end experiment, not retroactive selection.",
     "productionEnabled": false,
     "selectedVariant": "single-pass-baseline"
   },

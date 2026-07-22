@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "id": "semantic-evidence-human-review-v1-summary",
+  "createdAt": "2026-07-22T09:42:46.897Z",
+  "split": "validation",
+  "lockedTestTouched": false,
+  "source": {
+    "humanReview": "docs/evaluation/semantic-evidence-human-review-v1.completed.csv",
+    "humanReviewSha256": "22e42dd1749694da6a0b219ad470c80f584956b4275d9c7f0e5e3b50c2d5b672",
+    "frozenAssessorResult": "docs/experiment-results/agentic-semantic-assessor-v1-validation.json",
+    "frozenAssessorResultSha256": "ed648eb91d7995222fd497edcafa8457f32c6418bd3e715f0cd4ec8ce0512d6f"
+  },
+  "review": {
+    "rows": 3,
+    "reviewerIds": [
+      "Gabriele"
+    ],
+    "sufficient": 3,
+    "insufficient": 0,
+    "semanticAgreement": 1,
+    "deterministicAgreement": 0.6666666666666666,
+    "cases": [
+      {
+        "stateId": "python-parameter-kinds-001::attempt-1",
+        "caseId": "python-parameter-kinds-001",
+        "attempt": 1,
+        "canonicalSufficient": false,
+        "deterministicSufficient": true,
+        "semanticSufficient": true,
+        "humanSufficient": true,
+        "notes": "",
+        "reviewer": "Gabriele",
+        "reviewedAt": "2026-07-22T09:39:23.206Z"
+      },
+      {
+        "stateId": "compare-javascript-typescript-type-errors::attempt-1",
+        "caseId": "compare-javascript-typescript-type-errors",
+        "attempt": 1,
+        "canonicalSufficient": false,
+        "deterministicSufficient": false,
+        "semanticSufficient": true,
+        "humanSufficient": true,
+        "notes": "",
+        "reviewer": "Gabriele",
+        "reviewedAt": "2026-07-22T09:39:24.604Z"
+      },
+      {
+        "stateId": "compare-java-cpp-multiple-inheritance::attempt-1",
+        "caseId": "compare-java-cpp-multiple-inheritance",
+        "attempt": 1,
+        "canonicalSufficient": false,
+        "deterministicSufficient": true,
+        "semanticSufficient": true,
+        "humanSufficient": true,
+        "notes": "",
+        "reviewer": "Gabriele",
+        "reviewedAt": "2026-07-22T09:39:26.037Z"
+      }
+    ]
+  },
+  "sensitivity": {
+    "description": "The three reviewed canonical-negative labels are replaced only for this sensitivity analysis; the frozen validation artifact remains unchanged.",
+    "canonicalReference": {
+      "deterministic": {
+        "total": 110,
+        "truePositive": 28,
+        "trueNegative": 77,
+        "falsePositive": 5,
+        "falseNegative": 0,
+        "accuracy": 0.9545454545454546,
+        "precision": 0.8484848484848485,
+        "recall": 1,
+        "specificity": 0.9390243902439024,
+        "falsePositiveRate": 0.06097560975609756
+      },
+      "semantic": {
+        "total": 110,
+        "truePositive": 28,
+        "trueNegative": 79,
+        "falsePositive": 3,
+        "falseNegative": 0,
+        "accuracy": 0.9727272727272728,
+        "precision": 0.9032258064516129,
+        "recall": 1,
+        "specificity": 0.9634146341463414,
+        "falsePositiveRate": 0.036585365853658534
+      }
+    },
+    "humanAdjudicatedReference": {
+      "deterministic": {
+        "total": 110,
+        "truePositive": 30,
+        "trueNegative": 76,
+        "falsePositive": 3,
+        "falseNegative": 1,
+        "accuracy": 0.9636363636363636,
+        "precision": 0.9090909090909091,
+        "recall": 0.967741935483871,
+        "specificity": 0.9620253164556962,
+        "falsePositiveRate": 0.0379746835443038
+      },
+      "semantic": {
+        "total": 110,
+        "truePositive": 31,
+        "trueNegative": 79,
+        "falsePositive": 0,
+        "falseNegative": 0,
+        "accuracy": 1,
+        "precision": 1,
+        "recall": 1,
+        "specificity": 1,
+        "falsePositiveRate": 0
+      }
+    }
+  },
+  "conclusion": {
+    "canonicalResultPreserved": true,
+    "retroactiveSelection": false,
+    "interpretation": "All three apparent semantic false positives were judged sufficient. Under the adjudicated sensitivity reference, the semantic assessor is perfect on the 110 frozen states and the deterministic gate still makes four errors.",
+    "nextStep": "Preregister a new end-to-end semantic-assessor Agentic RAG experiment and evaluate it on newly reserved or independently reviewed evidence states before production selection."
+  },
+  "limitations": [
+    "The same primary reviewer who developed the benchmark completed this adjudication.",
+    "The reviewer consulted Codex while interpreting the three cases, so this is AI-assisted human adjudication rather than an independent second-human replication.",
+    "Only model disagreements were reviewed, which is appropriate for error analysis but cannot estimate agreement over the complete state distribution.",
+    "The reviewed validation states are now inspected and cannot serve as untouched evidence for subsequent model selection."
+  ]
+}

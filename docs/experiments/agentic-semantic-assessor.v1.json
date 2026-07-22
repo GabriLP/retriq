@@ -57,10 +57,24 @@
     "failedChecks": ["falsePositiveRate"],
     "decision": "Do not integrate automatically. Preserve the canonical-label result and adjudicate all three semantic disagreements separately because each may contain genuinely sufficient alternative evidence."
   },
-  "artifacts": ["src/lib/rag/semantic-evidence-assessor.ts", "scripts/test-semantic-evidence-assessor.ts", "scripts/evaluate-semantic-evidence-assessor.ts", "docs/experiment-results/agentic-semantic-assessor-v1-validation.json", "docs/experiment-results/agentic-semantic-assessor-v1-validation.md"],
+  "postHocHumanReview": {
+    "status": "completed",
+    "reviewedDisagreements": 3,
+    "humanSufficient": 3,
+    "humanInsufficient": 0,
+    "semanticAgreement": 1,
+    "deterministicAgreement": 0.6666666666666666,
+    "sensitivityResult": {
+      "deterministic": { "accuracy": 0.9636363636363636, "recall": 0.967741935483871, "falsePositiveRate": 0.0379746835443038 },
+      "semantic": { "accuracy": 1, "recall": 1, "falsePositiveRate": 0 }
+    },
+    "interpretation": "All three apparent semantic false positives were sufficient alternative evidence. This sensitivity analysis supports a newly preregistered end-to-end experiment but does not retroactively change the frozen canonical selection result."
+  },
+  "artifacts": ["src/lib/rag/semantic-evidence-assessor.ts", "scripts/test-semantic-evidence-assessor.ts", "scripts/evaluate-semantic-evidence-assessor.ts", "scripts/report-semantic-evidence-human-review.ts", "src/app/evaluation/semantic-evidence-review/page.tsx", "src/components/semantic-evidence-review-workbench.tsx", "src/lib/evaluation/semantic-evidence-review.ts", "docs/evaluation/semantic-evidence-human-review-v1.completed.csv", "docs/experiment-results/agentic-semantic-assessor-v1-validation.json", "docs/experiment-results/agentic-semantic-assessor-v1-validation.md", "docs/experiment-results/semantic-evidence-human-review-v1-summary.json", "docs/experiment-results/semantic-evidence-human-review-v1-summary.md"],
   "limitations": [
     "Canonical-evidence labels may mark alternative but genuinely sufficient excerpts as insufficient.",
     "The source states come from a validation trace already inspected during v3 diagnosis.",
-    "Selection qualifies a component for another validation experiment, not for production or locked-test execution."
+    "Selection qualifies a component for another validation experiment, not for production or locked-test execution.",
+    "The targeted three-case review was completed by the primary benchmark reviewer with Codex guidance and is not an independent second-human replication."
   ]
 }

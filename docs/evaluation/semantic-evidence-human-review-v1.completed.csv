@@ -1,0 +1,4 @@
+schema_version,state_id,case_id,attempt,human_sufficient_0_1,reviewer_notes,reviewed_by,reviewed_at,source_experiment
+1,python-parameter-kinds-001::attempt-1,python-parameter-kinds-001,1,1,,Gabriele,2026-07-22T09:39:23.206Z,agentic-semantic-assessor-v1
+1,compare-javascript-typescript-type-errors::attempt-1,compare-javascript-typescript-type-errors,1,1,,Gabriele,2026-07-22T09:39:24.604Z,agentic-semantic-assessor-v1
+1,compare-java-cpp-multiple-inheritance::attempt-1,compare-java-cpp-multiple-inheritance,1,1,,Gabriele,2026-07-22T09:39:26.037Z,agentic-semantic-assessor-v1
