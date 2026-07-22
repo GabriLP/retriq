@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-rag-planner-v1",
+  "status": "failed-guardrail",
+  "attemptedAt": "2026-07-22T08:47:00.000Z",
+  "evaluationCommit": "c4797f8182cf0782b40c3835c1d5dbca996e3e2f",
+  "split": "validation",
+  "testSplitTouched": false,
+  "lockedTestCasesExecuted": 0,
+  "execution": {
+    "plannedCases": 70,
+    "completedCasesBeforeFailure": 10,
+    "partialMetricsInspected": false,
+    "metricsCalculated": false,
+    "providerErrors": 1,
+    "error": "Agentic planner returned invalid JSON."
+  },
+  "observedPlannerUsage": {
+    "successfullyParsedResponses": 1,
+    "parsedResponsePromptTokens": 159,
+    "parsedResponseCompletionTokens": 81,
+    "parsedResponseReasoningTokens": 110,
+    "parsedResponseTotalTokens": 350,
+    "parsedResponseEstimatedCostUsd": 0.0019575,
+    "invalidResponseUsageAvailable": false
+  },
+  "guardrails": {
+    "requiredStructuredValidityRate": 1,
+    "maximumProviderErrors": 0,
+    "structuredValiditySatisfied": false,
+    "providerErrorGuardrailSatisfied": false
+  },
+  "decision": {
+    "selectedVariant": "single-pass-baseline",
+    "reason": "Planner v1 violated its preregistered structured-output and zero-provider-error guardrails. The attempt was terminated without coercion, retry, or partial-metric selection."
+  },
+  "limitations": [
+    "No retrieval-quality metrics are reported because the complete validation sample was not executed.",
+    "Usage and cost for the invalid provider response were unavailable because parsing failed before the response was persisted.",
+    "The one successfully parsed response is reported only for operational accounting and is not used to estimate retrieval quality."
+  ]
+}

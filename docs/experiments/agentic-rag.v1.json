@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "rag-agent-loop-v1",
-  "status": "planner-preregistered",
+  "status": "planner-v1-rejected",
   "researchQuestion": "Can a bounded retrieval-assessment-rewrite loop improve evidence coverage over the frozen single-pass RAG baseline without unacceptable false positives, latency, or cost?",
   "baseline": {
     "pipeline": "src/lib/rag/pipeline.ts",
@@ -40,6 +40,12 @@
     "selectionPolicy": "Must be preregistered before any validation execution. Production remains disabled until a variant passes every retrieval and safety guardrail."
   },
   "selectedProtocolForExecution": "docs/experiments/agentic-rag-planner.v1.json",
+  "latestOutcome": {
+    "status": "failed-guardrail",
+    "reason": "Gemini 3.5 Flash returned invalid JSON after 10 of 70 validation cases; the preregistered zero-error rule rejected planner v1 without partial metric inspection.",
+    "productionEnabled": false,
+    "selectedVariant": "single-pass-baseline"
+  },
   "knownLimitations": [
     "The foundation does not select an assessor or rewrite model.",
     "Score and language coverage gates measure evidence availability, not semantic entailment.",

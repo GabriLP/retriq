@@ -63,6 +63,7 @@ async function main() {
     console.log(`VALID ${inputs.protocol.id}: ${inputs.generalCases.length} general + ${inputs.positives.cases.length} positive + ${inputs.negatives.cases.length} negative validation cases; locked test cases executed: 0.`);
     return;
   }
+  if (inputs.protocol.status === "completed") throw new Error("This protocol is already completed and cannot be rerun in place. Preregister a new protocol id.");
   if (!options.allowProviderRequests) throw new Error("Execution requires --allow-provider-requests; --plan remains provider-free.");
 
   const { embedTextsWithCache } = await import("../src/lib/rag/embeddings");
@@ -158,7 +159,7 @@ async function loadInputs() {
 
 function validateInputs(input: Awaited<ReturnType<typeof loadInputs>>) {
   const { protocol, positives, negatives, config, run, chunks, split, generalCases } = input;
-  if (protocol.schemaVersion !== 1 || protocol.status !== "preregistered" || protocol.split !== "validation" || protocol.testSplitTouched !== false) throw new Error("A preregistered validation-only protocol is required.");
+  if (protocol.schemaVersion !== 1 || !["preregistered", "completed"].includes(protocol.status) || protocol.split !== "validation" || protocol.testSplitTouched !== false) throw new Error("A registered validation-only protocol is required.");
   if (protocol.benchmark.lockedTestExecution !== false || !split.testLocked || split.testCaseIds.length !== protocol.benchmark.lockedTestCases) throw new Error("Locked test split guard failed.");
   if (generalCases.length !== protocol.benchmark.generalValidationCases || generalCases.some((item) => split.testCaseIds.includes(item.id))) throw new Error("General validation case count or split isolation failed.");
   for (const benchmark of [positives, negatives]) if (benchmark.schemaVersion !== 1 || benchmark.split !== "validation" || benchmark.testSplitTouched !== false || path.resolve(benchmark.parentRun) !== path.resolve(runDirectory)) throw new Error("Focused benchmark must target the frozen validation run.");

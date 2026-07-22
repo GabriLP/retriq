@@ -2,7 +2,7 @@
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
 - Experiment families: **21**
-- Completed: **14**
+- Completed: **15**
 - Superseded but retained: **1**
 
 This is the narrative index for the thesis. The JSON registry is the source of truth; generated Markdown and CSV provide readable and tabular views. Every experiment records its question, isolated variable, controls, metrics, decision, limitations, and next action.
@@ -19,7 +19,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 8 | Embedding model comparison | embedding-models-v2 | completed | Embedding provider/model at a fixed 1024-dimensional output | On the 54-case v4 validation split, retain Gemini Embedding 2 at threshold 0.68. It is the only 1024-dimensional candidate satisfying zero no-answer false positives, Recall@4 >= 0.90, and MRR >= 0.85. OpenAI Large is strongest at a permissive threshold but fails after zero-FPR calibration; Voyage preserves recall but misses the MRR floor. |
 | 9 | Reranking | reranking-v1 | completed | No reranker, Voyage rerank-2.5, or Voyage rerank-2.5-lite | Retain no reranker. With candidate Recall@20 equal to 1.0, rerank-2.5 preserved Recall@4 but reduced MRR from 0.9444 to 0.9259 and nDCG@4 from 0.9493 to 0.9327; rerank-2.5-lite reduced them further. Both added cost and about 0.31-0.33 seconds median API latency. |
 | 10 | Answer generation and LLM-as-a-judge | generation-and-judge-v1 | in-progress | Generator model first; judge model and judge prompt only after human reference labels exist | The 72-row blinded human review selects GLM-5.2 BaseTen FP8 on validation: normalized quality 0.9740, every guardrail passed, and the lowest observed generation cost. Grok 4.5 scored 0.9323 and passed all guardrails. Gemini 3.5 Flash scored 0.9219 but its one human-labelled generator failure produced a 4.17% rate, above the preregistered 2% limit. The locked test remains untouched. |
-| 11 | Agentic RAG | rag-agent-loop-v1 | planner-preregistered | Single-pass retrieval versus a deterministic sufficiency gate and at most one Gemini 3.5 Flash rewrite attempt | Planner v1 is preregistered but not executed. Production remains on the single-pass baseline until every retrieval, false-positive, validity, latency, and cost guardrail passes on validation. |
+| 11 | Agentic RAG | rag-agent-loop-v1 | completed | Single-pass retrieval versus a deterministic sufficiency gate and at most one Gemini 3.5 Flash rewrite attempt | Planner v1 was rejected: Gemini 3.5 Flash produced invalid JSON after 10 of 70 validation cases, violating the preregistered perfect-structure and zero-provider-error guardrails. No partial retrieval metrics were calculated, the locked test remained untouched, and production retains the single-pass baseline. |
 | 12 | Production retrieval infrastructure | postgres-vector-storage-v1 | completed | Local exhaustive cosine persistence versus exact pgvector execution | Deploy exact pgvector search on Neon Free. It preserved all 54 frozen validation outputs within a 0.0002 score tolerance, stored 33,079 chunks in 228 MB, reused cached embeddings with zero provider calls, and cost $0 at observation time. HNSW and IVFFlat remain deferred experiments. |
 | 13 | Runtime generation reliability | generation-output-budget-v1 | completed | Maximum output-token budget: frozen 900-token baseline versus 2,048-token runtime candidate | Use 2,048 tokens for runtime reliability. All 27 validation generations returned STOP with zero errors and zero MAX_TOKENS events; the known 900-token Rust failure completed. Observed cost increased from $0.164763 to $0.166626 (+$0.001863, approximately 1.13%). This is not a quality-selection result. |
 | 14 | Comparative-query retrieval | multi-technology-retrieval-v1 | completed | Legacy first-technology filtering versus multi-technology union versus language-balanced union | Retain language-balanced multi-technology ordering among the three preregistered policies. It raises both-language coverage@4 from 0.0000 for legacy first-match and 0.3750 for the unbalanced union to 0.6250. Canonical two-sided evidence coverage remains only 0.2500, however, so this is a retrieval regression fix rather than a complete comparative-query solution. |
@@ -154,14 +154,14 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 ## 11. Agentic RAG: rag-agent-loop-v1
 
 - **Research question:** Can a bounded retrieval-assessment-rewrite loop improve evidence coverage over the frozen single-pass RAG baseline without unacceptable false positives, latency, or cost?
-- **Status:** planner-preregistered
+- **Status:** completed
 - **Changed variable:** Single-pass retrieval versus a deterministic sufficiency gate and at most one Gemini 3.5 Flash rewrite attempt
 - **Controls:** production baseline unchanged; Gemini 3.5 Flash low planner; deterministic 0.68 score and language-coverage assessor; maximum two retrieval attempts; maximum two queries per attempt; repeated-query termination; complete compact trace; locked test untouched
 - **Metrics:** Recall@4; MRR; nDCG@4; both-side evidence coverage; unanswerable false-positive rate; attempts; latency; tokens; cost
-- **Artifacts:** `docs/experiments/agentic-rag.v1.json`; `docs/experiments/agentic-rag-planner.v1.json`; `src/lib/rag/agentic-retrieval.ts`; `src/lib/rag/agentic-assessor.ts`; `src/lib/rag/agentic-planner.ts`; `scripts/test-agentic-retrieval.ts`; `scripts/test-agentic-policy.ts`
-- **Decision:** Planner v1 is preregistered but not executed. Production remains on the single-pass baseline until every retrieval, false-positive, validity, latency, and cost guardrail passes on validation.
+- **Artifacts:** `docs/experiments/agentic-rag.v1.json`; `docs/experiments/agentic-rag-planner.v1.json`; `docs/experiment-results/agentic-rag-planner-v1-validation.json`; `docs/experiment-results/agentic-rag-planner-v1-validation.md`; `src/lib/rag/agentic-retrieval.ts`; `src/lib/rag/agentic-assessor.ts`; `src/lib/rag/agentic-planner.ts`; `scripts/test-agentic-retrieval.ts`; `scripts/test-agentic-policy.ts`; `scripts/evaluate-agentic-rag.ts`
+- **Decision:** Planner v1 was rejected: Gemini 3.5 Flash produced invalid JSON after 10 of 70 validation cases, violating the preregistered perfect-structure and zero-provider-error guardrails. No partial retrieval metrics were calculated, the locked test remained untouched, and production retains the single-pass baseline.
 - **Limitations:** Validation cases have informed prior retrieval experiments; Deterministic coverage gates do not establish semantic sufficiency; Agentic answer generation remains out of scope for this experiment; Must not hide a weak single-pass baseline
-- **Next step:** Commit the frozen planner protocol, then execute one complete validation benchmark without inspecting partial metrics.
+- **Next step:** Preregister a separate robustness variant before execution, preserving this failed attempt and keeping the production baseline unchanged.
 
 ## 12. Production retrieval infrastructure: postgres-vector-storage-v1
 

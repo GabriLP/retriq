@@ -149,14 +149,14 @@
       "id": "rag-agent-loop-v1",
       "thesisSection": "Agentic RAG",
       "researchQuestion": "Can a bounded retrieval-assessment-rewrite loop improve evidence coverage over the frozen single-pass RAG baseline without unacceptable false positives, latency, or cost?",
-      "status": "planner-preregistered",
+      "status": "completed",
       "variable": "Single-pass retrieval versus a deterministic sufficiency gate and at most one Gemini 3.5 Flash rewrite attempt",
       "controls": ["production baseline unchanged", "Gemini 3.5 Flash low planner", "deterministic 0.68 score and language-coverage assessor", "maximum two retrieval attempts", "maximum two queries per attempt", "repeated-query termination", "complete compact trace", "locked test untouched"],
       "metrics": ["Recall@4", "MRR", "nDCG@4", "both-side evidence coverage", "unanswerable false-positive rate", "attempts", "latency", "tokens", "cost"],
-      "artifacts": ["docs/experiments/agentic-rag.v1.json", "docs/experiments/agentic-rag-planner.v1.json", "src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/test-agentic-retrieval.ts", "scripts/test-agentic-policy.ts"],
-      "decision": "Planner v1 is preregistered but not executed. Production remains on the single-pass baseline until every retrieval, false-positive, validity, latency, and cost guardrail passes on validation.",
+      "artifacts": ["docs/experiments/agentic-rag.v1.json", "docs/experiments/agentic-rag-planner.v1.json", "docs/experiment-results/agentic-rag-planner-v1-validation.json", "docs/experiment-results/agentic-rag-planner-v1-validation.md", "src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/test-agentic-retrieval.ts", "scripts/test-agentic-policy.ts", "scripts/evaluate-agentic-rag.ts"],
+      "decision": "Planner v1 was rejected: Gemini 3.5 Flash produced invalid JSON after 10 of 70 validation cases, violating the preregistered perfect-structure and zero-provider-error guardrails. No partial retrieval metrics were calculated, the locked test remained untouched, and production retains the single-pass baseline.",
       "limitations": ["Validation cases have informed prior retrieval experiments", "Deterministic coverage gates do not establish semantic sufficiency", "Agentic answer generation remains out of scope for this experiment", "Must not hide a weak single-pass baseline"],
-      "nextStep": "Commit the frozen planner protocol, then execute one complete validation benchmark without inspecting partial metrics."
+      "nextStep": "Preregister a separate robustness variant before execution, preserving this failed attempt and keeping the production baseline unchanged."
     },
     {
       "order": 12,

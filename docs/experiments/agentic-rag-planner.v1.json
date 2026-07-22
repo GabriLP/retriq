@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "agentic-rag-planner-v1",
-  "status": "preregistered",
+  "status": "completed",
   "parent": "rag-agent-loop-v1",
   "hypothesis": "A bounded Gemini-planned second retrieval attempt will improve canonical evidence coverage for difficult and comparative validation questions while preserving the frozen baseline's zero unanswerable false-positive rate.",
   "split": "validation",
@@ -78,6 +78,21 @@
       "reason": "The intended non-inferiority guardrail is the exact frozen baseline value (26/27). The rounded value 0.963 was microscopically stricter and would incorrectly reject an identical result."
     }
   ],
-  "artifacts": ["src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/test-agentic-retrieval.ts", "scripts/test-agentic-policy.ts"],
+  "executionOutcome": {
+    "status": "failed-guardrail",
+    "attemptedAt": "2026-07-22T08:47:00.000Z",
+    "evaluationCommit": "c4797f8182cf0782b40c3835c1d5dbca996e3e2f",
+    "completedCasesBeforeFailure": 10,
+    "plannedCases": 70,
+    "metricsCalculated": false,
+    "lockedTestCasesExecuted": 0,
+    "plannerProviderErrors": 1,
+    "error": "Agentic planner returned invalid JSON.",
+    "successfullyParsedPlannerResponses": 1,
+    "observedCostForSuccessfullyParsedResponsesUsd": 0.0019575,
+    "invalidResponseCostAvailable": false,
+    "decision": "Reject planner v1 and retain the single-pass production baseline. Do not retry or coerce the same preregistered attempt."
+  },
+  "artifacts": ["src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/test-agentic-retrieval.ts", "scripts/test-agentic-policy.ts", "scripts/evaluate-agentic-rag.ts", "docs/experiment-results/agentic-rag-planner-v1-validation.json", "docs/experiment-results/agentic-rag-planner-v1-validation.md"],
   "limitations": ["The validation and focused comparative sets have already informed earlier retrieval experiments.", "Language coverage is a proxy for evidence sufficiency rather than semantic entailment.", "This experiment evaluates retrieval behavior, not final generated-answer quality.", "Gemini planner list-price cost is estimated from provider token metadata."]
 }

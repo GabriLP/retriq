@@ -45,6 +45,7 @@ yarn-error.log*
 /data/reranker-cache/*
 /data/generation-cache/*
 /data/judge-cache/*
+/data/agentic-planner-cache/*
 !/data/vector-store.json
 !/data/.gitkeep
 !/data/source/.gitkeep
