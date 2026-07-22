@@ -66,6 +66,7 @@
     "database:parity": "tsx scripts/verify-postgres-retrieval-parity.ts",
     "database:test": "tsx scripts/test-postgres-vector-store.ts",
     "experiment:generation": "tsx scripts/evaluate-generation-models.ts",
+    "experiment:generation:final-test": "tsx scripts/evaluate-final-generation-test.ts",
     "experiment:retrieval:strategies": "tsx scripts/evaluate-retrieval-strategies.ts",
     "experiment:registry:report": "tsx scripts/report-experiment-registry.ts",
     "metadata:filter:test": "tsx scripts/test-metadata-filter.ts",

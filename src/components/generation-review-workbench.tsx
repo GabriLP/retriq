@@ -18,7 +18,7 @@ const scoreDefinitions: Array<{ column: ScoreColumn; label: string; hint: string
 
 type StoredReview = { reviewerId: string; reviews: Record<string, ReviewValues>; currentTaskId?: string; savedAt?: string };
 
-export function GenerationReviewWorkbench({ headers, rows, tasks: suppliedTasks }: { headers: string[]; rows: ReviewCsvRow[]; tasks: GenerationReviewTask[] }) {
+export function GenerationReviewWorkbench({ headers, rows, tasks: suppliedTasks, storageKey = "retriq:generation-human-review:v1", exportFilename = "generation-human-review-v1.completed.csv" }: { headers: string[]; rows: ReviewCsvRow[]; tasks: GenerationReviewTask[]; storageKey?: string; exportFilename?: string }) {
   const tasks = useMemo(() => suppliedTasks.length ? suppliedTasks : buildReviewTasks(rows), [rows, suppliedTasks]);
   const [reviews, setReviews] = useState<Record<string, ReviewValues>>({});
   const [reviewerId, setReviewerId] = useState("Gabriele");
@@ -76,7 +76,7 @@ export function GenerationReviewWorkbench({ headers, rows, tasks: suppliedTasks 
 
   function downloadCsv() {
     const csv = exportReviewedCsv({ headers, rows, tasks, reviews, reviewerId, reviewedAt: new Date().toISOString() });
-    downloadFile("generation-human-review-v1.completed.csv", csv, "text/csv;charset=utf-8");
+    downloadFile(exportFilename, csv, "text/csv;charset=utf-8");
   }
 
   function downloadBackup() {
@@ -108,7 +108,7 @@ export function GenerationReviewWorkbench({ headers, rows, tasks: suppliedTasks 
         <aside className="border-r border-black/15 px-4 py-6 lg:min-h-[calc(100vh-66px)] lg:px-5">
           <label className="block font-mono text-[10px] uppercase tracking-[0.18em] text-black/45">Revisore</label>
           <input value={reviewerId} onChange={(event) => setReviewerId(event.target.value)} className="mt-2 w-full border-b border-black/25 bg-transparent py-2 font-serif text-lg outline-none focus:border-[#d9472b]" />
-          <div className="mt-7 flex items-center justify-between"><span className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/45">Casi</span><span className="text-xs text-black/45">48 effettivi</span></div>
+          <div className="mt-7 flex items-center justify-between"><span className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/45">Casi</span><span className="text-xs text-black/45">{tasks.length} effettivi</span></div>
           <div className="mt-3 grid grid-cols-8 gap-1.5 lg:grid-cols-6">
             {tasks.map((item, index) => {
               const done = isReviewComplete(item, reviews[item.id]);
