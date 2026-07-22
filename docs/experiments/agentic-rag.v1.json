@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "rag-agent-loop-v1",
-  "status": "planner-v2-rejected",
+  "status": "planner-v3-completed-not-selected",
   "researchQuestion": "Can a bounded retrieval-assessment-rewrite loop improve evidence coverage over the frozen single-pass RAG baseline without unacceptable false positives, latency, or cost?",
   "baseline": {
     "pipeline": "src/lib/rag/pipeline.ts",
@@ -40,10 +40,10 @@
     "selectionPolicy": "Must be preregistered before any validation execution. Production remains disabled until a variant passes every retrieval and safety guardrail."
   },
   "selectedProtocolForExecution": "docs/experiments/agentic-rag-planner.v1.json",
-  "nextProtocolForExecution": "docs/experiments/agentic-rag-planner.v3.json",
+  "nextProtocolForExecution": null,
   "latestOutcome": {
-    "status": "planner-v2-failed-max-tokens",
-    "reason": "Raw audit showed MAX_TOKENS on both the initial 256-token response and its single controlled recovery after 10 of 70 validation cases.",
+    "status": "planner-v3-completed-not-selected",
+    "reason": "The 512-token budget completed all 70 validation cases with perfect structured validity, but general unanswerable FPR rose from 0 to 0.1111 and focused evidence-side recall fell from 0.5625 to 0.3125.",
     "productionEnabled": false,
     "selectedVariant": "single-pass-baseline"
   },

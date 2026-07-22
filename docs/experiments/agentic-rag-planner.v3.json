@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "agentic-rag-planner-v3",
-  "status": "preregistered",
+  "status": "completed",
   "parent": "agentic-rag-planner-v2",
   "hypothesis": "Increasing only the planner output budget from 256 to 512 tokens will prevent the observed reasoning-induced JSON truncation and allow the complete validation benchmark to run while satisfying every frozen retrieval, quality, false-positive, recovery, latency, and cost guardrail.",
   "split": "validation",
@@ -73,6 +73,20 @@
     "observedTokenUse": "The failed initial call used 147 reasoning and 93 visible completion tokens; recovery used 242 reasoning tokens and emitted only 10 visible tokens.",
     "rationale": "512 is the smallest allowed doubled budget and exceeds both observed reasoning-plus-visible-output totals without changing reasoning effort or semantic instructions."
   },
-  "artifacts": ["src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/evaluate-agentic-rag.ts", "scripts/test-agentic-policy.ts"],
+  "executionOutcome": {
+    "status": "completed-not-selected",
+    "attemptId": "20260722090144314",
+    "evaluationCommit": "ecc7dcd",
+    "completedCases": 70,
+    "lockedTestCasesExecuted": 0,
+    "structuredValidityRate": 1,
+    "plannerProviderErrors": 0,
+    "controlledRecoveries": 0,
+    "observedPlannerCostUsd": 0.090069,
+    "p95IncrementalLatencyMs": 2515.23,
+    "failedSelectionChecks": ["generalUnanswerableFalsePositiveRate", "comparativeBothEvidenceSideCoverageAt4", "comparativeMeanEvidenceSideRecallAt4"],
+    "decision": "Retain the single-pass baseline. The 512-token budget fixed structured output, but the agentic policy increased general false positives and reduced focused comparative evidence-side recall."
+  },
+  "artifacts": ["src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/evaluate-agentic-rag.ts", "scripts/test-agentic-policy.ts", "docs/experiment-results/agentic-rag-planner-v3-validation.json", "docs/experiment-results/agentic-rag-planner-v3-validation.md", "docs/experiment-results/agentic-rag-planner-v3-validation.csv"],
   "limitations": ["The validation and focused comparative sets have informed earlier retrieval experiments.", "A larger output budget may increase cost even when visible JSON remains short.", "A recovered response may differ from malformed output despite the formatting-only instruction.", "Language coverage is a proxy for evidence sufficiency rather than semantic entailment."]
 }
