@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-rag-planner-v2",
+  "status": "failed-guardrail",
+  "attemptedAt": "2026-07-22T09:00:00.000Z",
+  "evaluationCommit": "5739e85",
+  "split": "validation",
+  "testSplitTouched": false,
+  "lockedTestCasesExecuted": 0,
+  "execution": {
+    "plannedCases": 70,
+    "completedCasesBeforeFailure": 10,
+    "partialMetricsInspected": false,
+    "metricsCalculated": false,
+    "plannerInvocations": 2,
+    "providerCalls": 3,
+    "controlledRecoveries": 1,
+    "successfulRecoveries": 0
+  },
+  "failure": {
+    "initialFinishReason": "MAX_TOKENS",
+    "initialResponseText": "{\n  \"strategy\": \"focus-missing-aspect\",\n  \"queries\": [\n    \"IQueryable deferred execution expression tree\",\n    \"IQueryProvider Execute ToList translation\"\n  ],\n  \"rationale\": \"The original query was too wordy. Breaking it down into the core mechanics of IQueryable deferred execution and how the IQueryProvider translates the expression tree when a terminal method like ToList is called will yield",
+    "initialUsage": { "promptTokens": 181, "completionTokens": 93, "reasoningTokens": 147, "totalTokens": 421, "estimatedCostUsd": 0.0024315 },
+    "recoveryFinishReason": "MAX_TOKENS",
+    "recoveryResponseText": "Here is the JSON requested",
+    "recoveryUsage": { "promptTokens": 154, "completionTokens": 10, "reasoningTokens": 242, "totalTokens": 406, "estimatedCostUsd": 0.002499 },
+    "diagnosis": "The 256-token output budget includes reasoning. The initial response was truncated before closing its rationale and JSON object; the recovery consumed nearly all available output in reasoning and was truncated before emitting JSON."
+  },
+  "observedUsage": {
+    "successfulNonRecoveryCallCostUsd": 0.0023715,
+    "failedInitialAndRecoveryCostUsd": 0.0049305,
+    "totalObservedCostUsd": 0.007302
+  },
+  "decision": {
+    "selectedVariant": "single-pass-baseline",
+    "reason": "Planner v2 failed its perfect recovery and zero-error guardrails. No complete-sample retrieval metrics were calculated."
+  },
+  "nextControlledExperiment": "Keep v2 unchanged except for increasing maxOutputTokens from 256 to 512, then preregister under a new protocol id."
+}

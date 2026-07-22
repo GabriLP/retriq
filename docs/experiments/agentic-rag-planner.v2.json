@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "agentic-rag-planner-v2",
-  "status": "preregistered",
+  "status": "completed",
   "parent": "agentic-rag-planner-v1",
   "hypothesis": "Persisting raw planner responses and allowing exactly one controlled format recovery will complete the validation benchmark with perfect structured-output validity while preserving the frozen retrieval, quality, false-positive, latency, and cost guardrails.",
   "split": "validation",
@@ -78,6 +78,19 @@
     "plannerV1Failure": "Invalid JSON after 10 of 70 cases; no partial metrics calculated.",
     "whyThisIsNotPostHocMetricTuning": "The change addresses a measured serialization failure before retrieval metrics existed. It does not change ranking, relevance labels, thresholds, corpus, or the planner's semantic instructions."
   },
-  "artifacts": ["src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/evaluate-agentic-rag.ts", "scripts/test-agentic-policy.ts"],
+  "executionOutcome": {
+    "status": "failed-guardrail",
+    "attemptedAt": "2026-07-22T09:00:00.000Z",
+    "evaluationCommit": "5739e85",
+    "completedCasesBeforeFailure": 10,
+    "plannedCases": 70,
+    "metricsCalculated": false,
+    "lockedTestCasesExecuted": 0,
+    "cause": "Both the initial response and its single recovery ended with MAX_TOKENS. Reasoning consumed 147/256 and 242/256 output-budget tokens, leaving truncated non-JSON text.",
+    "providerCalls": 3,
+    "observedCostUsd": 0.007302,
+    "decision": "Reject planner v2 and retain the single-pass baseline. Investigate a separately preregistered output-budget variant."
+  },
+  "artifacts": ["src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/evaluate-agentic-rag.ts", "scripts/test-agentic-policy.ts", "docs/experiment-results/agentic-rag-planner-v2-validation.json", "docs/experiment-results/agentic-rag-planner-v2-validation.md"],
   "limitations": ["The validation and focused comparative sets have informed earlier retrieval experiments.", "A recovered response may differ from the malformed response despite the formatting-only instruction.", "Language coverage is a proxy for evidence sufficiency rather than semantic entailment.", "This experiment evaluates retrieval behavior, not final generated-answer quality."]
 }
