@@ -6,7 +6,7 @@ import path from "node:path";
 import * as nextEnv from "@next/env";
 
 import { assessAgenticEvidence } from "../src/lib/rag/agentic-assessor";
-import { planAgenticRewrite, type AgenticPlannerCandidate, type AgenticPlannerResult } from "../src/lib/rag/agentic-planner";
+import { planAgenticRewrite, planAgenticRewriteWithRecovery, type AgenticPlannerCandidate, type AgenticPlannerRecoveryResult, type AgenticPlannerResult } from "../src/lib/rag/agentic-planner";
 import { retrieveWithAgenticLoop, type AgenticRetrievalResult } from "../src/lib/rag/agentic-retrieval";
 import type { ExperimentConfig, ExperimentRun } from "../src/lib/rag/experiment-types";
 import { loadGoldenSet, loadGoldenSetSplit, selectGoldenSplit, type GoldenCase } from "../src/lib/rag/golden-set";
@@ -15,13 +15,12 @@ import { aggregateRetrievalMetrics, evaluateRetrievalCase } from "../src/lib/rag
 import type { DocumentationChunk, RetrievalResult } from "../src/lib/rag/types";
 import { cosineSimilarity } from "../src/lib/rag/vector-store";
 
-const protocolPath = "docs/experiments/agentic-rag-planner.v1.json";
+const defaultProtocolPath = "docs/experiments/agentic-rag-planner.v1.json";
 const positivePath = "docs/evaluation/multi-technology-retrieval-benchmark.v1.json";
 const negativePath = "docs/evaluation/multi-technology-negative-benchmark.v1.json";
 const goldenPath = "docs/evaluation/golden-set.v4.json";
 const splitPath = "docs/evaluation/golden-set-splits.v4.json";
 const runDirectory = "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec";
-const reportBase = "docs/experiment-results/agentic-rag-planner-v1-validation";
 
 type EvidenceTarget = { sourceId: string; acceptedChunkIds: string[] };
 type PositiveCase = { id: string; question: string; expectedLanguages: string[]; evidenceByLanguage: Record<string, EvidenceTarget> };
@@ -35,13 +34,13 @@ type Protocol = {
   testSplitTouched: false;
   hypothesis: string;
   frozenRetrievalControls: { corpusChunks: number; embedding: string; minimumScore: number; topK: number; reranker: null };
-  agenticPolicy: { maximumAttempts: number; maximumQueriesPerAttempt: number; planner: { provider: "google"; model: string; reasoningEffort: "low"; maxOutputTokens: number; inputPriceUsdPerMillionTokens: number; outputPriceUsdPerMillionTokensIncludingThinking: number } };
+  agenticPolicy: { maximumAttempts: number; maximumQueriesPerAttempt: number; planner: { provider: "google"; model: string; reasoningEffort: "low"; maxOutputTokens: number; inputPriceUsdPerMillionTokens: number; outputPriceUsdPerMillionTokensIncludingThinking: number; recoveryPolicy?: "one-controlled-recovery" } };
   benchmark: { generalValidationCases: number; focusedComparativePositiveCases: number; focusedComparativeNegativeCases: number; lockedTestCases: number; lockedTestExecution: false };
   selectionRule: {
     requiredGeneralRecallAt4: number; requiredGeneralMrr: number; requiredGeneralNdcgAt4: number;
     requiredUnanswerableFalsePositiveRate: number; minimumComparativeBothEvidenceSideCoverageAt4: number;
     minimumComparativeMeanEvidenceSideRecallAt4: number; requiredPlannerStructuredValidityRate: number;
-    maximumPlannerProviderErrors: number; maximumObservedPlannerCostUsd: number; maximumP95IncrementalLatencyMs: number;
+    maximumPlannerProviderErrors: number; maximumObservedPlannerCostUsd: number; maximumP95IncrementalLatencyMs: number; requiredRecoverySuccessRate?: number;
   };
 };
 type CompactChunk = { rank: number; chunkId: string; sourceId: string | null; language: string | null; section: string; score: number };
@@ -49,6 +48,7 @@ type CaseRun = {
   caseId: string; group: "general" | "focused-positive" | "focused-negative"; question: string;
   baseline: RetrievalResult[]; agentic: AgenticRetrievalResult; effectiveAgenticChunks: RetrievalResult[]; incrementalLatencyMs: number;
 };
+type PlannerObservation = { caseId: string; result: AgenticPlannerResult };
 type FocusedMetrics = {
   bothLanguageCoverageAt4: number; meanLanguageSideCoverageAt4: number; bothEvidenceSideCoverageAt4: number;
   meanEvidenceSideRecallAt4: number; macroEvidenceSideMrr: number; noAnswerFalsePositiveRate: number;
@@ -57,7 +57,7 @@ type FocusedMetrics = {
 async function main() {
   nextEnv.loadEnvConfig(process.cwd());
   const options = parseArgs(process.argv.slice(2));
-  const inputs = await loadInputs();
+  const inputs = await loadInputs(options.protocol);
   validateInputs(inputs);
   if (options.plan) {
     console.log(`VALID ${inputs.protocol.id}: ${inputs.generalCases.length} general + ${inputs.positives.cases.length} positive + ${inputs.negatives.cases.length} negative validation cases; locked test cases executed: 0.`);
@@ -87,7 +87,7 @@ async function main() {
   });
   const vectorByQuery = new Map(uniqueOriginalQuestions.map((question, index) => [normalizeQuery(question), originals.vectors[index]]));
   const embeddingUsage = { apiInputs: 0, apiRequests: 0, cacheHits: documents.cache.cacheHits + originals.cache.cacheHits, cacheMisses: documents.cache.cacheMisses + originals.cache.cacheMisses, estimatedApiCostUsd: 0 };
-  const plannerResults: AgenticPlannerResult[] = [];
+  const plannerObservations: PlannerObservation[] = [];
   const candidate = plannerCandidate(inputs.protocol);
 
   async function retrieve(query: string, topK: number) {
@@ -121,8 +121,11 @@ async function main() {
       retrieve,
       assess: async ({ question, chunks: retrieved }) => assessAgenticEvidence({ question, chunks: retrieved, minimumTopScore: inputs.protocol.frozenRetrievalControls.minimumScore }),
       rewrite: async ({ question, previousQueries, chunks: retrieved, assessment }) => {
-        const result = await planAgenticRewrite({ candidate, question, previousQueries, chunks: retrieved, assessment, allowProviderRequests: true });
-        plannerResults.push(result);
+        const plannerOptions = { candidate, question, previousQueries, chunks: retrieved, assessment, allowProviderRequests: true };
+        const result = inputs.protocol.agenticPolicy.planner.recoveryPolicy === "one-controlled-recovery"
+          ? await planAgenticRewriteWithRecovery(plannerOptions)
+          : await planAgenticRewrite(plannerOptions);
+        plannerObservations.push({ caseId: item.caseId, result });
         return result.rewrite;
       },
     }, { topK: inputs.protocol.frozenRetrievalControls.topK, maxAttempts: inputs.protocol.agenticPolicy.maximumAttempts, maxQueriesPerAttempt: inputs.protocol.agenticPolicy.maximumQueriesPerAttempt });
@@ -131,15 +134,15 @@ async function main() {
     if ((index + 1) % 5 === 0 || index + 1 === cases.length) console.log(`Executed ${index + 1}/${cases.length} cases; metrics remain sealed until completion.`);
   }
 
-  const artifact = buildArtifact(inputs, runs, plannerResults, embeddingUsage, candidate);
+  const artifact = buildArtifact(inputs, runs, plannerObservations, embeddingUsage, candidate);
   await writeAttempt(inputs.run.runId, artifact);
   if (options.writeReport) await writeReport(artifact);
   printCompletedMetrics(artifact);
 }
 
-async function loadInputs() {
+async function loadInputs(selectedProtocolPath: string) {
   const [protocolRaw, positiveRaw, negativeRaw, configRaw, runRaw, chunksRaw] = await Promise.all([
-    fs.readFile(protocolPath, "utf8"), fs.readFile(positivePath, "utf8"), fs.readFile(negativePath, "utf8"),
+    fs.readFile(selectedProtocolPath, "utf8"), fs.readFile(positivePath, "utf8"), fs.readFile(negativePath, "utf8"),
     fs.readFile(path.join(runDirectory, "config.snapshot.json"), "utf8"), fs.readFile(path.join(runDirectory, "run.json"), "utf8"), fs.readFile(path.join(runDirectory, "chunks.json"), "utf8"),
   ]);
   const dataset = await loadGoldenSet(goldenPath);
@@ -182,7 +185,8 @@ function plannerCandidate(protocol: Protocol): AgenticPlannerCandidate {
   return { id: protocol.id, model: planner.model, reasoningEffort: planner.reasoningEffort, maxOutputTokens: planner.maxOutputTokens, inputPriceUsdPerMillionTokens: planner.inputPriceUsdPerMillionTokens, outputPriceUsdPerMillionTokens: planner.outputPriceUsdPerMillionTokensIncludingThinking };
 }
 
-function buildArtifact(input: Awaited<ReturnType<typeof loadInputs>>, runs: CaseRun[], planner: AgenticPlannerResult[], embedding: { apiInputs: number; apiRequests: number; cacheHits: number; cacheMisses: number; estimatedApiCostUsd: number }, candidate: AgenticPlannerCandidate) {
+function buildArtifact(input: Awaited<ReturnType<typeof loadInputs>>, runs: CaseRun[], plannerObservations: PlannerObservation[], embedding: { apiInputs: number; apiRequests: number; cacheHits: number; cacheMisses: number; estimatedApiCostUsd: number }, candidate: AgenticPlannerCandidate) {
+  const planner = plannerObservations.map((item) => item.result);
   const generalRuns = runs.filter((item) => item.group === "general");
   const baselineGeneralCases = generalRuns.map((item) => evaluateRetrievalCase(input.generalCases.find((test) => test.id === item.caseId)!, item.baseline));
   const agenticGeneralCases = generalRuns.map((item) => evaluateRetrievalCase(input.generalCases.find((test) => test.id === item.caseId)!, item.effectiveAgenticChunks));
@@ -192,6 +196,8 @@ function buildArtifact(input: Awaited<ReturnType<typeof loadInputs>>, runs: Case
   const focusedAgentic = evaluateFocused(input.positives.cases, input.negatives.cases, runs, "agentic");
   const latencies = runs.map((item) => item.incrementalLatencyMs);
   const plannerCostThisRun = planner.filter((item) => !item.cacheHit).reduce((total, item) => total + item.usage.estimatedCostUsd, 0);
+  const recoveryResults = planner.filter(isRecoveryResult);
+  const recoverySuccessRate = recoveryResults.some((item) => item.recovery.used) ? recoveryResults.filter((item) => item.recovery.used && item.recovery.succeeded).length / recoveryResults.filter((item) => item.recovery.used).length : 1;
   const plannerErrors = 0;
   const structuredValidity = 1;
   const rule = input.protocol.selectionRule;
@@ -207,6 +213,7 @@ function buildArtifact(input: Awaited<ReturnType<typeof loadInputs>>, runs: Case
     plannerProviderErrors: plannerErrors <= rule.maximumPlannerProviderErrors,
     plannerCost: plannerCostThisRun <= rule.maximumObservedPlannerCostUsd,
     p95IncrementalLatency: percentile(latencies, .95) <= rule.maximumP95IncrementalLatencyMs,
+    recoverySuccessRate: recoverySuccessRate >= (rule.requiredRecoverySuccessRate ?? 0),
   };
   const selected = Object.values(checks).every(Boolean);
   const createdAt = new Date().toISOString();
@@ -216,10 +223,13 @@ function buildArtifact(input: Awaited<ReturnType<typeof loadInputs>>, runs: Case
     inputHashes: { protocol: sha256(input.protocolRaw), positives: sha256(input.positiveRaw), negatives: sha256(input.negativeRaw), goldenSet: sha256(JSON.stringify(input.dataset)), split: sha256(JSON.stringify(input.split)), config: sha256(input.configRaw), chunks: sha256(input.chunksRaw) },
     code: codeProvenance(), controls: { threshold: .68, topK: 4, embedding: "google/gemini-embedding-2@1024", reranker: null, maximumAttempts: 2, maximumQueriesPerAttempt: 2, planner: candidate },
     cacheAndCost: {
-      embedding, plannerInvocations: planner.length, plannerProviderCalls: planner.filter((item) => !item.cacheHit).length,
+      embedding, plannerInvocations: planner.length, plannerProviderCalls: planner.filter((item) => !item.cacheHit).reduce((total, item) => total + (isRecoveryResult(item) ? item.recovery.attempts.length : 1), 0),
       plannerCacheHits: planner.filter((item) => item.cacheHit).length,
       plannerTokens: sumPlannerUsage(planner), plannerCostThisRunUsd: plannerCostThisRun,
       analyticalPlannerCostWithoutCacheUsd: planner.reduce((total, item) => total + item.usage.estimatedCostUsd, 0),
+      recoveryInvocations: recoveryResults.filter((item) => item.recovery.used).length,
+      successfulRecoveries: recoveryResults.filter((item) => item.recovery.used && item.recovery.succeeded).length,
+      recoverySuccessRate,
     },
     latencyMs: { meanIncremental: mean(latencies), p95Incremental: percentile(latencies, .95), maximumIncremental: Math.max(...latencies) },
     guardrails: { plannerStructuredValidityRate: structuredValidity, plannerProviderErrors: plannerErrors, checks },
@@ -233,6 +243,7 @@ function buildArtifact(input: Awaited<ReturnType<typeof loadInputs>>, runs: Case
       rawFinalAgentic: item.agentic.chunks.map(compactChunk), sufficient: item.agentic.sufficient, attempts: item.agentic.attempts,
       stopReason: item.agentic.stopReason, incrementalLatencyMs: item.incrementalLatencyMs, trace: item.agentic.trace,
     })),
+    plannerAudit: plannerObservations,
     generalCaseMetrics: { baseline: baselineGeneralCases, agentic: agenticGeneralCases },
     limitations: ["Validation and focused comparative cases have informed earlier experiments.", "The deterministic assessor checks score and requested-language coverage, not semantic entailment.", "Planner cache hits have zero observed provider cost in this run; analytical no-cache cost is reported separately.", "Generation quality and production enablement are outside this retrieval experiment."],
   };
@@ -265,7 +276,7 @@ async function writeAttempt(runId: string, artifact: ReturnType<typeof buildArti
 }
 
 async function writeReport(artifact: ReturnType<typeof buildArtifact>) {
-  const base = path.resolve(reportBase);
+  const base = path.resolve(`docs/experiment-results/${artifact.id}-validation`);
   await fs.mkdir(path.dirname(base), { recursive: true });
   await fs.writeFile(`${base}.json`, `${JSON.stringify(artifact, null, 2)}\n`);
   await fs.writeFile(`${base}.md`, renderMarkdown(artifact));
@@ -276,7 +287,7 @@ async function writeReport(artifact: ReturnType<typeof buildArtifact>) {
 function renderMarkdown(artifact: ReturnType<typeof buildArtifact>, runId?: string) {
   const baseline = artifact.results.baseline;
   const agentic = artifact.results.agentic;
-  return `# Bounded agentic RAG validation\n\n- Protocol/attempt: \`${artifact.id}\` / \`${artifact.attemptId}\`\n- Parent run: \`${runId ?? "20260717084956473-e60c88ec"}\`\n- Split: **validation only**; locked test cases executed: **0**\n- Decision: **${artifact.decision.selectedVariant}**\n- Failed preregistered checks: ${artifact.decision.failedChecks.length ? artifact.decision.failedChecks.map((item) => `\`${item}\``).join(", ") : "none"}\n\n| Variant | Recall@4 | Precision@4 | MRR | nDCG@4 | General FPR | Both evidence sides | Evidence-side recall | Focused FPR |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n| Single-pass baseline | ${format(baseline.general.recallAtK)} | ${format(baseline.general.precisionAtK)} | ${format(baseline.general.mrr)} | ${format(baseline.general.ndcgAtK)} | ${format(baseline.general.noAnswerFalsePositiveRate)} | ${format(baseline.focused.bothEvidenceSideCoverageAt4)} | ${format(baseline.focused.meanEvidenceSideRecallAt4)} | ${format(baseline.focused.noAnswerFalsePositiveRate)} |\n| Bounded Gemini planner | ${format(agentic.general.recallAtK)} | ${format(agentic.general.precisionAtK)} | ${format(agentic.general.mrr)} | ${format(agentic.general.ndcgAtK)} | ${format(agentic.general.noAnswerFalsePositiveRate)} | ${format(agentic.focused.bothEvidenceSideCoverageAt4)} | ${format(agentic.focused.meanEvidenceSideRecallAt4)} | ${format(agentic.focused.noAnswerFalsePositiveRate)} |\n\n## Operational guardrails\n\n- Planner invocations/provider calls/cache hits: **${artifact.cacheAndCost.plannerInvocations}/${artifact.cacheAndCost.plannerProviderCalls}/${artifact.cacheAndCost.plannerCacheHits}**\n- Observed planner cost this run: **$${artifact.cacheAndCost.plannerCostThisRunUsd.toFixed(6)}**; analytical no-cache cost: **$${artifact.cacheAndCost.analyticalPlannerCostWithoutCacheUsd.toFixed(6)}**\n- Incremental latency mean/p95/max: **${artifact.latencyMs.meanIncremental.toFixed(0)} / ${artifact.latencyMs.p95Incremental.toFixed(0)} / ${artifact.latencyMs.maximumIncremental.toFixed(0)} ms**\n- Structured validity/provider errors: **${format(artifact.guardrails.plannerStructuredValidityRate)} / ${artifact.guardrails.plannerProviderErrors}**\n\n## Interpretation\n\n${artifact.decision.allChecksPassed ? "The agentic variant passed every preregistered quality, safety, latency, and cost requirement." : "The agentic variant failed at least one preregistered requirement, so the frozen single-pass baseline remains selected. No post-hoc tuning is applied to this run."}\n\n## Limitations\n\n${artifact.limitations.map((item) => `- ${item}`).join("\n")}\n`;
+  return `# Bounded agentic RAG validation\n\n- Protocol/attempt: \`${artifact.id}\` / \`${artifact.attemptId}\`\n- Parent run: \`${runId ?? "20260717084956473-e60c88ec"}\`\n- Split: **validation only**; locked test cases executed: **0**\n- Decision: **${artifact.decision.selectedVariant}**\n- Failed preregistered checks: ${artifact.decision.failedChecks.length ? artifact.decision.failedChecks.map((item) => `\`${item}\``).join(", ") : "none"}\n\n| Variant | Recall@4 | Precision@4 | MRR | nDCG@4 | General FPR | Both evidence sides | Evidence-side recall | Focused FPR |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n| Single-pass baseline | ${format(baseline.general.recallAtK)} | ${format(baseline.general.precisionAtK)} | ${format(baseline.general.mrr)} | ${format(baseline.general.ndcgAtK)} | ${format(baseline.general.noAnswerFalsePositiveRate)} | ${format(baseline.focused.bothEvidenceSideCoverageAt4)} | ${format(baseline.focused.meanEvidenceSideRecallAt4)} | ${format(baseline.focused.noAnswerFalsePositiveRate)} |\n| Bounded Gemini planner | ${format(agentic.general.recallAtK)} | ${format(agentic.general.precisionAtK)} | ${format(agentic.general.mrr)} | ${format(agentic.general.ndcgAtK)} | ${format(agentic.general.noAnswerFalsePositiveRate)} | ${format(agentic.focused.bothEvidenceSideCoverageAt4)} | ${format(agentic.focused.meanEvidenceSideRecallAt4)} | ${format(agentic.focused.noAnswerFalsePositiveRate)} |\n\n## Operational guardrails\n\n- Planner invocations/provider calls/cache hits: **${artifact.cacheAndCost.plannerInvocations}/${artifact.cacheAndCost.plannerProviderCalls}/${artifact.cacheAndCost.plannerCacheHits}**\n- Controlled recoveries invoked/succeeded: **${artifact.cacheAndCost.recoveryInvocations}/${artifact.cacheAndCost.successfulRecoveries}**\n- Observed planner cost this run: **$${artifact.cacheAndCost.plannerCostThisRunUsd.toFixed(6)}**; analytical no-cache cost: **$${artifact.cacheAndCost.analyticalPlannerCostWithoutCacheUsd.toFixed(6)}**\n- Incremental latency mean/p95/max: **${artifact.latencyMs.meanIncremental.toFixed(0)} / ${artifact.latencyMs.p95Incremental.toFixed(0)} / ${artifact.latencyMs.maximumIncremental.toFixed(0)} ms**\n- Structured validity/provider errors: **${format(artifact.guardrails.plannerStructuredValidityRate)} / ${artifact.guardrails.plannerProviderErrors}**\n\n## Interpretation\n\n${artifact.decision.allChecksPassed ? "The agentic variant passed every preregistered quality, safety, latency, and cost requirement." : "The agentic variant failed at least one preregistered requirement, so the frozen single-pass baseline remains selected. No post-hoc tuning is applied to this run."}\n\n## Limitations\n\n${artifact.limitations.map((item) => `- ${item}`).join("\n")}\n`;
 }
 
 function printCompletedMetrics(artifact: ReturnType<typeof buildArtifact>) {
@@ -288,6 +299,7 @@ function printCompletedMetrics(artifact: ReturnType<typeof buildArtifact>) {
 }
 
 function compactChunk(chunk: RetrievalResult): CompactChunk { return { rank: chunk.rank, chunkId: chunk.id, sourceId: chunk.sourceId ?? null, language: chunk.language ?? null, section: chunk.section, score: chunk.score }; }
+function isRecoveryResult(item: AgenticPlannerResult): item is AgenticPlannerRecoveryResult { return "recovery" in item && typeof item.recovery === "object" && item.recovery !== null; }
 function sumPlannerUsage(items: AgenticPlannerResult[]) { return items.reduce((total, item) => ({ promptTokens: total.promptTokens + item.usage.promptTokens, completionTokens: total.completionTokens + item.usage.completionTokens, reasoningTokens: total.reasoningTokens + item.usage.reasoningTokens, totalTokens: total.totalTokens + item.usage.totalTokens }), { promptTokens: 0, completionTokens: 0, reasoningTokens: 0, totalTokens: 0 }); }
 function codeProvenance() { const tracked = ["src", "scripts", "package.json", "package-lock.json", "docs/evaluation", "docs/experiments"]; const status = command("git", ["status", "--porcelain", "--", ...tracked]); const diff = command("git", ["diff", "--binary", "--", ...tracked]); return { gitCommit: command("git", ["rev-parse", "HEAD"]) || "unknown", dirty: Boolean(status), gitDiffHash: sha256(diff) }; }
 function command(executable: string, args: string[]) { return spawnSync(executable, args, { encoding: "utf8" }).stdout.trim(); }
@@ -297,6 +309,6 @@ function mean(values: number[]) { return values.length ? values.reduce((total, v
 function percentile(values: number[], fraction: number) { const sorted = [...values].sort((left, right) => left - right); return sorted[Math.max(0, Math.ceil(sorted.length * fraction) - 1)] ?? 0; }
 function format(value: number | null) { return value === null ? "n/a" : value.toFixed(4); }
 function csv(value: unknown) { const text = String(value); return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text; }
-function parseArgs(args: string[]) { return { plan: args.includes("--plan"), allowProviderRequests: args.includes("--allow-provider-requests"), writeReport: args.includes("--write-report") }; }
+function parseArgs(args: string[]) { const protocolIndex = args.indexOf("--protocol"); return { protocol: path.resolve(protocolIndex >= 0 ? args[protocolIndex + 1] : defaultProtocolPath), plan: args.includes("--plan"), allowProviderRequests: args.includes("--allow-provider-requests"), writeReport: args.includes("--write-report") }; }
 
 main().catch((error) => { console.error(error instanceof Error ? error.stack ?? error.message : error); process.exitCode = 1; });

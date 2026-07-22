@@ -35,6 +35,26 @@ export type AgenticPlannerResult = {
   cacheHit: boolean;
 };
 
+export type AgenticPlannerRecoveryAttempt = {
+  kind: "initial" | "format-repair" | "empty-response-retry";
+  responseText: string | null;
+  responseModel: string;
+  responseId: string | null;
+  finishReason: string | null;
+  usage: AgenticPlannerUsage;
+  latencyMs: number;
+  parseError: string | null;
+};
+
+export type AgenticPlannerRecoveryResult = AgenticPlannerResult & {
+  recovery: {
+    policy: "one-controlled-recovery";
+    used: boolean;
+    succeeded: boolean;
+    attempts: AgenticPlannerRecoveryAttempt[];
+  };
+};
+
 type PlannerResponse = {
   text?: string;
   modelVersion?: string;
@@ -115,6 +135,39 @@ export async function planAgenticRewrite(options: Options): Promise<AgenticPlann
   return result;
 }
 
+export async function planAgenticRewriteWithRecovery(options: Options): Promise<AgenticPlannerRecoveryResult> {
+  validateCandidate(options.candidate);
+  const cacheDirectory = path.resolve(options.cacheDirectory ?? "data/agentic-planner-cache");
+  const request = buildRequest(options);
+  const cacheKey = crypto.createHash("sha256").update(JSON.stringify({ schemaVersion: 2, candidate: options.candidate, request, recoveryPolicy: "one-controlled-recovery" })).digest("hex");
+  const cachePath = path.join(cacheDirectory, `${cacheKey}.json`);
+  const cached = await readRecoveryCache(cachePath);
+  if (cached) return { ...cached, cacheHit: true };
+  if (options.allowProviderRequests === false) throw new Error(`Agentic planner recovery cache miss ${cacheKey}; provider requests are disabled.`);
+  const generate = options.generateContent ?? (async (value: PlannerRequest) => getGeminiClient().models.generateContent(value as Parameters<ReturnType<typeof getGeminiClient>["models"]["generateContent"]>[0]));
+  const attempts: AgenticPlannerRecoveryAttempt[] = [];
+  const initial = await executeAuditedAttempt("initial", request, options.candidate, generate);
+  attempts.push(initial.audit);
+  if (initial.rewrite) {
+    const result = recoveryResult(initial.rewrite, initial.response, attempts, false, options.candidate);
+    await persistRecovery(cacheDirectory, cachePath, result);
+    return result;
+  }
+
+  const recoveryKind = initial.response.text?.trim() ? "format-repair" : "empty-response-retry";
+  const recoveryRequest = recoveryKind === "format-repair" ? buildFormatRepairRequest(request, initial.response.text!) : request;
+  const recovered = await executeAuditedAttempt(recoveryKind, recoveryRequest, options.candidate, generate);
+  attempts.push(recovered.audit);
+  if (!recovered.rewrite) {
+    await fs.mkdir(cacheDirectory, { recursive: true });
+    await fs.writeFile(path.join(cacheDirectory, `${cacheKey}.failure.json`), `${JSON.stringify({ schemaVersion: 1, cacheKey, recoveryPolicy: "one-controlled-recovery", attempts }, null, 2)}\n`);
+    throw new Error(`Agentic planner recovery failed after ${attempts.length} structured-output attempts.`);
+  }
+  const result = recoveryResult(recovered.rewrite, recovered.response, attempts, true, options.candidate);
+  await persistRecovery(cacheDirectory, cachePath, result);
+  return result;
+}
+
 export function buildAgenticPlannerPrompt(input: Pick<Options, "question" | "previousQueries" | "assessment" | "chunks">) {
   const evidence = input.chunks.slice(0, 4).map((chunk) => ({
     rank: chunk.rank,
@@ -145,6 +198,88 @@ export function agenticPlannerCacheKey(candidate: AgenticPlannerCandidate, reque
 }
 
 const allowedStrategies = new Set(["decompose-by-technology", "focus-missing-aspect", "rephrase"]);
+
+async function executeAuditedAttempt(kind: AgenticPlannerRecoveryAttempt["kind"], request: PlannerRequest, candidate: AgenticPlannerCandidate, generate: (request: PlannerRequest) => Promise<PlannerResponse>) {
+  const started = performance.now();
+  const response = await generate(request);
+  const latencyMs = Number((performance.now() - started).toFixed(2));
+  let rewrite: QueryRewrite | null = null;
+  let parseError: string | null = null;
+  try { rewrite = parseAgenticRewrite(response.text); }
+  catch (error) { parseError = error instanceof Error ? error.message : "Unknown structured-output parsing error."; }
+  const audit: AgenticPlannerRecoveryAttempt = {
+    kind,
+    responseText: response.text ?? null,
+    responseModel: response.modelVersion ?? candidate.model,
+    responseId: response.responseId ?? null,
+    finishReason: response.candidates?.[0]?.finishReason ?? null,
+    usage: usageFor(response, candidate),
+    latencyMs,
+    parseError,
+  };
+  return { response, rewrite, audit };
+}
+
+function buildFormatRepairRequest(original: PlannerRequest, invalidText: string): PlannerRequest {
+  return {
+    ...original,
+    contents: `Convert the following malformed planner output to the required JSON schema. Preserve its query meaning; do not answer the original question and do not add new requirements.\n\nMalformed output:\n${invalidText}`,
+    config: {
+      ...original.config,
+      systemInstruction: "Repair formatting only. Return exactly one valid JSON object matching the supplied schema, with no markdown fences or surrounding prose.",
+    },
+  };
+}
+
+function usageFor(response: PlannerResponse, candidate: AgenticPlannerCandidate): AgenticPlannerUsage {
+  const promptTokens = response.usageMetadata?.promptTokenCount ?? 0;
+  const completionTokens = response.usageMetadata?.candidatesTokenCount ?? 0;
+  const reasoningTokens = response.usageMetadata?.thoughtsTokenCount ?? 0;
+  return {
+    promptTokens,
+    completionTokens,
+    reasoningTokens,
+    totalTokens: response.usageMetadata?.totalTokenCount ?? promptTokens + completionTokens + reasoningTokens,
+    estimatedCostUsd: estimateCost(promptTokens, completionTokens + reasoningTokens, candidate),
+  };
+}
+
+function recoveryResult(rewrite: QueryRewrite, response: PlannerResponse, attempts: AgenticPlannerRecoveryAttempt[], recovered: boolean, candidate: AgenticPlannerCandidate): AgenticPlannerRecoveryResult {
+  const usage = attempts.reduce((total, attempt) => ({
+    promptTokens: total.promptTokens + attempt.usage.promptTokens,
+    completionTokens: total.completionTokens + attempt.usage.completionTokens,
+    reasoningTokens: total.reasoningTokens + attempt.usage.reasoningTokens,
+    totalTokens: total.totalTokens + attempt.usage.totalTokens,
+    estimatedCostUsd: total.estimatedCostUsd + attempt.usage.estimatedCostUsd,
+  }), { promptTokens: 0, completionTokens: 0, reasoningTokens: 0, totalTokens: 0, estimatedCostUsd: 0 });
+  return {
+    rewrite,
+    responseModel: response.modelVersion ?? candidate.model,
+    responseId: response.responseId ?? null,
+    finishReason: response.candidates?.[0]?.finishReason ?? null,
+    usage,
+    latencyMs: Number(attempts.reduce((total, attempt) => total + attempt.latencyMs, 0).toFixed(2)),
+    cacheHit: false,
+    recovery: { policy: "one-controlled-recovery", used: attempts.length > 1, succeeded: recovered, attempts },
+  };
+}
+
+async function readRecoveryCache(cachePath: string): Promise<AgenticPlannerRecoveryResult | null> {
+  try {
+    const cached = JSON.parse(await fs.readFile(cachePath, "utf8")) as AgenticPlannerRecoveryResult;
+    parseAgenticRewrite(JSON.stringify(cached.rewrite));
+    if (cached.recovery?.policy !== "one-controlled-recovery" || !Array.isArray(cached.recovery.attempts)) throw new Error(`Invalid agentic planner recovery cache entry ${cachePath}.`);
+    return cached;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+async function persistRecovery(cacheDirectory: string, cachePath: string, result: AgenticPlannerRecoveryResult) {
+  await fs.mkdir(cacheDirectory, { recursive: true });
+  await fs.writeFile(cachePath, `${JSON.stringify(result, null, 2)}\n`);
+}
 
 function buildRequest(options: Options): PlannerRequest {
   return {

@@ -34,6 +34,7 @@
     "agentic:retrieval:test": "tsx scripts/test-agentic-retrieval.ts",
     "agentic:policy:test": "tsx scripts/test-agentic-policy.ts",
     "experiment:agentic": "tsx scripts/evaluate-agentic-rag.ts",
+    "experiment:agentic:v2": "tsx scripts/evaluate-agentic-rag.ts --protocol docs/experiments/agentic-rag-planner.v2.json",
     "rerankers:test": "tsx scripts/test-rerankers.ts",
     "experiment:reranking": "tsx scripts/evaluate-reranking.ts",
     "generation:benchmark:build": "tsx scripts/build-generation-benchmark.ts",
