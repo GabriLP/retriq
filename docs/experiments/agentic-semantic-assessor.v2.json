@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "agentic-semantic-assessor-v2",
-  "status": "human-reference-frozen",
+  "status": "completed",
   "createdAt": "2026-07-22T10:00:00+02:00",
   "researchQuestion": "Does GPT-5.4 Mini generalize as an evidence-sufficiency assessor on newly curated question-evidence packets that were not used in the v1 error analysis?",
   "hypothesis": "Because the v1 disagreements were caused by strict canonical-chunk labels, a semantic assessor will outperform the score-and-language gate on human-reviewed packets containing valid alternative evidence while maintaining at most one false positive among twelve insufficient packets.",
@@ -70,12 +70,29 @@
     "Execute deterministic and semantic assessors once without prompt changes.",
     "Publish all predictions, metrics, costs, and disagreements."
   ],
+  "executionOutcome": {
+    "executedAt": "2026-07-22",
+    "providerCalls": 24,
+    "cacheHits": 0,
+    "providerErrors": 0,
+    "observedCostUsd": 0.04751625,
+    "p95LatencyMs": 4257.93,
+    "deterministic": { "accuracy": 0.5, "recall": 1, "falsePositiveRate": 1, "kappa": 0 },
+    "semantic": { "accuracy": 0.875, "balancedAccuracy": 0.875, "precision": 0.8, "recall": 1, "specificity": 0.75, "falsePositiveRate": 0.25, "kappa": 0.75 },
+    "qualifiedForOneEndToEndExperiment": false,
+    "failedChecks": ["accuracy", "falsePositiveRate"],
+    "decision": "Do not qualify the semantic assessor under the frozen rule. Preserve the result as a negative component experiment. A post-result audit found that all three model disagreements appear semantically sufficient despite their frozen insufficient labels, so the observed false-positive rate must also be reported as reference-sensitive rather than a production error estimate."
+  },
   "artifacts": [
     "docs/evaluation/semantic-evidence-benchmark.v2.seed.json",
     "docs/evaluation/semantic-evidence-benchmark.v2.json",
     "docs/experiments/agentic-semantic-assessor.v2.json",
     "scripts/validate-semantic-evidence-benchmark-v2.ts",
     "scripts/evaluate-semantic-evidence-assessor-v2.ts",
+    "docs/experiment-results/agentic-semantic-assessor-v2-validation.json",
+    "docs/experiment-results/agentic-semantic-assessor-v2-validation.md",
+    "docs/experiment-results/agentic-semantic-assessor-v2-validation-predictions.csv",
+    "docs/experiment-results/agentic-semantic-assessor-v2-disagreement-audit.md",
     "src/app/evaluation/semantic-evidence-benchmark-v2-review/page.tsx",
     "src/components/semantic-evidence-review-workbench.tsx",
     "src/lib/evaluation/semantic-evidence-review.ts"

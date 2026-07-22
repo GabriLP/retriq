@@ -1,0 +1,1469 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-semantic-assessor-v2",
+  "createdAt": "2026-07-22T10:32:46.661Z",
+  "reference": {
+    "path": "docs/evaluation/semantic-evidence-benchmark-v2-human-review.completed.csv",
+    "sha256": "3ed845ecd747fcc4e3490812be6491f1a62330eb76d66db13eabd5622e596e8e",
+    "provenance": "ai-assisted-human-review",
+    "independent": false,
+    "agreementWithConstruction": 1
+  },
+  "benchmark": {
+    "path": "docs/evaluation/semantic-evidence-benchmark.v2.json",
+    "sha256": "360747f48dbbeb157c657daf94e80d7a174c78f36a031074ebc05d17dbcdad8c",
+    "states": 24,
+    "questions": 12,
+    "lockedTestTouched": false
+  },
+  "candidate": {
+    "id": "openrouter-gpt-5.4-mini-medium-semantic-evidence-v2",
+    "model": "openai/gpt-5.4-mini",
+    "expectedResponseModel": "openai/gpt-5.4-mini",
+    "expectedResponseProvider": "OpenAI",
+    "providerOrder": [
+      "openai"
+    ],
+    "reasoningEffort": "medium",
+    "maxOutputTokens": 1000,
+    "inputPriceUsdPerMillionTokens": 0.75,
+    "outputPriceUsdPerMillionTokens": 4.5,
+    "priceObservedOn": "2026-07-21",
+    "priceSource": "https://developers.openai.com/api/docs/models/gpt-5.4-mini"
+  },
+  "results": {
+    "deterministic": {
+      "total": 24,
+      "truePositive": 12,
+      "trueNegative": 0,
+      "falsePositive": 12,
+      "falseNegative": 0,
+      "accuracy": 0.5,
+      "balancedAccuracy": 0.5,
+      "precision": 0.5,
+      "recall": 1,
+      "specificity": 0,
+      "falsePositiveRate": 1,
+      "falseNegativeRate": 0,
+      "kappa": 0
+    },
+    "semantic": {
+      "total": 24,
+      "truePositive": 12,
+      "trueNegative": 9,
+      "falsePositive": 3,
+      "falseNegative": 0,
+      "accuracy": 0.875,
+      "balancedAccuracy": 0.875,
+      "precision": 0.8,
+      "recall": 1,
+      "specificity": 0.75,
+      "falsePositiveRate": 0.25,
+      "falseNegativeRate": 0,
+      "kappa": 0.75
+    }
+  },
+  "execution": {
+    "providerCalls": 24,
+    "cacheHits": 0,
+    "providerErrors": 0,
+    "observedCostUsd": 0.047516249999999996,
+    "tokens": {
+      "promptTokens": 23545,
+      "completionTokens": 6635,
+      "reasoningTokens": 3239,
+      "totalTokens": 30180
+    },
+    "latencyMs": {
+      "mean": 2842.3354166666663,
+      "p95": 4257.93,
+      "maximum": 5234.88
+    }
+  },
+  "selection": {
+    "qualifiedForOneEndToEndExperiment": false,
+    "checks": {
+      "accuracy": false,
+      "recall": true,
+      "falsePositiveRate": false,
+      "exceedsDeterministicAccuracy": true,
+      "doesNotIncreaseDeterministicFpr": true,
+      "providerErrors": true,
+      "cost": true,
+      "p95Latency": true
+    },
+    "failedChecks": [
+      "accuracy",
+      "falsePositiveRate"
+    ]
+  },
+  "observations": [
+    {
+      "stateId": "evidence-v2-javascript-promise-all::incomplete",
+      "caseId": "evidence-v2-javascript-promise-all",
+      "technology": "JavaScript",
+      "constructionCategory": "distractor-insufficient",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts describe `Promise.allSettled`, not `Promise.all`. They do not provide direct evidence for how `Promise.all` settles when inputs fulfill or when one rejects.",
+        "supportedAspects": [
+          "`Promise.allSettled` waits until all input promises have settled"
+        ],
+        "missingAspects": [
+          "`Promise.all` behavior when all input promises fulfill",
+          "`Promise.all` behavior when any input promise rejects",
+          "Whether `Promise.all` fulfills or rejects in those cases"
+        ]
+      },
+      "evidence": [
+        {
+          "id": "8a30e186ac0e05cd",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "rank": 1,
+          "score": 0.7092,
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "27.2.4.2 Promise.allSettled ( iterable )",
+          "language": "JavaScript"
+        },
+        {
+          "id": "4d1abb74f415b533",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "rank": 2,
+          "score": 0.6907,
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "27.2.4.2.1 PerformPromiseAllSettled ( iteratorRecord , constructor , resultCapability , promiseResolve ) (part 1)",
+          "language": "JavaScript"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716299-ToHM6lsgpN0O04ZKaPHM",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1000,
+          "completionTokens": 198,
+          "reasoningTokens": 80,
+          "totalTokens": 1198,
+          "costUsd": 0.001641
+        },
+        "latencyMs": 2085.16,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-rust-refcell-runtime::complete",
+      "caseId": "evidence-v2-rust-refcell-runtime",
+      "technology": "Rust",
+      "constructionCategory": "alternative-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that ordinary references enforce borrowing rules at compile time, while RefCell<T> enforces the same rules at runtime and panics if they are violated. That is enough to answer the question accurately.",
+        "supportedAspects": [
+          "ordinary references enforce borrowing rules at compile time",
+          "RefCell<T> enforces borrowing rules at runtime",
+          "violations with RefCell<T> cause a panic",
+          "RefCell<T> is used when compiler cannot guarantee the rules but runtime checks can"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "e35658a5e9af77fb",
+          "sourceId": "rust-book",
+          "rank": 1,
+          "score": 0.8061,
+          "title": "The Rust Programming Language",
+          "section": "RefCell<T> and the Interior Mutability Pattern (part 2)",
+          "language": "Rust"
+        },
+        {
+          "id": "39f2bbc69d476d8c",
+          "sourceId": "rust-book",
+          "rank": 2,
+          "score": 0.7975,
+          "title": "The Rust Programming Language",
+          "section": "RefCell<T> and the Interior Mutability Pattern (part 1)",
+          "language": "Rust"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716300-qAOEnUspMEtkd6QncVrR",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1074,
+          "completionTokens": 183,
+          "reasoningTokens": 57,
+          "totalTokens": 1257,
+          "costUsd": 0.001629
+        },
+        "latencyMs": 1969.79,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-postgresql-where-having::incomplete",
+      "caseId": "evidence-v2-postgresql-where-having",
+      "technology": "PostgreSQL / SQL",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that WHERE is evaluated before aggregate functions are computed and filters input rows, while HAVING is used after GROUP BY to filter grouped rows based on aggregate results. This is enough to explain the difference for grouped/aggregate queries.",
+        "supportedAspects": [
+          "WHERE filters rows before aggregation/grouping",
+          "aggregate functions cannot be used in WHERE",
+          "HAVING filters grouped rows after GROUP BY",
+          "HAVING can reference aggregate results"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "fa8c06164a1c5a22",
+          "sourceId": "postgresql-18-manual",
+          "rank": 1,
+          "score": 0.7427,
+          "title": "PostgreSQL 18.4 Documentation",
+          "section": "2.7. Aggregate Functions (part 1)",
+          "language": "PostgreSQL / SQL"
+        },
+        {
+          "id": "73a1a9e4149305d5",
+          "sourceId": "postgresql-18-manual",
+          "rank": 2,
+          "score": 0.6987,
+          "title": "PostgreSQL 18.4 Documentation",
+          "section": "7.2.2. The WHERE Clause",
+          "language": "PostgreSQL / SQL"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716302-IpRIfRuXaihR3NnzUJyK",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 807,
+          "completionTokens": 298,
+          "reasoningTokens": 183,
+          "totalTokens": 1105,
+          "costUsd": 0.00194625
+        },
+        "latencyMs": 2939.21,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-react-stable-list-keys::complete",
+      "caseId": "evidence-v2-react-stable-list-keys",
+      "technology": "React",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly explain that index keys break when items are inserted, deleted, or reordered, causing subtle bugs, and that randomly generated keys never match between renders, causing full recreation of components/DOM and loss of user input. They also explicitly recommend stable IDs based on the data.",
+        "supportedAspects": [
+          "Index keys become unstable when list order changes",
+          "Index keys can cause subtle and confusing bugs",
+          "Randomly generated keys do not match across renders",
+          "Random keys can force components/DOM to be recreated and lose user input",
+          "Stable IDs based on data are recommended"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "ea9a0988e8a0fecc",
+          "rank": 1,
+          "score": 0.7963,
+          "title": "Rendering Lists",
+          "section": "Rendering data from arrays (part 6)",
+          "language": "React"
+        },
+        {
+          "id": "d2850d211b077c7d",
+          "rank": 2,
+          "score": 0.7681,
+          "title": "Rendering Lists",
+          "section": "Rendering data from arrays (part 7)",
+          "language": "React"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716305-1SyQuNw3oTx3PN4WYtVx",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1010,
+          "completionTokens": 209,
+          "reasoningTokens": 67,
+          "totalTokens": 1219,
+          "costUsd": 0.001698
+        },
+        "latencyMs": 1934.86,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-go-defer-evaluation::incomplete",
+      "caseId": "evidence-v2-go-defer-evaluation",
+      "technology": "Go",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts show that deferred calls run before the surrounding function returns, but they do not directly state when a deferred call’s function value and arguments are evaluated. The call-evaluation rules shown are for ordinary function calls, not defer specifically.",
+        "supportedAspects": [
+          "A deferred call executes before the surrounding function returns",
+          "A deferred function may access named result parameters before return"
+        ],
+        "missingAspects": [
+          "When a deferred call’s function value is evaluated",
+          "When a deferred call’s arguments are evaluated",
+          "Direct defer-specific execution timing details"
+        ]
+      },
+      "evidence": [
+        {
+          "id": "e6e509da5df1b502",
+          "sourceId": "go-language-specification",
+          "rank": 1,
+          "score": 0.7077,
+          "title": "The Go Programming Language Specification",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 152)",
+          "language": "Go"
+        },
+        {
+          "id": "0fb1cadb036b3aaa",
+          "sourceId": "go-language-specification",
+          "rank": 2,
+          "score": 0.6691,
+          "title": "The Go Programming Language Specification",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 83)",
+          "language": "Go"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716307-sEir5yW4b1sljsNcjJDM",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1050,
+          "completionTokens": 491,
+          "reasoningTokens": 362,
+          "totalTokens": 1541,
+          "costUsd": 0.002997
+        },
+        "latencyMs": 4257.93,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-java-checked-exceptions::complete",
+      "caseId": "evidence-v2-java-checked-exceptions",
+      "technology": "Java",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that checked exceptions are subject to compile-time checking and must be declared in a method or constructor’s throws clause if they can result, while unchecked exceptions (runtime exceptions and errors) are exempt from compile-time checking. This is exactly the distinction asked about.",
+        "supportedAspects": [
+          "Checked exceptions require compile-time checking",
+          "Checked exceptions must be declared in throws clauses when possible results of a method/constructor",
+          "Unchecked exceptions are exempt from compile-time checking",
+          "Unchecked exceptions include runtime exceptions and errors"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "6d0787f1b77e5a39",
+          "sourceId": "java-se-26-language-specification",
+          "rank": 1,
+          "score": 0.7615,
+          "title": "The Java Language Specification, Java SE 26 Edition",
+          "section": "11.2 Compile-Time Checking of Exceptions (part 1)",
+          "language": "Java"
+        },
+        {
+          "id": "c6a06d3eae448e4d",
+          "sourceId": "java-se-26-language-specification",
+          "rank": 2,
+          "score": 0.7551,
+          "title": "The Java Language Specification, Java SE 26 Edition",
+          "section": "11.1.1 The Kinds of Exceptions (part 1)",
+          "language": "Java"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716311-XiBYt54S6op9b0l5hNxC",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1030,
+          "completionTokens": 128,
+          "reasoningTokens": 0,
+          "totalTokens": 1158,
+          "costUsd": 0.0013485
+        },
+        "latencyMs": 3515.92,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-python-generator-suspension::incomplete",
+      "caseId": "evidence-v2-python-generator-suspension",
+      "technology": "Python",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state what state is preserved on suspension at `yield` and how execution resumes: local variables, instruction pointer, evaluation stack, and exception-handling state are retained, and the generator resumes via its methods (`__next__`, `send`, etc.) at the last executed `yield` expression.",
+        "supportedAspects": [
+          "State preserved on suspension: local variables, instruction pointer, evaluation stack, exception-handling state",
+          "Resumption via generator methods (`__next__`, `send`)",
+          "Resumes at the last executed `yield` expression",
+          "Behavior of resumed `yield` value depends on the resuming method"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "1c745930f5e2a46f",
+          "sourceId": "python-language-reference",
+          "rank": 1,
+          "score": 0.7036,
+          "title": "Python Language Reference",
+          "section": "6.1. Arithmetic conversions¶ (part 17)",
+          "language": "Python"
+        },
+        {
+          "id": "a0c0bf5eeef0208f",
+          "sourceId": "python-language-reference",
+          "rank": 2,
+          "score": 0.7031,
+          "title": "Python Language Reference",
+          "section": "6.1. Arithmetic conversions¶ (part 14)",
+          "language": "Python"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716315-oiB90ms59pO8PdFxN3Gn",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1191,
+          "completionTokens": 286,
+          "reasoningTokens": 131,
+          "totalTokens": 1477,
+          "costUsd": 0.00218025
+        },
+        "latencyMs": 2495.03,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-c-realloc-failure::complete",
+      "caseId": "evidence-v2-c-realloc-failure",
+      "technology": "C",
+      "constructionCategory": "alternative-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that if realloc cannot allocate the new object, the old object is not deallocated and its value remains unchanged. This answers the question about the original allocation.",
+        "supportedAspects": [
+          "realloc failure returns null pointer",
+          "original allocation is not deallocated",
+          "original object remains unchanged"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "3d15d4f9f3c9c651",
+          "sourceId": "c11-working-draft-n1570",
+          "rank": 1,
+          "score": 0.7609,
+          "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
+          "section": "Description",
+          "language": "C"
+        },
+        {
+          "id": "020c6d441ebd9142",
+          "sourceId": "c11-working-draft-n1570",
+          "rank": 2,
+          "score": 0.6954,
+          "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
+          "section": "Returns",
+          "language": "C"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716317-o3yywBUGpYkjEFs7JGjI",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 438,
+          "completionTokens": 152,
+          "reasoningTokens": 63,
+          "totalTokens": 590,
+          "costUsd": 0.0010125
+        },
+        "latencyMs": 1573.99,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-kotlin-safe-call::incomplete",
+      "caseId": "evidence-v2-kotlin-safe-call",
+      "technology": "Kotlin",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts directly show Kotlin safe-call/navigation behavior when the receiver is null, but they do not mention the Elvis operator or how it combines with safe-calls. That combination cannot be answered accurately from the shown evidence alone.",
+        "supportedAspects": [
+          "Safe-call/navigation (`?.`) short-circuits when the receiver is null.",
+          "A safe navigation expression evaluates the receiver once and yields null instead of continuing the call/assignment path."
+        ],
+        "missingAspects": [
+          "Elvis operator (`?:`) behavior.",
+          "How `?.` and `?:` are combined in one expression when the receiver may be null.",
+          "The resulting value/control flow when the safe-call produces null and the Elvis fallback is used."
+        ]
+      },
+      "evidence": [
+        {
+          "id": "81caad20a3e827ae",
+          "sourceId": "kotlin-language-specification",
+          "rank": 1,
+          "score": 0.7027,
+          "title": "Kotlin Language Specification",
+          "section": "7.1.3 Safe assignments",
+          "language": "Kotlin"
+        },
+        {
+          "id": "780e8e185605a424",
+          "sourceId": "kotlin-language-specification",
+          "rank": 2,
+          "score": 0.6984,
+          "title": "Kotlin Language Specification",
+          "section": "11.1.1 Receivers (part 1)",
+          "language": "Kotlin"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716319-PIo4bRfYGg05akbL8rWc",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 747,
+          "completionTokens": 257,
+          "reasoningTokens": 95,
+          "totalTokens": 1004,
+          "costUsd": 0.00171675
+        },
+        "latencyMs": 2370.32,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-typescript-discriminated-union::complete",
+      "caseId": "evidence-v2-typescript-discriminated-union",
+      "technology": "TypeScript",
+      "constructionCategory": "alternative-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly explain that when each union member shares a common property with literal values, TypeScript treats it as a discriminant; checking that property (e.g. `shape.kind === \"circle\"`) removes the other union members and narrows the object to the matching type (e.g. `Circle`).",
+        "supportedAspects": [
+          "discriminated union definition via a common literal-typed property",
+          "narrowing by checking the discriminant property",
+          "example of narrowing `Shape` to `Circle`",
+          "switch statement narrowing by discriminant"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "90fe7fe08289d3e4",
+          "sourceId": "typescript-handbook",
+          "rank": 1,
+          "score": 0.7722,
+          "title": "The TypeScript Handbook",
+          "section": "typeof type guards (part 16)",
+          "language": "TypeScript"
+        },
+        {
+          "id": "72665883de3477c2",
+          "sourceId": "typescript-handbook",
+          "rank": 2,
+          "score": 0.7677,
+          "title": "The TypeScript Handbook",
+          "section": "typeof type guards (part 15)",
+          "language": "TypeScript"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716321-JJ9ADDB5RfejfE66UuQo",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1061,
+          "completionTokens": 215,
+          "reasoningTokens": 76,
+          "totalTokens": 1276,
+          "costUsd": 0.00176325
+        },
+        "latencyMs": 3507.7,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-bash-at-star::incomplete",
+      "caseId": "evidence-v2-bash-at-star",
+      "technology": "Bash",
+      "constructionCategory": "distractor-insufficient",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts do not directly explain the behavior difference between quoted \"$@\" and quoted \"$*\" in Bash. They only discuss positional parameters in general and substring expansion for ${@}/{*}, which is not the same topic.",
+        "supportedAspects": [
+          "Bash positional parameters exist and can be referenced as $N or ${N}",
+          "Substring expansion involving positional parameters starts indexing at 1 and may prefix $0 when offset is 0"
+        ],
+        "missingAspects": [
+          "Direct definition of quoted \"$@\" expansion",
+          "Direct definition of quoted \"$*\" expansion",
+          "The word-splitting behavior difference between \"$@\" and \"$*\" inside double quotes",
+          "Any mention of IFS-based joining for \"$*\""
+        ]
+      },
+      "evidence": [
+        {
+          "id": "a2dbc66d29b6992a",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "rank": 1,
+          "score": 0.7043,
+          "title": "GNU Bash Reference Manual",
+          "section": "3.4.1 Positional Parameters",
+          "language": "Bash"
+        },
+        {
+          "id": "b4e1e618412f3277",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "rank": 2,
+          "score": 0.6982,
+          "title": "GNU Bash Reference Manual",
+          "section": "${ parameter :? word (part 4)",
+          "language": "Bash"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716325-n7zcDELaz6Z6kpFiXfAo",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1202,
+          "completionTokens": 402,
+          "reasoningTokens": 235,
+          "totalTokens": 1604,
+          "costUsd": 0.0027105
+        },
+        "latencyMs": 4004.28,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-cpp-virtual-destructor::complete",
+      "caseId": "evidence-v2-cpp-virtual-destructor",
+      "technology": "C++",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that in a single-object delete expression, if the static type is a base class of the dynamic type and the types differ, the static type must have a virtual destructor or behavior is undefined. They also note that a virtual destructor ensures the deallocation function corresponding to the object's dynamic type is available, which explains why deletion through a base-class pointer needs it.",
+        "supportedAspects": [
+          "Deleting through a base-class pointer can involve a static type different from the dynamic type",
+          "A virtual destructor is required in that case or the behavior is undefined",
+          "A virtual destructor helps ensure the deallocation function for the dynamic type is used"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "1935ade9c3bf8922",
+          "sourceId": "cpp26-working-draft-n5046",
+          "rank": 1,
+          "score": 0.6972,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "N5046 (part 3)",
+          "language": "C++"
+        },
+        {
+          "id": "12d5985b8413700f",
+          "sourceId": "cpp26-working-draft-n5046",
+          "rank": 2,
+          "score": 0.6956,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "7.6.2.9 Delete (part 2)",
+          "language": "C++"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716329-lXMMf3mFAbZhpLTc6zmj",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 994,
+          "completionTokens": 354,
+          "reasoningTokens": 197,
+          "totalTokens": 1348,
+          "costUsd": 0.0023385
+        },
+        "latencyMs": 2865.49,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-react-stable-list-keys::incomplete",
+      "caseId": "evidence-v2-react-stable-list-keys",
+      "technology": "React",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts directly explain that keys help React match array items across moves, insertions, and deletions, and that keys should be included in the data rather than generated on the fly. However, they do not directly explain why array indexes are a poor choice or why randomly generated keys are problematic, so the comparison requested by the question is not fully supported.",
+        "supportedAspects": [
+          "Stable keys let React identify which array item a component corresponds to.",
+          "Stable keys help React handle sorting, insertion, and deletion correctly.",
+          "Keys should be taken from the data rather than generated on the fly."
+        ],
+        "missingAspects": [
+          "Direct evidence that array indexes are unsuitable as keys.",
+          "Direct evidence that randomly generated keys are unsuitable as keys.",
+          "Direct explanation of the consequences of using unstable keys (e.g. incorrect component identity/state reuse)."
+        ]
+      },
+      "evidence": [
+        {
+          "id": "0b74e6ca0ee5d732",
+          "rank": 1,
+          "score": 0.722,
+          "title": "Rendering Lists",
+          "section": "Rendering data from arrays (part 5)",
+          "language": "React"
+        },
+        {
+          "id": "5e9398f3a96b5d9f",
+          "rank": 2,
+          "score": 0.72,
+          "title": "Rendering Lists",
+          "section": "Rendering data from arrays (part 4)",
+          "language": "React"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716332-YONcCSstlD2gvF8N9oTd",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1325,
+          "completionTokens": 467,
+          "reasoningTokens": 280,
+          "totalTokens": 1792,
+          "costUsd": 0.00309525
+        },
+        "latencyMs": 3593.92,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-javascript-promise-all::complete",
+      "caseId": "evidence-v2-javascript-promise-all",
+      "technology": "JavaScript",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that Promise.all fulfills with an array of all fulfillment values once every input has settled successfully, and rejects with the reason from the first input promise that rejects.",
+        "supportedAspects": [
+          "Settles by fulfilling with an array of fulfillment values when all input promises fulfill",
+          "Rejects with the reason of the first rejected promise",
+          "Uses internal counting to resolve only after all inputs are fulfilled"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "51b0124babe774ef",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "rank": 1,
+          "score": 0.7211,
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "27.2.4.1 Promise.all ( iterable )",
+          "language": "JavaScript"
+        },
+        {
+          "id": "912dea91ba39e30b",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "rank": 2,
+          "score": 0.6959,
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "27.2.4.1.2 PerformPromiseAll ( iteratorRecord , constructor , resultCapability , promiseResolve ) (part 1)",
+          "language": "JavaScript"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716335-ustNLrPE0spNmYEhKuej",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 996,
+          "completionTokens": 210,
+          "reasoningTokens": 101,
+          "totalTokens": 1206,
+          "costUsd": 0.001692
+        },
+        "latencyMs": 2050.33,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-java-checked-exceptions::incomplete",
+      "caseId": "evidence-v2-java-checked-exceptions",
+      "technology": "Java",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts define checked vs. unchecked exceptions and mention compile-time checking for exception handlers, but they do not directly state the key compile-time rule difference (for example, that checked exceptions must be caught or declared while unchecked exceptions are not required to be).",
+        "supportedAspects": [
+          "Unchecked exceptions are the runtime exception classes and error classes.",
+          "Checked exceptions are all exception classes other than unchecked exceptions.",
+          "Java has compile-time checking for exception handlers."
+        ],
+        "missingAspects": [
+          "Direct rule that checked exceptions must be caught or declared.",
+          "Direct rule that unchecked exceptions are exempt from catch-or-declare compile-time checking.",
+          "Any explicit statement comparing compile-time obligations for checked vs. unchecked exceptions."
+        ]
+      },
+      "evidence": [
+        {
+          "id": "c6a06d3eae448e4d",
+          "sourceId": "java-se-26-language-specification",
+          "rank": 1,
+          "score": 0.7551,
+          "title": "The Java Language Specification, Java SE 26 Edition",
+          "section": "11.1.1 The Kinds of Exceptions (part 1)",
+          "language": "Java"
+        },
+        {
+          "id": "bb23743a742add08",
+          "sourceId": "java-se-26-language-specification",
+          "rank": 2,
+          "score": 0.6893,
+          "title": "The Java Language Specification, Java SE 26 Edition",
+          "section": "11.3 Run-Time Handling of an Exception (part 2)",
+          "language": "Java"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716337-GsCPNYoyuiChht82jlQP",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 991,
+          "completionTokens": 371,
+          "reasoningTokens": 212,
+          "totalTokens": 1362,
+          "costUsd": 0.00241275
+        },
+        "latencyMs": 3110.57,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-go-defer-evaluation::complete",
+      "caseId": "evidence-v2-go-defer-evaluation",
+      "technology": "Go",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpt directly states when a defer statement executes, the function value and parameters are evaluated and saved, and that the actual call is invoked immediately before the surrounding function returns (in reverse order).",
+        "supportedAspects": [
+          "Function value and arguments are evaluated when the defer statement executes.",
+          "The evaluated function value and parameters are saved.",
+          "The call itself is not executed at defer time.",
+          "Deferred calls are executed immediately before the surrounding function returns.",
+          "Deferred calls run in reverse order of deferral."
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "e6e509da5df1b502",
+          "sourceId": "go-language-specification",
+          "rank": 1,
+          "score": 0.7077,
+          "title": "The Go Programming Language Specification",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 152)",
+          "language": "Go"
+        },
+        {
+          "id": "63469c12a737345a",
+          "sourceId": "go-language-specification",
+          "rank": 2,
+          "score": 0.6882,
+          "title": "The Go Programming Language Specification",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 151)",
+          "language": "Go"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716341-cs2gfpDBAyrvKOY5DswC",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1046,
+          "completionTokens": 234,
+          "reasoningTokens": 108,
+          "totalTokens": 1280,
+          "costUsd": 0.0018375
+        },
+        "latencyMs": 2383.62,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-cpp-virtual-destructor::incomplete",
+      "caseId": "evidence-v2-cpp-virtual-destructor",
+      "technology": "C++",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts explain destructor invocation order and that destructors are not virtually dispatched during base/member teardown, but they do not directly state the rule for deleting through a base-class pointer or the consequence when the base destructor is non-virtual. The specific reason why an appropriate virtual destructor is required is not shown.",
+        "supportedAspects": [
+          "Destructors call base/member destructors in reverse order",
+          "Destructor calls are made as if qualified, not via virtual overriding",
+          "A destructor can be declared virtual and must be defined if virtual and objects are created"
+        ],
+        "missingAspects": [
+          "Direct semantics of `delete` through a base-class pointer",
+          "The requirement that the base class destructor be virtual for polymorphic deletion",
+          "The failure mode/undefined behavior when deleting a derived object via a non-virtual base destructor",
+          "Explanation of how virtual dispatch ensures the derived destructor runs before the base destructor"
+        ]
+      },
+      "evidence": [
+        {
+          "id": "8067325bcb4a89cc",
+          "sourceId": "cpp26-working-draft-n5046",
+          "rank": 1,
+          "score": 0.6889,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "N5046 (part 2)",
+          "language": "C++"
+        },
+        {
+          "id": "f0a0c65e7c3f72c1",
+          "sourceId": "cpp26-working-draft-n5046",
+          "rank": 2,
+          "score": 0.6721,
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "N5046 (part 1)",
+          "language": "C++"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716343-MS5HikeJT7VNBkRbSP4F",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1085,
+          "completionTokens": 337,
+          "reasoningTokens": 140,
+          "totalTokens": 1422,
+          "costUsd": 0.00233025
+        },
+        "latencyMs": 3829.41,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-postgresql-where-having::complete",
+      "caseId": "evidence-v2-postgresql-where-having",
+      "technology": "PostgreSQL / SQL",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state how WHERE and HAVING differ in PostgreSQL with grouping and aggregates: WHERE filters input rows before GROUP BY/aggregate computation, while HAVING filters group rows after grouping and aggregation. They also note that WHERE cannot contain aggregate functions, whereas HAVING applies to grouped results and can reference aggregates.",
+        "supportedAspects": [
+          "WHERE filters individual/input rows before grouping and aggregate computation",
+          "HAVING filters group rows after GROUP BY and aggregates are computed",
+          "WHERE should not contain aggregate functions",
+          "HAVING can reference aggregate functions and grouped results"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "e17a4d761fb2052a",
+          "sourceId": "postgresql-18-manual",
+          "rank": 1,
+          "score": 0.7978,
+          "title": "PostgreSQL 18.4 Documentation",
+          "section": "1 The LIKE operator does pattern matching and is explained in Section 9.7.",
+          "language": "PostgreSQL / SQL"
+        },
+        {
+          "id": "6900cfffa71cca5e",
+          "sourceId": "postgresql-18-manual",
+          "rank": 2,
+          "score": 0.7829,
+          "title": "PostgreSQL 18.4 Documentation",
+          "section": "HAVING Clause",
+          "language": "PostgreSQL / SQL"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716347-Fu1Vbv6x7ITodCQdfu3d",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 822,
+          "completionTokens": 239,
+          "reasoningTokens": 101,
+          "totalTokens": 1061,
+          "costUsd": 0.001692
+        },
+        "latencyMs": 2585.43,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-rust-refcell-runtime::incomplete",
+      "caseId": "evidence-v2-rust-refcell-runtime",
+      "technology": "Rust",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that ordinary references enforce borrowing rules at compile time, while RefCell<T> enforces them at runtime and panics if the rules are violated.",
+        "supportedAspects": [
+          "Ordinary references are checked at compile time",
+          "RefCell<T> checks borrowing rules at runtime",
+          "Violations with RefCell<T> cause a panic rather than a compiler error",
+          "RefCell<T> enables interior mutability"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "39f2bbc69d476d8c",
+          "sourceId": "rust-book",
+          "rank": 1,
+          "score": 0.7975,
+          "title": "The Rust Programming Language",
+          "section": "RefCell<T> and the Interior Mutability Pattern (part 1)",
+          "language": "Rust"
+        },
+        {
+          "id": "427c5b30a82aae71",
+          "sourceId": "rust-book",
+          "rank": 2,
+          "score": 0.774,
+          "title": "The Rust Programming Language",
+          "section": "RefCell<T> and the Interior Mutability Pattern (part 3)",
+          "language": "Rust"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716349-wWLRNnWDZtbhP2PFGnQU",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1176,
+          "completionTokens": 177,
+          "reasoningTokens": 65,
+          "totalTokens": 1353,
+          "costUsd": 0.0016785
+        },
+        "latencyMs": 2768.47,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-bash-at-star::complete",
+      "caseId": "evidence-v2-bash-at-star",
+      "technology": "Bash",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly define both quoted \"$*\" and quoted \"$@\" in Bash and state their different behaviors: \"$*\" becomes one word with parameters joined by the first character of IFS, while \"$@\" expands each positional parameter to a separate word (equivalent to \"$1\" \"$2\" ...).",
+        "supportedAspects": [
+          "Quoted \"$*\" joins positional parameters into a single word using the first IFS character",
+          "Quoted \"$@\" expands each positional parameter as a separate word",
+          "Bash-specific behavior",
+          "Behavior when there are no positional parameters"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "1462b3503c9fe47b",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "rank": 1,
+          "score": 0.8146,
+          "title": "GNU Bash Reference Manual",
+          "section": "3.4.2 Special Parameters (part 1)",
+          "language": "Bash"
+        },
+        {
+          "id": "4f76cf88e67467e2",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "rank": 2,
+          "score": 0.7735,
+          "title": "GNU Bash Reference Manual",
+          "section": "3.4.2 Special Parameters (part 2)",
+          "language": "Bash"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716352-eM75TBNODMEu9fALVup0",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1068,
+          "completionTokens": 194,
+          "reasoningTokens": 51,
+          "totalTokens": 1262,
+          "costUsd": 0.001674
+        },
+        "latencyMs": 1917.4,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-c-realloc-failure::incomplete",
+      "caseId": "evidence-v2-c-realloc-failure",
+      "technology": "C",
+      "constructionCategory": "distractor-insufficient",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts show that `realloc` returns a null pointer if the requested space cannot be allocated, but they do not directly state what happens to the original allocation after the failure. The key guarantee that the original block remains unchanged/not freed is missing from the shown evidence.",
+        "supportedAspects": [
+          "`realloc` may return `NULL` when allocation fails"
+        ],
+        "missingAspects": [
+          "Whether the original allocation remains valid and unchanged after `realloc` failure",
+          "Whether the original block is freed or preserved on failure"
+        ]
+      },
+      "evidence": [
+        {
+          "id": "4eac370b588cbd12",
+          "sourceId": "beej-c-library-reference",
+          "rank": 1,
+          "score": 0.6882,
+          "title": "Beej’s Guide to C Programming - Library Reference",
+          "section": "Synopsis",
+          "language": "C"
+        },
+        {
+          "id": "a4d25d814465e969",
+          "sourceId": "c11-working-draft-n1570",
+          "rank": 2,
+          "score": 0.6882,
+          "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
+          "section": "7.22.3  Memory management functions",
+          "language": "C"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716354-g5t5fP8S373P0ugqBTb7",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 568,
+          "completionTokens": 229,
+          "reasoningTokens": 101,
+          "totalTokens": 797,
+          "costUsd": 0.0014565
+        },
+        "latencyMs": 2227.89,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-kotlin-safe-call::complete",
+      "caseId": "evidence-v2-kotlin-safe-call",
+      "technology": "Kotlin",
+      "constructionCategory": "alternative-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that Kotlin's safe-call `?.` returns `null` when the receiver is `null`, and that the Elvis operator `?:` checks whether its left-hand side is `null` and, if so, evaluates and returns the right-hand side lazily. Together, this is enough to explain their interaction when a receiver may be null.",
+        "supportedAspects": [
+          "Safe-call `?.` returns `null` if the receiver is `null`",
+          "Elvis `?:` tests the left-hand side for `null`",
+          "Elvis evaluates the right-hand side only when the left-hand side is `null`",
+          "The combined null-handling behavior can be inferred from the two operators' definitions"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "d08840d67f98cbfc",
+          "sourceId": "kotlin-language-specification",
+          "rank": 1,
+          "score": 0.7484,
+          "title": "Kotlin Language Specification",
+          "section": "8.12 Elvis operator expressions",
+          "language": "Kotlin"
+        },
+        {
+          "id": "1377ce297aa955e4",
+          "sourceId": "kotlin-language-specification",
+          "rank": 2,
+          "score": 0.7181,
+          "title": "Kotlin Language Specification",
+          "section": "8.21.1 Navigation operators (part 1)",
+          "language": "Kotlin"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716356-uJ72Y2lcHoS49APgUISX",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 735,
+          "completionTokens": 442,
+          "reasoningTokens": 269,
+          "totalTokens": 1177,
+          "costUsd": 0.00254025
+        },
+        "latencyMs": 5234.88,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-typescript-discriminated-union::incomplete",
+      "caseId": "evidence-v2-typescript-discriminated-union",
+      "technology": "TypeScript",
+      "constructionCategory": "related-incomplete",
+      "intendedSufficient": false,
+      "humanSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts explain TypeScript narrowing with `typeof`, `in`, and `instanceof`, but they do not directly discuss discriminated unions or how a shared literal discriminant property is used to narrow to a specific union member. That key mechanism is missing from the evidence shown.",
+        "supportedAspects": [
+          "TypeScript uses control-flow analysis to narrow types",
+          "Type guards can refine a union in branches",
+          "The `in` operator can narrow union members based on property presence"
+        ],
+        "missingAspects": [
+          "Definition of a discriminated union",
+          "Use of a common discriminant/tag property with literal values",
+          "How checking the discriminant narrows to one specific member"
+        ]
+      },
+      "evidence": [
+        {
+          "id": "16eebabe9ebff640",
+          "sourceId": "typescript-handbook",
+          "rank": 1,
+          "score": 0.7274,
+          "title": "The TypeScript Handbook",
+          "section": "typeof type guards (part 2)",
+          "language": "TypeScript"
+        },
+        {
+          "id": "9df124d2077583b5",
+          "sourceId": "typescript-handbook",
+          "rank": 2,
+          "score": 0.7272,
+          "title": "The TypeScript Handbook",
+          "section": "typeof type guards (part 8)",
+          "language": "TypeScript"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716361-yjHrDYkViAH4lSJMeUpn",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1047,
+          "completionTokens": 254,
+          "reasoningTokens": 100,
+          "totalTokens": 1301,
+          "costUsd": 0.00192825
+        },
+        "latencyMs": 2377.55,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "evidence-v2-python-generator-suspension::complete",
+      "caseId": "evidence-v2-python-generator-suspension",
+      "technology": "Python",
+      "constructionCategory": "direct-complete",
+      "intendedSufficient": true,
+      "humanSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state what state is retained when a generator is suspended at `yield` and describe how execution resumes via generator methods (`__next__()`, `send()`, etc.).",
+        "supportedAspects": [
+          "Retention of local state on suspension",
+          "Preservation of local variables, instruction pointer, evaluation stack, and exception-handling state",
+          "Resumption at the last executed `yield` expression",
+          "Resumption via generator methods such as `__next__()` and `send()`",
+          "`send()` supplying a value as the result of the suspended `yield` expression"
+        ],
+        "missingAspects": []
+      },
+      "evidence": [
+        {
+          "id": "cf3260cc4c84011c",
+          "sourceId": "python-language-reference",
+          "rank": 1,
+          "score": 0.7389,
+          "title": "Python Language Reference",
+          "section": "6.1. Arithmetic conversions¶ (part 15)",
+          "language": "Python"
+        },
+        {
+          "id": "1c745930f5e2a46f",
+          "sourceId": "python-language-reference",
+          "rank": 2,
+          "score": 0.7036,
+          "title": "Python Language Reference",
+          "section": "6.1. Arithmetic conversions¶ (part 17)",
+          "language": "Python"
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784716364-Eu1bD7SrFqWYtiLxItre",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1082,
+          "completionTokens": 308,
+          "reasoningTokens": 165,
+          "totalTokens": 1390,
+          "costUsd": 0.0021975
+        },
+        "latencyMs": 2616.9,
+        "cacheHit": false
+      }
+    }
+  ],
+  "limitations": [
+    "The 24-packet sample is a bounded in-domain component benchmark.",
+    "The thesis author completed the reference with case-level Codex assistance; it is not an independent human gold standard.",
+    "Construction agreement describes dataset consistency, not independent validation.",
+    "Qualification permits only one preregistered end-to-end validation experiment, not production activation."
+  ]
+}
