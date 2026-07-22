@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-rag-cross-attempt-merge-v1",
+  "status": "preregistered",
+  "createdAt": "2026-07-22T13:15:00+02:00",
+  "title": "Final agentic RAG merge-policy experiment",
+  "researchQuestion": "Can language-balanced evidence accumulation across attempts recover complementary comparative evidence that the current replacement policy discards, without harming abstention or general retrieval quality?",
+  "hypothesis": "For explicit two-technology comparisons, retaining up to two highest-scoring chunks per requested technology across both attempts will recover at least one previously failed comparison while preserving the semantic gate's zero false-positive rate.",
+  "parent": {
+    "protocol": {
+      "path": "docs/experiments/agentic-rag-semantic-gate.v1.json",
+      "sha256": "0131db0bd48cb5669c261e08755b42546167a9e48c9c5706edfd3e79b5a0975f"
+    },
+    "result": {
+      "path": "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.json",
+      "sha256": "f935fbd88b1bb3dad5f5523aaba1eda5f22005af55914865e1f8290a4a40e62c"
+    }
+  },
+  "singleChangedVariable": "Cross-attempt evidence merge policy: replace the previous attempt versus accumulate and apply a per-requested-technology quota.",
+  "variants": [
+    {
+      "id": "replace-on-retry-historical",
+      "source": "agentic-rag-semantic-gate-v1",
+      "description": "Only the current attempt's top four chunks are assessed."
+    },
+    {
+      "id": "language-balanced-cross-attempt-accumulation",
+      "source": "new execution",
+      "description": "Deduplicate all chunks seen so far; for explicit multi-technology questions reserve floor(topK / requested technologies) positions per technology, then fill remaining positions by cosine score. For zero or one detected technology, retain ordinary global score ordering."
+    }
+  ],
+  "split": "validation",
+  "testSplitTouched": false,
+  "benchmark": {
+    "generalValidationCases": 54,
+    "focusedComparativePositiveCases": 8,
+    "focusedComparativeNegativeCases": 8,
+    "totalExecutedCases": 70,
+    "lockedTestCases": 24,
+    "lockedTestExecution": false
+  },
+  "frozenControls": {
+    "corpusChunks": 33079,
+    "chunking": "300 words",
+    "embedding": "google/gemini-embedding-2@1024",
+    "retrieval": "metadata-filtered dense cosine",
+    "minimumScore": 0.68,
+    "topK": 4,
+    "reranker": null,
+    "semanticAssessor": "openai/gpt-5.4-mini, medium reasoning, prompt and schema v2",
+    "planner": "gemini-3.5-flash, low reasoning, 512 output tokens, one controlled format recovery",
+    "maximumAttempts": 2,
+    "maximumQueriesPerAttempt": 2,
+    "generation": false
+  },
+  "candidateMergePolicy": {
+    "appliesAfterAttempt": 2,
+    "input": "deduplicated union of chunks retrieved in attempts one and two",
+    "technologyDetection": "existing detectQueryMetadataConstraint on the original question",
+    "quota": "floor(topK / number of requested database languages) per requested language",
+    "withinLanguageOrdering": "descending cosine score, then prior rank, then chunk id",
+    "remainingCapacity": "highest-scoring unselected chunks regardless of language",
+    "output": "exactly min(topK, available unique chunks) chunks reranked from one",
+    "nonComparativeBehavior": "ordinary global mergeRankings over accumulated chunks",
+    "defaultRuntimeBehavior": "unchanged; accumulation is opt-in for this experiment"
+  },
+  "primaryMetrics": [
+    "general Recall@4",
+    "general MRR",
+    "general nDCG@4",
+    "general unanswerable false-positive rate",
+    "comparative both-evidence-side coverage@4",
+    "comparative mean evidence-side recall@4",
+    "focused unanswerable false-positive rate",
+    "cases recovered at attempt two"
+  ],
+  "diagnostics": [
+    "attempt-one, attempt-two, cumulative, and selected chunk ids",
+    "per-language quota selections",
+    "semantic decisions before and after accumulation",
+    "stop-reason distribution",
+    "provider calls, cache hits, tokens, cost, and latency"
+  ],
+  "selectionRule": {
+    "minimumGeneralRecallAt4": 0.9629629629629629,
+    "minimumGeneralMrr": 0.9444444444444444,
+    "minimumGeneralNdcgAt4": 0.9492936945767206,
+    "requiredGeneralUnanswerableFalsePositiveRate": 0,
+    "minimumComparativeBothEvidenceSideCoverageAt4": 0.375,
+    "minimumComparativeMeanEvidenceSideRecallAt4": 0.625,
+    "requiredFocusedUnanswerableFalsePositiveRate": 0,
+    "minimumRecoveredSecondAttemptCases": 1,
+    "maximumProviderErrors": 0,
+    "maximumObservedCombinedModelCostUsd": 0.25,
+    "maximumP95IncrementalLatencyMs": 20000,
+    "decision": "Advance only to a separately preregistered generation-quality experiment if every requirement passes. If any requirement fails, stop further Agentic RAG development for the current thesis and retain the single-pass baseline."
+  },
+  "executionOrder": [
+    "Commit this protocol before code changes.",
+    "Add an opt-in cross-attempt accumulation dependency while leaving default replacement behavior unchanged.",
+    "Test default replacement, balanced accumulation, deduplication, quota filling, non-comparative fallback, and final abstention.",
+    "Commit implementation before provider execution.",
+    "Run one provider-free plan and one cache-preserving validation execution.",
+    "Publish all results and stop this research direction if any frozen check fails."
+  ],
+  "plannedArtifacts": [
+    "src/lib/rag/agentic-retrieval.ts",
+    "scripts/test-agentic-retrieval.ts",
+    "scripts/evaluate-agentic-cross-attempt-merge.ts",
+    "docs/experiment-results/agentic-rag-cross-attempt-merge-v1-validation.json",
+    "docs/experiment-results/agentic-rag-cross-attempt-merge-v1-validation.md",
+    "docs/experiment-results/agentic-rag-cross-attempt-merge-v1-validation.csv"
+  ],
+  "limitations": [
+    "The motivating C/C++ trace and all validation comparators are already inspected, so this is a final targeted engineering experiment rather than independent confirmation.",
+    "Canonical chunk metrics may undervalue semantically valid alternative evidence.",
+    "Only explicit technologies recognized by the existing metadata detector receive quotas.",
+    "Generated-answer quality remains outside scope.",
+    "The locked test remains untouched."
+  ]
+}

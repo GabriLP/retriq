@@ -1,7 +1,7 @@
 # Thesis experiment map
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
-- Experiment families: **23**
+- Experiment families: **24**
 - Completed: **15**
 - Superseded but retained: **1**
 
@@ -32,6 +32,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 21 | LLM-as-a-judge calibration | llm-judge-calibration-v2 | failed | GPT-5.4 Mini replaces GPT-5.4 Nano; every prompt, schema, split, metric, threshold, reasoning, and routing control remains frozen | Do not select GPT-5.4 Mini. It improved over Nano on every primary calibration metric: QWK 0.5975 versus 0.4320, Spearman 0.4893 versus 0.3570, and binary pass agreement 0.9375 versus 0.8333. It nevertheless missed the frozen QWK floor of 0.60 by 0.0025 and the Spearman floor of 0.70 materially. All 32 unique responses were valid, provider-pinned, and completed without errors for $0.110033. Per protocol, neither the old inspected audit nor the locked generation test was accessed. |
 | 22 | AI-assisted evidence-sufficiency validation | agentic-semantic-assessor-v2 | failed | Deterministic score-and-language gate versus GPT-5.4 Mini semantic assessment on identical frozen evidence packets | Do not qualify GPT-5.4 Mini under the frozen rule. It improved accuracy from 0.5000 to 0.8750 and FPR from 1.0000 to 0.2500, with recall 1.0000 and kappa 0.7500, but missed the 0.9167 accuracy floor and 0.0833 FPR ceiling. All 24 provider calls succeeded for $0.047516. A post-result audit found that all three disagreements appear semantically sufficient despite their frozen insufficient labels, making the measured FPR reference-sensitive; labels remain unchanged to avoid circular post-hoc correction. |
 | 23 | Exploratory agentic RAG integration | agentic-rag-semantic-gate-v1 | failed | Deterministic score-and-language assessment versus GPT-5.4 Mini semantic assessment inside the otherwise identical agentic loop | Do not advance the current semantic-gated agentic architecture. It preserved general Recall@4 0.9630, MRR 0.9444, and nDCG@4 0.9493 while reducing general and focused negative FPR to zero. However, comparative both-evidence coverage remained 0.2500 and evidence-side recall 0.3750, below the frozen 0.3750 and 0.6250 requirements. All 39 second attempts failed to recover additional cases, so retry planning added 39 planner calls, latency, and cost without retrieval benefit. The run completed without provider errors for $0.203783 plus $0.000181 estimated embedding cost. |
+| 24 | Final agentic RAG merge-policy experiment | agentic-rag-cross-attempt-merge-v1 | in-progress | Replace previous-attempt evidence versus accumulate it with a per-requested-technology quota | Protocol frozen before implementation. This is the final targeted Agentic RAG experiment: every preregistered quality, abstention, recovery, cost, and latency requirement must pass before any generation study. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
 
@@ -308,3 +309,15 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Decision:** Do not advance the current semantic-gated agentic architecture. It preserved general Recall@4 0.9630, MRR 0.9444, and nDCG@4 0.9493 while reducing general and focused negative FPR to zero. However, comparative both-evidence coverage remained 0.2500 and evidence-side recall 0.3750, below the frozen 0.3750 and 0.6250 requirements. All 39 second attempts failed to recover additional cases, so retry planning added 39 planner calls, latency, and cost without retrieval benefit. The run completed without provider errors for $0.203783 plus $0.000181 estimated embedding cost.
 - **Limitations:** Validation and historical comparator results were already known; The semantic assessor failed its AI-assisted component benchmark; Generation quality was intentionally excluded to preserve a single changed variable; The 68-second maximum latency was an outlier while p95 remained 7.03 seconds; The locked test remained untouched
 - **Next step:** Stop generic rewrite-and-retry. Preregister one narrowly scoped merge-policy experiment: preserve evidence across attempts with a per-technology quota for explicit comparisons. A post-hoc trace diagnostic found complementary C and C++ canonical evidence across two attempts in one failed case, while naive global top-4 accumulation still discarded the C side.
+
+## 24. Final agentic RAG merge-policy experiment: agentic-rag-cross-attempt-merge-v1
+
+- **Research question:** Can language-balanced accumulation across attempts recover complementary comparative evidence without harming abstention or general retrieval quality?
+- **Status:** in-progress
+- **Changed variable:** Replace previous-attempt evidence versus accumulate it with a per-requested-technology quota
+- **Controls:** Same 70 validation cases; same semantic assessor; same Gemini planner; same embeddings, threshold, top-k, metadata filter, and two-attempt limit; no reranker; generation excluded; locked test untouched
+- **Metrics:** Recall@4; MRR; nDCG@4; general and focused FPR; comparative evidence coverage and recall; second-attempt recoveries; calls; tokens; cost; latency
+- **Artifacts:** `docs/experiments/agentic-rag-cross-attempt-merge.v1.json`
+- **Decision:** Protocol frozen before implementation. This is the final targeted Agentic RAG experiment: every preregistered quality, abstention, recovery, cost, and latency requirement must pass before any generation study.
+- **Limitations:** The motivating trace and validation comparators are already inspected; Canonical chunk metrics may reject alternatives; Technology quotas depend on existing metadata detection; The locked test remains untouched
+- **Next step:** Implement and test the opt-in merge policy, then execute it once; stop Agentic RAG development if any frozen check fails.
