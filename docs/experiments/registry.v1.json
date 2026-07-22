@@ -339,6 +339,20 @@
       "decision": "Do not select cross-attempt accumulation and stop Agentic RAG development for the current thesis. General Recall@4 0.9630, MRR 0.9444, nDCG@4 0.9493, and zero general FPR were preserved. The policy recovered three positive comparisons, but canonical both-evidence coverage remained 0.2500, side recall reached only 0.5000, and negative-go-rust-react-effect became a false positive, raising focused FPR to 0.1250. It therefore failed three frozen checks. Six new assessor calls cost $0.019962; all 39 planner rewrites were exact cache hits.",
       "limitations": ["The motivating trace and validation comparators were already inspected", "Canonical chunk metrics may reject semantically valid recovered comparisons", "The semantic assessor accepted one ambiguous negative despite explicitly noting the missing framework meaning", "Technology quotas depend on existing metadata detection", "The locked test remained untouched"],
       "nextStep": "Retain the single-pass RAG baseline, preserve the Agentic RAG implementations as documented negative experiments, and move to final baseline verification and thesis writing rather than further architectural tuning."
+    },
+    {
+      "order": 25,
+      "id": "baseline-final-test-v1",
+      "thesisSection": "Final locked retrieval verification",
+      "researchQuestion": "Does the validation-selected single-pass retrieval baseline retain retrieval quality and abstention on the untouched v4 test split?",
+      "status": "in-progress",
+      "variable": "Evaluation split changes from validation to the locked test; every retrieval parameter remains frozen",
+      "controls": ["24 frozen test cases: 12 answerable and 12 unanswerable", "300-word chunks with 80-word overlap", "Gemini Embedding 2 at 1,024 dimensions", "dense cosine retrieval with metadata filtering", "threshold 0.68", "topK=4", "no reranker", "no agentic loop", "single execution"],
+      "metrics": ["Recall@4", "Precision@4", "MRR", "nDCG@4", "unanswerable false-positive rate", "full canonical-evidence coverage", "any canonical-evidence hit rate", "Wilson 95% intervals", "provider errors", "cost"],
+      "artifacts": ["docs/experiments/baseline-final-test.v1.json"],
+      "decision": "Preregistered; no test metric has been computed. The locked configuration will be evaluated once without post-result tuning.",
+      "limitations": ["Only 12 cases per answerability class", "Benchmark approval state is pending-confirmation and AI-assisted rather than independently human-validated", "Retrieval-only verification"],
+      "nextStep": "Commit the dedicated integrity-checking runner, execute the test once, and report the result regardless of whether the frozen guardrails pass."
     }
   ]
 }
