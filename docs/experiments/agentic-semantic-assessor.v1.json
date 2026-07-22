@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "agentic-semantic-assessor-v1",
-  "status": "preregistered",
+  "status": "completed",
   "researchQuestion": "Can an independent semantic evidence assessor distinguish genuinely sufficient frozen retrieval evidence from plausible but irrelevant evidence better than the v3 deterministic score-and-language gate?",
   "hypothesis": "GPT-5.4 Mini will eliminate the deterministic assessor's false-positive evidence decisions while preserving at least 0.90 recall on canonically sufficient evidence states.",
   "role": "Offline component selection before any new end-to-end Agentic RAG integration.",
@@ -46,7 +46,18 @@
     "v3Failure": "The deterministic policy accepted three plausible but irrelevant general-negative retrievals and produced general FPR 0.1111.",
     "judgeCalibrationCaveat": "GPT-5.4 Mini failed the ordinal generation-judge calibration but achieved 0.9375 binary pass agreement; this binary evidence-sufficiency task is separately evaluated rather than assumed valid."
   },
-  "artifacts": ["src/lib/rag/semantic-evidence-assessor.ts", "scripts/test-semantic-evidence-assessor.ts", "scripts/evaluate-semantic-evidence-assessor.ts"],
+  "executionOutcome": {
+    "status": "completed-not-selected",
+    "states": 110,
+    "providerCalls": 48,
+    "observedCostUsd": 0.111858,
+    "p95LatencyMs": 3876.89,
+    "deterministic": { "accuracy": 0.9545454545454546, "recall": 1, "falsePositiveRate": 0.06097560975609756 },
+    "semantic": { "accuracy": 0.9727272727272728, "recall": 1, "falsePositiveRate": 0.036585365853658534 },
+    "failedChecks": ["falsePositiveRate"],
+    "decision": "Do not integrate automatically. Preserve the canonical-label result and adjudicate all three semantic disagreements separately because each may contain genuinely sufficient alternative evidence."
+  },
+  "artifacts": ["src/lib/rag/semantic-evidence-assessor.ts", "scripts/test-semantic-evidence-assessor.ts", "scripts/evaluate-semantic-evidence-assessor.ts", "docs/experiment-results/agentic-semantic-assessor-v1-validation.json", "docs/experiment-results/agentic-semantic-assessor-v1-validation.md"],
   "limitations": [
     "Canonical-evidence labels may mark alternative but genuinely sufficient excerpts as insufficient.",
     "The source states come from a validation trace already inspected during v3 diagnosis.",

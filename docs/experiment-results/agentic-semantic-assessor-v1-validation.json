@@ -1,0 +1,5316 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-semantic-assessor-v1",
+  "createdAt": "2026-07-22T09:15:00.773Z",
+  "split": "validation",
+  "sourceTrace": "docs/experiment-results/agentic-rag-planner-v3-validation.json",
+  "sourceTraceSha256": "9ea6b684ade79d41add445e494335cc0687e9965a7cb37e45be8c50b10bb49ed",
+  "lockedTestTouched": false,
+  "sample": {
+    "states": 110,
+    "positiveLabels": 28,
+    "negativeLabels": 82,
+    "providerEligibleStates": 48
+  },
+  "candidate": {
+    "id": "openrouter-gpt-5.4-mini-medium-semantic-evidence-v1",
+    "model": "openai/gpt-5.4-mini",
+    "expectedResponseModel": "openai/gpt-5.4-mini",
+    "expectedResponseProvider": "OpenAI",
+    "providerOrder": [
+      "openai"
+    ],
+    "reasoningEffort": "medium",
+    "maxOutputTokens": 1000,
+    "inputPriceUsdPerMillionTokens": 0.75,
+    "outputPriceUsdPerMillionTokens": 4.5,
+    "priceObservedOn": "2026-07-21",
+    "priceSource": "https://developers.openai.com/api/docs/models/gpt-5.4-mini"
+  },
+  "results": {
+    "deterministic": {
+      "total": 110,
+      "truePositive": 28,
+      "trueNegative": 77,
+      "falsePositive": 5,
+      "falseNegative": 0,
+      "accuracy": 0.9545454545454546,
+      "precision": 0.8484848484848485,
+      "recall": 1,
+      "specificity": 0.9390243902439024,
+      "falsePositiveRate": 0.06097560975609756,
+      "falseNegativeRate": 0
+    },
+    "semantic": {
+      "total": 110,
+      "truePositive": 28,
+      "trueNegative": 79,
+      "falsePositive": 3,
+      "falseNegative": 0,
+      "accuracy": 0.9727272727272728,
+      "precision": 0.9032258064516129,
+      "recall": 1,
+      "specificity": 0.9634146341463414,
+      "falsePositiveRate": 0.036585365853658534,
+      "falseNegativeRate": 0
+    }
+  },
+  "execution": {
+    "providerCalls": 48,
+    "cacheHits": 0,
+    "deterministicEmptyDecisions": 62,
+    "providerErrors": 0,
+    "observedCostUsd": 0.11185800000000001,
+    "tokens": {
+      "prompt": 77012,
+      "completion": 12022,
+      "reasoning": 5481,
+      "total": 89034
+    },
+    "latencyMs": {
+      "mean": 2568.516875,
+      "p95": 3876.89,
+      "maximum": 5341.81
+    }
+  },
+  "selection": {
+    "selectedForEndToEndIntegration": false,
+    "checks": {
+      "accuracy": true,
+      "recall": true,
+      "falsePositiveRate": false,
+      "exceedsDeterministicAccuracy": true,
+      "reducesDeterministicFalsePositiveRate": true,
+      "providerErrors": true,
+      "cost": true,
+      "p95Latency": true
+    },
+    "failedChecks": [
+      "falsePositiveRate"
+    ]
+  },
+  "observations": [
+    {
+      "stateId": "react-state-snapshot-001::attempt-1",
+      "caseId": "react-state-snapshot-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly explain that React state is a snapshot for a given render, and that calling a setter only schedules the new value for the next render. They explicitly say the state variable’s value does not change within the current render/event handler, so reading it immediately after the setter still returns the current render’s value.",
+        "supportedAspects": [
+          "State behaves like a snapshot in React",
+          "Setting state only takes effect on the next render",
+          "State variable value remains fixed within the current render/event handler",
+          "Event handlers are created from the state of that render"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "dc648d4e5831c175",
+          "language": "React",
+          "section": "Setting state triggers renders (part 4)",
+          "score": 0.7881544220128799
+        },
+        {
+          "rank": 2,
+          "id": "fa2e31e783804974",
+          "language": "React",
+          "section": "Setting state triggers renders (part 3)",
+          "score": 0.7842217934794689
+        },
+        {
+          "rank": 3,
+          "id": "e841e501529c1760",
+          "language": "React",
+          "section": "Setting state triggers renders (part 5)",
+          "score": 0.7799363338779016
+        },
+        {
+          "rank": 4,
+          "id": "5aaaec5c082fd1eb",
+          "language": "React",
+          "section": "Setting state triggers renders (part 1)",
+          "score": 0.7796694840446705
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711578-ZJnacMrmGKxxUtYoCedL",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2210,
+          "completionTokens": 212,
+          "reasoningTokens": 73,
+          "totalTokens": 2422,
+          "costUsd": 0.0026115
+        },
+        "latencyMs": 2304.65,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "react-state-queue-001::attempt-1",
+      "caseId": "react-state-queue-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly show the recommended React pattern for updating the same state variable three times in one event handler: call the state setter three times with updater functions, e.g. `setNumber(n => n + 1)` repeated three times. They also explain that React queues these updaters and applies them in order on the next render.",
+        "supportedAspects": [
+          "React should use functional updater form for repeated state updates",
+          "Three `setNumber(n => n + 1)` calls in one click handler",
+          "React queues updater functions and applies them sequentially",
+          "Using `setNumber(number + 1)` three times would not produce +3"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "d8e41cb2f2fb6bd3",
+          "language": "React",
+          "section": "React batches state updates (part 3)",
+          "score": 0.8102083119266955
+        },
+        {
+          "rank": 2,
+          "id": "2da618e713137e93",
+          "language": "React",
+          "section": "React batches state updates (part 2)",
+          "score": 0.8071351196456665
+        },
+        {
+          "rank": 3,
+          "id": "dc648d4e5831c175",
+          "language": "React",
+          "section": "Setting state triggers renders (part 4)",
+          "score": 0.8004556797931945
+        },
+        {
+          "rank": 4,
+          "id": "7f8bb278413d64cf",
+          "language": "React",
+          "section": "React batches state updates (part 1)",
+          "score": 0.7841307457198841
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711580-8k90P5NCQ2VQ2iOEdws2",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2056,
+          "completionTokens": 224,
+          "reasoningTokens": 66,
+          "totalTokens": 2280,
+          "costUsd": 0.00255
+        },
+        "latencyMs": 3868.87,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "react-effects-001::attempt-1",
+      "caseId": "react-effects-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that values derived from props/state should be calculated during rendering, not with an Effect, and that Effects are appropriate when synchronizing with external systems or performing side effects caused by rendering itself rather than pure data derivation.",
+        "supportedAspects": [
+          "Rendering should be used to derive pure values from props/state",
+          "Effects are not needed for transforming data for rendering",
+          "Effects are appropriate for synchronizing with external systems",
+          "Effects are appropriate for side effects caused by rendering itself"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "97dbc5e2beca8b8d",
+          "language": "React",
+          "section": "What are Effects and how are they different from events? (part 2)",
+          "score": 0.7818965653960707
+        },
+        {
+          "rank": 2,
+          "id": "d500ea68f84c856e",
+          "language": "React",
+          "section": "How to remove unnecessary Effects (part 2)",
+          "score": 0.7799956548972437
+        },
+        {
+          "rank": 3,
+          "id": "1f874a42916c090a",
+          "language": "React",
+          "section": "What are Effects and how are they different from events? (part 3)",
+          "score": 0.773015105050914
+        },
+        {
+          "rank": 4,
+          "id": "e581484c010768d8",
+          "language": "React",
+          "section": "What are Effects and how are they different from events? (part 1)",
+          "score": 0.7710197062332194
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711583-YzTrX5WvVSZYH7cbHOLe",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1864,
+          "completionTokens": 309,
+          "reasoningTokens": 184,
+          "totalTokens": 2173,
+          "costUsd": 0.0027885
+        },
+        "latencyMs": 2930.66,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "react-refs-001::attempt-1",
+      "caseId": "react-refs-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that changing a ref does not trigger a re-render, so values read during render or shown in JSX will not update on the screen. They also explicitly say information used for rendering should be state instead.",
+        "supportedAspects": [
+          "Refs do not trigger re-renders when changed",
+          "Values displayed in the component should use state instead of refs",
+          "Reading ref.current during render makes output unreliable / won’t update the UI"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "8365fd87ae7b55d6",
+          "language": "React",
+          "section": "Adding a ref to your component (part 4)",
+          "score": 0.7978768386572144
+        },
+        {
+          "rank": 2,
+          "id": "d9d4844cdc053dc5",
+          "language": "React",
+          "section": "Reference (part 4)",
+          "score": 0.771346466041307
+        },
+        {
+          "rank": 3,
+          "id": "a6213c65b7d5b16c",
+          "language": "React",
+          "section": "Adding a ref to your component (part 5)",
+          "score": 0.7705245348178099
+        },
+        {
+          "rank": 4,
+          "id": "634aee579c11b679",
+          "language": "React",
+          "section": "Adding a ref to your component (part 1)",
+          "score": 0.7678916713050528
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711586-D3fC6hKbL2ZmFRP9he2l",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2039,
+          "completionTokens": 189,
+          "reasoningTokens": 73,
+          "totalTokens": 2228,
+          "costUsd": 0.00237975
+        },
+        "latencyMs": 2909.86,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "react-out-of-scope-001::attempt-1",
+      "caseId": "react-out-of-scope-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "react-out-of-scope-001::attempt-2",
+      "caseId": "react-out-of-scope-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "c-standard-purpose-001::attempt-1",
+      "caseId": "c-standard-purpose-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpt from the N1570 draft’s ABSTRACT explicitly states the standard’s purpose: to promote portability, reliability, maintainability, and efficient execution of C language programs on a variety of computing systems.",
+        "supportedAspects": [
+          "Purpose of the C language standard",
+          "Specific goals: portability, reliability, maintainability, efficient execution",
+          "Applies to C language programs on a variety of computing systems"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "bfc25f97482d7f7f",
+          "sourceId": "c11-working-draft-n1570",
+          "language": "C",
+          "section": "ABSTRACT",
+          "score": 0.8181197692476727
+        },
+        {
+          "rank": 2,
+          "id": "e42df028d8c70752",
+          "sourceId": "c11-working-draft-n1570",
+          "language": "C",
+          "section": "1.  Scope",
+          "score": 0.7954483767240208
+        },
+        {
+          "rank": 3,
+          "id": "74b12aaa93ec80fa",
+          "sourceId": "c11-working-draft-n1570",
+          "language": "C",
+          "section": "ISO/IEC 9899:201x Committee Draft - April 12, 2011 N1570",
+          "score": 0.7527108665313882
+        },
+        {
+          "rank": 4,
+          "id": "464f0c81d0ad9d8c",
+          "sourceId": "c11-working-draft-n1570",
+          "language": "C",
+          "section": "Programming languages - C",
+          "score": 0.752673430843216
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711589-2v4YGs9nslJyJnC5DBpX",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 792,
+          "completionTokens": 177,
+          "reasoningTokens": 69,
+          "totalTokens": 969,
+          "costUsd": 0.0013905
+        },
+        "latencyMs": 1677.11,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "java-spec-release-001::attempt-1",
+      "caseId": "java-spec-release-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state the Java Language Specification edition as Java SE 26, with specification status listed as Final Release and release date March 2026.",
+        "supportedAspects": [
+          "Java SE 26 Edition",
+          "Specification status: Final Release",
+          "Release: March 2026"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "7d9f9e34c3ab05cf",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "Java SE 26 Edition",
+          "score": 0.8087263681914445
+        },
+        {
+          "rank": 2,
+          "id": "6359b4ecf7adf80f",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "Appendix A. Limited License Grant",
+          "score": 0.8038997130465106
+        },
+        {
+          "rank": 3,
+          "id": "c32e3a3624025980",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "The Java ®  Language Specification",
+          "score": 0.7858983765433539
+        },
+        {
+          "rank": 4,
+          "id": "67e6bd605a08d550",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "1.5.2 Current Preview Language Features",
+          "score": 0.7763058339344849
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711591-UsNhuKYDPVGftj7qKWfT",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 557,
+          "completionTokens": 189,
+          "reasoningTokens": 105,
+          "totalTokens": 746,
+          "costUsd": 0.00126825
+        },
+        "latencyMs": 1716.3,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "java-ods-arraystack-amortized-001::attempt-1",
+      "caseId": "java-ods-arraystack-amortized-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that ArrayStack resize() allocates a new array and copies all n elements, which is O(n) for that single operation, and that across any sequence of updates the total time spent in resize() is O(m), giving O(1) amortized cost per operation. The text also indicates resizes are infrequent, occurring only after many intervening add/remove calls, which is the key amortization idea.",
+        "supportedAspects": [
+          "resize() can take linear time because it copies n elements into a new array",
+          "amortized analysis over a sequence of updates gives total resize cost O(m)",
+          "this yields constant amortized cost per update",
+          "resizes are infrequent relative to the number of updates between them"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "05b87327a4d909da",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "2.1.2 Growing and Shrinking (part 1)",
+          "score": 0.7856114409347792
+        },
+        {
+          "rank": 2,
+          "id": "f490ae8363440df8",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "2.1.3 Summary",
+          "score": 0.7646653610687156
+        },
+        {
+          "rank": 3,
+          "id": "0cdab49da52e20b9",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "Array-Based Lists (part 2)",
+          "score": 0.7492950775980693
+        },
+        {
+          "rank": 4,
+          "id": "848e06c824eaba71",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "2.6.1 Analysis of Growing and Shrinking",
+          "score": 0.7381574491543191
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711593-FgQpRLyDV9n4PgDkU73T",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1366,
+          "completionTokens": 405,
+          "reasoningTokens": 227,
+          "totalTokens": 1771,
+          "costUsd": 0.002847
+        },
+        "latencyMs": 3362.03,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "java-ods-dual-array-deque-001::attempt-1",
+      "caseId": "java-ods-dual-array-deque-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state the balance invariant for DualArrayDeque (front and back each stay within a factor of 3, equivalently each has at least n/4 elements unless n<2) and directly provide the amortized analysis showing that balance() may take O(n) when it shifts elements but total balance() time over m updates is O(m), via the potential method and the fact that enough updates occur between rebalances.",
+        "supportedAspects": [
+          "Balance invariant: front.size() and back.size() differ by at most a factor of 3; each has at least n/4 elements unless size()<2.",
+          "Rebalancing cost: when balance() shifts elements, it moves Θ(n) elements and takes O(n) time.",
+          "Amortized argument: total time spent in balance() over any sequence of add/remove operations is O(m).",
+          "Reason for amortized O(1): each non-balancing update increases potential by at most 1, and a rebalance only occurs after enough updates have accumulated."
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "3564e6768c7dcc9b",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "2.5.1 Balancing (part 1)",
+          "score": 0.7930780581996817
+        },
+        {
+          "rank": 2,
+          "id": "1aebebb6fbe3373e",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "2.5.1 Balancing (part 2)",
+          "score": 0.7802806709791377
+        },
+        {
+          "rank": 3,
+          "id": "d3bd1c4b0c214b42",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "2.5 DualArrayDeque : Building a Deque from Two Stacks (part 3)",
+          "score": 0.7692149847027081
+        },
+        {
+          "rank": 4,
+          "id": "8106a6af6ec188c7",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "2.5 DualArrayDeque : Building a Deque from Two Stacks (part 1)",
+          "score": 0.7507444144034936
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711596-7zVCo8RhqC2PFrwLaidV",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2071,
+          "completionTokens": 462,
+          "reasoningTokens": 228,
+          "totalTokens": 2533,
+          "costUsd": 0.00363225
+        },
+        "latencyMs": 4043.85,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "java-ods-skiplist-analysis-001::attempt-1",
+      "caseId": "java-ods-skiplist-analysis-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state the skiplist space bound and search-path bound for n elements: expected total nodes (space) is 2n + O(log n) including sentinel occurrences, and the expected search-path length is at most 2 log n + O(1), i.e. O(log n).",
+        "supportedAspects": [
+          "Expected space bound: 2n + O(log n) nodes including sentinels (linear space)",
+          "Expected search-path length bound: at most 2 log n + O(1) = O(log n)"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "c29de7e7039ae4b1",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "4.4 Analysis of Skiplists (part 2)",
+          "score": 0.8014965086913333
+        },
+        {
+          "rank": 2,
+          "id": "9f0625aefb865e09",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "4.1 The Basic Structure (part 2)",
+          "score": 0.7937314102149917
+        },
+        {
+          "rank": 3,
+          "id": "07ae531c8893199c",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "4.4 Analysis of Skiplists (part 1)",
+          "score": 0.7928123202064143
+        },
+        {
+          "rank": 4,
+          "id": "891675bfb5a7364e",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "4.4 Analysis of Skiplists (part 3)",
+          "score": 0.7928084385106319
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711600-M2anetdKj8u9DJz2b3yK",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1770,
+          "completionTokens": 253,
+          "reasoningTokens": 111,
+          "totalTokens": 2023,
+          "costUsd": 0.002466
+        },
+        "latencyMs": 2115.19,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "java-ods-linear-probing-001::attempt-1",
+      "caseId": "java-ods-linear-probing-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts explicitly state the assumptions used in the LinearHashTable analysis: all hash values are independently and uniformly distributed, indices are taken modulo the table length, the table maintains load factor q <= t.length/2, and the O(1) expected bound ignores resize() costs.",
+        "supportedAspects": [
+          "Independent and uniform hash values / hash(x) uniform and independent",
+          "Indices taken modulo t.length",
+          "Invariant that the table stays at load factor at most 1/2 (q <= t.length/2)",
+          "The O(1) expected-time claim is stated while ignoring resize() costs"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "e0bdb7083d82a3aa",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "5.2.1 Analysis of Linear Probing (part 4)",
+          "score": 0.8110031736611338
+        },
+        {
+          "rank": 2,
+          "id": "6bb113802966cd73",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "5.2.2 Summary",
+          "score": 0.7904961632584394
+        },
+        {
+          "rank": 3,
+          "id": "ddac1a9599b7ed4f",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "5.2.1 Analysis of Linear Probing (part 1)",
+          "score": 0.7841032765384356
+        },
+        {
+          "rank": 4,
+          "id": "0550dd4cb21de4b8",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "5.2.1 Analysis of Linear Probing (part 3)",
+          "score": 0.7781473824337375
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711602-1FQ7CqRnNn6UdjZ3mstX",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1693,
+          "completionTokens": 348,
+          "reasoningTokens": 199,
+          "totalTokens": 2041,
+          "costUsd": 0.00283575
+        },
+        "latencyMs": 3530.56,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "java-ods-red-black-tree-001::attempt-1",
+      "caseId": "java-ods-red-black-tree-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly explain the correspondence: collapsing red nodes turns a red-black tree into a 2-4 tree, whose height is log(n+1). Each root-to-leaf path in the red-black tree maps to one in the 2-4 tree, and because red nodes cannot be adjacent, the red-black path has at most one red node per black node, giving a total path length bounded by about 2 log n. This is exactly the height-bound argument asked for.",
+        "supportedAspects": [
+          "red-black trees correspond to 2-4 trees by removing red nodes",
+          "the resulting 2-4 tree has height log(n+1)",
+          "each red-black root-to-leaf path maps to a 2-4-tree path",
+          "no-red-edge implies at most one red node between black nodes",
+          "therefore the red-black tree height is at most 2 log n (up to the stated form)"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "e5c3673459462a65",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "9.2.1 Red-Black Trees and 2-4 Trees (part 2)",
+          "score": 0.8051616398832765
+        },
+        {
+          "rank": 2,
+          "id": "b6ed352ad68c11ed",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "9.2.1 Red-Black Trees and 2-4 Trees (part 1)",
+          "score": 0.8034103266852457
+        },
+        {
+          "rank": 3,
+          "id": "f933e69c13b229b7",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "Red-Black Trees (part 2)",
+          "score": 0.7524905990406968
+        },
+        {
+          "rank": 4,
+          "id": "79d9224d486ad448",
+          "sourceId": "open-data-structures-java",
+          "language": "Java",
+          "section": "9.2 RedBlackTree : A Simulated 2-4 Tree (part 1)",
+          "score": 0.7393656455901094
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711606-QHPJSP7UykytrQFKqZDL",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1960,
+          "completionTokens": 392,
+          "reasoningTokens": 176,
+          "totalTokens": 2352,
+          "costUsd": 0.003234
+        },
+        "latencyMs": 3038.51,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "postgresql-license-001::attempt-1",
+      "caseId": "postgresql-license-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "S1 directly states the permission is granted only if the specified copyright notice and the referenced paragraphs appear in all copies.",
+        "supportedAspects": [
+          "Permission to use, copy, modify, and distribute the software and documentation",
+          "Condition: the copyright notice and the listed paragraphs must appear in all copies",
+          "Applies to the PostgreSQL 18.4 manual/legal notice"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "14d8d46a40c5f9df",
+          "sourceId": "postgresql-18-manual",
+          "language": "PostgreSQL / SQL",
+          "section": "Legal Notice",
+          "score": 0.7611314854547337
+        },
+        {
+          "rank": 2,
+          "id": "08d06fd75f62cb7b",
+          "sourceId": "postgresql-18-manual",
+          "language": "PostgreSQL / SQL",
+          "section": "PostgreSQL 18.4 Documentation",
+          "score": 0.7246839784912488
+        },
+        {
+          "rank": 3,
+          "id": "d7d9bd5404edc08c",
+          "sourceId": "postgresql-18-manual",
+          "language": "PostgreSQL / SQL",
+          "section": "Table of Contents (part 2)",
+          "score": 0.7122252590189734
+        },
+        {
+          "rank": 4,
+          "id": "71bc978da787f0ba",
+          "sourceId": "postgresql-18-manual",
+          "language": "PostgreSQL / SQL",
+          "section": "The PostgreSQL Global Development Group",
+          "score": 0.7104773127986468
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711609-vrsk8MEjTJHxxmSpRUot",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1386,
+          "completionTokens": 238,
+          "reasoningTokens": 136,
+          "totalTokens": 1624,
+          "costUsd": 0.0021105
+        },
+        "latencyMs": 2281.36,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "csharp-linq-iqueryable-001::attempt-1",
+      "caseId": "csharp-linq-iqueryable-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "csharp-linq-iqueryable-001::attempt-2",
+      "caseId": "csharp-linq-iqueryable-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "swift-sendable-actors-001::attempt-1",
+      "caseId": "swift-sendable-actors-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "swift-sendable-actors-001::attempt-2",
+      "caseId": "swift-sendable-actors-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "ruby-activerecord-callbacks-001::attempt-1",
+      "caseId": "ruby-activerecord-callbacks-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "ruby-activerecord-callbacks-001::attempt-2",
+      "caseId": "ruby-activerecord-callbacks-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "haskell-stm-retry-001::attempt-1",
+      "caseId": "haskell-stm-retry-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "haskell-stm-retry-001::attempt-2",
+      "caseId": "haskell-stm-retry-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "java-android-activity-lifecycle-001::attempt-1",
+      "caseId": "java-android-activity-lifecycle-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "java-android-activity-lifecycle-001::attempt-2",
+      "caseId": "java-android-activity-lifecycle-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "react-native-flatlist-001::attempt-1",
+      "caseId": "react-native-flatlist-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "react-native-flatlist-001::attempt-2",
+      "caseId": "react-native-flatlist-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "python-django-atomic-001::attempt-1",
+      "caseId": "python-django-atomic-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "python-django-atomic-001::attempt-2",
+      "caseId": "python-django-atomic-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "postgresql-rds-parameter-groups-001::attempt-1",
+      "caseId": "postgresql-rds-parameter-groups-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "postgresql-rds-parameter-groups-001::attempt-2",
+      "caseId": "postgresql-rds-parameter-groups-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "c-msvc-sal-annotations-001::attempt-1",
+      "caseId": "c-msvc-sal-annotations-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "c-msvc-sal-annotations-001::attempt-2",
+      "caseId": "c-msvc-sal-annotations-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "java-se-27-value-classes-001::attempt-1",
+      "caseId": "java-se-27-value-classes-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "java-se-27-value-classes-001::attempt-2",
+      "caseId": "java-se-27-value-classes-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts are from Java SE 26 and discuss general binary compatibility and binary form, but they do not mention value classes or any Java SE 27-specific final syntax rules. There is no direct evidence for the requested value-class rules.",
+        "supportedAspects": [
+          "General Java binary compatibility concepts",
+          "General binary form / class file naming rules"
+        ],
+        "missingAspects": [
+          "Java SE 27-specific documentation",
+          "Final syntax for value classes",
+          "Binary compatibility rules specifically for value classes"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "6dc5ac52459bf0e7",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "Binary Compatibility (part 1)",
+          "score": 0.7137264865045609
+        },
+        {
+          "rank": 2,
+          "id": "c5091a88570ae442",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "Binary Compatibility (part 2)",
+          "score": 0.7087370126168491
+        },
+        {
+          "rank": 3,
+          "id": "942673bbcb4e23bb",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "13.1 The Form of a Binary (part 1)",
+          "score": 0.7077423940355609
+        },
+        {
+          "rank": 4,
+          "id": "2a79a0dc3528f6ba",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "13.1 The Form of a Binary (part 10)",
+          "score": 0.7066422267747771
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711611-emMqnliEwRgVPjt50Yfn",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1879,
+          "completionTokens": 197,
+          "reasoningTokens": 79,
+          "totalTokens": 2076,
+          "costUsd": 0.00229575
+        },
+        "latencyMs": 2200.33,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "postgresql-19-release-001::attempt-1",
+      "caseId": "postgresql-19-release-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "postgresql-19-release-001::attempt-2",
+      "caseId": "postgresql-19-release-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "cpp-move-constructor-001::attempt-1",
+      "caseId": "cpp-move-constructor-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly define when a non-template constructor is a move constructor and list the allowed first-parameter forms, along with the requirement that any additional parameters have default arguments.",
+        "supportedAspects": [
+          "A non-template constructor is a move constructor if its first parameter is X&&, const X&&, volatile X&&, or const volatile X&&",
+          "Any additional parameters must have default arguments"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "f3fef32688393442",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "11.4.5.3 Copy/move constructors (part 1)",
+          "score": 0.769461992854638
+        },
+        {
+          "rank": 2,
+          "id": "d589b6d93cec9884",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "N5046 (part 2)",
+          "score": 0.732278224689961
+        },
+        {
+          "rank": 3,
+          "id": "3b99ea6961e561a8",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "move construction",
+          "score": 0.7267259999950954
+        },
+        {
+          "rank": 4,
+          "id": "8f36a560f5cc3185",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "N5046 (part 4)",
+          "score": 0.705893499477953
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711613-hhF7zWhHi8FCi5X60RiW",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1498,
+          "completionTokens": 208,
+          "reasoningTokens": 101,
+          "totalTokens": 1706,
+          "costUsd": 0.0020595
+        },
+        "latencyMs": 2547.34,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "cpp-structured-binding-size-001::attempt-1",
+      "caseId": "cpp-structured-binding-size-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that when there is no structured binding pack, the number of elements in the sb-identifier-list shall be equal to the structured binding size of E. That is the exact constraint asked about.",
+        "supportedAspects": [
+          "No structured binding pack => the number of names must equal the structured binding size of E"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "6a293bfec5a2f468",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "[dcl.struct.bind] (part 2)",
+          "score": 0.8077574293475626
+        },
+        {
+          "rank": 2,
+          "id": "c1e0f25df113a1c5",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "[dcl.struct.bind] (part 1)",
+          "score": 0.7949882934684863
+        },
+        {
+          "rank": 3,
+          "id": "0b5bf6628eba4f78",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "N5046 (part 1)",
+          "score": 0.7632330839303823
+        },
+        {
+          "rank": 4,
+          "id": "1f7db8cd510bb4fc",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "N5046 (part 3)",
+          "score": 0.7352217232305388
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711616-xKA9VFGtXxuO828t5DrA",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1943,
+          "completionTokens": 220,
+          "reasoningTokens": 125,
+          "totalTokens": 2163,
+          "costUsd": 0.00244725
+        },
+        "latencyMs": 2167.61,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "javascript-promise-all-001::attempt-1",
+      "caseId": "javascript-promise-all-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that Promise.all rejects as soon as the first input promise rejects, while Promise.allSettled waits for all promises to settle and fulfills with an array of fulfillment/rejection state snapshots.",
+        "supportedAspects": [
+          "Promise.all rejects on the first rejection",
+          "Promise.allSettled waits for all promises to settle",
+          "Promise.allSettled returns fulfillment/rejection state snapshots"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "8a30e186ac0e05cd",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "language": "JavaScript",
+          "section": "27.2.4.2 Promise.allSettled ( iterable )",
+          "score": 0.7070195853640585
+        },
+        {
+          "rank": 2,
+          "id": "51b0124babe774ef",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "language": "JavaScript",
+          "section": "27.2.4.1 Promise.all ( iterable )",
+          "score": 0.6825035220230145
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711618-UxBrPNFDNaN78HGDv911",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 726,
+          "completionTokens": 208,
+          "reasoningTokens": 103,
+          "totalTokens": 934,
+          "costUsd": 0.0014805
+        },
+        "latencyMs": 1910.1,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "javascript-array-filter-holes-001::attempt-1",
+      "caseId": "javascript-array-filter-holes-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that Array.prototype.filter calls its callback only for elements that actually exist, not for missing elements, and that elements appended after filtering begins will not be visited.",
+        "supportedAspects": [
+          "Missing array elements are not passed to the callback.",
+          "Elements appended after filter starts are not visited by the callback."
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "afb7352d6e16f7ac",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "language": "JavaScript",
+          "section": "23.1.3.8 Array.prototype.filter ( callback [ , thisArg ] ) (part 1)",
+          "score": 0.7537151075140522
+        },
+        {
+          "rank": 2,
+          "id": "99c35b24cb3ad310",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "language": "JavaScript",
+          "section": "23.1.3.8 Array.prototype.filter ( callback [ , thisArg ] ) (part 2)",
+          "score": 0.7466770547495205
+        },
+        {
+          "rank": 3,
+          "id": "4316b59fbdb496ff",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "language": "JavaScript",
+          "section": "23.1.3.6 Array.prototype.every ( callback [ , thisArg ] ) (part 2)",
+          "score": 0.6901578894126214
+        },
+        {
+          "rank": 4,
+          "id": "db650a6fd02a5dba",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "language": "JavaScript",
+          "section": "23.1.3.15 Array.prototype.forEach ( callback [ , thisArg ] ) (part 1)",
+          "score": 0.6821657215196276
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711620-0qr77hytERVF7YU41Jwb",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1745,
+          "completionTokens": 154,
+          "reasoningTokens": 62,
+          "totalTokens": 1899,
+          "costUsd": 0.00200175
+        },
+        "latencyMs": 1577.27,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "kotlin-smart-cast-001::attempt-1",
+      "caseId": "kotlin-smart-cast-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly explain that Kotlin smart casts are a limited form of flow-sensitive typing that let the compiler use a more specific compile-time type when runtime checks guarantee it, thereby avoiding unnecessary explicit casts.",
+        "supportedAspects": [
+          "Smart casts are flow-sensitive typing",
+          "They change compile-time types based on control flow/data flow",
+          "They avoid unneeded explicit casts when runtime type is already guaranteed"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "b30367d4e4529cb1",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "14.1 Smart casts",
+          "score": 0.7700448618688932
+        },
+        {
+          "rank": 2,
+          "id": "e40da1bf04136d60",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "14.1.2 Smart cast types (part 1)",
+          "score": 0.7563784010386044
+        },
+        {
+          "rank": 3,
+          "id": "12994ecb468378a5",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "Example:",
+          "score": 0.7443589079603815
+        },
+        {
+          "rank": 4,
+          "id": "153ed030f8b4f934",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "14.1.3 Smart cast sink stability",
+          "score": 0.7316861175652732
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711622-k6rimn75SzOva1rX3oBF",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1171,
+          "completionTokens": 168,
+          "reasoningTokens": 62,
+          "totalTokens": 1339,
+          "costUsd": 0.00163425
+        },
+        "latencyMs": 3782.39,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "kotlin-not-null-assertion-001::attempt-1",
+      "caseId": "kotlin-not-null-assertion-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "S1 directly states the behavior of Kotlin's not-null assertion operator (!!) on a nullable expression: it checks for null at runtime and throws a runtime exception if the value is null; otherwise it yields the expression’s value.",
+        "supportedAspects": [
+          "When applied to a nullable expression, !! performs a runtime null check",
+          "It throws a runtime exception if the expression evaluates to null",
+          "If the value is not null, the expression evaluates to that value",
+          "The resulting type is the non-nullable variant of the original type"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "28d637b8f836927c",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "8.19 Not-null assertion expressions",
+          "score": 0.8165762443502464
+        },
+        {
+          "rank": 2,
+          "id": "de8e8d15fe992755",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "2.1.8 Nullable types",
+          "score": 0.7004484724092535
+        },
+        {
+          "rank": 3,
+          "id": "d08840d67f98cbfc",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "8.12 Elvis operator expressions",
+          "score": 0.6997218553249804
+        },
+        {
+          "rank": 4,
+          "id": "30450b4bcd14ca6a",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "2.1. TYPE KINDS",
+          "score": 0.6969063203556228
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711625-dWg9OK1HbBHqUJBMNSsU",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 818,
+          "completionTokens": 208,
+          "reasoningTokens": 74,
+          "totalTokens": 1026,
+          "costUsd": 0.0015495
+        },
+        "latencyMs": 2005.92,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "bash-pipeline-stderr-001::attempt-1",
+      "caseId": "bash-pipeline-stderr-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "S1 directly explains that Bash `|&` sends command1’s standard output and standard error through the pipe to command2’s standard input, equivalent to `2>&1 |`, and states that the implicit stderr-to-stdout redirection is applied after any redirections specified by command1.",
+        "supportedAspects": [
+          "Meaning of `|&` as piping both stdout and stderr",
+          "Equivalence to `2>&1 |`",
+          "Timing of the implicit redirection relative to command1 redirections"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "416d83385eea32ee",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "3.2.3 Pipelines (part 1)",
+          "score": 0.7843050173446372
+        },
+        {
+          "rank": 2,
+          "id": "7d10c492d87ed9f3",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "Appendix B Major Differences From The Bourne Shell (part 7)",
+          "score": 0.734206656805139
+        },
+        {
+          "rank": 3,
+          "id": "7732c1555b61ac8f",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "3.2.3 Pipelines (part 2)",
+          "score": 0.7275811365855458
+        },
+        {
+          "rank": 4,
+          "id": "c4cdac94929c34e1",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "3.6.4 Redirecting Standard Output and Standard Error",
+          "score": 0.7242985623551538
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711627-d4KeEfdWo0lZG5NVIQd7",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1838,
+          "completionTokens": 212,
+          "reasoningTokens": 82,
+          "totalTokens": 2050,
+          "costUsd": 0.0023325
+        },
+        "latencyMs": 1992.21,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "bash-heredoc-quoted-delimiter-001::attempt-1",
+      "caseId": "bash-heredoc-quoted-delimiter-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The Bash manual excerpt directly states that if any part of the here-document delimiter word is quoted, the resulting here-document lines are not expanded; if unquoted, the body is expanded like a double-quoted string with parameter, command, and arithmetic expansion.",
+        "supportedAspects": [
+          "Quoted delimiter disables expansion in the here-document body",
+          "Unquoted delimiter allows parameter, command, and arithmetic expansion",
+          "Delimiter is subject to quote removal when quoted"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "3d1ef89cc9c7c9a4",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "3.6.6 Here Documents",
+          "score": 0.7904519247008094
+        },
+        {
+          "rank": 2,
+          "id": "94bc61ca7b8ad6dd",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "3.6.7 Here Strings",
+          "score": 0.7399271827046178
+        },
+        {
+          "rank": 3,
+          "id": "bf6e1e405027ab98",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "Table of Contents (part 2)",
+          "score": 0.7202521726766227
+        },
+        {
+          "rank": 4,
+          "id": "c76822f06c97061d",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "3.1.2.4 ANSI-C Quoting",
+          "score": 0.7125479773269899
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711629-778was27KhLbHsM7wncE",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2266,
+          "completionTokens": 224,
+          "reasoningTokens": 107,
+          "totalTokens": 2490,
+          "costUsd": 0.0027075
+        },
+        "latencyMs": 3876.89,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "go-recover-conditions-001::attempt-1",
+      "caseId": "go-recover-conditions-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state both conditions: recover stops the panicking sequence when it is called directly by a deferred function during a panic on the same goroutine and returns normally; it returns nil when the goroutine is not panicking or when recover is not called directly by a deferred function.",
+        "supportedAspects": [
+          "recover stops a panicking sequence when called directly by a deferred function during a panic on the same goroutine",
+          "the panicking sequence stops if that deferred function returns normally without starting a new panic",
+          "recover returns nil when the goroutine is not panicking",
+          "recover returns nil when it was not called directly by a deferred function"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "9cb23ea407465d5c",
+          "sourceId": "go-language-specification",
+          "language": "Go",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 163)",
+          "score": 0.755125645677265
+        },
+        {
+          "rank": 2,
+          "id": "6c20e64faa491ac9",
+          "sourceId": "go-language-specification",
+          "language": "Go",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 162)",
+          "score": 0.7029797896263285
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711633-Jyd3KwXnFhcvmlcv4EQF",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1154,
+          "completionTokens": 209,
+          "reasoningTokens": 52,
+          "totalTokens": 1363,
+          "costUsd": 0.001806
+        },
+        "latencyMs": 1981.65,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "cpp-cmake-targets-001::attempt-1",
+      "caseId": "cpp-cmake-targets-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "cpp-cmake-targets-001::attempt-2",
+      "caseId": "cpp-cmake-targets-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "javascript-express-router-001::attempt-1",
+      "caseId": "javascript-express-router-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "javascript-express-router-001::attempt-2",
+      "caseId": "javascript-express-router-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "kotlin-gradle-plugin-001::attempt-1",
+      "caseId": "kotlin-gradle-plugin-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "kotlin-gradle-plugin-001::attempt-2",
+      "caseId": "kotlin-gradle-plugin-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "bash-zsh-completion-001::attempt-1",
+      "caseId": "bash-zsh-completion-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "bash-zsh-completion-001::attempt-2",
+      "caseId": "bash-zsh-completion-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The retrieved excerpts are about GNU Bash programmable completion, not Zsh. They do not provide direct evidence for how Zsh's zstyle and compinit configure completion matching.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "Zsh-specific behavior of compinit",
+          "Zsh-specific behavior of zstyle",
+          "How completion matching is configured in Zsh",
+          "Any direct explanation of matching rules or styles in Zsh"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "7002991f84ef4c00",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "8.6 Programmable Completion (part 3)",
+          "score": 0.6973773009574931
+        },
+        {
+          "rank": 2,
+          "id": "2bc6aed658a84a48",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "8.6 Programmable Completion (part 4)",
+          "score": 0.6930935717502559
+        },
+        {
+          "rank": 3,
+          "id": "02458611abf091e1",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "match-hidden-files",
+          "score": 0.6925510193396252
+        },
+        {
+          "rank": 4,
+          "id": "c24098e9defbe98d",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "8.6 Programmable Completion (part 2)",
+          "score": 0.6897214430329556
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711635-2qVqwVlPRnidtKPN1s13",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1746,
+          "completionTokens": 178,
+          "reasoningTokens": 72,
+          "totalTokens": 1924,
+          "costUsd": 0.0021105
+        },
+        "latencyMs": 1852.12,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "bash-fish-argparse-001::attempt-1",
+      "caseId": "bash-fish-argparse-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "bash-fish-argparse-001::attempt-2",
+      "caseId": "bash-fish-argparse-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "python-fastapi-dependencies-001::attempt-1",
+      "caseId": "python-fastapi-dependencies-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "python-fastapi-dependencies-001::attempt-2",
+      "caseId": "python-fastapi-dependencies-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "typescript-angular-onpush-001::attempt-1",
+      "caseId": "typescript-angular-onpush-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "typescript-angular-onpush-001::attempt-2",
+      "caseId": "typescript-angular-onpush-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "typescript-nestjs-guards-001::attempt-1",
+      "caseId": "typescript-nestjs-guards-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "typescript-nestjs-guards-001::attempt-2",
+      "caseId": "typescript-nestjs-guards-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpt only explains TypeScript decorator metadata and the reflect-metadata API. It does not mention NestJS, guards, ExecutionContext, or how route metadata is accessed in a guard.",
+        "supportedAspects": [
+          "TypeScript decorator metadata exists at runtime via reflect-metadata"
+        ],
+        "missingAspects": [
+          "NestJS guard behavior",
+          "ExecutionContext usage",
+          "Inspecting route metadata",
+          "Any NestJS-specific metadata retrieval example"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "a17b55f08fad9971",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Introduction (part 11)",
+          "score": 0.6801023201478167
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711637-bkdIyFCepO35LvIu3K0S",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 766,
+          "completionTokens": 186,
+          "reasoningTokens": 80,
+          "totalTokens": 952,
+          "costUsd": 0.0014115
+        },
+        "latencyMs": 1687.91,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "rust-serde-custom-001::attempt-1",
+      "caseId": "rust-serde-custom-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "rust-serde-custom-001::attempt-2",
+      "caseId": "rust-serde-custom-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "python-list-comprehension-001::attempt-1",
+      "caseId": "python-list-comprehension-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly define a list comprehension’s structure (brackets, an expression, a for clause, and optional additional for/if clauses) and state that it produces a new list.",
+        "supportedAspects": [
+          "Structure: brackets containing an expression followed by a for clause",
+          "Optional additional for/if clauses",
+          "Produces a new list"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "3ef8eea7f0ae00c6",
+          "sourceId": "python-tutorial",
+          "language": "Python",
+          "section": "5.1. More on Lists¶ (part 5)",
+          "score": 0.7181045237432283
+        },
+        {
+          "rank": 2,
+          "id": "bc13cfcda489092e",
+          "sourceId": "python-language-reference",
+          "language": "Python",
+          "section": "6.1. Arithmetic conversions¶ (part 8)",
+          "score": 0.707459048694343
+        },
+        {
+          "rank": 3,
+          "id": "e488724cf26c7e70",
+          "sourceId": "python-tutorial",
+          "language": "Python",
+          "section": "5.1. More on Lists¶ (part 4)",
+          "score": 0.6958291837467486
+        },
+        {
+          "rank": 4,
+          "id": "6e1439f6ff35b397",
+          "sourceId": "python-tutorial",
+          "language": "Python",
+          "section": "5.1. More on Lists¶ (part 6)",
+          "score": 0.691893576993099
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711639-Ew0TK71G4iihtm48qRL0",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2516,
+          "completionTokens": 189,
+          "reasoningTokens": 93,
+          "totalTokens": 2705,
+          "costUsd": 0.0027375
+        },
+        "latencyMs": 2085.87,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "python-parameter-kinds-001::attempt-1",
+      "caseId": "python-parameter-kinds-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that parameters before / are positional-only, parameters between / and * are positional-or-keyword, and parameters after * are keyword-only. They also include an annotated function signature showing this division.",
+        "supportedAspects": [
+          "/ separates positional-only parameters from later parameters",
+          "* introduces keyword-only parameters",
+          "parameters between / and * are positional-or-keyword",
+          "annotated example signature illustrates the partition"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "2ac32a0f6f00def6",
+          "sourceId": "python-tutorial",
+          "language": "Python",
+          "section": "4.1. if Statements¶ (part 22)",
+          "score": 0.8013133289805059
+        },
+        {
+          "rank": 2,
+          "id": "e9fd3499dd4b6c29",
+          "sourceId": "python-tutorial",
+          "language": "Python",
+          "section": "4.1. if Statements¶ (part 23)",
+          "score": 0.7778652624234381
+        },
+        {
+          "rank": 3,
+          "id": "f0ac85c074e06f93",
+          "sourceId": "python-tutorial",
+          "language": "Python",
+          "section": "4.1. if Statements¶ (part 24)",
+          "score": 0.7590169272303061
+        },
+        {
+          "rank": 4,
+          "id": "dd86f816909e07b5",
+          "sourceId": "python-tutorial",
+          "language": "Python",
+          "section": "4.1. if Statements¶ (part 21)",
+          "score": 0.7394754685505252
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711641-2wwkDTnGBOrfgcEJMSmy",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2279,
+          "completionTokens": 212,
+          "reasoningTokens": 101,
+          "totalTokens": 2491,
+          "costUsd": 0.00266325
+        },
+        "latencyMs": 2262.95,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "typescript-conditional-distribution-001::attempt-1",
+      "caseId": "typescript-conditional-distribution-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that conditional types become distributive when a generic type parameter is given a union type, and that this can be prevented by wrapping each side of the `extends` clause in square brackets.",
+        "supportedAspects": [
+          "Distributive conditional types act on a generic type parameter with a union input",
+          "The conditional is applied separately to each union member",
+          "Distribution can be prevented by surrounding both sides of `extends` with square brackets"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "ba75bdbb5f439f64",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Conditional Types (part 3)",
+          "score": 0.77513132563223
+        },
+        {
+          "rank": 2,
+          "id": "7c3ac29f1b73f204",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Distributive Conditional Types (part 6)",
+          "score": 0.7642210881138745
+        },
+        {
+          "rank": 3,
+          "id": "31d0eeb40090e657",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Distributive Conditional Types (part 1)",
+          "score": 0.7591296376184035
+        },
+        {
+          "rank": 4,
+          "id": "58f1eb66c455cd63",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Distributive Conditional Types (part 3)",
+          "score": 0.7532031445111044
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711643-U24AqmehRVapyBzIer9j",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2126,
+          "completionTokens": 226,
+          "reasoningTokens": 108,
+          "totalTokens": 2352,
+          "costUsd": 0.0026115
+        },
+        "latencyMs": 2527.87,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "typescript-keyof-001::attempt-1",
+      "caseId": "typescript-keyof-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "S1 directly states that TypeScript’s keyof operator takes an object type and produces a string or numeric literal union of its keys, which answers the question. S2 also supports that keyof yields the permitted property names for a type.",
+        "supportedAspects": [
+          "keyof applies to object types",
+          "it produces a union of the object's keys",
+          "the union may be string or numeric literal keys"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "a161a4852f8d8b26",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "The keyof type operator",
+          "score": 0.8279160666030474
+        },
+        {
+          "rank": 2,
+          "id": "c75d42a3cf8525e6",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "keyof and Lookup Types (part 1)",
+          "score": 0.7870768510945381
+        },
+        {
+          "rank": 3,
+          "id": "7846f933bbc30ba8",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Support number and symbol named properties with keyof and mapped types (part 3)",
+          "score": 0.7535277667900389
+        },
+        {
+          "rank": 4,
+          "id": "37f3c046f0b55ffb",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Support number and symbol named properties with keyof and mapped types (part 2)",
+          "score": 0.7493196014067267
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711646-c9DC4os2mtYHB9naWcyB",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2058,
+          "completionTokens": 201,
+          "reasoningTokens": 94,
+          "totalTokens": 2259,
+          "costUsd": 0.002448
+        },
+        "latencyMs": 2051.44,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "rust-ownership-move-clone-001::attempt-1",
+      "caseId": "rust-ownership-move-clone-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly describe both behaviors for `String`: a move copies only the stack metadata (pointer, length, capacity) and does not copy the heap contents, while `clone` performs a deep copy of the heap data and leaves both values valid. They also note the performance implication that cloning can be expensive.",
+        "supportedAspects": [
+          "Move transfers ownership by copying only stack-held metadata for `String`",
+          "Move does not copy the heap contents",
+          "Cloning deeply copies the heap data of a `String`",
+          "After cloning, both values remain valid",
+          "Clone may be more expensive than move"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "8762e3a7c9bff3ec",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "What Is Ownership? (part 17)",
+          "score": 0.7779034369744778
+        },
+        {
+          "rank": 2,
+          "id": "0983fffbbbb70128",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "What Is Ownership? (part 16)",
+          "score": 0.7686493031347273
+        },
+        {
+          "rank": 3,
+          "id": "e04be5c1f7fdcd2e",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "What Is Ownership? (part 12)",
+          "score": 0.7661826060165838
+        },
+        {
+          "rank": 4,
+          "id": "468b97d6cfe0b192",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "What Is Ownership? (part 11)",
+          "score": 0.7627449016492895
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711648-SaW3qQQHcxA2Zt2cxezY",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1969,
+          "completionTokens": 272,
+          "reasoningTokens": 124,
+          "totalTokens": 2241,
+          "costUsd": 0.00270075
+        },
+        "latencyMs": 2870.2,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "rust-mutable-reference-rules-001::attempt-1",
+      "caseId": "rust-mutable-reference-rules-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state the key rule for active mutable references: while a mutable reference is live, there must be no other references to the same value, and no overlapping immutable/mutable borrows. The Rust Reference excerpt also gives the aliasing requirement that the referenced memory not be read or written by any non-derived pointer while the mutable reference is live.",
+        "supportedAspects": [
+          "A mutable reference excludes other references to the same value while it is active/live",
+          "Multiple mutable borrows of the same value cannot overlap",
+          "Immutable and mutable borrows cannot overlap",
+          "While live, the referenced memory must not be read or written by pointers not derived from that mutable reference"
+        ],
+        "missingAspects": [
+          "Exact formal definition of when a reference is considered \"active\" or \"live\"",
+          "Exception details such as UnsafeCell/interior mutability caveats"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "4eafffc76b0ff35e",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "References and Borrowing (part 5)",
+          "score": 0.7658803231648312
+        },
+        {
+          "rank": 2,
+          "id": "47b9164f06017165",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "References and Borrowing (part 6)",
+          "score": 0.7642975244488119
+        },
+        {
+          "rank": 3,
+          "id": "7d5542f54b585ec5",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "References and Borrowing (part 4)",
+          "score": 0.7580430595681508
+        },
+        {
+          "rank": 4,
+          "id": "f26de57c09b9fe01",
+          "sourceId": "rust-reference",
+          "language": "Rust",
+          "section": "Pointed-to bytes (part 3)",
+          "score": 0.7563956760845028
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711650-jmcvOnVl8Cke9ud38jhG",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2101,
+          "completionTokens": 615,
+          "reasoningTokens": 424,
+          "totalTokens": 2716,
+          "costUsd": 0.00434325
+        },
+        "latencyMs": 5341.81,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "python-pandas-groupby-001::attempt-1",
+      "caseId": "python-pandas-groupby-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "python-pandas-groupby-001::attempt-2",
+      "caseId": "python-pandas-groupby-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "python-celery-retry-001::attempt-1",
+      "caseId": "python-celery-retry-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "python-celery-retry-001::attempt-2",
+      "caseId": "python-celery-retry-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "typescript-vite-glob-001::attempt-1",
+      "caseId": "typescript-vite-glob-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "typescript-vite-glob-001::attempt-2",
+      "caseId": "typescript-vite-glob-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "typescript-prisma-transaction-001::attempt-1",
+      "caseId": "typescript-prisma-transaction-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "typescript-prisma-transaction-001::attempt-2",
+      "caseId": "typescript-prisma-transaction-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "rust-bevy-query-001::attempt-1",
+      "caseId": "rust-bevy-query-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "rust-bevy-query-001::attempt-2",
+      "caseId": "rust-bevy-query-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "rust-diesel-querydsl-001::attempt-1",
+      "caseId": "rust-diesel-querydsl-001",
+      "group": "general",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "rust-diesel-querydsl-001::attempt-2",
+      "caseId": "rust-diesel-querydsl-001",
+      "group": "general",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "compare-c-rust-heap-memory::attempt-1",
+      "caseId": "compare-c-rust-heap-memory",
+      "group": "focused-positive",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts give direct evidence about Rust’s heap management and deallocation (ownership, scope-based automatic drop), but they do not provide direct evidence about C’s heap management or freeing behavior. The comparison requested needs both sides explicitly supported.",
+        "supportedAspects": [
+          "Rust uses ownership rules checked by the compiler",
+          "Rust allocates heap memory at runtime for growable data",
+          "Rust automatically returns heap memory when the owning variable goes out of scope via drop",
+          "Languages without GC may require explicit freeing (general statement)"
+        ],
+        "missingAspects": [
+          "Direct evidence for C heap allocation and deallocation practices",
+          "A direct C-vs-Rust comparison of how heap memory is released"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "8238e2e53432bd18",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "What Is Ownership? (part 9)",
+          "score": 0.7510042964208338
+        },
+        {
+          "rank": 2,
+          "id": "d2e6b82c3bebee4c",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "What Is Ownership? (part 1)",
+          "score": 0.734653676454911
+        },
+        {
+          "rank": 3,
+          "id": "ead1311e43db94c9",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "What Is Ownership? (part 2)",
+          "score": 0.7338034826610366
+        },
+        {
+          "rank": 4,
+          "id": "d715b69606a84bb9",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "What Is Ownership? (part 10)",
+          "score": 0.7270713534365488
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711656-mtpv8Ud5ErLDxV3Jp0c5",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1950,
+          "completionTokens": 266,
+          "reasoningTokens": 110,
+          "totalTokens": 2216,
+          "costUsd": 0.0026595
+        },
+        "latencyMs": 2424.71,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-c-rust-heap-memory::attempt-2",
+      "caseId": "compare-c-rust-heap-memory",
+      "group": "focused-positive",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts provide direct evidence for C heap allocation and explicit freeing, but তারা contain no direct evidence about Rust’s heap-memory management or release model. A C-vs-Rust comparison cannot be answered accurately from these excerpts alone.",
+        "supportedAspects": [
+          "C uses manual heap allocation with malloc/calloc and explicit free()",
+          "C heap memory can leak if not explicitly freed",
+          "Dynamically allocated C memory is freed when the program ends, but explicit free() is recommended"
+        ],
+        "missingAspects": [
+          "Rust heap allocation and deallocation behavior",
+          "How Rust releases heap memory (e.g., ownership/drop model)",
+          "Direct comparison of C vs Rust memory management"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "ebd5f7d6ce28eec3",
+          "sourceId": "beej-c-tutorial",
+          "language": "C",
+          "section": "12.1 Allocating and Deallocating, malloc() and free() (part 1)",
+          "score": 0.779362992591468
+        },
+        {
+          "rank": 2,
+          "id": "885d375ea9a7664d",
+          "sourceId": "beej-c-tutorial",
+          "language": "C",
+          "section": "Manual Memory Allocation (part 1)",
+          "score": 0.7699838425454949
+        },
+        {
+          "rank": 3,
+          "id": "4520164697062a25",
+          "sourceId": "gnu-c-library-2-42-manual",
+          "language": "C",
+          "section": "3.2.3 Unconstrained Allocation",
+          "score": 0.7351403840370109
+        },
+        {
+          "rank": 4,
+          "id": "e70ccde3b28bec58",
+          "sourceId": "beej-c-library-reference",
+          "language": "C",
+          "section": "Description",
+          "score": 0.7346471262690204
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711658-o75kZGWI9DmEyvZh0mLi",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1312,
+          "completionTokens": 214,
+          "reasoningTokens": 59,
+          "totalTokens": 1526,
+          "costUsd": 0.001947
+        },
+        "latencyMs": 2378.38,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-c-cpp-dynamic-deallocation::attempt-1",
+      "caseId": "compare-c-cpp-dynamic-deallocation",
+      "group": "focused-positive",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts provide direct evidence for releasing dynamically allocated memory in C via free(), but they do not include any direct evidence about how dynamically allocated objects are released in C++ (for example, delete/delete[] or equivalent).",
+        "supportedAspects": [
+          "In C, memory obtained with malloc() is released with free()",
+          "free() deallocates a block and makes it available for reuse",
+          "Dynamic memory should be explicitly freed when no longer needed"
+        ],
+        "missingAspects": [
+          "How dynamically allocated objects are released in C++",
+          "Any C++-specific deallocation mechanism or object lifetime rule"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "ebd5f7d6ce28eec3",
+          "sourceId": "beej-c-tutorial",
+          "language": "C",
+          "section": "12.1 Allocating and Deallocating, malloc() and free() (part 1)",
+          "score": 0.7248474552616184
+        },
+        {
+          "rank": 2,
+          "id": "885d375ea9a7664d",
+          "sourceId": "beej-c-tutorial",
+          "language": "C",
+          "section": "Manual Memory Allocation (part 1)",
+          "score": 0.7217490039080185
+        },
+        {
+          "rank": 3,
+          "id": "a7578e6ebf8efe8f",
+          "sourceId": "gnu-c-library-2-42-manual",
+          "language": "C",
+          "section": "3.2.1 Memory Allocation in C Programs",
+          "score": 0.7009778894090178
+        },
+        {
+          "rank": 4,
+          "id": "8d797f1058a89db7",
+          "sourceId": "gnu-c-library-2-42-manual",
+          "language": "C",
+          "section": "3.2.3.3 Freeing Memory Allocated with malloc (part 1)",
+          "score": 0.6924377495618516
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711661-tFfiF2letUIslOJoDan9",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1615,
+          "completionTokens": 234,
+          "reasoningTokens": 93,
+          "totalTokens": 1849,
+          "costUsd": 0.00226425
+        },
+        "latencyMs": 2300.23,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-c-cpp-dynamic-deallocation::attempt-2",
+      "caseId": "compare-c-cpp-dynamic-deallocation",
+      "group": "focused-positive",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts provide direct evidence for C++ object release via delete/delete[] and deallocation functions, but they do not include any C documentation showing how dynamically allocated objects are released in C. The question asks about both C and C++, so the evidence is incomplete.",
+        "supportedAspects": [
+          "In C++, dynamically allocated objects created by new are released with delete for single objects and delete[] for arrays.",
+          "C++ delete invokes the destructor before calling the corresponding deallocation function when applicable.",
+          "The selected deallocation function is operator delete or operator delete[] in C++."
+        ],
+        "missingAspects": [
+          "Direct evidence for how dynamically allocated objects are released in C.",
+          "Any C-specific function or mechanism for releasing allocated storage (for example, free) with direct documentation evidence.",
+          "A direct comparison covering both C and C++ release mechanisms."
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "4fb52ba10c7d7ea7",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "7.6.2.9 Delete (part 3)",
+          "score": 0.7499067741369148
+        },
+        {
+          "rank": 2,
+          "id": "12d5985b8413700f",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "7.6.2.9 Delete (part 2)",
+          "score": 0.7467643736331492
+        },
+        {
+          "rank": 3,
+          "id": "1051b39e511a665a",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "7.6.2.9 Delete (part 1)",
+          "score": 0.7443641777152692
+        },
+        {
+          "rank": 4,
+          "id": "d29e29ae93505082",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "N5046 (part 3)",
+          "score": 0.7380839766036883
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711663-YhZ7ZDApm7HzUNyuBtTJ",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1823,
+          "completionTokens": 259,
+          "reasoningTokens": 72,
+          "totalTokens": 2082,
+          "costUsd": 0.00253275
+        },
+        "latencyMs": 2394.34,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-java-kotlin-nullability::attempt-1",
+      "caseId": "compare-java-kotlin-nullability",
+      "group": "focused-positive",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts directly explain Kotlin nullable types and null references, but they contain no direct evidence about how Java represents nullable references, so a Java-vs-Kotlin comparison cannot be answered accurately from the shown material alone.",
+        "supportedAspects": [
+          "Kotlin uses separate nullable and nonnullable type universes",
+          "Kotlin marks a nullable type with T?",
+          "In Kotlin, null is only a valid value for nullable types"
+        ],
+        "missingAspects": [
+          "Direct evidence of Java's representation of nullable references",
+          "Direct comparison between Java and Kotlin nullability semantics"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "de8e8d15fe992755",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "2.1.8 Nullable types",
+          "score": 0.7295383379276575
+        },
+        {
+          "rank": 2,
+          "id": "7be1556b0f36dcd8",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "8.1.7 Null literal",
+          "score": 0.7156678267348515
+        },
+        {
+          "rank": 3,
+          "id": "7a10d737e9d75bdf",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "Nullability lozenge (part 1)",
+          "score": 0.71156432358046
+        },
+        {
+          "rank": 4,
+          "id": "30450b4bcd14ca6a",
+          "sourceId": "kotlin-language-specification",
+          "language": "Kotlin",
+          "section": "2.1. TYPE KINDS",
+          "score": 0.7080683549266454
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711665-Ta5vsSTpqWg5DTSRu9lT",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 990,
+          "completionTokens": 203,
+          "reasoningTokens": 71,
+          "totalTokens": 1193,
+          "costUsd": 0.001656
+        },
+        "latencyMs": 1919.03,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-java-kotlin-nullability::attempt-2",
+      "caseId": "compare-java-kotlin-nullability",
+      "group": "focused-positive",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts provide direct evidence only for Java’s null reference/null type behavior. There is no Kotlin documentation shown, so the comparison cannot be answered accurately from the retrieved evidence alone.",
+        "supportedAspects": [
+          "Java has a special null literal and null type.",
+          "Java reference values can be the null reference and null can be assigned to any reference type."
+        ],
+        "missingAspects": [
+          "Kotlin’s mechanism for nullable references.",
+          "A direct comparison between Java and Kotlin representations of nullable references."
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "6628da85b9f64aad",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "3.10.8 The Null Literal",
+          "score": 0.707878764759896
+        },
+        {
+          "rank": 2,
+          "id": "b1f16cb1d497436e",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "4.1 The Kinds of Types and Values",
+          "score": 0.7074450817939402
+        },
+        {
+          "rank": 3,
+          "id": "60f980a9f2a79848",
+          "sourceId": "java-se-26-vm-specification",
+          "language": "Java",
+          "section": "2.4 Reference Types and Values",
+          "score": 0.6975063395122193
+        },
+        {
+          "rank": 4,
+          "id": "a6ff063a61277941",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "3.10 Literals",
+          "score": 0.6919190384513672
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711667-DlgCQAyymhPsdEZdLYTm",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 839,
+          "completionTokens": 211,
+          "reasoningTokens": 92,
+          "totalTokens": 1050,
+          "costUsd": 0.00157875
+        },
+        "latencyMs": 2140.73,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-javascript-typescript-type-errors::attempt-1",
+      "caseId": "compare-javascript-typescript-type-errors",
+      "group": "focused-positive",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that JavaScript uses dynamic typing and reveals type-related problems only when code runs, while TypeScript is a static type-checker that flags many type mistakes before the code runs. This is enough to answer the timing difference accurately.",
+        "supportedAspects": [
+          "JavaScript type mistakes are detected at runtime/when code runs",
+          "TypeScript type mistakes are detected statically before code runs",
+          "JavaScript is described as dynamically typed",
+          "TypeScript is described as a static type-checker"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "7c4ccaa942e40446",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 2)",
+          "score": 0.7667653785995271
+        },
+        {
+          "rank": 2,
+          "id": "1ac6ec3e98653e9b",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 4)",
+          "score": 0.758040306532088
+        },
+        {
+          "rank": 3,
+          "id": "852dee0342e422e3",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 5)",
+          "score": 0.7538862047865231
+        },
+        {
+          "rank": 4,
+          "id": "35a6a9c0a60b152d",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 3)",
+          "score": 0.7485753342427134
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711669-8btN18PP6niUrVdko6jq",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1939,
+          "completionTokens": 230,
+          "reasoningTokens": 102,
+          "totalTokens": 2169,
+          "costUsd": 0.00248925
+        },
+        "latencyMs": 2178.78,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-javascript-typescript-type-errors::attempt-2",
+      "caseId": "compare-javascript-typescript-type-errors",
+      "group": "focused-positive",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpt only describes JavaScript/ECMAScript early errors versus runtime errors. It contains no direct evidence about TypeScript or when TypeScript type mistakes are detected, so it cannot support a comparison between the two languages.",
+        "supportedAspects": [
+          "JavaScript can report some errors at parse/early-error time",
+          "Other JavaScript errors are reported at runtime"
+        ],
+        "missingAspects": [
+          "Direct evidence about TypeScript type-checking timing",
+          "Direct comparison of JavaScript vs TypeScript on when type mistakes are detected"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "1d00bb053a5abf77",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "language": "JavaScript",
+          "section": "17 Error Handling and Language Extensions (part 1)",
+          "score": 0.7005274736539081
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711672-kIxk1RRopPHUaYw6kUu5",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 613,
+          "completionTokens": 179,
+          "reasoningTokens": 53,
+          "totalTokens": 792,
+          "costUsd": 0.00126525
+        },
+        "latencyMs": 2315.2,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-python-typescript-type-annotations::attempt-1",
+      "caseId": "compare-python-typescript-type-annotations",
+      "group": "focused-positive",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts provide direct evidence about TypeScript’s type annotations and type checking, but they contain no direct evidence about Python’s enforcement of type annotations, so a comparison cannot be answered accurately from these sources alone.",
+        "supportedAspects": [
+          "TypeScript uses static type checking to flag type issues before runtime.",
+          "TypeScript type annotations can be inferred in many cases.",
+          "TypeScript type annotations are erased at compile time and do not change runtime behavior.",
+          "TypeScript checks annotated function arguments and can report assignment/type errors."
+        ],
+        "missingAspects": [
+          "Python’s behavior with type annotations.",
+          "Whether Python enforces annotations at runtime, statically, optionally, or not at all.",
+          "A direct comparison between Python and TypeScript enforcement of type annotations."
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "1ac6ec3e98653e9b",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 4)",
+          "score": 0.7004171473124048
+        },
+        {
+          "rank": 2,
+          "id": "ac402a55336257bd",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 11)",
+          "score": 0.7004159862573445
+        },
+        {
+          "rank": 3,
+          "id": "852dee0342e422e3",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 5)",
+          "score": 0.6980048494362578
+        },
+        {
+          "rank": 4,
+          "id": "97c7adbac8777b90",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "The primitives: string, number, and boolean (part 4)",
+          "score": 0.6954392725000156
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711674-Tusuq3hqnDN0pykv7fES",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2040,
+          "completionTokens": 236,
+          "reasoningTokens": 68,
+          "totalTokens": 2276,
+          "costUsd": 0.002592
+        },
+        "latencyMs": 2609.63,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-python-typescript-type-annotations::attempt-2",
+      "caseId": "compare-python-typescript-type-annotations",
+      "group": "focused-positive",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "compare-go-rust-panic-recovery::attempt-1",
+      "caseId": "compare-go-rust-panic-recovery",
+      "group": "focused-positive",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly document Go’s `recover` behavior for a panicking goroutine and Rust’s panic handling/recovery via unwinding, `catch_unwind`, and thread panic recovery. This is enough to answer how each language describes recovering from or handling a panic.",
+        "supportedAspects": [
+          "Go: `recover` called from a deferred function can stop a panic and resume normal execution",
+          "Go: recovery applies to the same goroutine and returns the panic value",
+          "Rust: panics may unwind or abort; default unwinding cleans up stack frames",
+          "Rust: `std::panic::catch_unwind` and `std::thread::spawn` provide recovery mechanisms"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "0b279a517bd3b054",
+          "sourceId": "rust-reference",
+          "language": "Rust",
+          "section": "The panic_handler attribute (part 3)",
+          "score": 0.7503221672919693
+        },
+        {
+          "rank": 2,
+          "id": "9cb23ea407465d5c",
+          "sourceId": "go-language-specification",
+          "language": "Go",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 163)",
+          "score": 0.7469966207590047
+        },
+        {
+          "rank": 3,
+          "id": "b1776b1f7794289b",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "The Rust Programming Language",
+          "score": 0.7423073538549689
+        },
+        {
+          "rank": 4,
+          "id": "016d288441967425",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "Unrecoverable Errors with panic! (part 1)",
+          "score": 0.7383063978940897
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711677-GaBwY8ZCx0cd07Uy0qzW",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1818,
+          "completionTokens": 306,
+          "reasoningTokens": 144,
+          "totalTokens": 2124,
+          "costUsd": 0.0027405
+        },
+        "latencyMs": 3084.77,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-java-cpp-multiple-inheritance::attempt-1",
+      "caseId": "compare-java-cpp-multiple-inheritance",
+      "group": "focused-positive",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly state that Java supports multiple inheritance only from interfaces, with a class able to inherit instance methods from its superclass and superinterfaces, while C++ allows a class to be derived from any number of base classes (multiple inheritance), including virtual bases to control shared base subobjects.",
+        "supportedAspects": [
+          "Java supports multiple inheritance from interfaces",
+          "Java classes may inherit from a superclass and superinterfaces",
+          "C++ supports deriving from any number of base classes",
+          "C++ multiple inheritance includes virtual and non-virtual base class behavior"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "4ff89fdf16fab7a1",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "Example 8.1.5-3. Illegal Multiple Inheritance of an Interface",
+          "score": 0.7296773834646256
+        },
+        {
+          "rank": 2,
+          "id": "db08ba0a2ea8b691",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "11.7.2 Multiple base classes (part 1)",
+          "score": 0.7183903311865233
+        },
+        {
+          "rank": 3,
+          "id": "8998e0a810bb2795",
+          "sourceId": "java-se-26-language-specification",
+          "language": "Java",
+          "section": "1.1 Organization of the Specification (part 5)",
+          "score": 0.6976874987749979
+        },
+        {
+          "rank": 4,
+          "id": "ba4a3cb800606c07",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "11.7.2 Multiple base classes (part 2)",
+          "score": 0.6934529782513044
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711680-NPCwzDmttLuqOsJxWlCR",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1695,
+          "completionTokens": 295,
+          "reasoningTokens": 160,
+          "totalTokens": 1990,
+          "costUsd": 0.00259875
+        },
+        "latencyMs": 2393.43,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "compare-bash-python-for-loops::attempt-1",
+      "caseId": "compare-bash-python-for-loops",
+      "group": "focused-positive",
+      "attempt": 1,
+      "expectedSufficient": true,
+      "deterministicSufficient": true,
+      "semanticSufficient": true,
+      "assessment": {
+        "sufficient": true,
+        "reason": "The excerpts directly describe Bash for-loop iteration over words/positional parameters and Python for-loop iteration over sequence items in order, which is enough to answer the comparison question.",
+        "supportedAspects": [
+          "Bash for-loop iterates once per word in the expanded list, binding the loop variable to the current word",
+          "Bash for-loop without an 'in words' clause iterates over positional parameters",
+          "Python for-loop iterates over the items of a sequence in order",
+          "Python examples show iteration over a list and over range-generated numbers"
+        ],
+        "missingAspects": []
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "a92113350e4536f5",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "3.2.5.1 Looping Constructs (part 1)",
+          "score": 0.7079072041619695
+        },
+        {
+          "rank": 2,
+          "id": "278fd7b1d1c9b3f0",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "language": "Bash",
+          "section": "Appendix B Major Differences From The Bourne Shell (part 3)",
+          "score": 0.6969168954574021
+        },
+        {
+          "rank": 3,
+          "id": "98e19280456ce52e",
+          "sourceId": "python-tutorial",
+          "language": "Python",
+          "section": "4.1. if Statements¶ (part 2)",
+          "score": 0.6951686096595247
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711682-5QNYGhpTFojFeUomlBhZ",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1683,
+          "completionTokens": 336,
+          "reasoningTokens": 200,
+          "totalTokens": 2019,
+          "costUsd": 0.00277425
+        },
+        "latencyMs": 3129.26,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "negative-c-rust-kubernetes-pdb::attempt-1",
+      "caseId": "negative-c-rust-kubernetes-pdb",
+      "group": "focused-negative",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "negative-c-rust-kubernetes-pdb::attempt-2",
+      "caseId": "negative-c-rust-kubernetes-pdb",
+      "group": "focused-negative",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "negative-c-cpp-postgresql-isolation::attempt-1",
+      "caseId": "negative-c-cpp-postgresql-isolation",
+      "group": "focused-negative",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpt is about C++ runtime/environment and locale behavior, not database transactions or isolation levels. It contains no direct definition of transaction isolation levels in C or C++.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "C's definition of database transaction isolation levels",
+          "C++'s definition of database transaction isolation levels",
+          "Any direct standard text about transaction isolation semantics or levels",
+          "Comparison between C and C++ on transaction isolation levels"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "46d82cb74ebc57f1",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "17.14.1 General",
+          "score": 0.6805737901278239
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711685-9WRBvwpRhlJSwQVBc0mo",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 384,
+          "completionTokens": 185,
+          "reasoningTokens": 74,
+          "totalTokens": 569,
+          "costUsd": 0.0011205
+        },
+        "latencyMs": 2091.69,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "negative-c-cpp-postgresql-isolation::attempt-2",
+      "caseId": "negative-c-cpp-postgresql-isolation",
+      "group": "focused-negative",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "negative-java-kotlin-css-grid::attempt-1",
+      "caseId": "negative-java-kotlin-css-grid",
+      "group": "focused-negative",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "negative-java-kotlin-css-grid::attempt-2",
+      "caseId": "negative-java-kotlin-css-grid",
+      "group": "focused-negative",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "negative-javascript-typescript-borrow-checker::attempt-1",
+      "caseId": "negative-javascript-typescript-borrow-checker",
+      "group": "focused-negative",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts only discuss TypeScript basics, modules, and type/access modifiers. They do not mention ownership, borrowing, borrow checking, or any mechanism in JavaScript or TypeScript for implementing such a system.",
+        "supportedAspects": [
+          "TypeScript can perform compile-time checks",
+          "TypeScript supports module systems (ESM/CJS)",
+          "TypeScript has access modifiers and JSDoc annotations such as @private, @readonly, @override, @extends, @implements"
+        ],
+        "missingAspects": [
+          "Any direct explanation of ownership-based borrow checking",
+          "How JavaScript would implement borrow checking",
+          "How TypeScript would implement borrow checking",
+          "Any comparison between JavaScript and TypeScript on ownership/borrowing"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "69e926e24a512e1e",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 1)",
+          "score": 0.7122334478010942
+        },
+        {
+          "rank": 2,
+          "id": "aa4e6efd9c204155",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Scripts and modules in JavaScript (part 1)",
+          "score": 0.7050671253549583
+        },
+        {
+          "rank": 3,
+          "id": "0c4183bfb626a271",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Scripts and modules in JavaScript (part 2)",
+          "score": 0.704703654711387
+        },
+        {
+          "rank": 4,
+          "id": "ec0f94d1ef9ccc34",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Types (part 8)",
+          "score": 0.7038881294824221
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711687-kkx8Tqc4rhQfRXspyHeu",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2053,
+          "completionTokens": 269,
+          "reasoningTokens": 107,
+          "totalTokens": 2322,
+          "costUsd": 0.00275025
+        },
+        "latencyMs": 2234.91,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "negative-javascript-typescript-borrow-checker::attempt-2",
+      "caseId": "negative-javascript-typescript-borrow-checker",
+      "group": "focused-negative",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts only describe TypeScript’s static type checking, control-flow analysis, and runtime vs compile-time errors. They do not mention ownership, borrowing, borrow checking, or any mechanism resembling ownership-based memory safety in JavaScript or TypeScript. There is no direct evidence to explain how either language implements such a feature.",
+        "supportedAspects": [
+          "TypeScript performs static type checking",
+          "TypeScript can flag certain errors before runtime",
+          "JavaScript runtime behavior differs from TypeScript compile-time checks"
+        ],
+        "missingAspects": [
+          "Any discussion of ownership semantics",
+          "Any borrow-checking mechanism",
+          "How JavaScript would implement borrow checking",
+          "How TypeScript would implement borrow checking",
+          "Evidence that either language supports ownership-based borrowing at all"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "852dee0342e422e3",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 5)",
+          "score": 0.7048415629630641
+        },
+        {
+          "rank": 2,
+          "id": "1ac6ec3e98653e9b",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 4)",
+          "score": 0.6988252158820858
+        },
+        {
+          "rank": 3,
+          "id": "f231902a37a764e6",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Type parameters as constraints (part 1)",
+          "score": 0.6915217599715492
+        },
+        {
+          "rank": 4,
+          "id": "69e926e24a512e1e",
+          "sourceId": "typescript-handbook",
+          "language": "TypeScript",
+          "section": "Static type-checking (part 1)",
+          "score": 0.6911317212490715
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711689-b93kxXOUDPsgj3rez9U2",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2055,
+          "completionTokens": 253,
+          "reasoningTokens": 88,
+          "totalTokens": 2308,
+          "costUsd": 0.00267975
+        },
+        "latencyMs": 2820.07,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "negative-python-typescript-jvm-verification::attempt-1",
+      "caseId": "negative-python-typescript-jvm-verification",
+      "group": "focused-negative",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "negative-python-typescript-jvm-verification::attempt-2",
+      "caseId": "negative-python-typescript-jvm-verification",
+      "group": "focused-negative",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "negative-go-rust-react-effect::attempt-1",
+      "caseId": "negative-go-rust-react-effect",
+      "group": "focused-negative",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts provide direct Rust cleanup semantics via destructors/Drop and scope-based dropping, but they contain no Go-language documentation or evidence. Because the question asks about both Go and Rust, the retrieval is insufficient for an accurate comparison.",
+        "supportedAspects": [
+          "Rust values are dropped when they go out of scope",
+          "Rust uses the Drop trait/destructors for cleanup",
+          "Rust destructor/drop order details for fields, tuples, arrays, and moved closures"
+        ],
+        "missingAspects": [
+          "Go cleanup semantics",
+          "Direct evidence for how Go defines component/effect cleanup",
+          "A comparison covering both Go and Rust"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "7b6b498e601e3352",
+          "sourceId": "rust-reference",
+          "language": "Rust",
+          "section": "Drop scopes (part 1)",
+          "score": 0.6958329510505961
+        },
+        {
+          "rank": 2,
+          "id": "f227f858015e5bfb",
+          "sourceId": "rust-reference",
+          "language": "Rust",
+          "section": "The Rust Reference (part 20)",
+          "score": 0.6922850255745113
+        },
+        {
+          "rank": 3,
+          "id": "2a8076cd81792ae9",
+          "sourceId": "rust-book",
+          "language": "Rust",
+          "section": "Running Code on Cleanup with the Drop Trait (part 1)",
+          "score": 0.6817248433824984
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711692-cM2tkYSqYHo93Zg8H2Zy",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 2271,
+          "completionTokens": 290,
+          "reasoningTokens": 148,
+          "totalTokens": 2561,
+          "costUsd": 0.00300825
+        },
+        "latencyMs": 2737.51,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "negative-go-rust-react-effect::attempt-2",
+      "caseId": "negative-go-rust-react-effect",
+      "group": "focused-negative",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts provide direct evidence for Go's defer cleanup timing, but they contain no Rust documentation and no direct evidence about component effect cleanup semantics as such. The question asks for both Go and Rust, so the evidence is incomplete.",
+        "supportedAspects": [
+          "Go defer executes when the surrounding function returns (including on panic)",
+          "Go deferred functions run in reverse order of deferral",
+          "Go deferred calls can observe/modify named result parameters before return"
+        ],
+        "missingAspects": [
+          "Rust's cleanup/effect semantics",
+          "Any direct definition of 'component effect cleanup semantics'",
+          "A direct comparison covering both Go and Rust"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "63469c12a737345a",
+          "sourceId": "go-language-specification",
+          "language": "Go",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 151)",
+          "score": 0.7152843377869201
+        },
+        {
+          "rank": 2,
+          "id": "e6e509da5df1b502",
+          "sourceId": "go-language-specification",
+          "language": "Go",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 152)",
+          "score": 0.6915627986069885
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711695-mDGQnS2i7ygw72GuqCzu",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 1038,
+          "completionTokens": 259,
+          "reasoningTokens": 114,
+          "totalTokens": 1297,
+          "costUsd": 0.001944
+        },
+        "latencyMs": 2564.92,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "negative-java-cpp-bash-trap::attempt-1",
+      "caseId": "negative-java-cpp-bash-trap",
+      "group": "focused-negative",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "negative-java-cpp-bash-trap::attempt-2",
+      "caseId": "negative-java-cpp-bash-trap",
+      "group": "focused-negative",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "The excerpts only show C++ `<csignal>`/`signal()` handler declarations and related notes. They do not provide any Java documentation, nor do they explain shell trap handler configuration. That is not enough direct evidence to answer a comparison question about both Java and C++.",
+        "supportedAspects": [
+          "C++ provides `signal(int, signal-handler*)` in `<csignal>`",
+          "C++ `<csignal>` matches the C `<signal.h>` contents",
+          "C++ defines signal-related macros such as `SIG_DFL`, `SIG_ERR`, and `SIG_IGN`"
+        ],
+        "missingAspects": [
+          "Java signal/trap handler configuration",
+          "How shell signal trap handlers are configured",
+          "Direct comparison between Java and C++",
+          "Any shell-specific mechanism or syntax"
+        ]
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "id": "1df2cad668b59f9c",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "17.14.4 Header <csignal> synopsis",
+          "score": 0.7114111534656173
+        },
+        {
+          "rank": 2,
+          "id": "4485907e104a4728",
+          "sourceId": "cpp26-working-draft-n5046",
+          "language": "C++",
+          "section": "17.14.5 Signal handlers",
+          "score": 0.6829082913531755
+        }
+      ],
+      "response": {
+        "model": "openai/gpt-5.4-mini",
+        "provider": "OpenAI",
+        "id": "gen-1784711698-TqLj0EuUgHxExkaQFVPL",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 531,
+          "completionTokens": 312,
+          "reasoningTokens": 136,
+          "totalTokens": 843,
+          "costUsd": 0.00180225
+        },
+        "latencyMs": 3070.39,
+        "cacheHit": false
+      }
+    },
+    {
+      "stateId": "negative-bash-python-mvcc::attempt-1",
+      "caseId": "negative-bash-python-mvcc",
+      "group": "focused-negative",
+      "attempt": 1,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    },
+    {
+      "stateId": "negative-bash-python-mvcc::attempt-2",
+      "caseId": "negative-bash-python-mvcc",
+      "group": "focused-negative",
+      "attempt": 2,
+      "expectedSufficient": false,
+      "deterministicSufficient": false,
+      "semanticSufficient": false,
+      "assessment": {
+        "sufficient": false,
+        "reason": "No evidence passed the retrieval gate.",
+        "supportedAspects": [],
+        "missingAspects": [
+          "retrievable-evidence"
+        ]
+      },
+      "retrieved": [],
+      "response": {
+        "model": "deterministic-empty-gate",
+        "provider": "local",
+        "id": null,
+        "finishReason": "deterministic",
+        "usage": {
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "reasoningTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0
+        },
+        "latencyMs": 0,
+        "cacheHit": true
+      }
+    }
+  ],
+  "limitations": [
+    "Labels credit only frozen canonical evidence and may reject other genuinely sufficient excerpts.",
+    "The same validation benchmark informed the v3 diagnosis; this selects a component for another validation experiment, not production.",
+    "GPT-5.4 Mini failed some ordinal generation-judge calibration metrics despite strong binary agreement."
+  ]
+}
