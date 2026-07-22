@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-rag-semantic-gate-v1",
+  "status": "preregistered",
+  "createdAt": "2026-07-22T12:50:00+02:00",
+  "title": "Exploratory end-to-end agentic retrieval with a semantic evidence gate",
+  "researchQuestion": "When the frozen bounded agentic retrieval loop replaces only its deterministic evidence gate with GPT-5.4 Mini semantic assessment, does it reduce false acceptance of insufficient evidence without degrading answerable retrieval quality?",
+  "hypothesis": "The semantic gate will reject high-similarity but insufficient evidence that the deterministic score-and-language gate accepts, causing targeted rewrites that preserve the frozen single-pass retrieval metrics while restoring zero false positives.",
+  "parentExperiments": {
+    "deterministicAgenticProtocol": {
+      "path": "docs/experiments/agentic-rag-planner.v3.json",
+      "sha256": "efc341a4ac1308ebcce9d05832e7928e869c75633cc4b35ecd265f9c348ef18f"
+    },
+    "deterministicAgenticResult": {
+      "path": "docs/experiment-results/agentic-rag-planner-v3-validation.json",
+      "sha256": "9ea6b684ade79d41add445e494335cc0687e9965a7cb37e45be8c50b10bb49ed"
+    },
+    "semanticAssessorProtocol": {
+      "path": "docs/experiments/agentic-semantic-assessor.v2.json",
+      "sha256": "909d2a12ece7465b31ba090e767cd57f178f3a15126b863c96ff6d49f776496a"
+    },
+    "semanticAssessorResult": {
+      "path": "docs/experiment-results/agentic-semantic-assessor-v2-validation.json",
+      "sha256": "9a984a47baeb3091d3f2d94230abdc309d6e6d2a4803cfab046f15e91e5d68dd"
+    }
+  },
+  "scientificPositioning": {
+    "type": "exploratory downstream stress test",
+    "reason": "The semantic assessor materially outperformed the deterministic gate but failed its frozen component thresholds. This experiment does not reverse that decision and cannot qualify the assessor for production by itself.",
+    "knownValidationReuse": "The 54 general and 16 focused validation cases have informed earlier experiments. Historical baseline and deterministic-agentic results are reused without rerunning provider calls; the semantic-gated arm is new.",
+    "prohibitedClaim": "Do not describe this as independent confirmation or as evidence that the semantic assessor passed its component benchmark."
+  },
+  "singleChangedVariable": "Evidence-sufficiency assessment inside the same bounded agentic loop: deterministic score-and-language gate versus GPT-5.4 Mini semantic gate.",
+  "variants": [
+    {
+      "id": "single-pass-baseline-historical",
+      "role": "secondary reference",
+      "source": "agentic-rag-planner-v3",
+      "newProviderCalls": false
+    },
+    {
+      "id": "deterministic-gated-agentic-historical",
+      "role": "primary control",
+      "source": "agentic-rag-planner-v3",
+      "newProviderCalls": false
+    },
+    {
+      "id": "semantic-gated-agentic-v1",
+      "role": "exploratory candidate",
+      "source": "new execution",
+      "newProviderCalls": true
+    }
+  ],
+  "split": "validation",
+  "testSplitTouched": false,
+  "benchmark": {
+    "goldenSet": {
+      "path": "docs/evaluation/golden-set.v4.json",
+      "sha256": "2e59f0b027d3c1b6c1efc1f2fda2e219a2b41357a8868b75637dd3fdbda04159"
+    },
+    "splitDefinition": {
+      "path": "docs/evaluation/golden-set-splits.v4.json",
+      "sha256": "67705cf053ba8774b5c83f50401f150ce2efe47111300b5163f2d2af1956d70e"
+    },
+    "focusedPositive": {
+      "path": "docs/evaluation/multi-technology-retrieval-benchmark.v1.json",
+      "sha256": "dd38dbb829e24dfd832ed6f2d1cbec71e62134523e43190c64b8a05422d78db9"
+    },
+    "focusedNegative": {
+      "path": "docs/evaluation/multi-technology-negative-benchmark.v1.json",
+      "sha256": "8e187383bb4494ec5b2e87f40e583e881d8a62b9d0111a3ebf1bf4d29f376b20"
+    },
+    "generalValidationCases": 54,
+    "focusedComparativePositiveCases": 8,
+    "focusedComparativeNegativeCases": 8,
+    "totalExecutedCases": 70,
+    "lockedTestCases": 24,
+    "lockedTestExecution": false
+  },
+  "frozenRetrievalControls": {
+    "corpusChunks": 33079,
+    "chunking": "300 words",
+    "embedding": "google/gemini-embedding-2@1024",
+    "retrieval": "dense cosine with metadata filtering",
+    "minimumScore": 0.68,
+    "topK": 4,
+    "reranker": null,
+    "merge": "deduplicate by chunk id, retain highest cosine score, then stable score ordering"
+  },
+  "agenticPolicy": {
+    "maximumAttempts": 2,
+    "maximumQueriesPerAttempt": 2,
+    "repeatedQueryPolicy": "terminate without a third retrieval",
+    "insufficientAfterFinalAttempt": "abstain and expose no evidence to generation",
+    "semanticAssessor": {
+      "id": "openrouter-gpt-5.4-mini-medium-semantic-evidence-v2",
+      "model": "openai/gpt-5.4-mini",
+      "expectedResponseModel": "openai/gpt-5.4-mini",
+      "expectedResponseProvider": "OpenAI",
+      "providerOrder": ["openai"],
+      "allowFallbacks": false,
+      "reasoningEffort": "medium",
+      "temperature": 0,
+      "maxOutputTokens": 1000,
+      "promptAndSchema": "identical to agentic-semantic-assessor-v2",
+      "inputPriceUsdPerMillionTokens": 0.75,
+      "outputPriceUsdPerMillionTokens": 4.5,
+      "priceObservedOn": "2026-07-21"
+    },
+    "planner": {
+      "provider": "google",
+      "model": "gemini-3.5-flash",
+      "reasoningEffort": "low",
+      "temperature": 0,
+      "maxOutputTokens": 512,
+      "structuredOutput": true,
+      "recoveryPolicy": "one-controlled-recovery",
+      "maximumRecoveryAttempts": 1,
+      "promptAndSchema": "identical to agentic-rag-planner-v3",
+      "inputPriceUsdPerMillionTokens": 1.5,
+      "outputPriceUsdPerMillionTokensIncludingThinking": 9,
+      "priceObservedOn": "2026-07-22"
+    }
+  },
+  "primaryMetrics": [
+    "general Recall@4",
+    "general MRR",
+    "general nDCG@4",
+    "general unanswerable false-positive rate",
+    "focused comparative both-evidence-side coverage@4",
+    "focused comparative mean evidence-side recall@4",
+    "focused comparative unanswerable false-positive rate"
+  ],
+  "agenticDiagnostics": [
+    "cases entering a second attempt",
+    "cases recovered by a second attempt",
+    "positive cases incorrectly rejected",
+    "negative cases correctly converted to abstention",
+    "stop-reason distribution",
+    "semantic-assessor decisions and rationales",
+    "rewrite queries and retrieved evidence per attempt"
+  ],
+  "operationalMetrics": [
+    "assessor and planner provider calls",
+    "cache hits",
+    "structured validity",
+    "provider errors",
+    "prompt, completion, and reasoning tokens",
+    "observed and analytical no-cache cost",
+    "mean, p95, and maximum incremental latency"
+  ],
+  "advancementRule": {
+    "minimumGeneralRecallAt4": 0.9629629629629629,
+    "minimumGeneralMrr": 0.9444444444444444,
+    "minimumGeneralNdcgAt4": 0.9492936945767206,
+    "requiredGeneralUnanswerableFalsePositiveRate": 0,
+    "minimumComparativeBothEvidenceSideCoverageAt4": 0.375,
+    "minimumComparativeMeanEvidenceSideRecallAt4": 0.625,
+    "requiredFocusedUnanswerableFalsePositiveRate": 0,
+    "requiredAssessorStructuredValidityRate": 1,
+    "requiredPlannerStructuredValidityRate": 1,
+    "maximumAssessorProviderErrors": 0,
+    "maximumPlannerProviderErrors": 0,
+    "maximumObservedCombinedModelCostUsd": 0.5,
+    "maximumP95IncrementalLatencyMs": 20000,
+    "decision": "Advance the semantic-gated architecture only to a separately preregistered generation-quality validation if every quality, abstention, validity, cost, and latency check passes. Any failed check retains the single-pass architecture. Passing does not revise the failed component benchmark or enable production."
+  },
+  "executionOrder": [
+    "Commit this protocol before modifying the evaluator or loop integration.",
+    "Implement semantic-gate injection while leaving the deterministic default unchanged.",
+    "Add unit tests for semantic acceptance, semantic rejection, retry, final abstention, and provider failure.",
+    "Run a no-provider validation plan that verifies hashes, case counts, controls, and historical comparators.",
+    "Execute the semantic-gated arm once with cache-preserving retries only for transient technical failures.",
+    "Publish every case trace, metric, token, cost, latency, failure, and disagreement.",
+    "Apply the frozen advancement rule without post-hoc prompt or threshold changes."
+  ],
+  "generationBoundary": {
+    "included": false,
+    "reason": "Grounded answer generation would introduce a second changed variable and requires its own quality reference. This experiment ends at evidence selection or abstention.",
+    "frozenFutureGenerator": "GLM-5.2 BaseTen FP8 at low reasoning and 2048 maximum output tokens may be used only in a successor protocol if this experiment passes every advancement check."
+  },
+  "plannedArtifacts": [
+    "scripts/evaluate-agentic-semantic-gate.ts",
+    "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.json",
+    "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.md",
+    "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.csv"
+  ],
+  "limitations": [
+    "The validation cases and historical comparators have informed earlier engineering decisions.",
+    "The semantic assessor failed its frozen AI-assisted component benchmark and is included only as an exploratory downstream stress test.",
+    "The component reference was AI-assisted and the three apparent false positives may be label errors.",
+    "The experiment measures evidence selection and abstention, not generated-answer quality.",
+    "The locked 24-case test remains untouched and cannot be used to repair or tune this candidate."
+  ]
+}

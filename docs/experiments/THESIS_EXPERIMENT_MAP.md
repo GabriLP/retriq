@@ -1,7 +1,7 @@
 # Thesis experiment map
 
 - Registry: `retriq-thesis-experiment-registry@1.0.0`
-- Experiment families: **22**
+- Experiment families: **23**
 - Completed: **15**
 - Superseded but retained: **1**
 
@@ -31,6 +31,7 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 | 20 | LLM judge reference adjudication | judge-human-adjudication-v1 | completed | Second time-separated review with blind scoring followed by explicit comparison and adjudication | Treat the completed review as a human-in-the-loop sensitivity analysis, not as an independent replacement gold standard. Fourteen of 15 decisions confirmed the new blind score and one answerable case was revised to the judge after comparison. Replacing the 12 answerable audit labels with the final adjudicated labels raises cached audit QWK from 0.1912 to 0.6407, Spearman from 0.4948 to 0.9214, and binary pass agreement from 0.7917 to 0.8750, crossing every frozen audit threshold without provider calls. GPT-5.4 Nano nevertheless remains ineligible because the unchanged calibration split still fails QWK and Spearman. |
 | 21 | LLM-as-a-judge calibration | llm-judge-calibration-v2 | failed | GPT-5.4 Mini replaces GPT-5.4 Nano; every prompt, schema, split, metric, threshold, reasoning, and routing control remains frozen | Do not select GPT-5.4 Mini. It improved over Nano on every primary calibration metric: QWK 0.5975 versus 0.4320, Spearman 0.4893 versus 0.3570, and binary pass agreement 0.9375 versus 0.8333. It nevertheless missed the frozen QWK floor of 0.60 by 0.0025 and the Spearman floor of 0.70 materially. All 32 unique responses were valid, provider-pinned, and completed without errors for $0.110033. Per protocol, neither the old inspected audit nor the locked generation test was accessed. |
 | 22 | AI-assisted evidence-sufficiency validation | agentic-semantic-assessor-v2 | failed | Deterministic score-and-language gate versus GPT-5.4 Mini semantic assessment on identical frozen evidence packets | Do not qualify GPT-5.4 Mini under the frozen rule. It improved accuracy from 0.5000 to 0.8750 and FPR from 1.0000 to 0.2500, with recall 1.0000 and kappa 0.7500, but missed the 0.9167 accuracy floor and 0.0833 FPR ceiling. All 24 provider calls succeeded for $0.047516. A post-result audit found that all three disagreements appear semantically sufficient despite their frozen insufficient labels, making the measured FPR reference-sensitive; labels remain unchanged to avoid circular post-hoc correction. |
+| 23 | Exploratory agentic RAG integration | agentic-rag-semantic-gate-v1 | in-progress | Deterministic score-and-language assessment versus GPT-5.4 Mini semantic assessment inside the otherwise identical agentic loop | Protocol frozen before implementation. GPT-5.4 Mini is an exploratory arm because it did not pass the previous component benchmark. It may advance only to a separate generation-quality experiment if every frozen retrieval, abstention, validity, cost, and latency condition passes. |
 
 ## 1. Dataset and corpus construction: corpus-pdf-expansion
 
@@ -295,3 +296,15 @@ This is the narrative index for the thesis. The JSON registry is the source of t
 - **Decision:** Do not qualify GPT-5.4 Mini under the frozen rule. It improved accuracy from 0.5000 to 0.8750 and FPR from 1.0000 to 0.2500, with recall 1.0000 and kappa 0.7500, but missed the 0.9167 accuracy floor and 0.0833 FPR ceiling. All 24 provider calls succeeded for $0.047516. A post-result audit found that all three disagreements appear semantically sufficient despite their frozen insufficient labels, making the measured FPR reference-sensitive; labels remain unchanged to avoid circular post-hoc correction.
 - **Limitations:** Twenty-four packets provide a bounded component check rather than a high-powered population estimate; Questions and evidence are curated from the existing corpus; The thesis author remains the primary human reviewer; The reviewer consulted Codex case by case, so the frozen reference is AI-assisted rather than independent; All three apparent false positives may instead be reference-label errors; the 0.25 FPR is not a production estimate
 - **Next step:** Report this as a negative but informative component experiment. Do not tune on these 24 cases or automatically integrate the assessor; any renewed validation requires a newly frozen benchmark with genuinely independent evidence-sufficiency labels.
+
+## 23. Exploratory agentic RAG integration: agentic-rag-semantic-gate-v1
+
+- **Research question:** Does replacing only the deterministic evidence gate with GPT-5.4 Mini reduce false acceptance inside the frozen two-attempt agentic retrieval loop without degrading retrieval quality?
+- **Status:** in-progress
+- **Changed variable:** Deterministic score-and-language assessment versus GPT-5.4 Mini semantic assessment inside the otherwise identical agentic loop
+- **Controls:** 54 general validation cases; 8 focused comparative positives; 8 focused comparative negatives; historical single-pass and deterministic-agentic comparators; 300-word chunks; Gemini Embedding 2 at 1024 dimensions; cosine threshold 0.68; topK 4; no reranker; maximum two attempts and two queries; unchanged Gemini 3.5 Flash planner; locked test untouched
+- **Metrics:** Recall@4; MRR; nDCG@4; general and focused false-positive rate; comparative evidence coverage and recall; retry and recovery outcomes; structured validity; provider errors; tokens; cost; latency
+- **Artifacts:** `docs/experiments/agentic-rag-semantic-gate.v1.json`
+- **Decision:** Protocol frozen before implementation. GPT-5.4 Mini is an exploratory arm because it did not pass the previous component benchmark. It may advance only to a separate generation-quality experiment if every frozen retrieval, abstention, validity, cost, and latency condition passes.
+- **Limitations:** Validation and historical comparator results are already known; The semantic assessor failed its AI-assisted component benchmark; Generation quality is intentionally excluded to preserve a single changed variable; The locked test remains untouched
+- **Next step:** Implement injectable semantic assessment in the existing bounded loop and add the validation runner without changing the deterministic runtime default.

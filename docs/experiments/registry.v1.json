@@ -311,6 +311,20 @@
       "decision": "Do not qualify GPT-5.4 Mini under the frozen rule. It improved accuracy from 0.5000 to 0.8750 and FPR from 1.0000 to 0.2500, with recall 1.0000 and kappa 0.7500, but missed the 0.9167 accuracy floor and 0.0833 FPR ceiling. All 24 provider calls succeeded for $0.047516. A post-result audit found that all three disagreements appear semantically sufficient despite their frozen insufficient labels, making the measured FPR reference-sensitive; labels remain unchanged to avoid circular post-hoc correction.",
       "limitations": ["Twenty-four packets provide a bounded component check rather than a high-powered population estimate", "Questions and evidence are curated from the existing corpus", "The thesis author remains the primary human reviewer", "The reviewer consulted Codex case by case, so the frozen reference is AI-assisted rather than independent", "All three apparent false positives may instead be reference-label errors; the 0.25 FPR is not a production estimate"],
       "nextStep": "Report this as a negative but informative component experiment. Do not tune on these 24 cases or automatically integrate the assessor; any renewed validation requires a newly frozen benchmark with genuinely independent evidence-sufficiency labels."
+    },
+    {
+      "order": 23,
+      "id": "agentic-rag-semantic-gate-v1",
+      "thesisSection": "Exploratory agentic RAG integration",
+      "researchQuestion": "Does replacing only the deterministic evidence gate with GPT-5.4 Mini reduce false acceptance inside the frozen two-attempt agentic retrieval loop without degrading retrieval quality?",
+      "status": "in-progress",
+      "variable": "Deterministic score-and-language assessment versus GPT-5.4 Mini semantic assessment inside the otherwise identical agentic loop",
+      "controls": ["54 general validation cases", "8 focused comparative positives", "8 focused comparative negatives", "historical single-pass and deterministic-agentic comparators", "300-word chunks", "Gemini Embedding 2 at 1024 dimensions", "cosine threshold 0.68", "topK 4", "no reranker", "maximum two attempts and two queries", "unchanged Gemini 3.5 Flash planner", "locked test untouched"],
+      "metrics": ["Recall@4", "MRR", "nDCG@4", "general and focused false-positive rate", "comparative evidence coverage and recall", "retry and recovery outcomes", "structured validity", "provider errors", "tokens", "cost", "latency"],
+      "artifacts": ["docs/experiments/agentic-rag-semantic-gate.v1.json"],
+      "decision": "Protocol frozen before implementation. GPT-5.4 Mini is an exploratory arm because it did not pass the previous component benchmark. It may advance only to a separate generation-quality experiment if every frozen retrieval, abstention, validity, cost, and latency condition passes.",
+      "limitations": ["Validation and historical comparator results are already known", "The semantic assessor failed its AI-assisted component benchmark", "Generation quality is intentionally excluded to preserve a single changed variable", "The locked test remains untouched"],
+      "nextStep": "Implement injectable semantic assessment in the existing bounded loop and add the validation runner without changing the deterministic runtime default."
     }
   ]
 }
