@@ -46,6 +46,7 @@
     "productionEnabled": false,
     "selectedVariant": "single-pass-baseline"
   },
+  "nextProtocolForExecution": "docs/experiments/agentic-rag-planner.v2.json",
   "knownLimitations": [
     "The foundation does not select an assessor or rewrite model.",
     "Score and language coverage gates measure evidence availability, not semantic entailment.",

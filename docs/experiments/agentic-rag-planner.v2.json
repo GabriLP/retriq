@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-rag-planner-v2",
+  "status": "preregistered",
+  "parent": "agentic-rag-planner-v1",
+  "hypothesis": "Persisting raw planner responses and allowing exactly one controlled format recovery will complete the validation benchmark with perfect structured-output validity while preserving the frozen retrieval, quality, false-positive, latency, and cost guardrails.",
+  "split": "validation",
+  "testSplitTouched": false,
+  "variants": [
+    {
+      "id": "single-pass-baseline",
+      "description": "Frozen metadata-aware dense retrieval with one original query."
+    },
+    {
+      "id": "bounded-gemini-planner-v2",
+      "description": "Planner v1 with raw-response audit and exactly one controlled recovery after invalid structured output."
+    }
+  ],
+  "singleChangedVariable": "Planner v1 strict fail-fast output handling versus one audited controlled recovery. Retrieval and planner model settings are unchanged.",
+  "frozenRetrievalControls": {
+    "corpusChunks": 33079,
+    "chunking": "300 words",
+    "embedding": "google/gemini-embedding-2@1024",
+    "retrieval": "dense cosine with metadata filtering",
+    "minimumScore": 0.68,
+    "topK": 4,
+    "reranker": null
+  },
+  "agenticPolicy": {
+    "maximumAttempts": 2,
+    "maximumQueriesPerAttempt": 2,
+    "assessor": "deterministic minimum-score and requested-language coverage gate",
+    "planner": {
+      "provider": "google",
+      "model": "gemini-3.5-flash",
+      "reasoningEffort": "low",
+      "temperature": 0,
+      "maxOutputTokens": 256,
+      "structuredOutput": true,
+      "recoveryPolicy": "one-controlled-recovery",
+      "nonEmptyInvalidResponseAction": "Make one formatting-only call that receives the malformed output and must preserve its query meaning.",
+      "emptyResponseAction": "Repeat the exact original structured request once.",
+      "maximumRecoveryAttempts": 1,
+      "secondInvalidOutputAction": "Fail the experiment without coercion or another retry.",
+      "rawResponseAudit": true,
+      "inputPriceUsdPerMillionTokens": 1.5,
+      "outputPriceUsdPerMillionTokensIncludingThinking": 9,
+      "priceObservedOn": "2026-07-22",
+      "priceSource": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    "merge": "deduplicate by chunk id, retain highest cosine score, then stable score ordering",
+    "repeatedQueryPolicy": "terminate without a third retrieval"
+  },
+  "benchmark": {
+    "generalValidationCases": 54,
+    "focusedComparativePositiveCases": 8,
+    "focusedComparativeNegativeCases": 8,
+    "lockedTestCases": 24,
+    "lockedTestExecution": false
+  },
+  "primaryMetrics": ["general Recall@4", "general MRR", "general nDCG@4", "comparative both-evidence-side coverage@4", "comparative mean evidence-side recall@4", "unanswerable false-positive rate"],
+  "guardrails": ["planner structured validity rate", "controlled recovery success rate", "maximum-attempt termination rate", "mean and p95 incremental latency", "planner tokens", "planner cost", "provider errors"],
+  "selectionRule": {
+    "requiredGeneralRecallAt4": 0.9629629629629629,
+    "requiredGeneralMrr": 0.94,
+    "requiredGeneralNdcgAt4": 0.94,
+    "requiredUnanswerableFalsePositiveRate": 0,
+    "minimumComparativeBothEvidenceSideCoverageAt4": 0.375,
+    "minimumComparativeMeanEvidenceSideRecallAt4": 0.625,
+    "requiredPlannerStructuredValidityRate": 1,
+    "requiredRecoverySuccessRate": 1,
+    "maximumPlannerProviderErrors": 0,
+    "maximumObservedPlannerCostUsd": 0.1,
+    "maximumP95IncrementalLatencyMs": 15000,
+    "decision": "Select the agentic variant only if every threshold and guardrail passes on the complete sample; otherwise retain the single-pass baseline without tuning on observed failures."
+  },
+  "preExecutionEvidence": {
+    "plannerV1Failure": "Invalid JSON after 10 of 70 cases; no partial metrics calculated.",
+    "whyThisIsNotPostHocMetricTuning": "The change addresses a measured serialization failure before retrieval metrics existed. It does not change ranking, relevance labels, thresholds, corpus, or the planner's semantic instructions."
+  },
+  "artifacts": ["src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/evaluate-agentic-rag.ts", "scripts/test-agentic-policy.ts"],
+  "limitations": ["The validation and focused comparative sets have informed earlier retrieval experiments.", "A recovered response may differ from the malformed response despite the formatting-only instruction.", "Language coverage is a proxy for evidence sufficiency rather than semantic entailment.", "This experiment evaluates retrieval behavior, not final generated-answer quality."]
+}
