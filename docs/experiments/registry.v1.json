@@ -149,14 +149,14 @@
       "id": "rag-agent-loop-v1",
       "thesisSection": "Agentic RAG",
       "researchQuestion": "Can a bounded retrieval-assessment-rewrite loop improve evidence coverage over the frozen single-pass RAG baseline without unacceptable false positives, latency, or cost?",
-      "status": "foundation-implemented-awaiting-preregistration",
-      "variable": "No experiment run yet; reusable agentic controller added behind an opt-in boundary",
-      "controls": ["production baseline unchanged", "maximum two retrieval attempts by default", "maximum two queries per attempt by default", "repeated-query termination", "complete compact trace", "locked test untouched"],
+      "status": "planner-preregistered",
+      "variable": "Single-pass retrieval versus a deterministic sufficiency gate and at most one Gemini 3.5 Flash rewrite attempt",
+      "controls": ["production baseline unchanged", "Gemini 3.5 Flash low planner", "deterministic 0.68 score and language-coverage assessor", "maximum two retrieval attempts", "maximum two queries per attempt", "repeated-query termination", "complete compact trace", "locked test untouched"],
       "metrics": ["Recall@4", "MRR", "nDCG@4", "both-side evidence coverage", "unanswerable false-positive rate", "attempts", "latency", "tokens", "cost"],
-      "artifacts": ["docs/experiments/agentic-rag.v1.json", "src/lib/rag/agentic-retrieval.ts", "scripts/test-agentic-retrieval.ts"],
-      "decision": "Foundation only. Do not enable agentic retrieval in production or claim a quality improvement before a separately preregistered validation benchmark.",
-      "limitations": ["No assessor or rewrite model selected yet", "Deterministic coverage gates do not establish semantic sufficiency", "Agentic answer generation remains out of scope for this commit", "Must not hide a weak single-pass baseline"],
-      "nextStep": "Preregister one planner and assessor configuration against the frozen single-pass baseline on validation only."
+      "artifacts": ["docs/experiments/agentic-rag.v1.json", "docs/experiments/agentic-rag-planner.v1.json", "src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/test-agentic-retrieval.ts", "scripts/test-agentic-policy.ts"],
+      "decision": "Planner v1 is preregistered but not executed. Production remains on the single-pass baseline until every retrieval, false-positive, validity, latency, and cost guardrail passes on validation.",
+      "limitations": ["Validation cases have informed prior retrieval experiments", "Deterministic coverage gates do not establish semantic sufficiency", "Agentic answer generation remains out of scope for this experiment", "Must not hide a weak single-pass baseline"],
+      "nextStep": "Commit the frozen planner protocol, then execute one complete validation benchmark without inspecting partial metrics."
     },
     {
       "order": 12,

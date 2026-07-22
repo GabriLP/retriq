@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-rag-planner-v1",
+  "status": "preregistered",
+  "parent": "rag-agent-loop-v1",
+  "hypothesis": "A bounded Gemini-planned second retrieval attempt will improve canonical evidence coverage for difficult and comparative validation questions while preserving the frozen baseline's zero unanswerable false-positive rate.",
+  "split": "validation",
+  "testSplitTouched": false,
+  "variants": [
+    {
+      "id": "single-pass-baseline",
+      "description": "Frozen metadata-aware dense retrieval with one original query."
+    },
+    {
+      "id": "bounded-gemini-planner-v1",
+      "description": "The same first retrieval followed by deterministic evidence assessment and at most one Gemini-planned rewrite attempt."
+    }
+  ],
+  "singleChangedVariable": "Single-pass retrieval versus the complete bounded assessment-and-rewrite policy.",
+  "frozenRetrievalControls": {
+    "corpusChunks": 33079,
+    "chunking": "300 words",
+    "embedding": "google/gemini-embedding-2@1024",
+    "retrieval": "dense cosine with metadata filtering",
+    "minimumScore": 0.68,
+    "topK": 4,
+    "reranker": null
+  },
+  "agenticPolicy": {
+    "maximumAttempts": 2,
+    "maximumQueriesPerAttempt": 2,
+    "assessor": "deterministic minimum-score and requested-language coverage gate",
+    "planner": {
+      "provider": "google",
+      "model": "gemini-3.5-flash",
+      "reasoningEffort": "low",
+      "temperature": 0,
+      "maxOutputTokens": 256,
+      "structuredOutput": true,
+      "inputPriceUsdPerMillionTokens": 1.5,
+      "outputPriceUsdPerMillionTokensIncludingThinking": 9,
+      "priceObservedOn": "2026-07-22",
+      "priceSource": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    "merge": "deduplicate by chunk id, retain highest cosine score, then stable score ordering",
+    "repeatedQueryPolicy": "terminate without a third retrieval",
+    "invalidPlannerOutputPolicy": "fail the experiment attempt without coercion"
+  },
+  "benchmark": {
+    "generalValidationCases": 54,
+    "focusedComparativePositiveCases": 8,
+    "focusedComparativeNegativeCases": 8,
+    "lockedTestCases": 24,
+    "lockedTestExecution": false
+  },
+  "primaryMetrics": ["general Recall@4", "general MRR", "general nDCG@4", "comparative both-evidence-side coverage@4", "comparative mean evidence-side recall@4", "unanswerable false-positive rate"],
+  "guardrails": ["planner structured validity rate", "maximum-attempt termination rate", "mean and p95 incremental latency", "planner tokens", "planner cost", "provider errors"],
+  "selectionRule": {
+    "requiredGeneralRecallAt4": 0.963,
+    "requiredGeneralMrr": 0.94,
+    "requiredGeneralNdcgAt4": 0.94,
+    "requiredUnanswerableFalsePositiveRate": 0,
+    "minimumComparativeBothEvidenceSideCoverageAt4": 0.375,
+    "minimumComparativeMeanEvidenceSideRecallAt4": 0.625,
+    "requiredPlannerStructuredValidityRate": 1,
+    "maximumPlannerProviderErrors": 0,
+    "maximumObservedPlannerCostUsd": 0.1,
+    "maximumP95IncrementalLatencyMs": 15000,
+    "decision": "Select the agentic variant only if every threshold and guardrail passes; otherwise retain the single-pass baseline without tuning on observed failures."
+  },
+  "artifacts": ["src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/test-agentic-retrieval.ts", "scripts/test-agentic-policy.ts"],
+  "limitations": ["The validation and focused comparative sets have already informed earlier retrieval experiments.", "Language coverage is a proxy for evidence sufficiency rather than semantic entailment.", "This experiment evaluates retrieval behavior, not final generated-answer quality.", "Gemini planner list-price cost is estimated from provider token metadata."]
+}
