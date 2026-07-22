@@ -1,0 +1,71 @@
+case_id,group,sufficient,attempts,stop_reason,final_chunks,rewrite_queries
+react-state-snapshot-001,general,true,1,sufficient-evidence,4,[]
+react-state-queue-001,general,true,1,sufficient-evidence,4,[]
+react-effects-001,general,true,1,sufficient-evidence,4,[]
+react-refs-001,general,true,1,sufficient-evidence,4,[]
+react-out-of-scope-001,general,false,2,maximum-attempts,0,"[""Angular NgModule providers dependency injection"",""Angular configure providers in NgModule""]"
+c-standard-purpose-001,general,true,1,sufficient-evidence,4,[]
+java-spec-release-001,general,true,1,sufficient-evidence,4,[]
+java-ods-arraystack-amortized-001,general,true,1,sufficient-evidence,4,[]
+java-ods-dual-array-deque-001,general,true,1,sufficient-evidence,4,[]
+java-ods-skiplist-analysis-001,general,true,1,sufficient-evidence,4,[]
+java-ods-linear-probing-001,general,true,1,sufficient-evidence,4,[]
+java-ods-red-black-tree-001,general,true,1,sufficient-evidence,4,[]
+postgresql-license-001,general,true,1,sufficient-evidence,4,[]
+csharp-linq-iqueryable-001,general,false,2,maximum-attempts,0,"[""IQueryable deferred execution expression tree translation"",""how IQueryable Provider executes on ToList""]"
+swift-sendable-actors-001,general,false,2,maximum-attempts,0,"[""Swift Sendable actor isolation boundary"",""Swift Sendable conformance requirements crossing actors""]"
+ruby-activerecord-callbacks-001,general,false,2,maximum-attempts,0,"[""Active Record Callbacks order of execution Rails"",""Rails Active Record validation and save callbacks sequence""]"
+haskell-stm-retry-001,general,false,2,maximum-attempts,0,"[""Haskell STM retry transaction composition"",""Haskell STM orElse transaction composition""]"
+java-android-activity-lifecycle-001,general,false,2,maximum-attempts,0,"[""Android Activity lifecycle foreground to stopped callbacks"",""Activity lifecycle transition resumed to stopped""]"
+react-native-flatlist-001,general,false,2,maximum-attempts,0,"[""React Native FlatList getItemLayout"",""getItemLayout fixed height example""]"
+python-django-atomic-001,general,false,2,maximum-attempts,0,"[""django transaction atomic nested savepoints"",""django transaction atomic rollback propagation""]"
+postgresql-rds-parameter-groups-001,general,false,2,maximum-attempts,0,"[""AWS RDS PostgreSQL static parameters reboot"",""AWS RDS DB parameter group static dynamic parameters""]"
+c-msvc-sal-annotations-001,general,false,2,maximum-attempts,0,"[""MSVC static analysis _In_reads_"",""MSVC static analysis _Out_writes_""]"
+java-se-27-value-classes-001,general,false,2,maximum-attempts,0,"[""Java SE 27 value classes syntax binary compatibility"",""Project Valhalla value classes binary compatibility rules""]"
+postgresql-19-release-001,general,false,2,maximum-attempts,0,"[""PostgreSQL 19 release notes final additions"",""PostgreSQL 19 release notes""]"
+cpp-move-constructor-001,general,true,1,sufficient-evidence,4,[]
+cpp-structured-binding-size-001,general,true,1,sufficient-evidence,4,[]
+javascript-promise-all-001,general,true,1,sufficient-evidence,2,[]
+javascript-array-filter-holes-001,general,true,1,sufficient-evidence,4,[]
+kotlin-smart-cast-001,general,true,1,sufficient-evidence,4,[]
+kotlin-not-null-assertion-001,general,true,1,sufficient-evidence,4,[]
+bash-pipeline-stderr-001,general,true,1,sufficient-evidence,4,[]
+bash-heredoc-quoted-delimiter-001,general,true,1,sufficient-evidence,4,[]
+go-recover-conditions-001,general,true,1,sufficient-evidence,2,[]
+cpp-cmake-targets-001,general,false,2,maximum-attempts,0,"[""cmake find_package imported targets target_link_libraries"",""cmake link imported target from find_package""]"
+javascript-express-router-001,general,false,2,maximum-attempts,0,"[""express Router mergeParams"",""express router merge parent route parameters""]"
+kotlin-gradle-plugin-001,general,false,2,maximum-attempts,0,"[""Kotlin Gradle plugin jvmToolchain configuration"",""Kotlin Gradle plugin compilerOptions configuration""]"
+bash-zsh-completion-001,general,false,2,maximum-attempts,0,"[""zsh zstyle completion matching control"",""zsh compinit completion setup""]"
+bash-fish-argparse-001,general,false,2,maximum-attempts,0,"[""fish shell argparse variables"",""fish argparse function options""]"
+python-fastapi-dependencies-001,general,false,2,maximum-attempts,0,"[""FastAPI dependency injection cache use_cache"",""FastAPI sub-dependencies execution single request""]"
+typescript-angular-onpush-001,general,false,2,maximum-attempts,0,"[""Angular ChangeDetectionStrategy OnPush triggers"",""Angular OnPush change detection conditions""]"
+typescript-nestjs-guards-001,general,false,2,maximum-attempts,0,"[""NestJS Reflector retrieve metadata ExecutionContext"",""NestJS ExecutionContext getHandler getClass""]"
+rust-serde-custom-001,general,false,2,maximum-attempts,0,"[""serde deserialize_with attribute field customization"",""serde deserialize_with example""]"
+python-list-comprehension-001,general,true,1,sufficient-evidence,4,[]
+python-parameter-kinds-001,general,true,1,sufficient-evidence,4,[]
+typescript-conditional-distribution-001,general,true,1,sufficient-evidence,4,[]
+typescript-keyof-001,general,true,1,sufficient-evidence,4,[]
+rust-ownership-move-clone-001,general,true,1,sufficient-evidence,4,[]
+rust-mutable-reference-rules-001,general,true,1,sufficient-evidence,4,[]
+python-pandas-groupby-001,general,false,2,maximum-attempts,0,"[""pandas groupby transform return shape index"",""pandas groupby named aggregation return shape index""]"
+python-celery-retry-001,general,false,2,maximum-attempts,0,"[""Celery acks_late retry delivery acknowledgement"",""Celery apply_async retry behavior""]"
+typescript-vite-glob-001,general,false,2,maximum-attempts,0,"[""Vite import.meta.glob"",""Vite import.meta.glob eager""]"
+typescript-prisma-transaction-001,general,false,2,maximum-attempts,0,"[""Prisma relationLoadStrategy interactive transactions"",""PrismaClient transaction relationLoadStrategy""]"
+rust-bevy-query-001,general,false,2,maximum-attempts,0,"[""Bevy ECS Query Mut Transform Changed"",""Bevy ECS Changed filter query syntax""]"
+rust-diesel-querydsl-001,general,false,2,maximum-attempts,0,"[""Diesel QueryDsl construct typed SQL query"",""Diesel RunQueryDsl execute typed SQL query""]"
+compare-c-rust-heap-memory,focused-positive,false,2,maximum-attempts,0,"[""C programming language heap memory allocation malloc free"",""how C manages and releases heap memory""]"
+compare-c-cpp-dynamic-deallocation,focused-positive,true,2,sufficient-evidence,4,"[""how to release dynamically allocated memory in C++"",""C++ delete operator dynamic memory deallocation""]"
+compare-java-kotlin-nullability,focused-positive,true,2,sufficient-evidence,4,"[""Java nullable references representation"",""Java vs Kotlin nullability representation""]"
+compare-javascript-typescript-type-errors,focused-positive,true,1,sufficient-evidence,4,[]
+compare-python-typescript-type-annotations,focused-positive,true,2,sufficient-evidence,4,"[""Python type annotations enforcement runtime static analysis""]"
+compare-go-rust-panic-recovery,focused-positive,true,1,sufficient-evidence,4,[]
+compare-java-cpp-multiple-inheritance,focused-positive,true,1,sufficient-evidence,4,[]
+compare-bash-python-for-loops,focused-positive,true,1,sufficient-evidence,3,[]
+negative-c-rust-kubernetes-pdb,focused-negative,false,2,maximum-attempts,0,"[""kubernetes c client PodDisruptionBudget"",""kube-rs PodDisruptionBudget""]"
+negative-c-cpp-postgresql-isolation,focused-negative,false,2,maximum-attempts,0,"[""C database transaction isolation levels"",""C++ database transaction isolation levels""]"
+negative-java-kotlin-css-grid,focused-negative,false,2,maximum-attempts,0,"[""Java CSS Grid track sizing"",""Kotlin CSS Grid track sizing""]"
+negative-javascript-typescript-borrow-checker,focused-negative,false,2,maximum-attempts,0,"[""JavaScript ownership borrow checking"",""TypeScript ownership borrow checking""]"
+negative-python-typescript-jvm-verification,focused-negative,false,2,maximum-attempts,0,"[""Python JVM class file verification configuration"",""TypeScript JVM class file verification configuration""]"
+negative-go-rust-react-effect,focused-negative,true,2,sufficient-evidence,4,"[""Go language component effect cleanup semantics"",""Go defer cleanup destructor mechanism""]"
+negative-java-cpp-bash-trap,focused-negative,false,2,maximum-attempts,0,"[""Java register signal handler SignalHandler"",""C++ register signal handler std signal sigaction""]"
+negative-bash-python-mvcc,focused-negative,false,2,maximum-attempts,0,"[""Bash SQL MVCC snapshot isolation"",""Python SQL MVCC snapshot isolation""]"

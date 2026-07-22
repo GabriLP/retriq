@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "agentic-rag-cross-attempt-merge-v1",
-  "status": "preregistered",
+  "status": "completed",
   "createdAt": "2026-07-22T13:15:00+02:00",
   "title": "Final agentic RAG merge-policy experiment",
   "researchQuestion": "Can language-balanced evidence accumulation across attempts recover complementary comparative evidence that the current replacement policy discards, without harming abstention or general retrieval quality?",
@@ -103,7 +103,48 @@
     "Run one provider-free plan and one cache-preserving validation execution.",
     "Publish all results and stop this research direction if any frozen check fails."
   ],
+  "executionOutcome": {
+    "status": "completed-not-selected",
+    "executedAt": "2026-07-22",
+    "lockedTestCasesExecuted": 0,
+    "providerErrors": 0,
+    "semanticAssessorInvocations": 109,
+    "semanticAssessorProviderCalls": 6,
+    "semanticAssessorCacheHits": 103,
+    "plannerInvocations": 39,
+    "plannerProviderCalls": 0,
+    "plannerCacheHits": 39,
+    "observedCombinedModelCostUsd": 0.019962,
+    "incrementalLatencyP95Ms": 3950.89,
+    "metrics": {
+      "generalRecallAt4": 0.9629629629629629,
+      "generalMrr": 0.9444444444444444,
+      "generalNdcgAt4": 0.9492936945767206,
+      "generalUnanswerableFalsePositiveRate": 0,
+      "comparativeBothEvidenceSideCoverageAt4": 0.25,
+      "comparativeMeanEvidenceSideRecallAt4": 0.5,
+      "focusedUnanswerableFalsePositiveRate": 0.125
+    },
+    "secondAttemptCases": 39,
+    "recoveredPositiveCases": [
+      "compare-c-cpp-dynamic-deallocation",
+      "compare-java-kotlin-nullability",
+      "compare-python-typescript-type-annotations"
+    ],
+    "recoveredNegativeCases": ["negative-go-rust-react-effect"],
+    "failedChecks": ["comparativeBothEvidence", "comparativeSideRecall", "focusedFpr"],
+    "qualifiedForGenerationStudy": false,
+    "decision": "Stop Agentic RAG development for the current thesis and retain the single-pass baseline. Accumulation recovered three semantically useful comparisons, but canonical both-evidence coverage remained 0.25, side recall reached only 0.50, and one focused negative became a false positive. The added recall-safety tradeoff fails the frozen rule."
+  },
   "plannedArtifacts": [
+    "src/lib/rag/agentic-retrieval.ts",
+    "scripts/test-agentic-retrieval.ts",
+    "scripts/evaluate-agentic-cross-attempt-merge.ts",
+    "docs/experiment-results/agentic-rag-cross-attempt-merge-v1-validation.json",
+    "docs/experiment-results/agentic-rag-cross-attempt-merge-v1-validation.md",
+    "docs/experiment-results/agentic-rag-cross-attempt-merge-v1-validation.csv"
+  ],
+  "producedArtifacts": [
     "src/lib/rag/agentic-retrieval.ts",
     "scripts/test-agentic-retrieval.ts",
     "scripts/evaluate-agentic-cross-attempt-merge.ts",

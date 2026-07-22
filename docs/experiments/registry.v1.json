@@ -331,14 +331,14 @@
       "id": "agentic-rag-cross-attempt-merge-v1",
       "thesisSection": "Final agentic RAG merge-policy experiment",
       "researchQuestion": "Can language-balanced accumulation across attempts recover complementary comparative evidence without harming abstention or general retrieval quality?",
-      "status": "in-progress",
+      "status": "failed",
       "variable": "Replace previous-attempt evidence versus accumulate it with a per-requested-technology quota",
       "controls": ["Same 70 validation cases", "same semantic assessor", "same Gemini planner", "same embeddings, threshold, top-k, metadata filter, and two-attempt limit", "no reranker", "generation excluded", "locked test untouched"],
       "metrics": ["Recall@4", "MRR", "nDCG@4", "general and focused FPR", "comparative evidence coverage and recall", "second-attempt recoveries", "calls", "tokens", "cost", "latency"],
-      "artifacts": ["docs/experiments/agentic-rag-cross-attempt-merge.v1.json"],
-      "decision": "Protocol frozen before implementation. This is the final targeted Agentic RAG experiment: every preregistered quality, abstention, recovery, cost, and latency requirement must pass before any generation study.",
-      "limitations": ["The motivating trace and validation comparators are already inspected", "Canonical chunk metrics may reject alternatives", "Technology quotas depend on existing metadata detection", "The locked test remains untouched"],
-      "nextStep": "Implement and test the opt-in merge policy, then execute it once; stop Agentic RAG development if any frozen check fails."
+      "artifacts": ["docs/experiments/agentic-rag-cross-attempt-merge.v1.json", "src/lib/rag/agentic-retrieval.ts", "scripts/test-agentic-retrieval.ts", "scripts/evaluate-agentic-cross-attempt-merge.ts", "docs/experiment-results/agentic-rag-cross-attempt-merge-v1-validation.json", "docs/experiment-results/agentic-rag-cross-attempt-merge-v1-validation.md", "docs/experiment-results/agentic-rag-cross-attempt-merge-v1-validation.csv"],
+      "decision": "Do not select cross-attempt accumulation and stop Agentic RAG development for the current thesis. General Recall@4 0.9630, MRR 0.9444, nDCG@4 0.9493, and zero general FPR were preserved. The policy recovered three positive comparisons, but canonical both-evidence coverage remained 0.2500, side recall reached only 0.5000, and negative-go-rust-react-effect became a false positive, raising focused FPR to 0.1250. It therefore failed three frozen checks. Six new assessor calls cost $0.019962; all 39 planner rewrites were exact cache hits.",
+      "limitations": ["The motivating trace and validation comparators were already inspected", "Canonical chunk metrics may reject semantically valid recovered comparisons", "The semantic assessor accepted one ambiguous negative despite explicitly noting the missing framework meaning", "Technology quotas depend on existing metadata detection", "The locked test remained untouched"],
+      "nextStep": "Retain the single-pass RAG baseline, preserve the Agentic RAG implementations as documented negative experiments, and move to final baseline verification and thesis writing rather than further architectural tuning."
     }
   ]
 }
