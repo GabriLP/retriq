@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "agentic-rag-semantic-gate-v1",
-  "status": "preregistered",
+  "status": "completed",
   "createdAt": "2026-07-22T12:50:00+02:00",
   "title": "Exploratory end-to-end agentic retrieval with a semantic evidence gate",
   "researchQuestion": "When the frozen bounded agentic retrieval loop replaces only its deterministic evidence gate with GPT-5.4 Mini semantic assessment, does it reduce false acceptance of insufficient evidence without degrading answerable retrieval quality?",
@@ -179,8 +179,56 @@
     "reason": "Grounded answer generation would introduce a second changed variable and requires its own quality reference. This experiment ends at evidence selection or abstention.",
     "frozenFutureGenerator": "GLM-5.2 BaseTen FP8 at low reasoning and 2048 maximum output tokens may be used only in a successor protocol if this experiment passes every advancement check."
   },
+  "executionOutcome": {
+    "status": "completed-not-advanced",
+    "executedAt": "2026-07-22",
+    "lockedTestCasesExecuted": 0,
+    "semanticAssessorInvocations": 109,
+    "semanticAssessorProviderCalls": 49,
+    "semanticAssessorCacheHits": 60,
+    "plannerInvocations": 39,
+    "plannerProviderCalls": 39,
+    "plannerCacheHits": 0,
+    "providerErrors": 0,
+    "newQueryEmbeddingInputs": 45,
+    "observedAssessorCostUsd": 0.116172,
+    "observedPlannerCostUsd": 0.0876105,
+    "observedCombinedModelCostUsd": 0.2037825,
+    "estimatedEmbeddingCostUsd": 0.000181,
+    "incrementalLatencyMs": { "mean": 3892.6851, "p95": 7033.62, "maximum": 68088.42 },
+    "semanticGatedMetrics": {
+      "generalRecallAt4": 0.9629629629629629,
+      "generalMrr": 0.9444444444444444,
+      "generalNdcgAt4": 0.9492936945767206,
+      "generalUnanswerableFalsePositiveRate": 0,
+      "comparativeBothEvidenceSideCoverageAt4": 0.25,
+      "comparativeMeanEvidenceSideRecallAt4": 0.375,
+      "focusedUnanswerableFalsePositiveRate": 0
+    },
+    "secondAttemptCases": 39,
+    "casesRecoveredBySecondAttempt": 0,
+    "finalAbstentions": 39,
+    "failedChecks": ["comparativeBothEvidence", "comparativeSideRecall"],
+    "qualifiedForGenerationStudy": false,
+    "decision": "Do not advance the current agentic architecture. The semantic gate preserved the frozen general retrieval metrics and eliminated false positives, but comparative evidence coverage remained 0.25 and side recall 0.375. None of the 39 second attempts recovered a case, so the planner added cost and latency without retrieval benefit."
+  },
+  "postExecutionDiagnostic": {
+    "providerCalls": 0,
+    "scope": "The four focused-positive cases that reached attempt two.",
+    "finding": "For compare-c-cpp-dynamic-deallocation, the union of all chunks retrieved across both attempts contains canonical evidence for both technologies even though neither attempt alone does. The other three failed comparisons remain canonically incomplete after union.",
+    "naiveTop4Result": "Globally sorting the cumulative union by cosine score and retaining four chunks loses the first-attempt C evidence, so naive cross-attempt accumulation does not recover the case.",
+    "hypothesisForFutureWork": "A newly preregistered merge policy that accumulates evidence across attempts while reserving capacity per explicitly requested technology may recover complementary evidence without changing the planner, assessor, retrieval model, threshold, or top-k budget.",
+    "status": "diagnostic only; no selection claim and no implementation in this experiment"
+  },
   "plannedArtifacts": [
     "scripts/evaluate-agentic-semantic-gate.ts",
+    "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.json",
+    "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.md",
+    "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.csv"
+  ],
+  "producedArtifacts": [
+    "scripts/evaluate-agentic-semantic-gate.ts",
+    "scripts/test-agentic-semantic-gate.ts",
     "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.json",
     "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.md",
     "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.csv"

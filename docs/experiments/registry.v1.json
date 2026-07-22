@@ -317,14 +317,14 @@
       "id": "agentic-rag-semantic-gate-v1",
       "thesisSection": "Exploratory agentic RAG integration",
       "researchQuestion": "Does replacing only the deterministic evidence gate with GPT-5.4 Mini reduce false acceptance inside the frozen two-attempt agentic retrieval loop without degrading retrieval quality?",
-      "status": "in-progress",
+      "status": "failed",
       "variable": "Deterministic score-and-language assessment versus GPT-5.4 Mini semantic assessment inside the otherwise identical agentic loop",
       "controls": ["54 general validation cases", "8 focused comparative positives", "8 focused comparative negatives", "historical single-pass and deterministic-agentic comparators", "300-word chunks", "Gemini Embedding 2 at 1024 dimensions", "cosine threshold 0.68", "topK 4", "no reranker", "maximum two attempts and two queries", "unchanged Gemini 3.5 Flash planner", "locked test untouched"],
       "metrics": ["Recall@4", "MRR", "nDCG@4", "general and focused false-positive rate", "comparative evidence coverage and recall", "retry and recovery outcomes", "structured validity", "provider errors", "tokens", "cost", "latency"],
-      "artifacts": ["docs/experiments/agentic-rag-semantic-gate.v1.json"],
-      "decision": "Protocol frozen before implementation. GPT-5.4 Mini is an exploratory arm because it did not pass the previous component benchmark. It may advance only to a separate generation-quality experiment if every frozen retrieval, abstention, validity, cost, and latency condition passes.",
-      "limitations": ["Validation and historical comparator results are already known", "The semantic assessor failed its AI-assisted component benchmark", "Generation quality is intentionally excluded to preserve a single changed variable", "The locked test remains untouched"],
-      "nextStep": "Implement injectable semantic assessment in the existing bounded loop and add the validation runner without changing the deterministic runtime default."
+      "artifacts": ["docs/experiments/agentic-rag-semantic-gate.v1.json", "scripts/evaluate-agentic-semantic-gate.ts", "scripts/test-agentic-semantic-gate.ts", "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.json", "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.md", "docs/experiment-results/agentic-rag-semantic-gate-v1-validation.csv"],
+      "decision": "Do not advance the current semantic-gated agentic architecture. It preserved general Recall@4 0.9630, MRR 0.9444, and nDCG@4 0.9493 while reducing general and focused negative FPR to zero. However, comparative both-evidence coverage remained 0.2500 and evidence-side recall 0.3750, below the frozen 0.3750 and 0.6250 requirements. All 39 second attempts failed to recover additional cases, so retry planning added 39 planner calls, latency, and cost without retrieval benefit. The run completed without provider errors for $0.203783 plus $0.000181 estimated embedding cost.",
+      "limitations": ["Validation and historical comparator results were already known", "The semantic assessor failed its AI-assisted component benchmark", "Generation quality was intentionally excluded to preserve a single changed variable", "The 68-second maximum latency was an outlier while p95 remained 7.03 seconds", "The locked test remained untouched"],
+      "nextStep": "Stop generic rewrite-and-retry. Preregister one narrowly scoped merge-policy experiment: preserve evidence across attempts with a per-technology quota for explicit comparisons. A post-hoc trace diagnostic found complementary C and C++ canonical evidence across two attempts in one failed case, while naive global top-4 accumulation still discarded the C side."
     }
   ]
 }
