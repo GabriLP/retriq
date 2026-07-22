@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-semantic-assessor-v2",
+  "status": "benchmark-construction",
+  "createdAt": "2026-07-22T10:00:00+02:00",
+  "researchQuestion": "Does GPT-5.4 Mini generalize as an evidence-sufficiency assessor on newly curated question-evidence packets that were not used in the v1 error analysis?",
+  "hypothesis": "Because the v1 disagreements were caused by strict canonical-chunk labels, a semantic assessor will outperform the score-and-language gate on human-reviewed packets containing valid alternative evidence while maintaining at most one false positive among twelve insufficient packets.",
+  "singleChangedVariable": "Deterministic score-and-language sufficiency assessment versus GPT-5.4 Mini semantic assessment on the same frozen evidence packets.",
+  "benchmark": {
+    "seed": "docs/evaluation/semantic-evidence-benchmark.v2.seed.json",
+    "states": 24,
+    "uniqueQuestions": 12,
+    "packetsPerQuestion": 2,
+    "plannedSufficientPackets": 12,
+    "plannedInsufficientPackets": 12,
+    "chunksPerPacket": 2,
+    "lockedTestTouched": false,
+    "overlapPolicy": "No state id or complete question-evidence packet may occur in agentic-semantic-assessor-v1. Golden-set test cases and the locked 24-case test split are excluded.",
+    "referencePolicy": "A blinded human review of all 24 packets is frozen before either assessor is executed. Intended construction labels are not treated as gold labels.",
+    "constructionCategories": ["direct-complete", "alternative-complete", "related-incomplete", "distractor-insufficient"]
+  },
+  "candidate": {
+    "id": "openrouter-gpt-5.4-mini-medium-semantic-evidence-v2",
+    "model": "openai/gpt-5.4-mini",
+    "expectedResponseModel": "openai/gpt-5.4-mini",
+    "expectedResponseProvider": "OpenAI",
+    "providerOrder": ["openai"],
+    "reasoningEffort": "medium",
+    "maxOutputTokens": 1000,
+    "inputPriceUsdPerMillionTokens": 0.75,
+    "outputPriceUsdPerMillionTokens": 4.5,
+    "priceObservedOn": "2026-07-21",
+    "priceSource": "https://developers.openai.com/api/docs/models/gpt-5.4-mini"
+  },
+  "metrics": {
+    "primary": "accuracy",
+    "secondary": ["balanced accuracy", "precision", "recall", "specificity", "false-positive rate", "Cohen's kappa versus human reference"],
+    "operational": ["provider errors", "latency", "token usage", "cost"]
+  },
+  "selectionRule": {
+    "minimumAccuracy": 0.9166666666666666,
+    "minimumRecall": 0.9166666666666666,
+    "maximumFalsePositiveRate": 0.08333333333333333,
+    "mustExceedDeterministicAccuracy": true,
+    "mustNotIncreaseDeterministicFalsePositiveRate": true,
+    "maximumProviderErrors": 0,
+    "maximumCostUsd": 0.1,
+    "maximumP95LatencyMs": 25000,
+    "decision": "Qualify the semantic assessor for one new end-to-end validation experiment only if every frozen quality and operational guardrail passes. This benchmark cannot enable production directly."
+  },
+  "executionOrder": [
+    "Freeze question seed and protocol.",
+    "Construct and validate 24 evidence packets.",
+    "Complete blinded human review of every packet.",
+    "Freeze the human-reference CSV and its SHA-256.",
+    "Execute deterministic and semantic assessors once without prompt changes.",
+    "Publish all predictions, metrics, costs, and disagreements."
+  ],
+  "artifacts": [
+    "docs/evaluation/semantic-evidence-benchmark.v2.seed.json",
+    "docs/experiments/agentic-semantic-assessor.v2.json"
+  ],
+  "limitations": [
+    "Twenty-four packets support a bounded component check, not a high-powered population estimate.",
+    "Questions and evidence are curated from the existing corpus and therefore measure in-domain generalization.",
+    "The primary reviewer is also the thesis author; this does not estimate inter-rater reliability."
+  ]
+}

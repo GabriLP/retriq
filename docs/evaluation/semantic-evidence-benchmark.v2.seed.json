@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "semantic-evidence-benchmark-v2-seed",
+  "status": "frozen-before-evidence-selection",
+  "createdAt": "2026-07-22T10:00:00+02:00",
+  "lockedTestTouched": false,
+  "questions": [
+    {
+      "id": "evidence-v2-react-stable-list-keys",
+      "technology": "React",
+      "question": "Why should list items use stable keys instead of array indexes or randomly generated keys?",
+      "expectedFacts": ["Stable keys identify an item between renders.", "Indexes become unreliable when items are inserted, removed, or reordered.", "Randomly generated keys cause components and DOM to be recreated and can lose user input."]
+    },
+    {
+      "id": "evidence-v2-postgresql-where-having",
+      "technology": "PostgreSQL / SQL",
+      "question": "What is the difference between WHERE and HAVING when a PostgreSQL query uses grouping and aggregates?",
+      "expectedFacts": ["WHERE filters input rows before grouping and aggregation.", "HAVING filters group rows after grouping and aggregation.", "Aggregate computations therefore see rows admitted by WHERE before HAVING is evaluated."]
+    },
+    {
+      "id": "evidence-v2-java-checked-exceptions",
+      "technology": "Java",
+      "question": "How do checked and unchecked exceptions differ in Java's compile-time checking rules?",
+      "expectedFacts": ["Checked exception classes exclude RuntimeException, Error, and their subclasses.", "Checked exceptions are subject to compile-time handling or declaration requirements.", "Unchecked exceptions are exempt from those compile-time requirements."]
+    },
+    {
+      "id": "evidence-v2-c-realloc-failure",
+      "technology": "C",
+      "question": "What happens to the original allocation when realloc cannot allocate the requested new block in C?",
+      "expectedFacts": ["realloc returns a null pointer when allocation fails.", "The original object is not deallocated when allocation fails.", "The original pointer therefore remains valid and must not be overwritten before checking the result."]
+    },
+    {
+      "id": "evidence-v2-cpp-virtual-destructor",
+      "technology": "C++",
+      "question": "Why does deleting a derived object through a base-class pointer require an appropriate virtual destructor in C++?",
+      "expectedFacts": ["The static and dynamic object types differ when deleting through a base pointer.", "The relevant base-class destructor must be virtual for defined polymorphic deletion.", "Otherwise deletion through that base pointer has undefined behavior."]
+    },
+    {
+      "id": "evidence-v2-javascript-promise-all",
+      "technology": "JavaScript",
+      "question": "How does Promise.all settle when its input promises fulfill or when one rejects?",
+      "expectedFacts": ["Promise.all fulfills with an array of fulfillment values when all inputs fulfill.", "It rejects when an input rejects.", "The rejection uses the reason of the first passed promise that rejects."]
+    },
+    {
+      "id": "evidence-v2-kotlin-safe-call",
+      "technology": "Kotlin",
+      "question": "How do Kotlin's safe-call and Elvis operators work together when a receiver may be null?",
+      "expectedFacts": ["A safe call evaluates to null instead of accessing a member on a null receiver.", "The Elvis operator evaluates its right-hand expression when the left-hand expression is null.", "Together they provide a fallback for a nullable access chain."]
+    },
+    {
+      "id": "evidence-v2-bash-at-star",
+      "technology": "Bash",
+      "question": "How do quoted \"$@\" and \"$*\" expand positional parameters differently in Bash?",
+      "expectedFacts": ["Quoted $@ expands each positional parameter as a separate word.", "Quoted $* expands to one word.", "The single word produced by quoted $* joins parameters using the first character of IFS."]
+    },
+    {
+      "id": "evidence-v2-python-generator-suspension",
+      "technology": "Python",
+      "question": "What execution state does a Python generator preserve when it suspends at yield, and how does it resume?",
+      "expectedFacts": ["Execution suspends at the yield expression and returns a value to the caller.", "The generator preserves local bindings, instruction position, evaluation stack, and exception-handling state.", "A later generator method resumes execution from the suspended yield point."]
+    },
+    {
+      "id": "evidence-v2-typescript-discriminated-union",
+      "technology": "TypeScript",
+      "question": "How does a discriminated union let TypeScript narrow an object to a specific member?",
+      "expectedFacts": ["Every union member has a common property with literal types.", "That property acts as the discriminant.", "Checking its value lets TypeScript exclude incompatible union members and narrow the object."]
+    },
+    {
+      "id": "evidence-v2-rust-refcell-runtime",
+      "technology": "Rust",
+      "question": "How does RefCell<T> enforce Rust's borrowing rules differently from ordinary references?",
+      "expectedFacts": ["Ordinary reference borrowing rules are enforced at compile time.", "RefCell<T> enforces the same invariants at runtime.", "Violating the rules through RefCell<T> causes a panic rather than a compiler error."]
+    },
+    {
+      "id": "evidence-v2-go-defer-evaluation",
+      "technology": "Go",
+      "question": "When are a deferred call's function value and arguments evaluated in Go, and when is the call executed?",
+      "expectedFacts": ["The function value and call arguments are evaluated when the defer statement executes.", "Their values are saved for later.", "The deferred function is invoked immediately before the surrounding function returns, in reverse order relative to other deferred calls."]
+    }
+  ]
+}
