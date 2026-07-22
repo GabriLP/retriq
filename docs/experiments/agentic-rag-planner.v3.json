@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-rag-planner-v3",
+  "status": "preregistered",
+  "parent": "agentic-rag-planner-v2",
+  "hypothesis": "Increasing only the planner output budget from 256 to 512 tokens will prevent the observed reasoning-induced JSON truncation and allow the complete validation benchmark to run while satisfying every frozen retrieval, quality, false-positive, recovery, latency, and cost guardrail.",
+  "split": "validation",
+  "testSplitTouched": false,
+  "variants": [
+    { "id": "single-pass-baseline", "description": "Frozen metadata-aware dense retrieval with one original query." },
+    { "id": "bounded-gemini-planner-v3", "description": "Planner v2 with the output budget increased from 256 to 512 tokens." }
+  ],
+  "singleChangedVariable": "Gemini planner maxOutputTokens: 256 in v2 versus 512 in v3. All semantic prompts, recovery behavior, retrieval settings, labels, and selection thresholds are unchanged.",
+  "frozenRetrievalControls": {
+    "corpusChunks": 33079,
+    "chunking": "300 words",
+    "embedding": "google/gemini-embedding-2@1024",
+    "retrieval": "dense cosine with metadata filtering",
+    "minimumScore": 0.68,
+    "topK": 4,
+    "reranker": null
+  },
+  "agenticPolicy": {
+    "maximumAttempts": 2,
+    "maximumQueriesPerAttempt": 2,
+    "assessor": "deterministic minimum-score and requested-language coverage gate",
+    "planner": {
+      "provider": "google",
+      "model": "gemini-3.5-flash",
+      "reasoningEffort": "low",
+      "temperature": 0,
+      "maxOutputTokens": 512,
+      "structuredOutput": true,
+      "recoveryPolicy": "one-controlled-recovery",
+      "nonEmptyInvalidResponseAction": "Make one formatting-only call that receives the malformed output and must preserve its query meaning.",
+      "emptyResponseAction": "Repeat the exact original structured request once.",
+      "maximumRecoveryAttempts": 1,
+      "secondInvalidOutputAction": "Fail the experiment without coercion or another retry.",
+      "rawResponseAudit": true,
+      "inputPriceUsdPerMillionTokens": 1.5,
+      "outputPriceUsdPerMillionTokensIncludingThinking": 9,
+      "priceObservedOn": "2026-07-22",
+      "priceSource": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    "merge": "deduplicate by chunk id, retain highest cosine score, then stable score ordering",
+    "repeatedQueryPolicy": "terminate without a third retrieval"
+  },
+  "benchmark": {
+    "generalValidationCases": 54,
+    "focusedComparativePositiveCases": 8,
+    "focusedComparativeNegativeCases": 8,
+    "lockedTestCases": 24,
+    "lockedTestExecution": false
+  },
+  "primaryMetrics": ["general Recall@4", "general MRR", "general nDCG@4", "comparative both-evidence-side coverage@4", "comparative mean evidence-side recall@4", "unanswerable false-positive rate"],
+  "guardrails": ["planner structured validity rate", "controlled recovery success rate", "maximum-attempt termination rate", "mean and p95 incremental latency", "planner tokens", "planner cost", "provider errors"],
+  "selectionRule": {
+    "requiredGeneralRecallAt4": 0.9629629629629629,
+    "requiredGeneralMrr": 0.94,
+    "requiredGeneralNdcgAt4": 0.94,
+    "requiredUnanswerableFalsePositiveRate": 0,
+    "minimumComparativeBothEvidenceSideCoverageAt4": 0.375,
+    "minimumComparativeMeanEvidenceSideRecallAt4": 0.625,
+    "requiredPlannerStructuredValidityRate": 1,
+    "requiredRecoverySuccessRate": 1,
+    "maximumPlannerProviderErrors": 0,
+    "maximumObservedPlannerCostUsd": 0.1,
+    "maximumP95IncrementalLatencyMs": 15000,
+    "decision": "Select the agentic variant only if every threshold and guardrail passes on the complete sample; otherwise retain the single-pass baseline without tuning on observed failures."
+  },
+  "preExecutionEvidence": {
+    "plannerV2Failure": "Both the initial response and controlled recovery ended with MAX_TOKENS under a 256-token output budget.",
+    "observedTokenUse": "The failed initial call used 147 reasoning and 93 visible completion tokens; recovery used 242 reasoning tokens and emitted only 10 visible tokens.",
+    "rationale": "512 is the smallest allowed doubled budget and exceeds both observed reasoning-plus-visible-output totals without changing reasoning effort or semantic instructions."
+  },
+  "artifacts": ["src/lib/rag/agentic-retrieval.ts", "src/lib/rag/agentic-assessor.ts", "src/lib/rag/agentic-planner.ts", "scripts/evaluate-agentic-rag.ts", "scripts/test-agentic-policy.ts"],
+  "limitations": ["The validation and focused comparative sets have informed earlier retrieval experiments.", "A larger output budget may increase cost even when visible JSON remains short.", "A recovered response may differ from malformed output despite the formatting-only instruction.", "Language coverage is a proxy for evidence sufficiency rather than semantic entailment."]
+}

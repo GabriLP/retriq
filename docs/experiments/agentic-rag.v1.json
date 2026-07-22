@@ -40,7 +40,7 @@
     "selectionPolicy": "Must be preregistered before any validation execution. Production remains disabled until a variant passes every retrieval and safety guardrail."
   },
   "selectedProtocolForExecution": "docs/experiments/agentic-rag-planner.v1.json",
-  "nextProtocolForExecution": "pending agentic-rag-planner-v3 preregistration",
+  "nextProtocolForExecution": "docs/experiments/agentic-rag-planner.v3.json",
   "latestOutcome": {
     "status": "planner-v2-failed-max-tokens",
     "reason": "Raw audit showed MAX_TOKENS on both the initial 256-token response and its single controlled recovery after 10 of 70 validation cases.",
