@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "confirmatory-final-test-v2",
   "title": "Locked confirmatory test of the validation-selected retrieval baseline",
-  "status": "preregistered",
+  "status": "completed",
   "preregisteredAt": "2026-07-23",
   "researchQuestion": "Does the validation-selected single-pass retrieval configuration retain strong canonical-evidence retrieval and controlled abstention on a larger, newly authored and author-confirmed test set?",
   "hypothesis": "The selected baseline generalizes to the 48-case confirmatory benchmark with Recall@4 of at least 0.9167, MRR and nDCG@4 of at least 0.85, and no more than two false positives among 24 unanswerable cases.",
@@ -110,6 +110,44 @@
     "docs/experiment-results/confirmatory-final-test-v2.md",
     "docs/experiment-results/confirmatory-final-test-v2.csv"
   ],
+  "observedResult": {
+    "executedAt": "2026-07-23T18:20:42.256Z",
+    "executedFromCommit": "519b5f2007b0cf3ad15a1f853f5ef53118b99733",
+    "executionCount": 1,
+    "metrics": {
+      "recallAtK": 0.875,
+      "precisionAtK": 0.5243055555555556,
+      "mrr": 0.7256944444444443,
+      "ndcgAtK": 0.7634777424494903,
+      "noAnswerFalsePositiveRate": 0.041666666666666664
+    },
+    "counts": {
+      "answerableWithFullCanonicalCoverage": 21,
+      "answerableCases": 24,
+      "unanswerableFalsePositives": 1,
+      "unanswerableCases": 24,
+      "providerErrors": 0,
+      "providerRequests": 2
+    },
+    "estimatedCostUsd": 0.0002626,
+    "passedAllChecks": false,
+    "failedChecks": [
+      "recallAtK",
+      "mrr",
+      "ndcgAtK"
+    ],
+    "passedChecks": [
+      "falsePositiveRate",
+      "providerErrors",
+      "costCeiling"
+    ],
+    "interpretation": "The result is retained without rerunning or changing the frozen configuration. Three answerable cases missed their single frozen canonical chunk, while the abstention guardrail passed with one false positive among 24 unanswerable cases. Exact canonical-chunk scoring may undercount semantically relevant alternatives and is treated as a measurement limitation rather than grounds for post-test relabeling."
+  },
+  "outputIntegrity": {
+    "jsonSha256": "ddb8da0a1a16a2ef24f52c0faa32e632b08761b0d53ea9368f8741dc94dcf3e6",
+    "markdownSha256": "918a3ecef56fe0c1f6ba7d86e40765e6d4f525ed300a7b17f314ff100fe8fc49",
+    "csvSha256": "6c6f0a966c092b383d89bd172ada54f8badaf1ffe3357fd5f125bf959e755c1f"
+  },
   "limitations": [
     "The benchmark was reviewed by one thesis-author reviewer and does not estimate inter-rater reliability.",
     "This test verifies retrieval only; answer-generation quality is evaluated separately.",
