@@ -1,0 +1,2313 @@
+{
+  "schemaVersion": 1,
+  "id": "retriq-confirmatory-programming-qa",
+  "version": "1.0.0",
+  "title": "Retriq confirmatory programming QA benchmark",
+  "description": "A fresh, balanced 48-case confirmatory test. It is intentionally non-executable until every label is independently confirmed by the thesis author.",
+  "createdAt": "2026-07-23T00:00:00.000Z",
+  "status": "confirmed-locked",
+  "testLocked": true,
+  "method": "Two answerable and two unanswerable cases per domain; answerable labels resolved to frozen corpus chunks; unanswerable labels checked by full-corpus phrase probes.",
+  "corpus": {
+    "chunksFile": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec/chunks.json",
+    "chunkCount": 33079,
+    "manifests": [
+      "docs/corpus/react-learn.json",
+      "docs/corpus/programming-foundation.json"
+    ]
+  },
+  "priorTestsExcluded": [
+    "docs/experiments/baseline-final-test.v1.json",
+    "docs/experiments/generation-final-test.v1.json",
+    "docs/evaluation/golden-set.v4.json"
+  ],
+  "counts": {
+    "total": 48,
+    "answerable": 24,
+    "unanswerable": 24,
+    "domains": 12
+  },
+  "cases": [
+    {
+      "id": "confirm-v1-bash-colon-parameter-expansion",
+      "status": "human-approved",
+      "language": "Bash",
+      "domain": "bash",
+      "question": "In Bash parameter expansion, how does including the colon in forms such as ${parameter:-word} change the test?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "comparative",
+      "expected": {
+        "answer": "With the colon, Bash tests whether the parameter is unset or null. Without the colon, it tests only whether the parameter is unset.",
+        "keyFacts": [
+          "Colon forms test both unset and null.",
+          "Forms without the colon test only unset."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 33,
+          "pageEnd": 34,
+          "section": "3.5.3 Shell Parameter Expansion (part 2)",
+          "note": "Frozen evidence chunk 6a8cdedaa6aa8918."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "6a8cdedaa6aa8918",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "title": "GNU Bash Reference Manual",
+          "section": "3.5.3 Shell Parameter Expansion (part 2)",
+          "pageStart": 33,
+          "pageEnd": 34,
+          "excerpt": "If the first character of parameter is an exclamation point (!), and parameter is not a nameref, it introduces a level of indirection. Bash uses the value formed by expanding the rest of parameter as the new parameter ; this new parameter is then expanded and that value is used in the rest of the expansion, rather than the expansion of the original parameter . This is known as indirect expansion . The value is subject to tilde expansion, parameter expansion, command substitution, and arithmetic expansion. If parameter is a nameref, this expands to the name of the variable referenced by parameter instead of performing the complete indirect expansion, for compatibility. The exceptions to this are the expansions of $ { ! prefix * } and $ { ! name [@] } described below. The exclamation point must immediately follow the left brace in order to introduce indirection.\n\nIn each of the cases below, word is subject to tilde expansion, parameter expansion, command substitution, and arithmetic expansion.\n\nWhen not performing substring expansion, using the forms described below (e.g., ' :-'), Bash tests for a parameter that is unset or null. Omitting the colon results in a test only for a parameter that is unset. Put another way, if the colon is included, the operator tests for both parameter 's existence and that its value is not null; if the colon is omitted, the operator tests only for existence."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:02:16.035Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-bash-command-substitution-newlines",
+      "status": "human-approved",
+      "language": "Bash",
+      "domain": "bash",
+      "question": "How does Bash command substitution treat trailing and embedded newlines in captured output?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "comparative",
+      "expected": {
+        "answer": "Ordinary command substitution deletes trailing newlines from the captured standard output. Embedded newlines are retained initially, although later word splitting may remove them.",
+        "keyFacts": [
+          "Trailing newlines are deleted.",
+          "Embedded newlines are not deleted by command substitution itself.",
+          "Unquoted word splitting may subsequently remove embedded newlines."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "pageStart": 42,
+          "pageEnd": 43,
+          "section": "3.5.4 Command Substitution (part 1)",
+          "note": "Frozen evidence chunk b82063eeb188ad63."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "b82063eeb188ad63",
+          "sourceId": "gnu-bash-5-3-reference-manual",
+          "sourceUrl": "https://www.gnu.org/software/bash/manual/bash.pdf",
+          "title": "GNU Bash Reference Manual",
+          "section": "3.5.4 Command Substitution (part 1)",
+          "pageStart": 42,
+          "pageEnd": 43,
+          "excerpt": "## 3.5.4 Command Substitution\n\nCommand substitution allows the output of a command to replace the command itself. The standard form of command substitution occurs when a command is enclosed as follows:\n\nor (deprecated)\n\n$( command ) ' command '.\n\nBash performs command substitution by executing command in a subshell environment and replacing the command substitution with the standard output of the command, with any trailing newlines deleted. Embedded newlines are not deleted, but they may be removed during word splitting. The command substitution $(cat file ) can be replaced by the equivalent but faster $(< file ) .\n\nWith the old-style backquote form of substitution, backslash retains its literal meaning except when followed by ' $ ', ' ' ', or ' \\ '. The first backquote not preceded by a backslash terminates the command substitution. When using the $( command ) form, all characters between the parentheses make up the command; none are treated specially.\n\nThere is an alternate form of command substitution:\n\n${ c command ; }\n\nwhich executes command in the current execution environment and captures its output, again with trailing newlines removed.\n\nThe character c following the open brace must be a space, tab, newline, or ' | ', and the close brace must be in a position where a reserved word may appear (i.e., preceded by a command terminator such as semicolon). Bash allows the close brace to be joined to the remaining characters in the word without being followed by a shell metacharacter as a reserved word would usually require.\n\nAny side effects of command take effect immediately in the current execution environment and persist in the current environment after the command completes (e.g., the exit builtin exits the shell).\n\nThis type of command substitution superficially resembles executing an unnamed shell function: local variables are created as when a shell function is executing, and the return builtin forces command to complete; however, the rest of the execution environment, including the positional parameters, is shared with the caller."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:02:17.563Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-bash-systemd",
+      "status": "human-approved",
+      "language": "Bash",
+      "domain": "bash",
+      "question": "How do systemd unit dependencies differ between Wants and Requires?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "systemd unit semantics are outside the Bash language manual."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "systemd unit semantics are outside the Bash language manual.",
+        "absenceProbes": [
+          "systemd unit dependency",
+          "Requires= Wants="
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "systemd unit dependency",
+            "matches": 0
+          },
+          {
+            "text": "Requires= Wants=",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:02:30.187Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-bash-tmux",
+      "status": "human-approved",
+      "language": "Bash",
+      "domain": "bash",
+      "question": "How are tmux prefix key bindings defined and reloaded?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The Bash manual does not document tmux configuration."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The Bash manual does not document tmux configuration.",
+        "absenceProbes": [
+          "tmux key binding",
+          "bind-key source-file"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "tmux key binding",
+            "matches": 0
+          },
+          {
+            "text": "bind-key source-file",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:02:33.115Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-c-array-conversion",
+      "status": "human-approved",
+      "language": "C",
+      "domain": "c",
+      "question": "Under C11, when does the usual conversion from an array expression to a pointer to its first element not occur?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The conversion does not occur when the array expression is the operand of sizeof, _Alignof, or unary &, or when it is a string literal used to initialize an array.",
+        "keyFacts": [
+          "The usual conversion produces a pointer to the initial element.",
+          "sizeof, _Alignof, and unary & are exceptions.",
+          "A string literal used to initialize an array is also an exception."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "pageStart": 72,
+          "pageEnd": 73,
+          "section": "6.3.2.1  Lvalues, arrays, and function designators (part 2)",
+          "note": "Frozen evidence chunk 52a682760b6caf3a."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "52a682760b6caf3a",
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
+          "section": "6.3.2.1  Lvalues, arrays, and function designators (part 2)",
+          "pageStart": 72,
+          "pageEnd": 73,
+          "excerpt": "2 Except when it is the operand of the sizeof operator, the _Alignof operator, the unary & operator, the ++ operator, the --operator, or the left operand of the . operator or an assignment operator, an lvalue that does not have array type is converted to the value stored in the designated object (and is no longer an lvalue); this is called lvalue conversion . If the lvalue has qualified type, the value has the unqualified version of the type of the lvalue; additionally, if the lvalue has atomic type, the value has the non-atomic version of the type of the lvalue; otherwise, the value has the type of the lvalue. If the lvalue has an incomplete type and does not have array type, the behavior is undefined. If the lvalue designates an object of automatic storage duration that could have been declared with the register storage class (never had its address taken), and that object is uninitialized (not declared with an initializer and no assignment to it has been performed prior to use), the behavior is undefined.\n\n3 Except when it is the operand of the sizeof operator, the _Alignof operator, or the unary & operator, or is a string literal used to initialize an array, an expression that has type ''array of type '' is converted to an expression with type ''pointer to type '' that points to the initial element of the array object and is not an lvalue. If the array object has register storage class, the behavior is undefined.\n\n4 A function designator is an expression that has function type. Except when it is the operand of the sizeof operator, the _Alignof operator, 65) or the unary & operator, a function designator with type ''function returning type '' is converted to an expression that\n\n64) The name ''lvalue'' comes originally from the assignment expression E1 = E2 , in which the left operand E1 is required to be a (modifiable) lvalue. It is perhaps better considered as representing an object ''locator value''. What is sometimes called ''rvalue'' is in this International Standard described as the ''value of an expression''."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:02:34.787Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-c-sequence-point",
+      "status": "human-approved",
+      "language": "C",
+      "domain": "c",
+      "question": "What ordering guarantee does a sequence point provide between two C expression evaluations?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "A sequence point between evaluations A and B means every value computation and side effect associated with A is sequenced before every value computation and side effect associated with B.",
+        "keyFacts": [
+          "All value computations associated with A precede those of B.",
+          "All side effects associated with A precede those of B."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "pageStart": 32,
+          "pageEnd": 35,
+          "section": "5.1.2.3  Program execution (part 2)",
+          "note": "Frozen evidence chunk 6d033e84c139a490."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "6d033e84c139a490",
+          "sourceId": "c11-working-draft-n1570",
+          "sourceUrl": "https://open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "title": "ISO/IEC 9899:201x - WG14 N1570 working draft",
+          "section": "5.1.2.3  Program execution (part 2)",
+          "pageStart": 32,
+          "pageEnd": 35,
+          "excerpt": "3 Sequenced before is an asymmetric, transitive, pair-wise relation between evaluations executed by a single thread, which induces a partial order among those evaluations. Given any two evaluations A and B , if A is sequenced before B , then the execution of A shall precede the execution of B . (Conversely, if A is sequenced before B , then B is sequenced after A .) If A is not sequenced before or after B , then A and B are unsequenced . Evaluations A and B are indeterminately sequenced when A is sequenced either before or after B , but it is unspecified which. 13) The presence of a sequence point between the evaluation of expressions A and B implies that every value computation and side effect associated with A is sequenced before every value computation and side effect associated with B . (A summary of the sequence points is given in annex C.)\n\n4 In the abstract machine, all expressions are evaluated as specified by the semantics. An actual implementation need not evaluate part of an expression if it can deduce that its value is not used and that no needed side effects are produced (including any caused by\n\n11) In accordance with 6.2.4, the lifetimes of objects with automatic storage duration declared in main will have ended in the former case, even where they would not have in the latter.\n\n12) The IEC 60559 standard for binary floating-point arithmetic requires certain user-accessible status flags and control modes. Floating-point operations implicitly set the status flags; modes affect result values of floating-point operations. Implementations that support such floating-point state are required to regard changes to it as side effects - see annex F for details. The floating-point environment library <fenv.h> provides a programming facility for indicating when these side effects matter, freeing the implementations in other cases."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:03:49.536Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-c-libuv",
+      "status": "human-approved",
+      "language": "C",
+      "domain": "c",
+      "question": "How does libuv's event loop order timer, poll, and check phases?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The C standard does not document libuv's event loop."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The C standard does not document libuv's event loop.",
+        "absenceProbes": [
+          "libuv event loop",
+          "uv_run"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "libuv event loop",
+            "matches": 0
+          },
+          {
+            "text": "uv_run",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:03:50.709Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-c-openssl",
+      "status": "human-approved",
+      "language": "C",
+      "domain": "c",
+      "question": "How should OpenSSL EVP contexts be initialized for authenticated encryption?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The C language standard does not cover the OpenSSL EVP library."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The C language standard does not cover the OpenSSL EVP library.",
+        "absenceProbes": [
+          "OpenSSL EVP",
+          "EVP_EncryptInit_ex"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "OpenSSL EVP",
+            "matches": 0
+          },
+          {
+            "text": "EVP_EncryptInit_ex",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:06.555Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-cpp-range-temporary-lifetime",
+      "status": "human-approved",
+      "language": "C++",
+      "domain": "cpp",
+      "question": "What happens to a temporary object created in the initializer of a C++ range-based for statement?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "factual",
+      "expected": {
+        "answer": "If it would otherwise be destroyed at the end of the initializer full-expression, its lifetime is extended to match the reference initialized by the range initializer.",
+        "keyFacts": [
+          "The rule concerns a temporary in the range initializer.",
+          "Its lifetime is extended when it would otherwise end after the initializer.",
+          "It persists for the lifetime of the initialized reference."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 90,
+          "pageEnd": 90,
+          "section": "N5046 (part 1)",
+          "note": "Frozen evidence chunk 9fff64c4b88c301d."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "9fff64c4b88c301d",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "N5046 (part 1)",
+          "pageStart": 90,
+          "pageEnd": 90,
+          "excerpt": "## N5046\n\nint i = 1; int&& a = id<int[3]>{1, 2, 3}[i]; // temporary array has same lifetime as a const int& b = static_cast<const int&>(0); // temporary int has same lifetime as b int&& c = cond ? id<int[3]>{1, 2, 3}[i] : static_cast<int&&>(0); // exactly one of the two temporaries is lifetime-extended -end example ] [ Note 4 : An explicit type conversion (7.6.1.4, 7.6.3) is interpreted as a sequence of elementary casts, covered above. [ Example 3 : const int& x = (const int&)1; // temporary for value 1 has same lifetime as x -end example ] -end note ] [ Note 5 : If a temporary object has a reference member initialized by another temporary object, lifetime extension applies recursively to such a member's initializer. [ Example 4 : struct S { const int& m; }; const S& s = S{1}; // both S and int temporaries have lifetime of s -end example ] -end note\n\nNote 6 -end note [ Example 5 : struct S { int mi; const std::pair<int,int>& mp; }; S a { 1, {2,3} }; S* p = new S{ 1, {2,3} }; // creates dangling reference -end example ]\n\n] The exceptions to this lifetime rule are: -(6.10) A temporary object bound to a reference parameter in a function call (7.6.1.3) persists until the completion of the full-expression containing the call. -(6.11) A temporary object bound to a reference element of an aggregate of class type initialized from a parenthesized expression-list (9.5) persists until the completion of the full-expression containing the expression-list . -(6.12) A temporary bound to a reference in a new-initializer (7.6.2.8) persists until the completion of the full-expression containing the new-initializer . [ : This might introduce a dangling reference. ]\n\n7 The fourth context is when a temporary object is created in the for-range-initializer of a range-based for statement. If such a temporary object would otherwise be destroyed at the end of the for-range-initializer full-expression, the object persists for the lifetime of the reference initialized by the for-range-initializer ."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:05:45.461Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-cpp-structured-binding-size",
+      "status": "human-approved",
+      "language": "C++",
+      "domain": "cpp",
+      "question": "How must the number of names in a C++ structured binding relate to the structured binding size when no binding pack is present?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Without a structured binding pack, the number of identifiers in the binding list must equal the structured binding size of the initializer type.",
+        "keyFacts": [
+          "The rule applies when there is no structured binding pack.",
+          "The identifier count must equal the structured binding size."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "pageStart": 280,
+          "pageEnd": 280,
+          "section": "[dcl.struct.bind] (part 2)",
+          "note": "Frozen evidence chunk 6a293bfec5a2f468."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "6a293bfec5a2f468",
+          "sourceId": "cpp26-working-draft-n5046",
+          "sourceUrl": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/n5046.pdf",
+          "title": "Working Draft, Programming Languages - C++ (N5046)",
+          "section": "[dcl.struct.bind] (part 2)",
+          "pageStart": 280,
+          "pageEnd": 280,
+          "excerpt": "2 The structured binding size of E , as defined below, is the number of structured bindings that need to be introduced by the structured binding declaration. If there is no structured binding pack, then the number of elements in the sb-identifier-list shall be equal to the structured binding size of E . Otherwise, the number of non-pack elements shall be no more than the structured binding size of E ; the number of elements of the structured binding pack is the structured binding size of E less the number of non-pack elements in the sb-identifier-list .\n\n3 Let SB i denote the i th structured binding in the structured binding declaration after expanding the structured binding pack, if any.\n\n4 If a structured binding declaration appears as a condition , the decision variable (8.1) of the condition is e .\n\n5 If the initializer refers to one of the names introduced by the structured binding declaration, the program is ill-formed.\n\n[ Note 2 : If there is no structured binding pack, then SB i denotes v i . -end note ] [ Example 1 : struct C { int x, y, z; }; template<class T> void now_i_know_my() { auto [a, b, c] = C(); // OK, SB 0 is a , SB 1 is b , and SB 2 is c auto [d, ...e] = C(); // OK, SB 0 is d , the pack e ( v 1 ) contains two structured bindings: SB 1 and SB 2 auto [...f, g] = C(); // OK, the pack f ( v 0 ) contains two structured bindings: SB 0 and SB 1 , and SB 2 is g auto [h, i, j, ...k] = C(); // OK, the pack k is empty auto [l, m, n, o, ...p] = C(); // error: structured binding size is too small } -end example ]"
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-cpp-boost-asio",
+      "status": "human-approved",
+      "language": "C++",
+      "domain": "cpp",
+      "question": "How does Boost.Asio io_context schedule completion handlers?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The C++ standard draft does not specify Boost.Asio."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The C++ standard draft does not specify Boost.Asio.",
+        "absenceProbes": [
+          "Boost.Asio io_context",
+          "io_context::run"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Boost.Asio io_context",
+            "matches": 0
+          },
+          {
+            "text": "io_context::run",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-cpp-qt-model",
+      "status": "human-approved",
+      "language": "C++",
+      "domain": "cpp",
+      "question": "How does QAbstractItemModel encode parent-child indexes in Qt?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "Qt model APIs are outside the C++ language standard."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "Qt model APIs are outside the C++ language standard.",
+        "absenceProbes": [
+          "QAbstractItemModel",
+          "QModelIndex internalPointer"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "QAbstractItemModel",
+            "matches": 0
+          },
+          {
+            "text": "QModelIndex internalPointer",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-go-interface-comparison",
+      "status": "human-approved",
+      "language": "Go",
+      "domain": "go",
+      "question": "When are two Go interface values equal, and when can comparing them panic?",
+      "answerability": "answerable",
+      "difficulty": "hard",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Two interface values are equal when their dynamic types are identical and their dynamic values are equal, or when both are nil. Comparison panics if identical dynamic types hold values of a non-comparable type.",
+        "keyFacts": [
+          "Equality depends on identical dynamic types and equal dynamic values.",
+          "Two nil interface values are equal.",
+          "A non-comparable dynamic value can cause a run-time panic."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 106)",
+          "note": "Frozen evidence chunk cc205c9c99348220."
+        },
+        {
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 76)",
+          "note": "Frozen evidence chunk 121c554716190e35."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "cc205c9c99348220",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "title": "The Go Programming Language Specification",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 106)",
+          "excerpt": "- Floating-point types are comparable and ordered.\n Two floating-point values are compared as defined by the IEEE 754 standard.\n\n- Complex types are comparable.\n Two complex values u and v are\n equal if both real(u) == real(v) and\n imag(u) == imag(v).\n\n- String types are comparable and ordered.\n Two string values are compared lexically byte-wise.\n\n- Pointer types are comparable.\n Two pointer values are equal if they point to the same variable or if both have value nil.\n Pointers to distinct zero-size variables may or may not be equal.\n\n- Channel types are comparable.\n Two channel values are equal if they were created by the same call to\n make\n or if both have value nil.\n\n- Interface types that are not type parameters are comparable.\n Two interface values are equal if they have identical dynamic types\n and equal dynamic values or if both have value nil.\n\n- A value x of non-interface type X and\n a value t of interface type T can be compared\n if type X is comparable and\n X implements T.\n They are equal if t's dynamic type is identical to X\n and t's dynamic value is equal to x.\n\n- Struct types are comparable if all their field types are comparable.\n Two struct values are equal if their corresponding\n non-blank field values are equal.\n The fields are compared in source order, and comparison stops as\n soon as two field values differ (or all fields have been compared).\n\n- Array types are comparable if their array element types are comparable.\n Two array values are equal if their corresponding element values are equal.\n The elements are compared in ascending index order, and comparison stops\n as soon as two element values differ (or all elements have been compared).\n\n- Type parameters are comparable if they are strictly comparable (see below)."
+        },
+        {
+          "chunkId": "121c554716190e35",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "title": "The Go Programming Language Specification",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 76)",
+          "excerpt": "- the index x must be an untyped constant, or its type must be\n an integer or a type parameter whose type set\n contains only integer types\n\n- a constant index must be non-negative and\n representable by a value of type int\n\n- a constant index that is untyped is given type int\n\n- the index x is in range if 0 <= x < len(a),\n otherwise it is out of range\n\nFor a of array type A:\n\n- a constant index must be in range\n\n- if x is out of range at run time,\n a run-time panic occurs\n\n- a[x] is the array element at index x and the type of\n a[x] is the element type of A\n\nFor a of pointer to array type:\n\n- a[x] is shorthand for (*a)[x]\n\nFor a of slice type S:\n\n- if x is out of range at run time,\n a run-time panic occurs\n\n- a[x] is the slice element at index x and the type of\n a[x] is the element type of S\n\nFor a of string type:\n\n- a constant index must be in range\n if the string a is also constant\n\n- if x is out of range at run time,\n a run-time panic occurs\n\n- a[x] is the non-constant byte value at index x and the type of\n a[x] is byte\n\n- a[x] may not be assigned to\n\nFor a of map type M:\n\n- x's type must be\n assignable\n to the key type of M\n\n- if the map contains an entry with key x,\n a[x] is the map element with key x\n and the type of a[x] is the element type of M\n\n- if the map is nil or does not contain such an entry,\n a[x] is the zero value\n for the element type of M"
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:10:02.166Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-go-select-choice",
+      "status": "human-approved",
+      "language": "Go",
+      "domain": "go",
+      "question": "What operation does a Go select statement choose among?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "A select statement chooses which of a set of possible channel send or receive operations can proceed; a default clause may proceed when no communication case is ready.",
+        "keyFacts": [
+          "Cases describe channel sends or receives.",
+          "select chooses an operation that can proceed.",
+          "A default clause is possible."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 145)",
+          "note": "Frozen evidence chunk 52863ae0397fb043."
+        },
+        {
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 146)",
+          "note": "Frozen evidence chunk 76a7c712f1cf14a1."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "52863ae0397fb043",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "title": "The Go Programming Language Specification",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 145)",
+          "excerpt": "The expression must be a function or method call; it cannot be parenthesized.\nCalls of built-in functions are restricted as for\nexpression statements.\n\nThe function value and parameters are\nevaluated as usual\nin the calling goroutine, but\nunlike with a regular call, program execution does not wait\nfor the invoked function to complete.\nInstead, the function begins executing independently\nin a new goroutine.\nWhen the function terminates, its goroutine also terminates.\nIf the function has any return values, they are discarded when the\nfunction completes.\n\n```\ngo Server()\ngo func(ch chan<- bool) { for { sleep(10); ch <- true }} (c)\n```\n\n### Select statements\n\nA \"select\" statement chooses which of a set of possible\nsend or\nreceive\noperations will proceed.\nIt looks similar to a\n\"switch\" statement but with the\ncases all referring to communication operations.\n\n```\nSelectStmt = \"select\" \"{\" { CommClause } \"}\" .\nCommClause = CommCase \":\" StatementList .\nCommCase = \"case\" ( SendStmt | RecvStmt ) | \"default\" .\nRecvStmt = [ ExpressionList \"=\" | IdentifierList \":=\" ] RecvExpr .\nRecvExpr = Expression .\n```\n\nA case with a RecvStmt may assign the result of a RecvExpr to one or\ntwo variables, which may be declared using a\nshort variable declaration.\nThe RecvExpr must be a (possibly parenthesized) receive operation.\nThere can be at most one default case and it may appear anywhere\nin the list of cases.\n\nExecution of a \"select\" statement proceeds in several steps:\n\n- For all the cases in the statement, the channel operands of receive operations\nand the channel and right-hand-side expressions of send statements are\nevaluated exactly once, in source order, upon entering the \"select\" statement.\nThe result is a set of channels to receive from or send to,\nand the corresponding values to send.\nAny side effects in that evaluation will occur irrespective of which (if any)\ncommunication operation is selected to proceed.\nExpressions on the left-hand side of a RecvStmt with a short variable declaration\nor assignment are not yet evaluated."
+        },
+        {
+          "chunkId": "76a7c712f1cf14a1",
+          "sourceId": "go-language-specification",
+          "sourceUrl": "https://go.dev/ref/spec",
+          "title": "The Go Programming Language Specification",
+          "section": "Language version go1.26 (Jan 12, 2026) (part 146)",
+          "excerpt": "- For all the cases in the statement, the channel operands of receive operations\nand the channel and right-hand-side expressions of send statements are\nevaluated exactly once, in source order, upon entering the \"select\" statement.\nThe result is a set of channels to receive from or send to,\nand the corresponding values to send.\nAny side effects in that evaluation will occur irrespective of which (if any)\ncommunication operation is selected to proceed.\nExpressions on the left-hand side of a RecvStmt with a short variable declaration\nor assignment are not yet evaluated.\n\n- If one or more of the communications can proceed,\na single one that can proceed is chosen via a uniform pseudo-random selection.\nOtherwise, if there is a default case, that case is chosen.\nIf there is no default case, the \"select\" statement blocks until\nat least one of the communications can proceed.\n\n- Unless the selected case is the default case, the respective communication\noperation is executed.\n\n- If the selected case is a RecvStmt with a short variable declaration or\nan assignment, the left-hand side expressions are evaluated and the\nreceived value (or values) are assigned.\n\n- The statement list of the selected case is executed.\n\nSince communication on nil channels can never proceed,\na select with only nil channels and no default case blocks forever.\n\n```\nvar a []int\nvar c, c1, c2, c3, c4 chan int\nvar i1, i2 int\nselect {\ncase i1 = <-c1:\n print(\"received \", i1, \" from c1\\n\")\ncase c2 <- i2:\n print(\"sent \", i2, \" to c2\\n\")\ncase i3, ok := (<-c3): // same as: i3, ok := <-c3\n if ok {\n print(\"received \", i3, \" from c3\\n\")\n } else {\n print(\"c3 is closed\\n\")\n }\ncase a[f()] = <-c4:\n // same as:\n // case t := <-c4\n // a[f()] = t\ndefault:\n print(\"no communication\\n\")\n}"
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-go-gin",
+      "status": "human-approved",
+      "language": "Go",
+      "domain": "go",
+      "question": "How does Gin middleware pass control to later handlers?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The Go language specification does not cover the Gin framework."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The Go language specification does not cover the Gin framework.",
+        "absenceProbes": [
+          "Gin middleware",
+          "c.Next()"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Gin middleware",
+            "matches": 0
+          },
+          {
+            "text": "c.Next()",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-go-grpc",
+      "status": "human-approved",
+      "language": "Go",
+      "domain": "go",
+      "question": "How is a unary gRPC interceptor chained in grpc-go?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "grpc-go middleware APIs are outside the Go language specification."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "grpc-go middleware APIs are outside the Go language specification.",
+        "absenceProbes": [
+          "gRPC interceptor",
+          "ChainUnaryInterceptor"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "gRPC interceptor",
+            "matches": 0
+          },
+          {
+            "text": "ChainUnaryInterceptor",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-java-record-purpose",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "java",
+      "question": "What purpose do Java record classes serve according to the language specification?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Record classes are a restricted kind of class intended for compactly expressing simple objects that aggregate values.",
+        "keyFacts": [
+          "A record is a restricted kind of class.",
+          "It compactly represents an aggregate of values."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "pageStart": 18,
+          "pageEnd": 22,
+          "section": "1.1 Organization of the Specification (part 5)",
+          "note": "Frozen evidence chunk 8998e0a810bb2795."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "8998e0a810bb2795",
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "title": "The Java Language Specification, Java SE 26 Edition",
+          "section": "1.1 Organization of the Specification (part 5)",
+          "pageStart": 18,
+          "pageEnd": 22,
+          "excerpt": "Classes support concurrent programming with synchronized methods. Methods declare the checked exceptions that can arise from their execution, which allows compile-time checking to ensure that exceptional conditions are handled. Objects can declare a finalize method that will be invoked before the objects are discarded by the garbage collector, allowing the objects to clean up their state.\n\nFor simplicity, the language has neither declaration \"headers\" separate from the implementation of a class nor separate type and class hierarchies.\n\nA restricted kind of class, enum classes, supports the definition of small sets of values and their manipulation in a type safe manner. Unlike enumerations in other languages, enum constants are objects and may have their own methods.\n\nAnother restricted kind of class, record classes, supports the compact expression of simple objects that serve as aggregates of values.\n\nChapter 9 describes interfaces. The members of interfaces are classes, interfaces, constant fields, and methods. Classes that are otherwise unrelated can implement the same interface. A variable of an interface type can contain a reference to any object that implements the interface.\n\nClasses and interfaces support multiple inheritance from interfaces. A class that implements one or more interfaces may inherit instance methods from both its superclass and its superinterfaces.\n\nAnnotations are metadata that may be applied to declarations in a program, as well as to the uses of types in declarations and expressions. The form of an annotation is defined by an annotation interface, a specialized kind of interface. Annotations are not permitted to affect the semantics of programs in the Java programming language in any way. However, they provide useful input to various tools.\n\nChapter 10 describes arrays. Array accesses include bounds checking. Arrays are dynamically created objects and may be assigned to variables of type Object . The language supports arrays of arrays, rather than multidimensional arrays."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-java-resource-autocloseable",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "java",
+      "question": "What type constraint applies to a resource used by a Java try-with-resources statement?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The type of a declared resource, or of an existing variable referenced as a resource, must be a subtype of AutoCloseable; otherwise a compile-time error occurs.",
+        "keyFacts": [
+          "The resource type must be a subtype of AutoCloseable.",
+          "The rule covers declared resources and referenced existing variables.",
+          "Violation is a compile-time error."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "pageStart": 574,
+          "pageEnd": 576,
+          "section": "14.20.3 try -with-resources (part 2)",
+          "note": "Frozen evidence chunk 11c61eb0a62cd87c."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "11c61eb0a62cd87c",
+          "sourceId": "java-se-26-language-specification",
+          "sourceUrl": "https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf",
+          "title": "The Java Language Specification, Java SE 26 Edition",
+          "section": "14.20.3 try -with-resources (part 2)",
+          "pageStart": 574,
+          "pageEnd": 576,
+          "excerpt": "The scope and shadowing of a local variable declared in a resource specification is specified in §6.3 and §6.4.\n\nReferences to the local variable from a nested class or interface, or a lambda expression, are restricted, as specified in §6.5.6.1.\n\nThe type of a local variable declared in a resource specification is specified in §14.4.1.\n\nThe type of a local variable declared in a resource specification, or the type of an existing variable referred to in a resource specification, must be a subtype of AutoCloseable , or a compile-time error occurs.\n\nIt is a compile-time error for a resource specification to declare two local variables with the same name.\n\nNote that a resource specification may declare more than one unnamed local variable (§6.1).\n\nResources are final , in that:\n\nA local variable declared in a resource specification is implicitly declared final if it is not explicitly declared final (§4.12.4).\n\nAn existing variable referred to in a resource specification must be a final or effectively final variable that is definitely assigned before the try -withresources statement (§16 ( Definite Assignment )), or a compile-time error occurs.\n\nResources are initialized in left-to-right order. If a resource fails to initialize (that is, its initializer expression throws an exception), then all resources initialized so far by the try -with-resources statement are closed. If all resources initialize successfully, the try block executes as normal and then all non-null resources of the try -withresources statement are closed.\n\nResources are closed in the reverse order from that in which they were initialized. A resource is closed only if it initialized to a non-null value. An exception from the closing of one resource does not prevent the closing of other resources. Such an exception is suppressed if an exception was thrown previously by an initializer, the try block, or the closing of a resource."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-java-micronaut",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "java",
+      "question": "How does Micronaut perform compile-time dependency injection?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "Micronaut framework internals are outside the Java language corpus."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "Micronaut framework internals are outside the Java language corpus.",
+        "absenceProbes": [
+          "Micronaut dependency injection",
+          "@Inject Micronaut"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Micronaut dependency injection",
+            "matches": 0
+          },
+          {
+            "text": "@Inject Micronaut",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-java-spring-data",
+      "status": "human-approved",
+      "language": "Java",
+      "domain": "java",
+      "question": "How does Spring Data JPA derive repository queries from method names?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The Java language specification does not document Spring Data JPA."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The Java language specification does not document Spring Data JPA.",
+        "absenceProbes": [
+          "Spring Data JPA",
+          "JpaRepository"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Spring Data JPA",
+            "matches": 0
+          },
+          {
+            "text": "JpaRepository",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-javascript-optional-chaining",
+      "status": "human-approved",
+      "language": "JavaScript",
+      "domain": "javascript",
+      "question": "What does JavaScript optional chaining do when the value to access or invoke is nullish?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Optional chaining short-circuits the property access or function invocation when the target is null or undefined.",
+        "keyFacts": [
+          "It applies to property access and function invocation.",
+          "It short-circuits for nullish targets."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 19,
+          "pageEnd": 22,
+          "section": "Introduction (part 5)",
+          "note": "Frozen evidence chunk 52089fb88b868f0a."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "52089fb88b868f0a",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "Introduction (part 5)",
+          "pageStart": 19,
+          "pageEnd": 22,
+          "excerpt": "ECMAScript 2 0 2 0 , the 11 th edition, introduced the matchAll method for Strings, to produce an iterator for all match objects generated by a global regular expression; import() , a syntax to asynchronously import Modules with a dynamic specifier; BigInt , a new number primitive for working with arbitrary precision integers; Promise.allSettled , a new Promise combinator that does not short-circuit; globalThis , a universal way to access the global this value; dedicated export * as ns from 'module' syntax for use within modules; increased standardization of for-in enumeration order; import.meta , a host-populated object available in Modules that may contain contextual information about the Module; as well as adding two new syntax features to improve working with 'nullish' values ( undefined or null ): nullish coalescing, a value selection operator; and optional chaining, a property access and function invocation operator that short-circuits if the value to access/invoke is nullish.\n\nECMAScript 2 0 21, the 12 th edition, introduced the replaceAll method for Strings; Promise.any , a Promise combinator that short-circuits when an input value is fulfilled; AggregateError , a new Error type to represent multiple errors at once; logical assignment operators ( ??= , &&= , ||= ); WeakRef , for referring to a target object without preserving it from garbage collection, and FinalizationRegistry , to manage registration and unregistration of cleanup operations performed when target objects are garbage collected; separators for numeric literals ( 1_000 ); and Array.prototype.sort was made more precise, reducing the amount of cases that result in an implementation-defined sort order.\n\nECMAScript 2 0 22, the 13 th edition, introduced top-level await , allowing the keyword to be used at the top level of modules; new class elements: public and private instance fields, public and private static fields, private instance methods and accessors, and private static methods and accessors; static blocks inside classes, to perform per-class evaluation initialization; the #x in obj syntax, to test for presence of private fields on objects; regular expression match indices via the /d flag, which provides start and end indices for matched substrings; the cause property on Error objects, which can be used to record a causation chain in errors; the at method for Strings, Arrays, and TypedArrays, which allows relative indexing; and Object.hasOwn , a convenient alternative to Object.prototype.hasOwnProperty ."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-javascript-promise-all",
+      "status": "human-approved",
+      "language": "JavaScript",
+      "domain": "javascript",
+      "question": "How does JavaScript Promise.all settle when given an iterable of promises?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "It returns a promise fulfilled with an array of fulfillment values if all inputs fulfill, or rejected with the reason from the first input promise that rejects.",
+        "keyFacts": [
+          "The result is a new promise.",
+          "Successful values are returned as an array.",
+          "The first rejection reason rejects the result."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "pageStart": 771,
+          "pageEnd": 772,
+          "section": "27.2.4.1 Promise.all ( iterable )",
+          "note": "Frozen evidence chunk 51b0124babe774ef."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "51b0124babe774ef",
+          "sourceId": "ecmascript-2026-ecma-262",
+          "sourceUrl": "https://www.ecma-international.org/wp-content/uploads/ECMA-262.pdf",
+          "title": "ECMAScript 2026 Language Specification, ECMA-262 17th Edition",
+          "section": "27.2.4.1 Promise.all ( iterable )",
+          "pageStart": 771,
+          "pageEnd": 772,
+          "excerpt": "## 27.2.4.1 Promise.all ( iterable )\n\nThis function returns a new promise which is fulfilled with an array of fulfillment values for the passed promises, or rejects with the reason of the first passed promise that rejects. It resolves all elements of the passed iterable to promises as it runs this algorithm.\n\nLet C be the this value.\n\nLet promiseCapability be ? NewPromiseCapability( C ).\n\nLet promiseResolve be Completion(GetPromiseResolve( C )).\n\nIfAbruptRejectPromise( promiseResolve , promiseCapability ).\n\nLet iteratorRecord be Completion(GetIterator( iterable , SYNC )).\n\nIfAbruptRejectPromise( iteratorRecord , promiseCapability ).\n\nLet result be Completion(PerformPromiseAll( iteratorRecord , C , promiseCapability , promiseResolve )).\n\nIf result is an abrupt completion, then\n\nIf iteratorRecord .[[Done]] is false , set result to Completion(IteratorClose( iteratorRecord , result )).\n\nIfAbruptRejectPromise( result , promiseCapability ).\n\nReturn ! result .\n\nNOTE This function requires its this value to be a constructor function that supports the parameter conventions of the Promise constructor.\n\n<!-- 🖼️❌ Image not available. Please use `PdfPipelineOptions(generate_picture_images=True)` -->"
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-javascript-deno",
+      "status": "human-approved",
+      "language": "JavaScript",
+      "domain": "javascript",
+      "question": "How do Deno permissions restrict network and file access?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "Deno runtime permissions are outside the ECMAScript standard."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "Deno runtime permissions are outside the ECMAScript standard.",
+        "absenceProbes": [
+          "Deno permission",
+          "--allow-net"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Deno permission",
+            "matches": 0
+          },
+          {
+            "text": "--allow-net",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-javascript-express",
+      "status": "human-approved",
+      "language": "JavaScript",
+      "domain": "javascript",
+      "question": "In what order does Express execute application and router middleware?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "ECMAScript specifies the language, not Express middleware behavior."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "ECMAScript specifies the language, not Express middleware behavior.",
+        "absenceProbes": [
+          "Express middleware",
+          "express.Router"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Express middleware",
+            "matches": 0
+          },
+          {
+            "text": "express.Router",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-kotlin-data-generated-members",
+      "status": "human-approved",
+      "language": "Kotlin",
+      "domain": "kotlin",
+      "question": "Which common functions does Kotlin generate for a data class to reduce boilerplate?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "A data class receives data-oriented members including equals, hashCode, toString, a shallow-copying copy function, and component functions for its data properties.",
+        "keyFacts": [
+          "equals, hashCode, and toString are generated.",
+          "copy performs shallow copying.",
+          "Component functions correspond to data properties."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 110,
+          "pageEnd": 113,
+          "section": "4.1.2 Data class declaration (part 1)",
+          "note": "Frozen evidence chunk 016a3e886dccb58c."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "016a3e886dccb58c",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "title": "Kotlin Language Specification",
+          "section": "4.1.2 Data class declaration (part 1)",
+          "pageStart": 110,
+          "pageEnd": 113,
+          "excerpt": "## 4.1.2 Data class declaration\n\nA data class dataClass is a special kind of class, which represents a product type constructed from a number of data properties ( dp 1 , . . . , dp m ), described in its primary constructor. Non-property constructor parameters are not allowed in the primary constructor of a data class. As such, data classes allow Kotlin to reduce the boilerplate and generate a number of additional data-relevant functions.\n\nequals() / hashCode() / toString() functions compliant with their contracts:\n\n-equals(that) returns true iff:\n\n∗ that has the same runtime type as this ;\n\n∗ this.prop == that.prop returns true for every data property prop ;\n\n-hashCode() returns the same numbers for values A and B if they are equal w.r.t. the generated equals ;\n\n-toString() returns a string representations which is guaranteed to include the class name along with all the data properties' string representations.\n\nA copy() function for shallow object copying with the following properties:\n\n-It has the same number of parameters as the primary constructor with the same names and types;\n\n-It calls the primary constructor with the corresponding parameters at the corresponding positions;\n\n-It has defaults for all the parameters defaulting to the value of the corresponding property in this object.\n\nA number of componentN() functions for destructuring declaration:\n\n-For the data property at position N ( starting from 1 ), the generated component N function has the same type as this property and returns the value of this property;\n\n-It has an operator modifier, allowing it to be used in destructuring declarations;\n\n-The number of these functions is the same as the number of data properties.\n\nAll these functions consider only data properties { dp i } ; e.g., your data class may include regular property declarations in its body, however, they will not be considered in the equals() implementation or have a componentN() generated for them."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-kotlin-elvis-laziness",
+      "status": "human-approved",
+      "language": "Kotlin",
+      "domain": "kotlin",
+      "question": "How does Kotlin's Elvis operator choose a value, and when is its right-hand expression evaluated?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "The Elvis operator returns the right-hand expression only when the left-hand value is null. It is lazy, so the right side is not evaluated when the left side is non-null.",
+        "keyFacts": [
+          "The operator tests the left side for null.",
+          "The right side supplies the null fallback.",
+          "The right side is evaluated lazily."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "pageStart": 186,
+          "pageEnd": 186,
+          "section": "8.12 Elvis operator expressions",
+          "note": "Frozen evidence chunk d08840d67f98cbfc."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "d08840d67f98cbfc",
+          "sourceId": "kotlin-language-specification",
+          "sourceUrl": "https://kotlinlang.org/spec/pdf/kotlin-spec.pdf",
+          "title": "Kotlin Language Specification",
+          "section": "8.12 Elvis operator expressions",
+          "pageStart": 186,
+          "pageEnd": 186,
+          "excerpt": "## 8.12 Elvis operator expressions\n\nelvisExpression : infixFunctionCall {{ NL } elvis { NL } infixFunctionCall }\n\nAn elvis operator expression is a binary expression which uses an elvis operator ( ?: ). It checks whether the left-hand side expression is reference equal to null , and, if it is, evaluates and return the right-hand side expression.\n\nThis operator is lazy , meaning that if the left-hand side expression is not reference equal to null , the right-hand side expression is not evaluated.\n\nThe type of elvis operator expression is the least upper bound of the non-nullable variant of the type of the left-hand side expression and the type of the right-hand side expression."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-kotlin-ktor",
+      "status": "human-approved",
+      "language": "Kotlin",
+      "domain": "kotlin",
+      "question": "How are typed routes registered in Ktor?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The Kotlin language specification does not document Ktor."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The Kotlin language specification does not document Ktor.",
+        "absenceProbes": [
+          "Ktor routing",
+          "RoutingCall"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Ktor routing",
+            "matches": 0
+          },
+          {
+            "text": "RoutingCall",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:10:11.226Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-kotlin-serialization",
+      "status": "human-approved",
+      "language": "Kotlin",
+      "domain": "kotlin",
+      "question": "How does kotlinx.serialization Json configure unknown-key handling?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The kotlinx.serialization library is not part of the language specification."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The kotlinx.serialization library is not part of the language specification.",
+        "absenceProbes": [
+          "kotlinx.serialization Json",
+          "ignoreUnknownKeys"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "kotlinx.serialization Json",
+            "matches": 0
+          },
+          {
+            "text": "ignoreUnknownKeys",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-postgres-gin-purpose",
+      "status": "human-approved",
+      "language": "PostgreSQL",
+      "domain": "postgresql",
+      "question": "What kind of data are PostgreSQL GIN indexes designed for, and how is an inverted index organized?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "GIN indexes suit values with multiple components, such as arrays. They store a separate index entry for each component so presence queries can be handled efficiently.",
+        "keyFacts": [
+          "GIN is an inverted index.",
+          "It is suited to multi-component values such as arrays.",
+          "It stores separate entries for component values."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 495,
+          "pageEnd": 496,
+          "section": "11.2.5. GIN",
+          "note": "Frozen evidence chunk e41457b4e0f2cd2d."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "e41457b4e0f2cd2d",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "title": "PostgreSQL 18.4 Documentation",
+          "section": "11.2.5. GIN",
+          "pageStart": 495,
+          "pageEnd": 496,
+          "excerpt": "## 11.2.5. GIN\n\nGIN indexes are 'inverted indexes' which are appropriate for data values that contain multiple component values, such as arrays. An inverted index contains a separate entry for each component value, and can efficiently handle queries that test for the presence of specific component values.\n\nLike GiST and SP-GiST, GIN can support many different user-defined indexing strategies, and the particular operators with which a GIN index can be used vary depending on the indexing strategy. As an example, the standard distribution of PostgreSQL includes a GIN operator class for arrays, which supports indexed queries using these operators:\n\n<@ @> = &&\n\n(See Section 9.19 for the meaning of these operators.) The GIN operator classes included in the standard distribution are documented in Table 65.3. Many other GIN operator classes are available in the contrib collection or as separate projects. For more information see Section 65.4."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-postgres-mvcc-snapshot",
+      "status": "human-approved",
+      "language": "PostgreSQL",
+      "domain": "postgresql",
+      "question": "How does PostgreSQL MVCC give a statement a consistent view while reducing read-write contention?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Each statement reads from a data snapshot rather than inconsistent concurrent row changes. Under MVCC, read locks do not conflict with write locks, so reads and writes do not block one another in the usual case.",
+        "keyFacts": [
+          "A statement sees a snapshot of data.",
+          "The snapshot prevents inconsistent concurrent changes from being observed.",
+          "Reading does not block writing and writing does not block reading."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "pageStart": 551,
+          "pageEnd": 551,
+          "section": "13.1. Introduction",
+          "note": "Frozen evidence chunk fccab51a28682fd3."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "fccab51a28682fd3",
+          "sourceId": "postgresql-18-manual",
+          "sourceUrl": "https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf",
+          "title": "PostgreSQL 18.4 Documentation",
+          "section": "13.1. Introduction",
+          "pageStart": 551,
+          "pageEnd": 551,
+          "excerpt": "## 13.1. Introduction\n\nPostgreSQL provides a rich set of tools for developers to manage concurrent access to data. Internally, data consistency is maintained by using a multiversion model (Multiversion Concurrency Control, MVCC). This means that each SQL statement sees a snapshot of data (a database version ) as it was some time ago, regardless of the current state of the underlying data. This prevents statements from viewing inconsistent data produced by concurrent transactions performing updates on the same data rows, providing transaction isolation for each database session. MVCC, by eschewing the locking methodologies of traditional database systems, minimizes lock contention in order to allow for reasonable performance in multiuser environments.\n\nThe main advantage of using the MVCC model of concurrency control rather than locking is that in MVCC locks acquired for querying (reading) data do not conflict with locks acquired for writing data, and so reading never blocks writing and writing never blocks reading. PostgreSQL maintains this guarantee even when providing the strictest level of transaction isolation through the use of an innovative Serializable Snapshot Isolation (SSI) level.\n\nTable- and row-level locking facilities are also available in PostgreSQL for applications which don't generally need full transaction isolation and prefer to explicitly manage particular points of conflict. However, proper use of MVCC will generally provide better performance than locks. In addition, application-defined advisory locks provide a mechanism for acquiring locks that are not tied to a single transaction."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-postgres-postgis",
+      "status": "human-approved",
+      "language": "PostgreSQL",
+      "domain": "postgresql",
+      "question": "How does PostGIS ST_Buffer handle geography values?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "PostGIS function semantics are not part of the core PostgreSQL manual."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "PostGIS function semantics are not part of the core PostgreSQL manual.",
+        "absenceProbes": [
+          "PostGIS ST_Buffer",
+          "ST_Buffer geography"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "PostGIS ST_Buffer",
+            "matches": 0
+          },
+          {
+            "text": "ST_Buffer geography",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:10:29.546Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-postgres-timescale",
+      "status": "human-approved",
+      "language": "PostgreSQL",
+      "domain": "postgresql",
+      "question": "How does TimescaleDB partition a hypertable into chunks?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus contains core PostgreSQL documentation, not TimescaleDB."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus contains core PostgreSQL documentation, not TimescaleDB.",
+        "absenceProbes": [
+          "TimescaleDB hypertable",
+          "create_hypertable"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "TimescaleDB hypertable",
+            "matches": 0
+          },
+          {
+            "text": "create_hypertable",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-python-generator-expression",
+      "status": "human-approved",
+      "language": "Python",
+      "domain": "python",
+      "question": "How does a Python generator expression differ from an equivalent list comprehension in syntax and memory behavior?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "comparative",
+      "expected": {
+        "answer": "A generator expression uses parentheses rather than square brackets and produces values lazily, making it generally more memory-friendly than an equivalent list comprehension.",
+        "keyFacts": [
+          "Generator expressions use parentheses.",
+          "List comprehensions use square brackets.",
+          "Generator expressions tend to use less memory."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "python-tutorial",
+          "sourceUrl": "https://docs.python.org/3/tutorial/classes.html",
+          "section": "9.1. A Word About Names and Objects¶ (part 26)",
+          "note": "Frozen evidence chunk e32ef8129f0b9ae5."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "e32ef8129f0b9ae5",
+          "sourceId": "python-tutorial",
+          "sourceUrl": "https://docs.python.org/3/tutorial/classes.html",
+          "title": "The Python Tutorial",
+          "section": "9.1. A Word About Names and Objects¶ (part 26)",
+          "excerpt": "```\n>>> for char in reverse('golf'):\n... print(char)\n...\nf\nl\no\ng\n```\n\nAnything that can be done with generators can also be done with class-based\niterators as described in the previous section. What makes generators so\ncompact is that the __iter__() and __next__() methods\nare created automatically.\n\nAnother key feature is that the local variables and execution state are\nautomatically saved between calls. This made the function easier to write and\nmuch more clear than an approach using instance variables like self.index\nand self.data.\n\nIn addition to automatic method creation and saving program state, when\ngenerators terminate, they automatically raise StopIteration. In\ncombination, these features make it easy to create iterators with no more effort\nthan writing a regular function.\n\n## 9.10. Generator Expressions¶\n\nSome simple generators can be coded succinctly as expressions using a syntax\nsimilar to list comprehensions but with parentheses instead of square brackets.\nThese expressions are designed for situations where the generator is used right\naway by an enclosing function. Generator expressions are more compact but less\nversatile than full generator definitions and tend to be more memory friendly\nthan equivalent list comprehensions.\n\nExamples:\n\n```\n>>> sum(i*i for i in range(10)) # sum of squares\n285\n\n>>> xvec = [10, 20, 30]\n>>> yvec = [7, 5, 3]\n>>> sum(x*y for x,y in zip(xvec, yvec)) # dot product\n260\n\n>>> unique_words = set(word for line in page for word in line.split())\n\n>>> valedictorian = max((student.gpa, student.name) for student in graduates)\n\n>>> data = 'golf'\n>>> list(data[i] for i in range(len(data)-1, -1, -1))\n['f', 'l', 'o', 'g']\n```\n\nFootnotes\n\nExcept for one thing. Module objects have a secret read-only attribute called\n__dict__ which returns the dictionary used to implement the module’s\nnamespace; the name __dict__ is an attribute but not a global name.\nObviously, using this violates the abstraction of namespace implementation, and\nshould be restricted to things like post-mortem debuggers."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:11:19.268Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-python-with-context-manager",
+      "status": "human-approved",
+      "language": "Python",
+      "domain": "python",
+      "question": "What protocol does Python's with statement use around execution of its block?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "procedural",
+      "expected": {
+        "answer": "It evaluates a context manager, invokes its __enter__ method before the block, and uses __exit__ when leaving, encapsulating common try/finally-style setup and cleanup.",
+        "keyFacts": [
+          "The context expression yields a context manager.",
+          "__enter__ is invoked before the managed block.",
+          "__exit__ handles leaving the context."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "python-language-reference",
+          "sourceUrl": "https://docs.python.org/3/reference/compound_stmts.html",
+          "section": "8.1. The if statement¶ (part 10)",
+          "note": "Frozen evidence chunk ed173967972c3b4a."
+        },
+        {
+          "sourceId": "python-language-reference",
+          "sourceUrl": "https://docs.python.org/3/reference/compound_stmts.html",
+          "section": "8.1. The if statement¶ (part 12)",
+          "note": "Frozen evidence chunk 440f3241673206ce."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "ed173967972c3b4a",
+          "sourceId": "python-language-reference",
+          "sourceUrl": "https://docs.python.org/3/reference/compound_stmts.html",
+          "title": "Python Language Reference",
+          "section": "8.1. The if statement¶ (part 10)",
+          "excerpt": "The exception information is not available to the program during execution of\nthe finally clause.\n\nWhen a return, break or continue statement is\nexecuted in the try suite of a try…finally\nstatement, the finally clause is also executed ‘on the way out.’\n\nThe return value of a function is determined by the last return\nstatement executed. Since the finally clause always executes, a\nreturn statement executed in the finally clause will\nalways be the last one executed. The following function returns ‘finally’.\n\n```\ndef foo():\n try:\n return 'try'\n finally:\n return 'finally'\n```\n\nChanged in version 3.8: Prior to Python 3.8, a continue statement was illegal in the\nfinally clause due to a problem with the implementation.\n\nChanged in version 3.14: The compiler emits a SyntaxWarning when a return,\nbreak or continue appears in a finally\nblock (see PEP 765).\n\n## 8.5. The with statement¶\n\nThe with statement is used to wrap the execution of a block with\nmethods defined by a context manager (see section With Statement Context Managers).\nThis allows common try…except…finally\nusage patterns to be encapsulated for convenient reuse.\n\n```\nwith_stmt: \"with\" ( \"(\" with_stmt_contents \",\"? \")\" | with_stmt_contents ) \":\" suite\nwith_stmt_contents: with_item (\",\" with_item)*\nwith_item: expression [\"as\" target]\n```\n\nThe execution of the with statement with one “item” proceeds as follows:\n\n- The context expression (the expression given in the\nwith_item) is evaluated to obtain a context manager.\n\nThe context expression (the expression given in the\nwith_item) is evaluated to obtain a context manager.\n\n- The context manager’s __enter__() is loaded for later use.\n\nThe context manager’s __enter__() is loaded for later use.\n\n- The context manager’s __exit__() is loaded for later use.\n\nThe context manager’s __exit__() is loaded for later use.\n\n- The context manager’s __enter__() method is invoked.\n\nThe context manager’s __enter__() method is invoked."
+        },
+        {
+          "chunkId": "440f3241673206ce",
+          "sourceId": "python-language-reference",
+          "sourceUrl": "https://docs.python.org/3/reference/compound_stmts.html",
+          "title": "Python Language Reference",
+          "section": "8.1. The if statement¶ (part 12)",
+          "excerpt": "- The context manager’s __exit__() method is invoked. If an exception\ncaused the suite to be exited, its type, value, and traceback are passed as\narguments to __exit__(). Otherwise, three None arguments are\nsupplied.\nIf the suite was exited due to an exception, and the return value from the\n__exit__() method was false, the exception is reraised. If the return\nvalue was true, the exception is suppressed, and execution continues with the\nstatement following the with statement.\nIf the suite was exited for any reason other than an exception, the return\nvalue from __exit__() is ignored, and execution proceeds at the normal\nlocation for the kind of exit that was taken.\n\nThe context manager’s __exit__() method is invoked. If an exception\ncaused the suite to be exited, its type, value, and traceback are passed as\narguments to __exit__(). Otherwise, three None arguments are\nsupplied.\n\nIf the suite was exited due to an exception, and the return value from the\n__exit__() method was false, the exception is reraised. If the return\nvalue was true, the exception is suppressed, and execution continues with the\nstatement following the with statement.\n\nIf the suite was exited for any reason other than an exception, the return\nvalue from __exit__() is ignored, and execution proceeds at the normal\nlocation for the kind of exit that was taken.\n\nThe following code:\n\n```\nwith EXPRESSION as TARGET:\n SUITE\n```\n\nis semantically equivalent to:\n\n```\nmanager = (EXPRESSION)\nenter = manager.__enter__\nexit = manager.__exit__\nvalue = enter()\nhit_except = False\n\ntry:\n TARGET = value\n SUITE\nexcept:\n hit_except = True\n if not exit(*sys.exc_info()):\n raise\nfinally:\n if not hit_except:\n exit(None, None, None)\n```\n\nexcept that implicit special method lookup is used\nfor __enter__() and __exit__().\n\nWith more than one item, the context managers are processed as if multiple\nwith statements were nested:"
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-python-flask",
+      "status": "human-approved",
+      "language": "Python",
+      "domain": "python",
+      "question": "How do Flask blueprints register routes and error handlers?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "Flask framework behavior is outside the Python language and tutorial corpus."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "Flask framework behavior is outside the Python language and tutorial corpus.",
+        "absenceProbes": [
+          "Flask blueprint",
+          "register_blueprint"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Flask blueprint",
+            "matches": 0
+          },
+          {
+            "text": "register_blueprint",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-python-pytorch",
+      "status": "human-approved",
+      "language": "Python",
+      "domain": "python",
+      "question": "How does PyTorch autograd construct and release a computation graph?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The Python documentation corpus does not document PyTorch."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The Python documentation corpus does not document PyTorch.",
+        "absenceProbes": [
+          "PyTorch autograd",
+          "requires_grad"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "PyTorch autograd",
+            "matches": 0
+          },
+          {
+            "text": "requires_grad",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-react-hook-placement",
+      "status": "human-approved",
+      "language": "React",
+      "domain": "react",
+      "question": "Where may React Hooks be called, and what should be done if state is needed inside a condition or loop?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "procedural",
+      "expected": {
+        "answer": "Hooks may be called only at the top level of components or other Hooks. Conditional or loop-specific state logic should be moved into a separate component or Hook.",
+        "keyFacts": [
+          "Hooks are called at the top level.",
+          "They may be called from components or other Hooks.",
+          "Conditional or loop use should be refactored."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://react.dev/learn",
+          "section": "Creating and nesting components (part 6)",
+          "note": "Frozen evidence chunk 0de64bd3e8e9db71."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "0de64bd3e8e9db71",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn",
+          "title": "Quick Start",
+          "section": "Creating and nesting components (part 6)",
+          "excerpt": "```\nfunction MyButton() { const [count, setCount] = useState(0); // ...\n```\n\nYou’ll get two things from useState: the current state (count), and the function that lets you update it (setCount). You can give them any names, but the convention is to write [something, setSomething].\n\nThe first time the button is displayed, count will be 0 because you passed 0 to useState(). When you want to change state, call setCount() and pass the new value to it. Clicking this button will increment the counter:\n\n```\nfunction MyButton() { const [count, setCount] = useState(0); function handleClick() { setCount(count + 1); } return ( <button onClick={handleClick}> Clicked {count} times </button> );}\n```\n\nReact will call your component function again. This time, count will be 1. Then it will be 2. And so on.\n\nIf you render the same component multiple times, each will get its own state. Click each button separately:\n\n```\nimport { useState } from 'react';\n\nexport default function MyApp() {\n return (\n <div>\n <h1>Counters that update separately</h1>\n <MyButton />\n <MyButton />\n </div>\n );\n}\n\nfunction MyButton() {\n const [count, setCount] = useState(0);\n\nfunction handleClick() {\n setCount(count + 1);\n }\n\nreturn (\n <button onClick={handleClick}>\n Clicked {count} times\n </button>\n );\n}\n```\n\nNotice how each button “remembers” its own count state and doesn’t affect other buttons.\n\n## Using Hooks\n\nFunctions starting with use are called Hooks. useState is a built-in Hook provided by React. You can find other built-in Hooks in the API reference. You can also write your own Hooks by combining the existing ones.\n\nHooks are more restrictive than other functions. You can only call Hooks at the top of your components (or other Hooks). If you want to use useState in a condition or a loop, extract a new component and put it there.\n\n## Sharing data between components"
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-react-list-keys",
+      "status": "human-approved",
+      "language": "React",
+      "domain": "react",
+      "question": "Why should React list items have stable keys, and where should those keys usually come from?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "Keys uniquely identify sibling items and let React track insertions, deletions, and reordering; they should normally come from stable data such as database IDs.",
+        "keyFacts": [
+          "A key identifies an item among its siblings.",
+          "React uses keys to track list changes.",
+          "Stable IDs from the underlying data are preferred."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://react.dev/learn",
+          "section": "Creating and nesting components (part 4)",
+          "note": "Frozen evidence chunk 37eb7780444845ba."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "37eb7780444845ba",
+          "sourceId": null,
+          "sourceUrl": "https://react.dev/learn",
+          "title": "Quick Start",
+          "section": "Creating and nesting components (part 4)",
+          "excerpt": "In React, there is no special syntax for writing conditions. Instead, you’ll use the same techniques as you use when writing regular JavaScript code. For example, you can use an if statement to conditionally include JSX:\n\n```\nlet content;if (isLoggedIn) { content = <AdminPanel />;} else { content = <LoginForm />;}return ( <div> {content} </div>);\n```\n\nIf you prefer more compact code, you can use the conditional ? operator. Unlike if, it works inside JSX:\n\n```\n<div> {isLoggedIn ? ( <AdminPanel /> ) : ( <LoginForm /> )}</div>\n```\n\nWhen you don’t need the else branch, you can also use a shorter logical && syntax:\n\n```\n<div> {isLoggedIn && <AdminPanel />}</div>\n```\n\nAll of these approaches also work for conditionally specifying attributes. If you’re unfamiliar with some of this JavaScript syntax, you can start by always using if...else.\n\n## Rendering lists\n\nYou will rely on JavaScript features like for loop and the array map() function to render lists of components.\n\nFor example, let’s say you have an array of products:\n\n```\nconst products = [ { title: 'Cabbage', id: 1 }, { title: 'Garlic', id: 2 }, { title: 'Apple', id: 3 },];\n```\n\nInside your component, use the map() function to transform an array of products into an array of <li> items:\n\n```\nconst listItems = products.map(product => <li key={product.id}> {product.title} </li>);return ( <ul>{listItems}</ul>);\n```\n\nNotice how <li> has a key attribute. For each item in a list, you should pass a string or a number that uniquely identifies that item among its siblings. Usually, a key should be coming from your data, such as a database ID. React uses your keys to know what happened if you later insert, delete, or reorder the items.\n\n```\nconst products = [\n { title: 'Cabbage', isFruit: false, id: 1 },\n { title: 'Garlic', isFruit: false, id: 2 },\n { title: 'Apple', isFruit: true, id: 3 },\n];"
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-react-apollo",
+      "status": "human-approved",
+      "language": "React",
+      "domain": "react",
+      "question": "How do Apollo Client cache policies control normalized GraphQL reads?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "Apollo Client cache behavior is outside the React documentation corpus."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "Apollo Client cache behavior is outside the React documentation corpus.",
+        "absenceProbes": [
+          "Apollo Client cache policy",
+          "InMemoryCache typePolicies"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Apollo Client cache policy",
+            "matches": 0
+          },
+          {
+            "text": "InMemoryCache typePolicies",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:11:54.287Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-react-zustand",
+      "status": "human-approved",
+      "language": "React",
+      "domain": "react",
+      "question": "How does Zustand createStore configure a vanilla store and subscriptions?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The corpus documents React itself, not Zustand's store API."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The corpus documents React itself, not Zustand's store API.",
+        "absenceProbes": [
+          "Zustand createStore",
+          "subscribeWithSelector"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Zustand createStore",
+            "matches": 0
+          },
+          {
+            "text": "subscribeWithSelector",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-rust-loop-break-value",
+      "status": "human-approved",
+      "language": "Rust",
+      "domain": "rust",
+      "question": "How can a Rust loop return a value to the surrounding code?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "procedural",
+      "expected": {
+        "answer": "Place the desired value after the break expression; that value becomes the value returned by the loop and can be assigned or otherwise used.",
+        "keyFacts": [
+          "break can carry a value.",
+          "That value is returned from the loop.",
+          "The returned value can be used by surrounding code."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch03-05-control-flow.html",
+          "section": "Control Flow (part 8)",
+          "note": "Frozen evidence chunk 43c050e7f1c2d776."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "43c050e7f1c2d776",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch03-05-control-flow.html",
+          "title": "The Rust Programming Language",
+          "section": "Control Flow (part 8)",
+          "excerpt": "```\nfn main() {\n loop {\n println!(\"again!\");\n }\n}\n```\n\nWhen we run this program, we’ll see again! printed over and over continuously\nuntil we stop the program manually. Most terminals support the keyboard shortcut\nctrl-C to interrupt a program that is stuck in a continual\nloop. Give it a try:\n\n```\n$ cargo run\n Compiling loops v0.1.0 (file:///projects/loops)\n Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s\n Running `target/debug/loops`\nagain!\nagain!\nagain!\nagain!\n^Cagain!\n```\n\nThe symbol ^C represents where you pressed ctrl-C.\n\nYou may or may not see the word again! printed after the ^C, depending on\nwhere the code was in the loop when it received the interrupt signal.\n\nFortunately, Rust also provides a way to break out of a loop using code. You\ncan place the break keyword within the loop to tell the program when to stop\nexecuting the loop. Recall that we did this in the guessing game in the\n“Quitting After a Correct Guess” section of Chapter 2 to exit the program when the user won the game by\nguessing the correct number.\n\nWe also used continue in the guessing game, which in a loop tells the program\nto skip over any remaining code in this iteration of the loop and go to the\nnext iteration.\n\n#### Returning Values from Loops\n\nOne of the uses of a loop is to retry an operation you know might fail, such\nas checking whether a thread has completed its job. You might also need to pass\nthe result of that operation out of the loop to the rest of your code. To do\nthis, you can add the value you want returned after the break expression you\nuse to stop the loop; that value will be returned out of the loop so that you\ncan use it, as shown here:"
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-rust-slice-ownership",
+      "status": "human-approved",
+      "language": "Rust",
+      "domain": "rust",
+      "question": "What does a Rust slice represent, and does it own the sequence it refers to?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "factual",
+      "expected": {
+        "answer": "A slice is a reference to a contiguous sequence of collection elements. Because it is a reference, it does not own the underlying data.",
+        "keyFacts": [
+          "A slice references a contiguous sequence.",
+          "A slice is a kind of reference.",
+          "It does not have ownership."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch04-03-slices.html",
+          "section": "The Slice Type (part 1)",
+          "note": "Frozen evidence chunk 41362bf64e20ab94."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "41362bf64e20ab94",
+          "sourceId": "rust-book",
+          "sourceUrl": "https://doc.rust-lang.org/stable/book/ch04-03-slices.html",
+          "title": "The Rust Programming Language",
+          "section": "The Slice Type (part 1)",
+          "excerpt": "## The Slice Type\n\nSlices let you reference a contiguous sequence of elements in a\ncollection. A slice is a kind\nof reference, so it does not have ownership.\n\nHere’s a small programming problem: Write a function that takes a string of\nwords separated by spaces and returns the first word it finds in that string.\nIf the function doesn’t find a space in the string, the whole string must be\none word, so the entire string should be returned.\n\nNote: For the purposes of introducing slices, we are assuming ASCII only in\nthis section; a more thorough discussion of UTF-8 handling is in the\n“Storing UTF-8 Encoded Text with Strings” section\nof Chapter 8.\n\nLet’s work through how we’d write the signature of this function without using\nslices, to understand the problem that slices will solve:\n\n```\nfn first_word(s: &String) -> ?\n```\n\nThe first_word function has a parameter of type &String. We don’t need\nownership, so this is fine. (In idiomatic Rust, functions do not take ownership\nof their arguments unless they need to, and the reasons for that will become\nclear as we keep going.) But what should we return? We don’t really have a way\nto talk about part of a string. However, we could return the index of the end\nof the word, indicated by a space. Let’s try that, as shown in Listing 4-7.\n\n```\nfn first_word(s: &String) -> usize {\n let bytes = s.as_bytes();\n\nfor (i, &item) in bytes.iter().enumerate() {\n if item == b' ' {\n return i;\n }\n }\n\ns.len()\n}\n\nfn main() {}\n```\n\nBecause we need to go through the String element by element and check whether\na value is a space, we’ll convert our String to an array of bytes using the\nas_bytes method.\n\n```\nfn first_word(s: &String) -> usize {\n let bytes = s.as_bytes();"
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-rust-actix",
+      "status": "human-approved",
+      "language": "Rust",
+      "domain": "rust",
+      "question": "How do Actix Web extractors reject malformed request payloads?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The Rust book does not document Actix Web."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The Rust book does not document Actix Web.",
+        "absenceProbes": [
+          "Actix Web extractor",
+          "FromRequest actix_web"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Actix Web extractor",
+            "matches": 0
+          },
+          {
+            "text": "FromRequest actix_web",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-rust-rayon",
+      "status": "human-approved",
+      "language": "Rust",
+      "domain": "rust",
+      "question": "How does Rayon split work across parallel iterators?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "Rayon's scheduling and iterator APIs are outside the Rust book."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "Rayon's scheduling and iterator APIs are outside the Rust book.",
+        "absenceProbes": [
+          "Rayon parallel iterator",
+          "ParallelIterator drive_unindexed"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "Rayon parallel iterator",
+            "matches": 0
+          },
+          {
+            "text": "ParallelIterator drive_unindexed",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:12:02.152Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-typescript-keyof-domain",
+      "status": "human-approved",
+      "language": "TypeScript",
+      "domain": "typescript",
+      "question": "Which property-name categories can TypeScript's keyof operator represent?",
+      "answerability": "answerable",
+      "difficulty": "medium",
+      "questionType": "factual",
+      "expected": {
+        "answer": "For an object type, keyof can represent string, number, and symbol property names; keyof T is therefore a subtype of string | number | symbol.",
+        "keyFacts": [
+          "keyof covers string-named properties.",
+          "It also covers number-named properties.",
+          "It also covers symbol-named properties."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-9.html",
+          "section": "Support number and symbol named properties with keyof and mapped types (part 1)",
+          "note": "Frozen evidence chunk ee556157ec5c084b."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "ee556157ec5c084b",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-9.html",
+          "title": "The TypeScript Handbook",
+          "section": "Support number and symbol named properties with keyof and mapped types (part 1)",
+          "excerpt": "Was this page helpful?\n\n# TypeScript 2.9\n\n## Support number and symbol named properties with keyof and mapped types\n\nTypeScript 2.9 adds support for number and symbol named properties in index types and mapped types.\nPreviously, the keyof operator and mapped types only supported string named properties.\n\nChanges include:\n\n- An index type keyof T for some type T is a subtype of string | number | symbol.\n\n- A mapped type { [P in K]: XXX } permits any K assignable to string | number | symbol.\n\n- In a for...in statement for an object of a generic type T, the inferred type of the iteration variable was previously keyof T but is now Extract<keyof T, string>. (In other words, the subset of keyof T that includes only string-like values.)\n\nGiven an object type X, keyof X is resolved as follows:\n\n- If X contains a string index signature, keyof X is a union of string, number, and the literal types representing symbol-like properties, otherwise\n\n- If X contains a numeric index signature, keyof X is a union of number and the literal types representing string-like and symbol-like properties, otherwise\n\n- keyof X is a union of the literal types representing string-like, number-like, and symbol-like properties.\n\nWhere:\n\n- String-like properties of an object type are those declared using an identifier, a string literal, or a computed property name of a string literal type.\n\n- Number-like properties of an object type are those declared using a numeric literal or computed property name of a numeric literal type.\n\n- Symbol-like properties of an object type are those declared using a computed property name of a unique symbol type.\n\nIn a mapped type { [P in K]: XXX }, each string literal type in K introduces a property with a string name, each numeric literal type in K introduces a property with a numeric name, and each unique symbol type in K introduces a property with a unique symbol name.\nFurthermore, if K includes type string, a string index signature is introduced, and if K includes type number, a numeric index signature is introduced."
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-typescript-unknown-safety",
+      "status": "human-approved",
+      "language": "TypeScript",
+      "domain": "typescript",
+      "question": "Why is TypeScript unknown safer than any?",
+      "answerability": "answerable",
+      "difficulty": "easy",
+      "questionType": "comparative",
+      "expected": {
+        "answer": "Both can represent any value, but operations on an unknown value are rejected until it is narrowed or otherwise checked, whereas any permits unchecked operations.",
+        "keyFacts": [
+          "unknown can represent any value.",
+          "Operations on unknown require validation or narrowing.",
+          "any permits unchecked use."
+        ]
+      },
+      "evidence": [
+        {
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/functions.html",
+          "section": "Function Type Expressions (part 16)",
+          "note": "Frozen evidence chunk 6fc7c5c1b916b7a5."
+        }
+      ],
+      "evidencePacket": [
+        {
+          "chunkId": "6fc7c5c1b916b7a5",
+          "sourceId": "typescript-handbook",
+          "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/functions.html",
+          "title": "The TypeScript Handbook",
+          "section": "Function Type Expressions (part 16)",
+          "excerpt": "The unknown type represents any value.\nThis is similar to the any type, but is safer because it’s not legal to do anything with an unknown value:\n\n```\ntsfunction f1(a: any) { a.b(); // OK}function f2(a: unknown) { a.b();'a' is of type 'unknown'.18046'a' is of type 'unknown'.}Try\n```\n\nThis is useful when describing function types because you can describe functions that accept any value without having any values in your function body.\n\nConversely, you can describe a function that returns a value of unknown type:\n\n```\ntsfunction safeParse(s: string): unknown { return JSON.parse(s);} // Need to be careful with 'obj'!const obj = safeParse(someRandomString);Try\n```\n\n### never\n\nSome functions never return a value:\n\n```\ntsfunction fail(msg: string): never { throw new Error(msg);}Try\n```\n\nThe never type represents values which are never observed.\nIn a return type, this means that the function throws an exception or terminates execution of the program.\n\nnever also appears when TypeScript determines there’s nothing left in a union.\n\n```\ntsfunction fn(x: string | number) { if (typeof x === \"string\") { // do something } else if (typeof x === \"number\") { // do something else } else { x; // has type 'never'! }}Try\n```\n\n### Function\n\nThe global type Function describes properties like bind, call, apply, and others present on all function values in JavaScript.\nIt also has the special property that values of type Function can always be called; these calls return any:\n\n```\ntsfunction doSomething(f: Function) { return f(1, 2, 3);}Try\n```\n\nThis is an untyped function call and is generally best avoided because of the unsafe any return type.\n\nIf you need to accept an arbitrary function but don’t intend to call it, the type () => void is generally safer.\n\n## Rest Parameters and Arguments\n\nBackground Reading:\n Rest Parameters\n Spread Syntax"
+        }
+      ],
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic corpus evidence resolution",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-typescript-trpc",
+      "status": "human-approved",
+      "language": "TypeScript",
+      "domain": "typescript",
+      "question": "How does a tRPC router infer client procedure types?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "The TypeScript handbook does not document tRPC."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "The TypeScript handbook does not document tRPC.",
+        "absenceProbes": [
+          "tRPC router",
+          "initTRPC"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "tRPC router",
+            "matches": 0
+          },
+          {
+            "text": "initTRPC",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    },
+    {
+      "id": "confirm-v1-typescript-typeorm",
+      "status": "human-approved",
+      "language": "TypeScript",
+      "domain": "typescript",
+      "question": "How do TypeORM entity decorators map relations?",
+      "answerability": "unanswerable",
+      "difficulty": "hard",
+      "questionType": "unanswerable",
+      "expected": {
+        "keyFacts": [],
+        "refusalReason": "TypeORM mapping behavior is outside the TypeScript language handbook."
+      },
+      "evidence": [],
+      "evidencePacket": [],
+      "negativeVerification": {
+        "category": "adjacent-technology",
+        "scopeBasis": "TypeORM mapping behavior is outside the TypeScript language handbook.",
+        "absenceProbes": [
+          "TypeORM entity decorator",
+          "@ManyToOne"
+        ]
+      },
+      "corpusCheck": {
+        "checkedChunkCount": 33079,
+        "probes": [
+          {
+            "text": "TypeORM entity decorator",
+            "matches": 0
+          },
+          {
+            "text": "@ManyToOne",
+            "matches": 0
+          }
+        ]
+      },
+      "authoredBy": "structured benchmark drafting workflow",
+      "verifiedBy": "deterministic full-corpus absence scan",
+      "verifiedAt": "2026-07-23T00:00:00.000Z",
+      "approval": {
+        "state": "confirmed",
+        "approvedBy": "Gabriele",
+        "approvedAt": "2026-07-23T18:04:28.350Z",
+        "basis": "Explicit case-by-case author review of question, expected label, and frozen corpus evidence or absence rationale."
+      }
+    }
+  ],
+  "confirmation": {
+    "reviewer": "Gabriele",
+    "confirmedAt": "2026-07-23T18:12:59.133Z",
+    "sourceReviewFile": "confirmatory-benchmark-v1-human-review.completed.csv",
+    "decision": "all-approved"
+  }
+}

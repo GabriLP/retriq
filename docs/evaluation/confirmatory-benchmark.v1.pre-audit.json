@@ -1,0 +1,593 @@
+{
+  "schemaVersion": 1,
+  "benchmarkId": "retriq-confirmatory-programming-qa",
+  "benchmarkVersion": "1.0.0-review",
+  "auditedAt": "2026-07-23T18:09:38.716Z",
+  "auditor": "Automated evidence pre-audit",
+  "method": "Case-by-case evidence review plus deterministic structural, balance, prior-set overlap, and full-corpus absence checks.",
+  "summary": {
+    "total": 48,
+    "recommendedApprove": 48,
+    "needsCorrection": 0,
+    "highConfidence": 38,
+    "authorSpotChecks": 10
+  },
+  "entries": [
+    {
+      "caseId": "confirm-v1-bash-colon-parameter-expansion",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "2 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-bash-command-substitution-newlines",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-bash-systemd",
+      "recommendation": "approve",
+      "confidence": "medium",
+      "authorSpotCheck": true,
+      "rationale": "The broad term 'systemd' occurs elsewhere in the corpus even though the requested Wants/Requires semantics do not.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-bash-tmux",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-c-array-conversion",
+      "recommendation": "approve",
+      "confidence": "medium",
+      "authorSpotCheck": true,
+      "rationale": "This label was corrected during pre-audit to include all C11 exceptions, so it merits direct confirmation.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-c-sequence-point",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "2 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-c-libuv",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-c-openssl",
+      "recommendation": "approve",
+      "confidence": "medium",
+      "authorSpotCheck": true,
+      "rationale": "OpenSSL is mentioned by PostgreSQL documentation, while the requested EVP API is absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-cpp-range-temporary-lifetime",
+      "recommendation": "approve",
+      "confidence": "medium",
+      "authorSpotCheck": true,
+      "rationale": "The rule is precise and version-sensitive; confirm the wording against the C++26 draft excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-cpp-structured-binding-size",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "2 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-cpp-boost-asio",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-cpp-qt-model",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-go-interface-comparison",
+      "recommendation": "approve",
+      "confidence": "medium",
+      "authorSpotCheck": true,
+      "rationale": "The run-time panic condition is subtle and merits direct confirmation.",
+      "checks": [
+        "2 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-go-select-choice",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "2 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-go-gin",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-go-grpc",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-java-record-purpose",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "2 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-java-resource-autocloseable",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-java-micronaut",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-java-spring-data",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-javascript-optional-chaining",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "2 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-javascript-promise-all",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-javascript-deno",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-javascript-express",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-kotlin-data-generated-members",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-kotlin-elvis-laziness",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-kotlin-ktor",
+      "recommendation": "approve",
+      "confidence": "medium",
+      "authorSpotCheck": true,
+      "rationale": "A broad substring match for Ktor occurs once outside Kotlin documentation; verify that it is irrelevant.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-kotlin-serialization",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-postgres-gin-purpose",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-postgres-mvcc-snapshot",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-postgres-postgis",
+      "recommendation": "approve",
+      "confidence": "medium",
+      "authorSpotCheck": true,
+      "rationale": "PostGIS is mentioned in the PostgreSQL manual, but ST_Buffer geography semantics are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-postgres-timescale",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-python-generator-expression",
+      "recommendation": "approve",
+      "confidence": "medium",
+      "authorSpotCheck": true,
+      "rationale": "Memory behavior is explicit, while laziness follows from the surrounding generator semantics.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-python-with-context-manager",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "2 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-python-flask",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-python-pytorch",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-react-hook-placement",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-react-list-keys",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-react-apollo",
+      "recommendation": "approve",
+      "confidence": "medium",
+      "authorSpotCheck": true,
+      "rationale": "Random negative control selected for author spot-checking.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-react-zustand",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-rust-loop-break-value",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-rust-slice-ownership",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-rust-actix",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-rust-rayon",
+      "recommendation": "approve",
+      "confidence": "medium",
+      "authorSpotCheck": true,
+      "rationale": "Random negative control selected for author spot-checking.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-typescript-keyof-domain",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-typescript-unknown-safety",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The expected answer is directly and completely supported by the frozen authoritative excerpt.",
+      "checks": [
+        "1 frozen evidence packet(s) resolve.",
+        "3 expected fact(s) are represented in the cited excerpt(s).",
+        "Question and answer were compared with the frozen evidence during the pre-audit."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-typescript-trpc",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    },
+    {
+      "caseId": "confirm-v1-typescript-typeorm",
+      "recommendation": "approve",
+      "confidence": "high",
+      "authorSpotCheck": false,
+      "rationale": "The technology-specific behavior is outside corpus scope and all distinctive probes are absent.",
+      "checks": [
+        "2 specific absence probe(s) return zero matches across 33079 chunks.",
+        "The requested API or framework behavior is outside the declared source scope.",
+        "Absence probes are treated as supporting evidence, not proof of semantic absence."
+      ]
+    }
+  ]
+}
