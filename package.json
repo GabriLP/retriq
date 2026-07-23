@@ -73,6 +73,7 @@
     "metadata:filter:test": "tsx scripts/test-metadata-filter.ts",
     "experiment:metadata:filter": "tsx scripts/evaluate-metadata-filter.ts",
     "experiment:baseline:final-test": "tsx scripts/evaluate-final-baseline-test.ts",
+    "experiment:retrieval:confirmatory-final-test": "tsx scripts/evaluate-final-baseline-test.ts --protocol docs/experiments/confirmatory-final-test.v2.json",
     "experiment:retrieval:multi-technology": "tsx scripts/evaluate-multi-technology-retrieval.ts",
     "experiment:retrieval:comparative-threshold": "tsx scripts/evaluate-comparative-threshold.ts",
     "experiment:retrieval:comparative-decomposition": "tsx scripts/evaluate-comparative-decomposition.ts",
@@ -90,6 +91,10 @@
     "golden:build:provisional-v2": "tsx scripts/build-provisional-human-benchmark.ts",
     "golden:build:expanded-v3": "tsx scripts/build-expanded-human-benchmark.ts",
     "golden:build:html-v4": "tsx scripts/build-html-language-benchmark.ts",
+    "benchmark:confirmatory:build": "tsx scripts/build-confirmatory-benchmark.ts",
+    "benchmark:confirmatory:preaudit": "tsx scripts/preaudit-confirmatory-benchmark.ts",
+    "benchmark:confirmatory:validate": "tsx scripts/validate-confirmatory-benchmark.ts",
+    "benchmark:confirmatory:finalize": "tsx scripts/finalize-confirmatory-benchmark.ts",
     "start": "next start",
     "lint": "eslint"
   },

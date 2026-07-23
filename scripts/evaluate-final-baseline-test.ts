@@ -6,6 +6,7 @@ import { performance } from "node:perf_hooks";
 
 import * as nextEnv from "@next/env";
 
+import type { ConfirmatoryBenchmark } from "../src/lib/evaluation/confirmatory-benchmark";
 import type { ExperimentConfig, ExperimentRun } from "../src/lib/rag/experiment-types";
 import { loadGoldenSet, loadGoldenSetSplit, selectGoldenSplit, validateGoldenSet, validateGoldenSetSplit, type GoldenCase } from "../src/lib/rag/golden-set";
 import { filterChunksByQueryMetadata, type CompatibilityDecision } from "../src/lib/rag/metadata-filter";
@@ -17,7 +18,7 @@ type Protocol = {
   schemaVersion: 1;
   id: string;
   status: "preregistered" | "completed";
-  testSplit: { dataset: string; manifest: string; name: "test"; caseCount: number; answerableCount: number; unanswerableCount: number; priorScoredArtifactMatches: number; approvalProvenance: { approvalState: string; independentHumanApproval: boolean } };
+  testSplit: { dataset: string; manifest?: string; datasetType?: "golden-split" | "confirmatory-locked"; name: "test"; caseCount: number; answerableCount: number; unanswerableCount: number; priorScoredArtifactMatches: number; approvalProvenance: { approvalState: string; independentHumanApproval: boolean; reviewFile?: string } };
   frozenConfiguration: { corpusRun: string; corpusChunks: number; chunking: { targetWords: number; overlapWords: number }; embedding: { provider: "google" | "openai" | "voyage"; model: string; outputDimensionality: number; documentTask: string; queryTask: string }; retrieval: { strategy: "dense-cosine"; metadataFiltering: true; minScore: number; topK: number; reranker: null; agenticLoop: false } };
   frozenReplicationChecks: { recallAtKMinimum: number; mrrMinimum: number; ndcgAtKMinimum: number; noAnswerFalsePositiveRateMaximum: number; providerErrorsMaximum: number };
   costCeilingUsd: number;
@@ -26,6 +27,24 @@ type Protocol = {
 };
 
 type Interval = { numerator: number; denominator: number; rate: number; lower: number; upper: number };
+type FinalRetrievalArtifact = {
+  id: string;
+  createdAt: string;
+  metrics: ReturnType<typeof aggregateRetrievalMetrics>;
+  intervals: {
+    fullCanonicalCoverage: Interval;
+    anyCanonicalHit: Interval;
+    falsePositive: Interval;
+  };
+  passedAllChecks: boolean;
+  cases: RetrievalCaseResult[];
+  cache: { apiRequests: number };
+  cost: { estimatedUsd: number };
+  provenance: {
+    gitCommit: string | null;
+    benchmarkApprovalState: string;
+  };
+};
 
 async function main() {
   nextEnv.loadEnvConfig(process.cwd());
@@ -92,7 +111,7 @@ async function main() {
     cache: { documentHits: documents.cache.cacheHits, documentMisses: documents.cache.cacheMisses, queryHits: queries.cache.cacheHits, queryMisses: queries.cache.cacheMisses, apiInputs: documents.apiInputs + queries.apiInputs, apiRequests: documents.apiRequests + queries.apiRequests, cacheWrites: documents.cacheWrites + queries.cacheWrites },
     cost: { estimatedUsd: estimatedCostUsd, ceilingUsd: protocol.costCeilingUsd, priceUsdPerMillionInputTokens: inputs.config.embedding.pricing?.usdPerMillionInputTokens ?? null },
     timingMs: Math.round(performance.now() - started),
-    provenance: { gitCommit: runCommand("git", ["rev-parse", "HEAD"]), protocolSha256: sha256(protocolRaw), runnerSha256: sha256(await fs.readFile(new URL(import.meta.url), "utf8")), benchmarkApprovalState: protocol.testSplit.approvalProvenance.approvalState, independentlyHumanApproved: false, priorScoredArtifactMatches: protocol.testSplit.priorScoredArtifactMatches },
+    provenance: { gitCommit: runCommand("git", ["rev-parse", "HEAD"]), protocolSha256: sha256(protocolRaw), runnerSha256: sha256(await fs.readFile(new URL(import.meta.url), "utf8")), benchmarkApprovalState: protocol.testSplit.approvalProvenance.approvalState, independentlyHumanApproved: protocol.testSplit.approvalProvenance.independentHumanApproval, priorScoredArtifactMatches: protocol.testSplit.priorScoredArtifactMatches },
     interpretation: "The locked result is retained regardless of pass/fail. It verifies retrieval only and does not authorize post-result tuning."
   };
   await writeOutputs(protocol, artifact);
@@ -102,12 +121,25 @@ async function main() {
 
 async function loadAndValidateInputs(protocol: Protocol, protocolPath: string) {
   const runDirectory = path.resolve(protocol.frozenConfiguration.corpusRun);
-  const [runRaw, configRaw, chunksRaw, goldenRaw, splitRaw] = await Promise.all([
-    fs.readFile(path.join(runDirectory, "run.json"), "utf8"), fs.readFile(path.join(runDirectory, "config.snapshot.json"), "utf8"), fs.readFile(path.join(runDirectory, "chunks.json"), "utf8"), fs.readFile(path.resolve(protocol.testSplit.dataset), "utf8"), fs.readFile(path.resolve(protocol.testSplit.manifest), "utf8")
+  const [runRaw, configRaw, chunksRaw, datasetRaw, splitRaw] = await Promise.all([
+    fs.readFile(path.join(runDirectory, "run.json"), "utf8"),
+    fs.readFile(path.join(runDirectory, "config.snapshot.json"), "utf8"),
+    fs.readFile(path.join(runDirectory, "chunks.json"), "utf8"),
+    fs.readFile(path.resolve(protocol.testSplit.dataset), "utf8"),
+    protocol.testSplit.manifest ? fs.readFile(path.resolve(protocol.testSplit.manifest), "utf8") : Promise.resolve(null),
   ]);
   const hashInputs: Record<string, [string, string]> = {
-    goldenSetSha256: [goldenRaw, protocol.testSplit.dataset], splitManifestSha256: [splitRaw, protocol.testSplit.manifest], preparedConfigSnapshotSha256: [configRaw, "prepared config"], chunksSha256: [chunksRaw, "prepared chunks"]
+    [protocol.testSplit.datasetType === "confirmatory-locked" ? "benchmarkSha256" : "goldenSetSha256"]: [datasetRaw, protocol.testSplit.dataset],
+    preparedConfigSnapshotSha256: [configRaw, "prepared config"],
+    chunksSha256: [chunksRaw, "prepared chunks"],
   };
+  if (splitRaw && protocol.testSplit.manifest) hashInputs.splitManifestSha256 = [splitRaw, protocol.testSplit.manifest];
+  if (protocol.testSplit.approvalProvenance.reviewFile) {
+    hashInputs.reviewCsvSha256 = [
+      await fs.readFile(path.resolve(protocol.testSplit.approvalProvenance.reviewFile), "utf8"),
+      protocol.testSplit.approvalProvenance.reviewFile,
+    ];
+  }
   for (const [key, [raw, label]] of Object.entries(hashInputs)) if (sha256(raw) !== protocol.integrity[key]) throw new Error(`Integrity mismatch for ${label}.`);
   const fileHashes: Record<string, string> = {
     baseConfigSha256: "docs/experiments/baseline-gemini-300-v4-validation.json", selectionProtocolSha256: "docs/experiments/baseline-gemini-300-v4-metadata-filter.v2.json", selectionReportMarkdownSha256: "docs/experiment-results/baseline-gemini-300-v4-metadata-filter-v2-validation.md", selectionReportCsvSha256: "docs/experiment-results/baseline-gemini-300-v4-metadata-filter-v2-validation.csv", metadataFilterSha256: "src/lib/rag/metadata-filter.ts", retrievalMetricsSha256: "src/lib/rag/retrieval-metrics.ts", vectorStoreSha256: "src/lib/rag/vector-store.ts"
@@ -116,13 +148,24 @@ async function loadAndValidateInputs(protocol: Protocol, protocolPath: string) {
   const run = JSON.parse(runRaw) as ExperimentRun;
   const config = JSON.parse(configRaw) as ExperimentConfig;
   const chunks = JSON.parse(chunksRaw) as DocumentationChunk[];
-  const golden = await loadGoldenSet(protocol.testSplit.dataset);
-  const split = await loadGoldenSetSplit(protocol.testSplit.manifest);
-  const validation = await validateGoldenSet(golden);
-  const splitValidation = validateGoldenSetSplit(golden, split);
-  if (validation.errors.length || splitValidation.errors.length) throw new Error([...validation.errors, ...splitValidation.errors].join("\n"));
-  if (!split.testLocked || run.status !== "prepared" || chunks.length !== protocol.frozenConfiguration.corpusChunks) throw new Error("Frozen run, split, or chunk-count validation failed.");
-  const cases = selectGoldenSplit(golden, split, "test");
+  let cases: GoldenCase[];
+  if (protocol.testSplit.datasetType === "confirmatory-locked") {
+    const benchmark = JSON.parse(datasetRaw) as ConfirmatoryBenchmark;
+    if (benchmark.status !== "confirmed-locked" || !benchmark.testLocked || benchmark.version !== "1.0.0" || !benchmark.confirmation) {
+      throw new Error("Confirmatory benchmark is not confirmed and locked.");
+    }
+    cases = benchmark.cases;
+  } else {
+    if (!protocol.testSplit.manifest || !splitRaw) throw new Error("Golden-set execution requires a split manifest.");
+    const golden = await loadGoldenSet(protocol.testSplit.dataset);
+    const split = await loadGoldenSetSplit(protocol.testSplit.manifest);
+    const validation = await validateGoldenSet(golden);
+    const splitValidation = validateGoldenSetSplit(golden, split);
+    if (validation.errors.length || splitValidation.errors.length) throw new Error([...validation.errors, ...splitValidation.errors].join("\n"));
+    if (!split.testLocked) throw new Error("Golden-set test split is not locked.");
+    cases = selectGoldenSplit(golden, split, "test");
+  }
+  if (run.status !== "prepared" || chunks.length !== protocol.frozenConfiguration.corpusChunks) throw new Error("Frozen run or chunk-count validation failed.");
   const answerable = cases.filter((item) => item.answerability === "answerable");
   const unanswerable = cases.filter((item) => item.answerability === "unanswerable");
   if (cases.length !== protocol.testSplit.caseCount || answerable.length !== protocol.testSplit.answerableCount || unanswerable.length !== protocol.testSplit.unanswerableCount) throw new Error("Test split cardinality differs from the preregistration.");
@@ -131,7 +174,7 @@ async function loadAndValidateInputs(protocol: Protocol, protocolPath: string) {
   return { config, chunks, cases, answerable, unanswerable };
 }
 
-async function writeOutputs(protocol: Protocol, artifact: any) {
+async function writeOutputs(protocol: Protocol, artifact: FinalRetrievalArtifact) {
   const [jsonPath, mdPath, csvPath] = protocol.plannedOutputs.map((item) => path.resolve(item));
   await fs.mkdir(path.dirname(jsonPath), { recursive: true });
   await fs.writeFile(jsonPath, `${JSON.stringify(artifact, null, 2)}\n`, { flag: "wx" });
@@ -140,8 +183,8 @@ async function writeOutputs(protocol: Protocol, artifact: any) {
   await fs.writeFile(csvPath, [["case_id", "answerability", "retrieved_count", "relevant_retrieved", "recall_at_4", "precision_at_4", "reciprocal_rank", "ndcg_at_4", "false_positive", "ranked_chunk_ids"], ...rows].map((row) => row.map(csv).join(",")).join("\n") + "\n", { flag: "wx" });
 }
 
-function renderMarkdown(a: any) {
-  return `# Final locked retrieval test\n\n- Protocol: \`${a.id}\`\n- Executed: ${a.createdAt}\n- Commit: \`${a.provenance.gitCommit}\`\n- Split: **test (single execution)**\n- Approval provenance: **${a.provenance.benchmarkApprovalState}; not independently human-approved**\n- Configuration: 300-word chunks, 80-word overlap, Gemini Embedding 2 (1,024 dimensions), metadata-aware dense cosine, threshold 0.68, top-k 4, no reranker, no agentic loop\n\n| Metric | Result | Frozen check |\n|---|---:|---:|\n| Recall@4 | ${format(a.metrics.recallAtK)} | >= 0.9167 |\n| Precision@4 | ${format(a.metrics.precisionAtK)} | descriptive |\n| MRR | ${format(a.metrics.mrr)} | >= 0.8500 |\n| nDCG@4 | ${format(a.metrics.ndcgAtK)} | >= 0.8500 |\n| Unanswerable FPR | ${format(a.metrics.noAnswerFalsePositiveRate)} | <= 0.0833 |\n\nAll frozen checks: **${a.passedAllChecks ? "PASS" : "FAIL"}**. Estimated embedding cost: **$${a.cost.estimatedUsd.toFixed(6)}**; provider requests: **${a.cache.apiRequests}**.\n\n## Binomial uncertainty (Wilson 95%)\n\n| Proportion | Count | Rate | 95% interval |\n|---|---:|---:|---:|\n| Full canonical coverage | ${ratio(a.intervals.fullCanonicalCoverage)} | ${format(a.intervals.fullCanonicalCoverage.rate)} | ${interval(a.intervals.fullCanonicalCoverage)} |\n| Any canonical hit | ${ratio(a.intervals.anyCanonicalHit)} | ${format(a.intervals.anyCanonicalHit.rate)} | ${interval(a.intervals.anyCanonicalHit)} |\n| False positives | ${ratio(a.intervals.falsePositive)} | ${format(a.intervals.falsePositive.rate)} | ${interval(a.intervals.falsePositive)} |\n\nThis result is retained regardless of outcome and was not used for tuning. It verifies retrieval only. With only 12 cases per class and provisional AI-assisted benchmark approvals, the intervals and provenance limitation must accompany thesis claims.\n`;
+function renderMarkdown(a: FinalRetrievalArtifact) {
+  return `# Final locked retrieval test\n\n- Protocol: \`${a.id}\`\n- Executed: ${a.createdAt}\n- Commit: \`${a.provenance.gitCommit}\`\n- Split: **test (single execution)**\n- Approval provenance: **${a.provenance.benchmarkApprovalState}; thesis-author confirmed**\n- Configuration: 300-word chunks, 80-word overlap, Gemini Embedding 2 (1,024 dimensions), metadata-aware dense cosine, threshold 0.68, top-k 4, no reranker, no agentic loop\n\n| Metric | Result | Frozen check |\n|---|---:|---:|\n| Recall@4 | ${format(a.metrics.recallAtK)} | >= 0.9167 |\n| Precision@4 | ${format(a.metrics.precisionAtK)} | descriptive |\n| MRR | ${format(a.metrics.mrr)} | >= 0.8500 |\n| nDCG@4 | ${format(a.metrics.ndcgAtK)} | >= 0.8500 |\n| Unanswerable FPR | ${format(a.metrics.noAnswerFalsePositiveRate)} | <= 0.0833 |\n\nAll frozen checks: **${a.passedAllChecks ? "PASS" : "FAIL"}**. Estimated embedding cost: **$${a.cost.estimatedUsd.toFixed(6)}**; provider requests: **${a.cache.apiRequests}**.\n\n## Binomial uncertainty (Wilson 95%)\n\n| Proportion | Count | Rate | 95% interval |\n|---|---:|---:|---:|\n| Full canonical coverage | ${ratio(a.intervals.fullCanonicalCoverage)} | ${format(a.intervals.fullCanonicalCoverage.rate)} | ${interval(a.intervals.fullCanonicalCoverage)} |\n| Any canonical hit | ${ratio(a.intervals.anyCanonicalHit)} | ${format(a.intervals.anyCanonicalHit.rate)} | ${interval(a.intervals.anyCanonicalHit)} |\n| False positives | ${ratio(a.intervals.falsePositive)} | ${format(a.intervals.falsePositive.rate)} | ${interval(a.intervals.falsePositive)} |\n\nThis result is retained regardless of outcome and was not used for tuning. It verifies retrieval only. The uncertainty intervals and single-reviewer provenance must accompany thesis claims.\n`;
 }
 
 export function wilson(successes: number, total: number, z = 1.959963984540054): Interval {
@@ -153,7 +196,7 @@ export function wilson(successes: number, total: number, z = 1.959963984540054):
   return { numerator: successes, denominator: total, rate, lower: Math.max(0, center - margin), upper: Math.min(1, center + margin) };
 }
 
-function validateProtocol(p: Protocol) { if (p.schemaVersion !== 1 || p.id !== "baseline-final-test-v1" || p.status !== "preregistered" || p.testSplit.name !== "test") throw new Error("The final-test protocol is not executable."); if (p.frozenConfiguration.retrieval.minScore !== 0.68 || p.frozenConfiguration.retrieval.topK !== 4 || p.frozenConfiguration.retrieval.reranker !== null || p.frozenConfiguration.retrieval.agenticLoop !== false) throw new Error("Frozen retrieval controls changed."); }
+function validateProtocol(p: Protocol) { if (p.schemaVersion !== 1 || !["baseline-final-test-v1", "confirmatory-final-test-v2"].includes(p.id) || p.status !== "preregistered" || p.testSplit.name !== "test") throw new Error("The final-test protocol is not executable."); if (p.id === "confirmatory-final-test-v2" && p.testSplit.datasetType !== "confirmatory-locked") throw new Error("Confirmatory v2 requires a locked confirmatory benchmark."); if (p.frozenConfiguration.retrieval.minScore !== 0.68 || p.frozenConfiguration.retrieval.topK !== 4 || p.frozenConfiguration.retrieval.reranker !== null || p.frozenConfiguration.retrieval.agenticLoop !== false) throw new Error("Frozen retrieval controls changed."); }
 function parseArgs(args: string[]) { const index = args.indexOf("--protocol"); return { protocol: index >= 0 ? args[index + 1] : "docs/experiments/baseline-final-test.v1.json", plan: args.includes("--plan"), allowProviderRequests: args.includes("--allow-provider-requests"), writeReport: args.includes("--write-report") }; }
 function wilsonFormat(v: number) { return v.toFixed(4); }
 function interval(v: Interval) { return `[${wilsonFormat(v.lower)}, ${wilsonFormat(v.upper)}]`; }

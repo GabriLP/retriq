@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "id": "confirmatory-final-test-v2",
+  "title": "Locked confirmatory test of the validation-selected retrieval baseline",
+  "status": "preregistered",
+  "preregisteredAt": "2026-07-23",
+  "researchQuestion": "Does the validation-selected single-pass retrieval configuration retain strong canonical-evidence retrieval and controlled abstention on a larger, newly authored and author-confirmed test set?",
+  "hypothesis": "The selected baseline generalizes to the 48-case confirmatory benchmark with Recall@4 of at least 0.9167, MRR and nDCG@4 of at least 0.85, and no more than two false positives among 24 unanswerable cases.",
+  "testSplit": {
+    "dataset": "docs/evaluation/confirmatory-benchmark.v1.json",
+    "datasetType": "confirmatory-locked",
+    "name": "test",
+    "caseCount": 48,
+    "answerableCount": 24,
+    "unanswerableCount": 24,
+    "executionPolicy": "Execute exactly once after the benchmark, protocol, and runner are committed. Cache-preserving recovery is allowed only after a technical failure before aggregate metrics are revealed.",
+    "priorScoredArtifactMatches": 0,
+    "approvalProvenance": {
+      "declaredStatus": "human-approved",
+      "approvalState": "confirmed",
+      "independentHumanApproval": false,
+      "reviewer": "Gabriele",
+      "reviewFile": "docs/evaluation/confirmatory-benchmark-v1-human-review.completed.csv",
+      "interpretation": "All 48 labels were confirmed case by case by the thesis author. This is a single-reviewer benchmark, not an independent multi-rater gold standard."
+    }
+  },
+  "frozenConfiguration": {
+    "corpusRun": "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec",
+    "corpusChunks": 33079,
+    "chunking": {
+      "strategy": "word-window",
+      "targetWords": 300,
+      "minWords": 200,
+      "overlapWords": 80
+    },
+    "embedding": {
+      "provider": "google",
+      "model": "gemini-embedding-2",
+      "outputDimensionality": 1024,
+      "documentTask": "RETRIEVAL_DOCUMENT",
+      "queryTask": "QUESTION_ANSWERING"
+    },
+    "retrieval": {
+      "strategy": "dense-cosine",
+      "metadataFiltering": true,
+      "minScore": 0.68,
+      "topK": 4,
+      "reranker": null,
+      "agenticLoop": false
+    }
+  },
+  "selectionEvidence": {
+    "protocol": "docs/experiments/baseline-gemini-300-v4-metadata-filter.v2.json",
+    "validationReport": "docs/experiment-results/baseline-gemini-300-v4-metadata-filter-v2-validation.md",
+    "validationMetrics": {
+      "recallAtK": 0.9629629629629629,
+      "precisionAtK": 0.6296296296296297,
+      "mrr": 0.9444444444444444,
+      "ndcgAtK": 0.9492936945767206,
+      "noAnswerFalsePositiveRate": 0
+    }
+  },
+  "metrics": {
+    "coPrimary": [
+      "macro Recall@4 over answerable cases",
+      "false-positive rate over unanswerable cases"
+    ],
+    "secondary": [
+      "macro Precision@4",
+      "MRR",
+      "nDCG@4",
+      "full canonical-evidence coverage rate",
+      "any canonical-evidence hit rate"
+    ],
+    "uncertainty": "Report Wilson 95% intervals for full-coverage, any-hit, and unanswerable false-positive proportions."
+  },
+  "frozenReplicationChecks": {
+    "recallAtKMinimum": 0.9166666666666666,
+    "mrrMinimum": 0.85,
+    "ndcgAtKMinimum": 0.85,
+    "noAnswerFalsePositiveRateMaximum": 0.08333333333333333,
+    "providerErrorsMaximum": 0,
+    "interpretation": "These are preregistered guardrails, not tuning targets. Failure does not authorize parameter changes or a rerun."
+  },
+  "costCeilingUsd": 0.01,
+  "prohibitedAfterExecution": [
+    "changing the 0.68 threshold",
+    "changing topK=4",
+    "changing chunks, embedding model, metadata filter, reranker, or agentic setting",
+    "excluding cases because of their outcomes",
+    "rewriting expected facts or evidence after seeing retrieval results",
+    "rerunning a completed test to obtain better metrics"
+  ],
+  "integrity": {
+    "benchmarkSha256": "701c800ae0025abe977b48e726122bf856d1a9a94e19f70382597b81a2155b28",
+    "reviewCsvSha256": "5424c3a3a6b52e6b9a34360ef47a90fd15bad63951b98f750201e870723a0239",
+    "baseConfigSha256": "e60c88ec7cf97433afebec3c523ba01013ccc0d18c3c7f27e06e4a7d41526d8f",
+    "preparedConfigSnapshotSha256": "e7d95b88394a8f87f08a4de9885b8c80cfa70f729e337b5a646e6500b1a40880",
+    "chunksSha256": "ca6e947cc62f572639ef1261b911d4834a17267c84b2844b0ed3e385c1e48864",
+    "selectionProtocolSha256": "a50991298f9d41eb5ac5366e398800fa11a2a306ee75e476fab5878a70fc1278",
+    "selectionReportMarkdownSha256": "b52f1fafbe9354ab9a217ddd649b1d79ca887cbd7725282eddaf87e646492b7a",
+    "selectionReportCsvSha256": "421f3d13e2154822fc6229ae44d5ce3ca38619e12b3dc1c5a5e2c1f2660dc37c",
+    "metadataFilterSha256": "e35b440f7dafe73236b231584f8b19a5e3ace2932f0eaf898815234f8c8b2215",
+    "retrievalMetricsSha256": "a0a8d5af8d35de843ff89312deb89f0d09ab0d20ff2e6190f6d0dcad2d495c09",
+    "vectorStoreSha256": "52f83802139b77cfa5548f2828e830d20f7d11cef29134bd20128889d19619e4",
+    "preregistrationParentCommit": "acf1c5d6797ef5bded36c4e589c90563eeec63bc"
+  },
+  "plannedOutputs": [
+    "docs/experiment-results/confirmatory-final-test-v2.json",
+    "docs/experiment-results/confirmatory-final-test-v2.md",
+    "docs/experiment-results/confirmatory-final-test-v2.csv"
+  ],
+  "limitations": [
+    "The benchmark was reviewed by one thesis-author reviewer and does not estimate inter-rater reliability.",
+    "This test verifies retrieval only; answer-generation quality is evaluated separately.",
+    "The corpus and validation-selected configuration are frozen at the recorded July 2026 snapshot."
+  ]
+}
