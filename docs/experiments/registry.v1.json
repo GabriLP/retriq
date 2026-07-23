@@ -367,6 +367,34 @@
       "decision": "Confirm GLM-5.2 BaseTen FP8. Automatic checks passed, and the 24-row locked human review achieved normalized quality 0.9740, groundedness 3.917/4, key-fact coverage 3.667/4, perfect citation correctness and completeness, correct abstention 1.0, and zero critical errors or generator failures. The result satisfies every frozen requirement without tuning or regeneration.",
       "limitations": ["One human reviewer", "AI-assisted pending-confirmation benchmark labels", "One retrieval false positive intentionally reaches the generator", "The selected GLM budget remains 900 tokens"],
       "nextStep": "Freeze the end-to-end experimental conclusion and move to thesis writing; runtime integration of GLM remains a separate implementation choice."
+    },
+    {
+      "order": 27,
+      "id": "confirmatory-final-test-v2",
+      "thesisSection": "Expanded confirmatory retrieval verification",
+      "researchQuestion": "Does the validation-selected single-pass retrieval baseline retain canonical-evidence retrieval and controlled abstention on a newly confirmed 48-case benchmark?",
+      "status": "failed",
+      "variable": "The evaluation benchmark expands to 48 newly confirmed cases while every retrieval parameter remains frozen",
+      "controls": ["48 confirmed cases: 24 answerable and 24 unanswerable", "12 domains", "300-word chunks with 80-word overlap", "Gemini Embedding 2 at 1,024 dimensions", "dense cosine retrieval with metadata filtering", "threshold 0.68", "topK=4", "no reranker", "no agentic loop", "single execution"],
+      "metrics": ["Recall@4", "Precision@4", "MRR", "nDCG@4", "unanswerable false-positive rate", "full canonical-evidence coverage", "any canonical-evidence hit rate", "Wilson 95% intervals", "provider errors", "cost"],
+      "artifacts": ["docs/evaluation/confirmatory-benchmark.v1.json", "docs/evaluation/confirmatory-benchmark-v1-human-review.completed.csv", "docs/experiments/confirmatory-final-test.v2.json", "scripts/evaluate-final-baseline-test.ts", "docs/experiment-results/confirmatory-final-test-v2.json", "docs/experiment-results/confirmatory-final-test-v2.md", "docs/experiment-results/confirmatory-final-test-v2.csv"],
+      "decision": "Retain the single execution without post-test tuning, but record failure of the canonical-ranking guardrails. Recall@4 was 0.8750, Precision@4 0.5243, MRR 0.7257, and nDCG@4 0.7635. Abstention remained controlled: one of 24 unanswerable cases was falsely accepted, for FPR 0.0417. All provider and cost checks passed for two requests and $0.000263.",
+      "limitations": ["One thesis-author benchmark reviewer", "Only one frozen canonical evidence packet per case can undercount semantically relevant alternative chunks", "The failed guardrails do not authorize relabeling, parameter changes, or a rerun"],
+      "nextStep": "Report both the negative ranking result and the successful abstention result, preserve the validation-selected baseline unchanged, and evaluate answer generation separately on the frozen retrieved evidence."
+    },
+    {
+      "order": 28,
+      "id": "generation-confirmatory-final-test-v2",
+      "thesisSection": "Expanded confirmatory generation verification",
+      "researchQuestion": "Does validation-selected GLM-5.2 retain grounded answer quality, citation reliability, and abstention on the 48-case confirmatory retrieval output?",
+      "status": "completed",
+      "variable": "The confirmatory benchmark expands to 48 cases; model, evidence, prompt, provider route, and generation controls remain frozen",
+      "controls": ["GLM-5.2 BaseTen FP8", "OpenRouter fallbacks disabled", "low reasoning", "temperature 0", "900 output tokens", "prompt v1", "48 confirmatory cases", "25 model calls", "23 deterministic no-evidence abstentions", "retrieval rank citations", "judge disabled", "single execution"],
+      "metrics": ["Human normalized grounded quality", "groundedness", "key-fact coverage", "citation correctness and completeness", "correct abstention", "critical unsupported claims", "contradictions", "generator failures", "provider errors", "truncations", "latency", "tokens", "cost"],
+      "artifacts": ["docs/experiments/generation-confirmatory-final-test.v2.json", "scripts/evaluate-final-generation-test.ts", "scripts/report-confirmatory-generation-human-review.ts", "docs/experiment-results/generation-confirmatory-final-test-v2.json", "docs/experiment-results/generation-confirmatory-final-test-v2.md", "docs/experiment-results/generation-confirmatory-final-test-v2-execution-ledger.json", "docs/evaluation/generation-confirmatory-final-test-human-review-v2.csv", "docs/evaluation/generation-confirmatory-final-test-human-review-v2.completed.csv", "docs/experiment-results/generation-confirmatory-final-test-human-review-v2-summary.json", "docs/experiment-results/generation-confirmatory-final-test-human-review-v2-summary.md", "src/app/evaluation/confirmatory-generation-review/page.tsx"],
+      "decision": "Confirm GLM-5.2 BaseTen FP8 on the expanded generation test. All 25 model-generated answers were manually reviewed, while 23 deterministic no-evidence responses were incorporated by the frozen automatic rule. Normalized quality was 0.9870, groundedness and key-fact coverage 3.917/4, citation correctness 3.958/4, citation completeness 4.000/4, directness 1.958/2, and correct abstention 1.000. Every critical-error rate was zero. Operational checks passed with no errors or truncations for $0.095552.",
+      "limitations": ["One thesis-author reviewer and no inter-rater reliability estimate", "Automatic adjudication is restricted to deterministic no-evidence responses", "The selected GLM budget remains 900 tokens", "Generation success must be reported separately from the failed confirmatory canonical-ranking guardrails"],
+      "nextStep": "Freeze the confirmatory end-to-end results and move to thesis synthesis, reporting retrieval ranking and answer quality as distinct outcomes."
     }
   ]
 }

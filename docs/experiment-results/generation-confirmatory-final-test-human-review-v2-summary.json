@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "generation-confirmatory-final-test-human-review-v2-summary",
+  "createdAt": "2026-07-23T19:11:47.789Z",
+  "split": "test",
+  "source": {
+    "humanReview": "docs/evaluation/generation-confirmatory-final-test-human-review-v2.completed.csv",
+    "humanReviewSha256": "13ede3bcae57847f16629ddbd3387cab176d07f8db710e200b3a1b3de65494d1",
+    "sourceWorksheet": "docs/evaluation/generation-confirmatory-final-test-human-review-v2.csv",
+    "sourceWorksheetSha256": "d68918325d7b11c62e4948abe7d90d3204f0b4fbedbb5dd1ddf05ffc34560b1b",
+    "generationResult": "docs/experiment-results/generation-confirmatory-final-test-v2.json",
+    "generationResultSha256": "e0e8348c3823614332ac52a511d0be9598352cb458152e5d0b26a99b98acde8f"
+  },
+  "review": {
+    "totalCases": 48,
+    "manuallyReviewedRows": 25,
+    "automaticallyAdjudicatedRows": 23,
+    "answerableRows": 24,
+    "manuallyReviewedUnanswerableRows": 1,
+    "reviewers": [
+      "Gabriele"
+    ],
+    "status": "complete-single-reviewer-confirmatory-reference",
+    "worksheetIntegrity": "All 25 case identities, questions, evidence packets, and substantive answers match the frozen worksheet. Browser export removed line-ending whitespace from 1 candidate answer; no semantic content changed."
+  },
+  "automaticAdjudication": {
+    "policy": "Only deterministic no-evidence abstentions are automatically counted; every model-generated answer was reviewed manually.",
+    "deterministicAbstentions": 23,
+    "verifiedErrors": 0
+  },
+  "metrics": {
+    "meanNormalizedQuality": 0.9869791666666666,
+    "meanGroundedness": 3.9166666666666665,
+    "meanKeyFactCoverage": 3.9166666666666665,
+    "meanCitationCorrectness": 3.9583333333333335,
+    "meanCitationCompleteness": 4,
+    "meanDirectness": 1.9583333333333333,
+    "correctAbstentionRate": 1,
+    "criticalUnsupportedClaimRate": 0,
+    "contradictionRate": 0,
+    "invalidCitationLabelRate": 0,
+    "generatorFailureRate": 0
+  },
+  "checks": {
+    "normalizedQuality": true,
+    "criticalUnsupportedClaim": true,
+    "citationCorrectness": true,
+    "correctAbstention": true,
+    "generatorFailure": true
+  },
+  "allPassed": true,
+  "operationalChecksPassed": true,
+  "limitations": [
+    "One thesis-author reviewer; inter-rater reliability is not estimated.",
+    "Automatic adjudication is limited to 23 deterministic no-evidence responses; all 25 model-generated answers received manual review.",
+    "The human review confirms only the frozen GLM output and was not used to tune or regenerate it."
+  ]
+}
