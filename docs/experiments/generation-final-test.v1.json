@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "generation-final-test-v1",
   "title": "Locked final test of the validation-selected grounded generator",
-  "status": "outputs-generated-awaiting-human-review",
+  "status": "completed",
   "preregisteredAt": "2026-07-22",
   "researchQuestion": "Does validation-selected GLM-5.2 retain grounded answer quality, citation reliability, abstention, and operational reliability on evidence returned by the single locked retrieval-test execution?",
   "hypothesis": "GLM-5.2 will complete every evidence-bearing test case without truncation or provider mismatch and will retain the frozen human-quality guardrails.",
@@ -98,7 +98,7 @@
     "medianLatencyMs": 3582.99,
     "p95LatencyMs": 9712.21,
     "automaticChecksPassed": true,
-    "semanticQualityStatus": "pending-required-human-review",
+    "semanticQualityStatus": "human-confirmed-pass",
     "notableEndToEndCase": "The pg_partman retrieval false positive reached GLM-5.2, which explicitly abstained because the excerpt lacked pg_partman-specific information; this remains subject to the frozen human rubric."
   },
   "outputIntegrity": {
@@ -106,6 +106,35 @@
     "reportSha256": "b1c682823b83c0f3326461a1d1abe73da509acf8481917bb7a724ae88f16e2a7",
     "executionLedgerSha256": "cacb16306e53f297f765b537c04ef3fa7e89a7d20e8cb88f91074b1ec8842c2d",
     "reviewWorksheetSha256": "ca0a4d6201d0d873ba3ce903b6c4d22c22aa5c49e2294e39e9e6ed72d9216baf"
+  },
+  "humanReview": {
+    "completedAt": "2026-07-23T08:51:04.846Z",
+    "reviewer": "Gabriele",
+    "reviewerCount": 1,
+    "rows": 24,
+    "answerableRows": 12,
+    "unanswerableRows": 12,
+    "source": "docs/evaluation/generation-final-test-human-review-v1.completed.csv",
+    "sourceSha256": "12855ad2529fb2d5ef4f0267e9bb1d4763868cd1a69508b6af6c1d1edf95f1dc",
+    "summary": "docs/experiment-results/generation-final-test-human-review-v1-summary.json",
+    "summarySha256": "2f83f1126ffe188758855f14b87b0a7766709bcb3259cd88443840f72acd0ecb",
+    "metrics": {
+      "meanNormalizedQuality": 0.9739583333333334,
+      "meanGroundedness": 3.9166666666666665,
+      "meanKeyFactCoverage": 3.6666666666666665,
+      "meanCitationCorrectness": 4,
+      "meanCitationCompleteness": 4,
+      "meanDirectness": 2,
+      "correctAbstentionRate": 1,
+      "criticalUnsupportedClaimRate": 0,
+      "contradictionRate": 0,
+      "invalidCitationLabelRate": 0,
+      "generatorFailureRate": 0
+    },
+    "allFrozenChecksPassed": true,
+    "worksheetIntegrity": "All 24 case identities, prompts, evidence packets, and substantive answers match the frozen worksheet. Browser export removed one trailing space from two candidate answers; no semantic content changed.",
+    "decision": "Confirm GLM-5.2 BaseTen FP8 as the final experimental generator. The locked-test quality of 0.9740 matches the validation point estimate to four decimals and every human and operational guardrail passed.",
+    "limitation": "Single thesis-author review with case-by-case Codex assistance; this is not an independent multi-rater gold standard."
   },
   "limitations": [
     "The final human review has one thesis-author reviewer and does not estimate inter-rater reliability.",

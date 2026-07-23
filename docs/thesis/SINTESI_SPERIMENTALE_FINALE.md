@@ -143,9 +143,9 @@ Il modello selezionato è stato eseguito una volta sulle evidenze del test retri
 
 Tre risposte upstream 429 di BaseTen hanno richiesto riprese cache-preserving; il ledger conserva gli eventi e nessun caso riuscito è stato rigenerato. Il caso negativo `pg_partman`, pur avendo ricevuto un excerpt PostgreSQL, produce una risposta esplicita di insufficienza invece di inventare il comportamento dell’estensione.
 
-**Stato scientifico:** i controlli operativi sono superati, ma groundedness, copertura, correttezza delle citazioni e astensione semantica richiedono ancora la review umana congelata di 24 righe. Poiché i judge automatici non sono stati qualificati, non sarebbe corretto sostituire questa review con un voto LLM.
+La review umana congelata di 24 righe conferma il risultato: qualità normalizzata **0,9740**, groundedness **3,917/4**, copertura **3,667/4**, correttezza e completezza delle citazioni **4/4**, chiarezza **2/2**, astensione corretta **1,000** e zero errori critici. Tutti i criteri preregistrati sono superati. Il valore di qualità coincide a quattro decimali con quello di validation, senza tuning o rigenerazione sul test.
 
-Il runtime web corrente continua a usare Gemini 3.5 Flash con budget 2.048. GLM-5.2 è la scelta sperimentale e non deve sostituire il runtime prima della conferma umana finale e di una modifica esplicitamente versionata.
+Il runtime web corrente continua a usare Gemini 3.5 Flash con budget 2.048. GLM-5.2 è ora la scelta sperimentale confermata; la sua eventuale integrazione nel runtime rimane una modifica implementativa separata e deve essere versionata esplicitamente.
 
 ## 7. LLM-as-a-judge
 
@@ -178,7 +178,7 @@ Gli indici approssimati sono deliberatamente esclusi: possono cambiare recall e 
 | Top-k | 4 |
 | Reranker | Nessuno |
 | Agentic loop | Non selezionato |
-| Generatore sperimentale | GLM-5.2 BaseTen FP8, conferma umana finale pendente |
+| Generatore sperimentale | GLM-5.2 BaseTen FP8, confermato sul test finale |
 | LLM judge | Disabilitato, calibrazione fallita |
 | Storage | PostgreSQL + pgvector exact su Neon |
 
@@ -191,7 +191,7 @@ Gli indici approssimati sono deliberatamente esclusi: possono cambiare recall e 
 5. La review della generazione e le adjudication hanno un solo revisore principale, in parte assistito da AI.
 6. Prezzi, disponibilità dei modelli e latenze sono osservazioni datate, non proprietà immutabili.
 7. Temperature zero e cache non garantiscono riproducibilità byte-identica dopo aggiornamenti provider-side.
-8. La qualità generativa finale non è ancora congelata fino all’import della review di 24 righe.
+8. La qualità generativa finale deriva da un’unica review dell’autore, assistita caso per caso da Codex; non misura l’accordo inter-rater.
 
 ## 12. Struttura consigliata della tesi
 
@@ -211,9 +211,8 @@ Gli indici approssimati sono deliberatamente esclusi: possono cambiare recall e 
 
 Non sono necessari nuovi benchmark retrieval o nuovi modelli per sostenere la tesi corrente. Restano:
 
-1. completare la review umana su `/evaluation/final-generation-review` ed esportare `generation-final-test-human-review-v1.completed.csv`;
-2. importare il CSV con il reporter già predisposto e congelare l’esito GLM;
-3. decidere, soltanto dopo il punto precedente, se integrare GLM nel runtime oppure mantenere Gemini come implementazione dimostrativa;
-4. trasformare questa sintesi nei capitoli della tesi, citando sempre artefatti, split e limitazioni.
+1. decidere se integrare GLM nel runtime oppure mantenere Gemini come implementazione dimostrativa;
+2. trasformare questa sintesi nei capitoli della tesi, citando sempre artefatti, split e limitazioni;
+3. ottenere, solo se realisticamente disponibile, una seconda review indipendente come rafforzamento opzionale e non come requisito per chiudere la tesi triennale.
 
 La mappa completa e machine-readable rimane `docs/experiments/registry.v1.json`; `docs/experiments/THESIS_EXPERIMENT_MAP.md` conserva anche tutte le famiglie negative e superseded.

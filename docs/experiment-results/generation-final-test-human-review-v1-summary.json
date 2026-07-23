@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "generation-final-test-human-review-v1-summary",
+  "createdAt": "2026-07-23T08:51:04.846Z",
+  "split": "test",
+  "source": {
+    "humanReview": "docs/evaluation/generation-final-test-human-review-v1.completed.csv",
+    "humanReviewSha256": "12855ad2529fb2d5ef4f0267e9bb1d4763868cd1a69508b6af6c1d1edf95f1dc",
+    "generationResult": "docs/experiment-results/generation-final-test-v1.json"
+  },
+  "review": {
+    "rows": 24,
+    "answerableRows": 12,
+    "unanswerableRows": 12,
+    "reviewers": [
+      "Gabriele"
+    ],
+    "status": "complete-single-reviewer-reference"
+  },
+  "metrics": {
+    "meanNormalizedQuality": 0.9739583333333334,
+    "meanGroundedness": 3.9166666666666665,
+    "meanKeyFactCoverage": 3.6666666666666665,
+    "meanCitationCorrectness": 4,
+    "meanCitationCompleteness": 4,
+    "meanDirectness": 2,
+    "correctAbstentionRate": 1,
+    "criticalUnsupportedClaimRate": 0,
+    "contradictionRate": 0,
+    "invalidCitationLabelRate": 0,
+    "generatorFailureRate": 0
+  },
+  "checks": {
+    "normalizedQuality": true,
+    "criticalUnsupportedClaim": true,
+    "citationCorrectness": true,
+    "correctAbstention": true,
+    "generatorFailure": true
+  },
+  "allPassed": true,
+  "operationalChecksPassed": true,
+  "limitations": [
+    "One thesis-author reviewer; inter-rater reliability is not estimated.",
+    "The benchmark approvals remain pending-confirmation and AI-assisted.",
+    "The human review confirms only the frozen GLM output and cannot be used to tune or regenerate it."
+  ]
+}
