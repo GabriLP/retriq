@@ -59,7 +59,11 @@
   "humanConfirmation": {
     "required": true,
     "reviewer": "thesis author",
-    "rows": 48,
+    "totalCases": 48,
+    "manualRows": 25,
+    "automaticallyAdjudicatedRows": 23,
+    "manualSelectionRule": "Review every case for which the generator was invoked: all 24 answerable cases plus the one unanswerable retrieval false positive.",
+    "automaticAdjudicationRule": "Count each no-evidence deterministic abstention as a correct abstention after verifying that the frozen response exactly matches the prompt policy; no semantic model output exists to score.",
     "primaryMetric": "mean normalized grounded answer quality over the 24 answerable cases",
     "primaryMinimum": 0.9,
     "guardrails": {
@@ -68,7 +72,8 @@
       "correctAbstentionRateMinimum": 1,
       "generatorFailureRateMaximum": 0.02
     },
-    "decisionRule": "Final generation confirmation requires the primary minimum and every guardrail. Automatic checks alone cannot establish semantic answer quality."
+    "decisionRule": "Final generation confirmation requires the primary minimum and every guardrail across all 48 cases. Human scores cover all 25 model-generated answers; the 23 deterministic no-evidence responses are incorporated by the frozen automatic rule.",
+    "procedureAmendment": "The manual workload was reduced after generation but before semantic review. No answer, evidence packet, case label, metric threshold, or model output was changed or inspected to select favorable cases."
   },
   "integrity": {
     "retrievalResultSha256": "ddb8da0a1a16a2ef24f52c0faa32e632b08761b0d53ea9368f8741dc94dcf3e6",
