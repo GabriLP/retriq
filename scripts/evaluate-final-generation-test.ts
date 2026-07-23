@@ -5,13 +5,14 @@ import path from "node:path";
 
 import * as nextEnv from "@next/env";
 
+import type { ConfirmatoryBenchmark } from "../src/lib/evaluation/confirmatory-benchmark";
 import { generateWithCandidate, type GeneratorCandidate, type GeneratorResult } from "../src/lib/rag/generator-providers";
 import { loadGoldenSet, loadGoldenSetSplit, selectGoldenSplit, type GoldenCase } from "../src/lib/rag/golden-set";
 import type { DocumentationChunk } from "../src/lib/rag/types";
 
 type Protocol = {
   schemaVersion: 1; id: string; status: "preregistered" | "outputs-generated-awaiting-human-review" | "completed";
-  lockedInputs: { retrievalResult: string; goldenSet: string; splitManifest: string; chunks: string; prompt: string; humanRubric: string; cases: number; answerableCases: number; unanswerableCases: number; expectedProviderCalls: number };
+  lockedInputs: { retrievalResult: string; goldenSet?: string; splitManifest?: string; confirmatoryBenchmark?: string; datasetType?: "golden-split" | "confirmatory-locked"; chunks: string; prompt: string; humanRubric: string; cases: number; answerableCases: number; unanswerableCases: number; expectedProviderCalls: number };
   candidate: GeneratorCandidate;
   generationControls: { temperature: number; maxOutputTokens: number; judgeEnabled: false };
   automaticChecks: { providerErrorsMaximum: number; providerOrModelMismatchesMaximum: number; explicitTruncationsMaximum: number; invalidCitationLabelRateMaximum: number; costCeilingUsd: number };
@@ -23,6 +24,26 @@ type RetrievalCase = { caseId: string; answerability: "answerable" | "unanswerab
 type RetrievalArtifact = { id: string; split: "test"; executionNumber: number; cases: RetrievalCase[] };
 type Output = { caseId: string; answerability: string; generationPolicy: "invoke-generator" | "deterministic-abstention"; answer: string; answerStatus: string; evidenceCount: number; invalidCitationLabels: string[]; result: GeneratorResult | null; error: string | null };
 type Ledger = { schemaVersion: 1; protocolId: string; startedAt: string; executionNumber: 1; protocolCommit: string | null; status: "running" | "technical-failure" | "completed"; outputs: Output[]; events: Array<{ at: string; type: string; caseId?: string; detail: string }> };
+type GenerationArtifact = {
+  schemaVersion: 1;
+  id: string;
+  createdAt: string;
+  split: "test";
+  executionNumber: 1;
+  candidate: GeneratorCandidate;
+  controls: Protocol["generationControls"];
+  estimate: number;
+  automatic: ReturnType<typeof summarize>;
+  outputs: Output[];
+  provenance: {
+    gitCommit: string | null;
+    protocolSha256: string;
+    retrievalResultSha256: string;
+    benchmarkApprovalState: string;
+    independentlyHumanApproved: false;
+  };
+  decisionStatus: string;
+};
 
 async function main() {
   nextEnv.loadEnvConfig(process.cwd());
@@ -76,7 +97,7 @@ async function main() {
   ledger.status = "completed";
   ledger.events.push({ at: new Date().toISOString(), type: "completed", detail: `Automatic checks ${automatic.allPassed ? "passed" : "failed"}; semantic quality awaits human review.` });
   await writeJson(ledgerPath, ledger);
-  const artifact = { schemaVersion: 1, id: protocol.id, createdAt: new Date().toISOString(), split: "test", executionNumber: 1, candidate: protocol.candidate, controls: protocol.generationControls, estimate, automatic, outputs: orderedOutputs, provenance: { gitCommit: runCommand("git", ["rev-parse", "HEAD"]), protocolSha256: sha256(protocolRaw), retrievalResultSha256: protocol.integrity.retrievalResultSha256, benchmarkApprovalState: "pending-confirmation", independentlyHumanApproved: false }, decisionStatus: automatic.allPassed ? "automatic-checks-passed-human-review-required" : "automatic-checks-failed-human-review-still-required" };
+  const artifact: GenerationArtifact = { schemaVersion: 1, id: protocol.id, createdAt: new Date().toISOString(), split: "test", executionNumber: 1, candidate: protocol.candidate, controls: protocol.generationControls, estimate, automatic, outputs: orderedOutputs, provenance: { gitCommit: runCommand("git", ["rev-parse", "HEAD"]), protocolSha256: sha256(protocolRaw), retrievalResultSha256: protocol.integrity.retrievalResultSha256, benchmarkApprovalState: protocol.lockedInputs.datasetType === "confirmatory-locked" ? "confirmed" : "pending-confirmation", independentlyHumanApproved: false }, decisionStatus: automatic.allPassed ? "automatic-checks-passed-human-review-required" : "automatic-checks-failed-human-review-still-required" };
   await writeFinalOutputs(protocol, artifact, prepared);
   console.log(`COMPLETED ${protocol.id}: automatic=${automatic.allPassed ? "PASS" : "FAIL"}, calls=${automatic.providerCalls}, cost=$${automatic.costUsd.toFixed(6)}, human review required.`);
 }
@@ -84,12 +105,23 @@ async function main() {
 async function loadInputs(protocol: Protocol) {
   const [retrievalRaw, promptRaw, rubricRaw, selectionRaw, chunksRaw] = await Promise.all([fs.readFile(path.resolve(protocol.lockedInputs.retrievalResult), "utf8"), fs.readFile(path.resolve(protocol.lockedInputs.prompt), "utf8"), fs.readFile(path.resolve(protocol.lockedInputs.humanRubric), "utf8"), fs.readFile(path.resolve("docs/experiments/generation-models.v1.json"), "utf8"), fs.readFile(path.resolve(protocol.lockedInputs.chunks), "utf8")]);
   const checks: Array<[string, string, string]> = [[retrievalRaw, protocol.integrity.retrievalResultSha256, "retrieval result"], [promptRaw, protocol.integrity.promptSha256, "prompt"], [rubricRaw, protocol.integrity.rubricSha256, "rubric"], [selectionRaw, protocol.integrity.selectionProtocolSha256, "selection protocol"], [chunksRaw, protocol.integrity.chunksSha256, "chunks"]];
+  let cases: GoldenCase[];
+  if (protocol.lockedInputs.datasetType === "confirmatory-locked") {
+    if (!protocol.lockedInputs.confirmatoryBenchmark) throw new Error("Confirmatory generation requires a benchmark path.");
+    const benchmarkRaw = await fs.readFile(path.resolve(protocol.lockedInputs.confirmatoryBenchmark), "utf8");
+    checks.push([benchmarkRaw, protocol.integrity.benchmarkSha256, "confirmatory benchmark"]);
+    const benchmark = JSON.parse(benchmarkRaw) as ConfirmatoryBenchmark;
+    if (benchmark.status !== "confirmed-locked" || !benchmark.testLocked || !benchmark.confirmation) throw new Error("Confirmatory benchmark is not confirmed and locked.");
+    cases = benchmark.cases;
+  } else {
+    if (!protocol.lockedInputs.goldenSet || !protocol.lockedInputs.splitManifest) throw new Error("Golden-set generation requires dataset and split paths.");
+    const golden = await loadGoldenSet(protocol.lockedInputs.goldenSet);
+    const split = await loadGoldenSetSplit(protocol.lockedInputs.splitManifest);
+    cases = selectGoldenSplit(golden, split, "test");
+  }
   for (const [raw, expected, label] of checks) if (sha256(raw) !== expected) throw new Error(`Integrity mismatch for ${label}.`);
   const retrieval = JSON.parse(retrievalRaw) as RetrievalArtifact;
   if (retrieval.split !== "test" || retrieval.executionNumber !== 1) throw new Error("Generation requires the sole locked retrieval-test artifact.");
-  const golden = await loadGoldenSet(protocol.lockedInputs.goldenSet);
-  const split = await loadGoldenSetSplit(protocol.lockedInputs.splitManifest);
-  const cases = selectGoldenSplit(golden, split, "test");
   if (cases.length !== protocol.lockedInputs.cases || cases.filter((item) => item.answerability === "answerable").length !== protocol.lockedInputs.answerableCases) throw new Error("Locked case counts changed.");
   return { retrieval, prompt: JSON.parse(promptRaw) as Prompt, chunks: JSON.parse(chunksRaw) as DocumentationChunk[], cases };
 }
@@ -115,10 +147,10 @@ function summarize(outputs: Output[], protocol: Protocol) {
   return { cases: outputs.length, providerCalls: generated.length, deterministicAbstentions: outputs.length - generated.length, errors: outputs.filter((item) => item.error).length, truncations: results.filter((item) => item.truncated).length, invalidCitationLabelCases: generated.filter((item) => item.invalidCitationLabels.length).length, tokens: { prompt: sum(results.map((item) => item.usage.promptTokens)), completion: sum(results.map((item) => item.usage.completionTokens)), reasoning: sum(results.map((item) => item.usage.reasoningTokens)), total: sum(results.map((item) => item.usage.totalTokens)) }, costUsd: sum(costs), latencyMs: { median: percentile(latency, .5), p95: percentile(latency, .95) }, checks, allPassed: Object.values(checks).every(Boolean) };
 }
 
-async function writeFinalOutputs(protocol: Protocol, artifact: any, prepared: ReturnType<typeof prepareCases>) {
+async function writeFinalOutputs(protocol: Protocol, artifact: GenerationArtifact, prepared: ReturnType<typeof prepareCases>) {
   for (const file of [protocol.plannedOutputs.result, protocol.plannedOutputs.report, protocol.plannedOutputs.reviewWorksheet]) if (await exists(path.resolve(file))) throw new Error(`Refusing to overwrite ${file}.`);
   await writeJson(path.resolve(protocol.plannedOutputs.result), artifact, true);
-  await fs.writeFile(path.resolve(protocol.plannedOutputs.report), `# Final locked generation test\n\n- Candidate: **GLM-5.2 BaseTen FP8**\n- Split: **test, single execution**\n- Automatic checks: **${artifact.automatic.allPassed ? "PASS" : "FAIL"}**\n- Semantic quality: **pending required human review**\n- Provider calls: **${artifact.automatic.providerCalls}**; deterministic abstentions: **${artifact.automatic.deterministicAbstentions}**\n- Errors: **${artifact.automatic.errors}**; explicit truncations: **${artifact.automatic.truncations}**; invalid citation-label cases: **${artifact.automatic.invalidCitationLabelCases}**\n- Cost: **$${artifact.automatic.costUsd.toFixed(6)}**; median latency: **${artifact.automatic.latencyMs.median.toFixed(2)} ms**; p95: **${artifact.automatic.latencyMs.p95.toFixed(2)} ms**\n\nAutomatic reliability cannot establish groundedness, fact coverage, citation correctness, or semantic abstention. The dedicated 24-row human review must be completed before the thesis calls generation confirmed. The benchmark labels remain pending-confirmation and not independently human-approved.\n`, { flag: "wx" });
+  await fs.writeFile(path.resolve(protocol.plannedOutputs.report), `# Final locked generation test\n\n- Protocol: \`${protocol.id}\`\n- Candidate: **GLM-5.2 BaseTen FP8**\n- Split: **test, single execution**\n- Benchmark state: **${artifact.provenance.benchmarkApprovalState}; thesis-author confirmed**\n- Automatic checks: **${artifact.automatic.allPassed ? "PASS" : "FAIL"}**\n- Semantic quality: **pending required human review**\n- Provider calls: **${artifact.automatic.providerCalls}**; deterministic abstentions: **${artifact.automatic.deterministicAbstentions}**\n- Errors: **${artifact.automatic.errors}**; explicit truncations: **${artifact.automatic.truncations}**; invalid citation-label cases: **${artifact.automatic.invalidCitationLabelCases}**\n- Cost: **$${artifact.automatic.costUsd.toFixed(6)}**; median latency: **${artifact.automatic.latencyMs.median.toFixed(2)} ms**; p95: **${artifact.automatic.latencyMs.p95.toFixed(2)} ms**\n\nAutomatic reliability cannot establish groundedness, fact coverage, citation correctness, or semantic abstention. The dedicated ${artifact.automatic.cases}-row human review must be completed before the thesis calls generation confirmed. This remains a single-reviewer evaluation.\n`, { flag: "wx" });
   const byCase = new Map(prepared.map((item) => [item.testCase.id, item]));
   const rows = artifact.outputs.map((output: Output) => { const entry = byCase.get(output.caseId)!; return [output.caseId, "selected-generator-hidden", output.answerability, entry.testCase.language, entry.testCase.question, entry.testCase.expected.keyFacts.join(" | "), entry.evidence.map((item) => item.text).join("\n\n---\n\n"), output.answer, "", "", "", "", "", "", "", "", "", "", ""]; });
   const header = ["case_id", "blind_variant_id", "answerability", "language", "question", "expected_key_facts", "frozen_evidence", "candidate_answer", "groundedness_0_4", "key_fact_coverage_0_4", "citation_correctness_0_4", "citation_completeness_0_4", "directness_0_2", "correct_abstention_0_1", "critical_unsupported_claim_0_1", "contradicts_evidence_0_1", "invalid_citation_label_0_1", "generator_failure_0_1", "reviewer_notes"];
@@ -133,7 +165,7 @@ async function loadOrCreateLedger(file: string, protocol: Protocol, resume: bool
   return ledger;
 }
 
-function validateProtocol(p: Protocol) { if (p.schemaVersion !== 1 || p.id !== "generation-final-test-v1" || p.status !== "preregistered" || p.generationControls.judgeEnabled || p.generationControls.maxOutputTokens !== 900 || p.candidate.id !== "glm-5.2-openrouter-baseten-fp8" || p.candidate.allowFallbacks !== false) throw new Error("Final generation protocol is not executable."); }
+function validateProtocol(p: Protocol) { if (p.schemaVersion !== 1 || !["generation-final-test-v1", "generation-confirmatory-final-test-v2"].includes(p.id) || p.status !== "preregistered" || p.generationControls.judgeEnabled || p.generationControls.maxOutputTokens !== 900 || p.candidate.id !== "glm-5.2-openrouter-baseten-fp8" || p.candidate.allowFallbacks !== false) throw new Error("Final generation protocol is not executable."); if (p.id === "generation-confirmatory-final-test-v2" && p.lockedInputs.datasetType !== "confirmatory-locked") throw new Error("Generation v2 requires the locked confirmatory benchmark."); }
 function invalidLabels(answer: string, count: number) { return [...new Set([...answer.matchAll(/\[S(\d+)\]/g)].map((match) => match[1]).filter((label) => Number(label) < 1 || Number(label) > count))]; }
 function classify(answer: string) { return /cannot be fully determined|does not contain enough information|insufficient/i.test(answer) ? "insufficient_context" : "grounded"; }
 function estimateCost(entries: ReturnType<typeof prepareCases>, candidate: GeneratorCandidate, maxTokens: number) { const generated = entries.filter((item) => item.evidence.length); const input = sum(generated.map((item) => Math.ceil(item.userPrompt.length / 4))); return input / 1e6 * candidate.inputPriceUsdPerMillionTokens + generated.length * maxTokens / 1e6 * candidate.outputPriceUsdPerMillionTokens; }
