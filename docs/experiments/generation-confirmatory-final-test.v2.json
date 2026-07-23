@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "generation-confirmatory-final-test-v2",
   "title": "Locked confirmatory test of the validation-selected grounded generator",
-  "status": "preregistered",
+  "status": "outputs-generated-awaiting-human-review",
   "preregisteredAt": "2026-07-23",
   "researchQuestion": "Does validation-selected GLM-5.2 retain grounded answer quality, citation reliability, abstention, and operational reliability on the 48-case confirmatory retrieval output?",
   "hypothesis": "GLM-5.2 will complete every evidence-bearing case without truncation, invalid citation labels, or provider mismatch and will retain the frozen human-quality guardrails.",
@@ -84,6 +84,34 @@
     "report": "docs/experiment-results/generation-confirmatory-final-test-v2.md",
     "reviewWorksheet": "docs/evaluation/generation-confirmatory-final-test-human-review-v2.csv",
     "executionLedger": "docs/experiment-results/generation-confirmatory-final-test-v2-execution-ledger.json"
+  },
+  "execution": {
+    "completedAt": "2026-07-23T18:26:36.464Z",
+    "executionCommit": "fba424e0869c0e6d52b467c40b3f9a822dc8583c",
+    "logicalExecutionCount": 1,
+    "providerCalls": 25,
+    "deterministicAbstentions": 23,
+    "technicalRecoveries": 0,
+    "finalErrors": 0,
+    "explicitTruncations": 0,
+    "invalidCitationLabelCases": 0,
+    "tokens": {
+      "prompt": 46603,
+      "completion": 7493,
+      "reasoning": 3986,
+      "total": 54096
+    },
+    "costUsd": 0.09555228000000002,
+    "medianLatencyMs": 2847.79,
+    "p95LatencyMs": 5104.06,
+    "automaticChecksPassed": true,
+    "semanticQualityStatus": "awaiting-required-human-review"
+  },
+  "outputIntegrity": {
+    "resultSha256": "e0e8348c3823614332ac52a511d0be9598352cb458152e5d0b26a99b98acde8f",
+    "reportSha256": "33e4eeca80265dd2bc44ff2f6919658ce4ee908aeda95335cbb7bc04747f1f00",
+    "reviewWorksheetSha256": "d68918325d7b11c62e4948abe7d90d3204f0b4fbedbb5dd1ddf05ffc34560b1b",
+    "executionLedgerSha256": "caa2541ea93fdae6bb8f08a3da9398ea01113297fe6dbea777f256f545c6def7"
   },
   "limitations": [
     "The final human review has one thesis-author reviewer and does not estimate inter-rater reliability.",

@@ -1,0 +1,1045 @@
+{
+  "schemaVersion": 1,
+  "id": "generation-confirmatory-final-test-v2",
+  "createdAt": "2026-07-23T18:26:36.464Z",
+  "split": "test",
+  "executionNumber": 1,
+  "candidate": {
+    "id": "glm-5.2-openrouter-baseten-fp8",
+    "provider": "openrouter",
+    "model": "z-ai/glm-5.2-20260616",
+    "expectedResponseModel": "z-ai/glm-5.2",
+    "expectedResponseProvider": "BaseTen",
+    "providerOrder": [
+      "baseten/fp8"
+    ],
+    "allowFallbacks": false,
+    "reasoningEffort": "low",
+    "inputPriceUsdPerMillionTokens": 1.4,
+    "outputPriceUsdPerMillionTokens": 4.4
+  },
+  "controls": {
+    "temperature": 0,
+    "maxOutputTokens": 900,
+    "promptVersion": "retriq-grounded-generation-prompt-v1@1.0.0",
+    "citationLabels": "retrieval rank labels S1-S4",
+    "noEvidencePolicy": "deterministic abstention without a provider call",
+    "judgeEnabled": false
+  },
+  "estimate": 0.1645172,
+  "automatic": {
+    "cases": 48,
+    "providerCalls": 25,
+    "deterministicAbstentions": 23,
+    "errors": 0,
+    "truncations": 0,
+    "invalidCitationLabelCases": 0,
+    "tokens": {
+      "prompt": 46603,
+      "completion": 7493,
+      "reasoning": 3986,
+      "total": 54096
+    },
+    "costUsd": 0.09555228000000002,
+    "latencyMs": {
+      "median": 2847.79,
+      "p95": 5104.06
+    },
+    "checks": {
+      "providerErrors": true,
+      "providerOrModelMismatches": true,
+      "explicitTruncations": true,
+      "invalidCitationLabels": true,
+      "costCeiling": true
+    },
+    "allPassed": true
+  },
+  "outputs": [
+    {
+      "caseId": "confirm-v1-bash-colon-parameter-expansion",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "Including the colon in forms such as `${parameter:-word}` causes the operator to test for both the parameter's existence and that its value is not null [S1]. If the colon is omitted, the operator tests only for the parameter's existence (whether it is unset) [S1]. For example, if a variable is set to a null value, `${parameter:-word}` substitutes the expansion of `word`, whereas `${parameter-word}` substitutes the null value [S2].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "Including the colon in forms such as `${parameter:-word}` causes the operator to test for both the parameter's existence and that its value is not null [S1]. If the colon is omitted, the operator tests only for the parameter's existence (whether it is unset) [S1]. For example, if a variable is set to a null value, `${parameter:-word}` substitutes the expansion of `word`, whereas `${parameter-word}` substitutes the null value [S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831121-xluOYH8U5nWjNu4Bv6Iq",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1236,
+          "completionTokens": 294,
+          "reasoningTokens": 196,
+          "cachedTokens": 0,
+          "totalTokens": 1530,
+          "costUsd": 0.003024,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3137.52,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-bash-command-substitution-newlines",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "Bash command substitution replaces the command substitution with the standard output of the command, with any trailing newlines deleted [S1]. Embedded newlines are not deleted, but they may be removed during word splitting [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "Bash command substitution replaces the command substitution with the standard output of the command, with any trailing newlines deleted [S1]. Embedded newlines are not deleted, but they may be removed during word splitting [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831124-4Stg9F6m5MwDaqx3OTNR",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2878,
+          "completionTokens": 160,
+          "reasoningTokens": 114,
+          "cachedTokens": 96,
+          "totalTokens": 3038,
+          "costUsd": 0.00461224,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 1587.79,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-bash-systemd",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-bash-tmux",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-c-array-conversion",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "Under C11 (WG14 N1570), the usual conversion of an array expression to a pointer to its first element does **not** occur when the array expression is:\n\n- the operand of the `sizeof` operator [S1, S2],\n- the operand of the `_Alignof` operator [S1, S2],\n- the operand of the unary `&` operator [S1, S2], or\n- a string literal used to initialize an array [S1, S2].\n\nNo other exceptions are listed in the provided excerpts.",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "Under C11 (WG14 N1570), the usual conversion of an array expression to a pointer to its first element does **not** occur when the array expression is:\n\n- the operand of the `sizeof` operator [S1, S2],\n- the operand of the `_Alignof` operator [S1, S2],\n- the operand of the unary `&` operator [S1, S2], or\n- a string literal used to initialize an array [S1, S2].\n\nNo other exceptions are listed in the provided excerpts.",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831126-336mrz3U3Ym1j1wXrfx6",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2104,
+          "completionTokens": 307,
+          "reasoningTokens": 193,
+          "cachedTokens": 96,
+          "totalTokens": 2411,
+          "costUsd": 0.00417544,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3267.54,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-c-sequence-point",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "The presence of a sequence point between the evaluation of expressions A and B implies that every value computation and side effect associated with A is sequenced before every value computation and side effect associated with B [S1, S3].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "The presence of a sequence point between the evaluation of expressions A and B implies that every value computation and side effect associated with A is sequenced before every value computation and side effect associated with B [S1, S3].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831129-7U7Ihehd15oO6IG0xOfW",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1942,
+          "completionTokens": 122,
+          "reasoningTokens": 76,
+          "cachedTokens": 96,
+          "totalTokens": 2064,
+          "costUsd": 0.00313464,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 1413.19,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-c-libuv",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-c-openssl",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-cpp-range-temporary-lifetime",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "A temporary object created in the for-range-initializer of a range-based for statement has its lifetime extended. Specifically, if such a temporary object would otherwise be destroyed at the end of the for-range-initializer full-expression, the object persists for the lifetime of the reference initialized by the for-range-initializer [S3]. This means the lifetime of some temporaries in the for-range-initializer is extended to cover the entire loop [S1, S2].\n\nHowever, this extension applies only to temporaries that are directly bound to the range reference. As illustrated in the documentation's example, when a temporary is passed by value to a function that returns a reference, the temporary is not protected and the result is undefined behavior [S1, S2]:\n\n- `for (auto e : f1(g())) {}` — OK, because the return value of `g()` is directly bound and its lifetime is extended [S1, S2].\n- `for (auto e : f2(g())) {}` — undefined behavior, because the temporary is destroyed before the loop body executes [S1, S2].\n\nThis behavior represents a change from C++2020, where destructors of some temporary objects in the for-range-initializer were invoked earlier [S4].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "A temporary object created in the for-range-initializer of a range-based for statement has its lifetime extended. Specifically, if such a temporary object would otherwise be destroyed at the end of the for-range-initializer full-expression, the object persists for the lifetime of the reference initialized by the for-range-initializer [S3]. This means the lifetime of some temporaries in the for-range-initializer is extended to cover the entire loop [S1, S2].\n\nHowever, this extension applies only to temporaries that are directly bound to the range reference. As illustrated in the documentation's example, when a temporary is passed by value to a function that returns a reference, the temporary is not protected and the result is undefined behavior [S1, S2]:\n\n- `for (auto e : f1(g())) {}` — OK, because the return value of `g()` is directly bound and its lifetime is extended [S1, S2].\n- `for (auto e : f2(g())) {}` — undefined behavior, because the temporary is destroyed before the loop body executes [S1, S2].\n\nThis behavior represents a change from C++2020, where destructors of some temporary objects in the for-range-initializer were invoked earlier [S4].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831131-Q24kSeAkTgA8k0GRYpvS",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 3303,
+          "completionTokens": 521,
+          "reasoningTokens": 265,
+          "cachedTokens": 96,
+          "totalTokens": 3824,
+          "costUsd": 0.00679564,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 4610.69,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-cpp-structured-binding-size",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "If there is no structured binding pack, the number of elements in the `sb-identifier-list` shall be equal to the structured binding size of `E` [S1, S2].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "If there is no structured binding pack, the number of elements in the `sb-identifier-list` shall be equal to the structured binding size of `E` [S1, S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831135-sLVq0UGSgNm8BbYjqfXq",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2184,
+          "completionTokens": 104,
+          "reasoningTokens": 64,
+          "cachedTokens": 96,
+          "totalTokens": 2288,
+          "costUsd": 0.00339424,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 1166.17,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-cpp-boost-asio",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-cpp-qt-model",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-go-interface-comparison",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "Two Go interface values are equal if they have identical dynamic types and equal dynamic values, or if both have value nil [S2]. A comparison of two interface values with identical dynamic types causes a run-time panic if that type is not comparable [S1]. This run-time panic behavior also applies when comparing arrays of interface values or structs with interface-valued fields [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 3,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "Two Go interface values are equal if they have identical dynamic types and equal dynamic values, or if both have value nil [S2]. A comparison of two interface values with identical dynamic types causes a run-time panic if that type is not comparable [S1]. This run-time panic behavior also applies when comparing arrays of interface values or structs with interface-valued fields [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831136-iOY3UMVIszz0RcoJ6MPA",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1516,
+          "completionTokens": 235,
+          "reasoningTokens": 158,
+          "cachedTokens": 96,
+          "totalTokens": 1751,
+          "costUsd": 0.00303544,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 2223.85,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-go-select-choice",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "A \"select\" statement chooses which of a set of possible send or receive operations will proceed [S2].",
+      "answerStatus": "grounded",
+      "evidenceCount": 3,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "A \"select\" statement chooses which of a set of possible send or receive operations will proceed [S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831139-cNe0ilCnNtpAWMQxurZj",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1748,
+          "completionTokens": 73,
+          "reasoningTokens": 50,
+          "cachedTokens": 96,
+          "totalTokens": 1821,
+          "costUsd": 0.00264744,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 1216.91,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-go-gin",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-go-grpc",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-java-record-purpose",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "According to the Java Language Specification, record classes are a restricted kind of class that support the compact expression of simple objects serving as aggregates of values [S1, S4]. A record declaration specifies a new record class that defines a simple aggregate of values [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "According to the Java Language Specification, record classes are a restricted kind of class that support the compact expression of simple objects serving as aggregates of values [S1, S4]. A record declaration specifies a new record class that defines a simple aggregate of values [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831140-YZi7XFH0itEylMdrCe87",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1309,
+          "completionTokens": 147,
+          "reasoningTokens": 92,
+          "cachedTokens": 96,
+          "totalTokens": 1456,
+          "costUsd": 0.00235844,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 1425.14,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-java-resource-autocloseable",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "The type of a local variable declared in a resource specification, or the type of an existing variable referred to in a resource specification, must be a subtype of `AutoCloseable`, or a compile-time error occurs [S1, S2].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "The type of a local variable declared in a resource specification, or the type of an existing variable referred to in a resource specification, must be a subtype of `AutoCloseable`, or a compile-time error occurs [S1, S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831141-reosdt2lpmYi4upXYTQo",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1878,
+          "completionTokens": 192,
+          "reasoningTokens": 142,
+          "cachedTokens": 96,
+          "totalTokens": 2070,
+          "costUsd": 0.00335304,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 1606.91,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-java-micronaut",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-java-spring-data",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-javascript-optional-chaining",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "When the value to access or invoke is either `undefined` or `null`, optional chaining returns `undefined` instead of proceeding with the chain evaluation [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 2,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "When the value to access or invoke is either `undefined` or `null`, optional chaining returns `undefined` instead of proceeding with the chain evaluation [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831143-ke7dZwxQohr0E4phO13S",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 573,
+          "completionTokens": 88,
+          "reasoningTokens": 54,
+          "cachedTokens": 96,
+          "totalTokens": 661,
+          "costUsd": 0.00106844,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 1162.22,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-javascript-promise-all",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "## How `Promise.all` Settles\n\n`Promise.all` returns a new promise that settles in one of two ways [S2]:\n\n1. **Fulfilled**: It is fulfilled with an array of fulfillment values for the passed promises, once all of them have fulfilled [S2]. As the algorithm iterates over the input, it resolves each element to a promise and stores each fulfillment value at its corresponding index in a values list; when the remaining elements count reaches zero, the result promise is resolved with an array created from that list [S3].\n\n2. **Rejected**: It rejects with the reason of the first passed promise that rejects [S2].\n\nThe algorithm resolves all elements of the passed iterable to promises as it runs [S2]. A `remainingElementsCount` record starts at 1 (rather than 0) to ensure the result is only resolved once, even in the presence of a misbehaving `then` [S3].\n\n> **Note:** The provided excerpts for `PerformPromiseAll` [S3] only show the fulfillment-handling steps and the iterator-exhaustion logic. The rejection-handling steps within `PerformPromiseAll` are not fully shown in the supplied documentation, so the precise internal rejection mechanism cannot be fully determined from these excerpts. However, the high-level rejection behavior is confirmed in [S2].",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "## How `Promise.all` Settles\n\n`Promise.all` returns a new promise that settles in one of two ways [S2]:\n\n1. **Fulfilled**: It is fulfilled with an array of fulfillment values for the passed promises, once all of them have fulfilled [S2]. As the algorithm iterates over the input, it resolves each element to a promise and stores each fulfillment value at its corresponding index in a values list; when the remaining elements count reaches zero, the result promise is resolved with an array created from that list [S3].\n\n2. **Rejected**: It rejects with the reason of the first passed promise that rejects [S2].\n\nThe algorithm resolves all elements of the passed iterable to promises as it runs [S2]. A `remainingElementsCount` record starts at 1 (rather than 0) to ensure the result is only resolved once, even in the presence of a misbehaving `then` [S3].\n\n> **Note:** The provided excerpts for `PerformPromiseAll` [S3] only show the fulfillment-handling steps and the iterator-exhaustion logic. The rejection-handling steps within `PerformPromiseAll` are not fully shown in the supplied documentation, so the precise internal rejection mechanism cannot be fully determined from these excerpts. However, the high-level rejection behavior is confirmed in [S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831144-VodQH85ACpMPtuFkGCrr",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1955,
+          "completionTokens": 567,
+          "reasoningTokens": 292,
+          "cachedTokens": 96,
+          "totalTokens": 2522,
+          "costUsd": 0.00511084,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 5104.06,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-javascript-deno",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-javascript-express",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-kotlin-data-generated-members",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "Kotlin generates the following common functions for a data class to reduce boilerplate [S1]:\n\n1. **`equals()`**: Returns `true` if the other object has the same runtime type and all data properties match [S1].\n2. **`hashCode()`**: Returns the same hash code for objects that are equal according to the generated `equals()` function [S1].\n3. **`toString()`**: Returns a string representation that includes the class name and the string representations of all data properties [S1].\n4. **`copy()`**: Creates a shallow copy of the object. It has the same parameters as the primary constructor, with defaults set to the current object's property values [S1].\n5. **`componentN()`**: A series of functions (e.g., `component1()`, `component2()`) generated for each data property to enable destructuring declarations. They have an `operator` modifier and return the value of the property at position N [S1, S2].\n\nAll of these generated functions consider only the data properties declared in the primary constructor [S1, S2].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "Kotlin generates the following common functions for a data class to reduce boilerplate [S1]:\n\n1. **`equals()`**: Returns `true` if the other object has the same runtime type and all data properties match [S1].\n2. **`hashCode()`**: Returns the same hash code for objects that are equal according to the generated `equals()` function [S1].\n3. **`toString()`**: Returns a string representation that includes the class name and the string representations of all data properties [S1].\n4. **`copy()`**: Creates a shallow copy of the object. It has the same parameters as the primary constructor, with defaults set to the current object's property values [S1].\n5. **`componentN()`**: A series of functions (e.g., `component1()`, `component2()`) generated for each data property to enable destructuring declarations. They have an `operator` modifier and return the value of the property at position N [S1, S2].\n\nAll of these generated functions consider only the data properties declared in the primary constructor [S1, S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831149-Tu83Y58mRCFNvFXcKQt0",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1835,
+          "completionTokens": 316,
+          "reasoningTokens": 88,
+          "cachedTokens": 96,
+          "totalTokens": 2151,
+          "costUsd": 0.00383844,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3974.31,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-kotlin-elvis-laziness",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "The Elvis operator (`?:`) checks whether the left-hand side expression is reference equal to null [S1]. If it is null, the operator evaluates and returns the right-hand side expression [S1]. If the left-hand side is not reference equal to null, the right-hand side expression is not evaluated, making the operator lazy [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 2,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "The Elvis operator (`?:`) checks whether the left-hand side expression is reference equal to null [S1]. If it is null, the operator evaluates and returns the right-hand side expression [S1]. If the left-hand side is not reference equal to null, the right-hand side expression is not evaluated, making the operator lazy [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831153-W03qwrfhbbZo19hcN66S",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 767,
+          "completionTokens": 98,
+          "reasoningTokens": 27,
+          "cachedTokens": 0,
+          "totalTokens": 865,
+          "costUsd": 0.001505,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 2458.13,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-kotlin-ktor",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-kotlin-serialization",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-postgres-gin-purpose",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "PostgreSQL GIN (Generalized Inverted Index) indexes are designed for data values that contain multiple component values, such as arrays or documents [S1, S2]. They are intended for cases where the items to be indexed are composite values, and queries need to search for specific element values (keys) that appear within those composite items [S2, S3].\n\nAn inverted index is organized by storing a separate entry for each component value (key) rather than for the item as a whole [S1, S2]. Specifically, a GIN index stores a set of (key, posting list) pairs, where a posting list is a set of row IDs (heap pointers) in which the key occurs [S2, S4]. The same row ID can appear in multiple posting lists, since an item can contain more than one key, but each key value is stored only once, making the index very compact for repeated keys [S2].\n\nInternally, a GIN index contains a B-tree index constructed over the keys [S4]. Each tuple in a leaf page of this B-tree contains either a pointer to a B-tree of heap pointers (called a \"posting tree\") or a simple list of heap pointers (a \"posting list\") if the list is small enough to fit into a single index tuple along with the key value [S4].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "PostgreSQL GIN (Generalized Inverted Index) indexes are designed for data values that contain multiple component values, such as arrays or documents [S1, S2]. They are intended for cases where the items to be indexed are composite values, and queries need to search for specific element values (keys) that appear within those composite items [S2, S3].\n\nAn inverted index is organized by storing a separate entry for each component value (key) rather than for the item as a whole [S1, S2]. Specifically, a GIN index stores a set of (key, posting list) pairs, where a posting list is a set of row IDs (heap pointers) in which the key occurs [S2, S4]. The same row ID can appear in multiple posting lists, since an item can contain more than one key, but each key value is stored only once, making the index very compact for repeated keys [S2].\n\nInternally, a GIN index contains a B-tree index constructed over the keys [S4]. Each tuple in a leaf page of this B-tree contains either a pointer to a B-tree of heap pointers (called a \"posting tree\") or a simple list of heap pointers (a \"posting list\") if the list is small enough to fit into a single index tuple along with the key value [S4].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831156-wgcSbd3QWT1uvTKJfADV",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1703,
+          "completionTokens": 596,
+          "reasoningTokens": 319,
+          "cachedTokens": 96,
+          "totalTokens": 2299,
+          "costUsd": 0.00488564,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 4490.82,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-postgres-mvcc-snapshot",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "PostgreSQL's Multiversion Concurrency Control (MVCC) gives each SQL statement a consistent view by allowing it to see a snapshot of the data (a database version) as it existed at some point in time, regardless of the current state of the underlying data [S1]. For example, in the default Read Committed isolation level, a SELECT query sees a snapshot of the database as of the instant the query begins, viewing only data committed before the query started [S4]. This prevents statements from viewing inconsistent data produced by concurrent transactions performing updates on the same data rows [S1].\n\nMVCC reduces read-write contention by eschewing the traditional locking methodologies used by other database systems [S1]. Under MVCC, locks acquired for reading data do not conflict with locks acquired for writing data [S1]. As a result, reading never blocks writing, and writing never blocks reading, which minimizes lock contention and allows for reasonable performance in multiuser environments [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "PostgreSQL's Multiversion Concurrency Control (MVCC) gives each SQL statement a consistent view by allowing it to see a snapshot of the data (a database version) as it existed at some point in time, regardless of the current state of the underlying data [S1]. For example, in the default Read Committed isolation level, a SELECT query sees a snapshot of the database as of the instant the query begins, viewing only data committed before the query started [S4]. This prevents statements from viewing inconsistent data produced by concurrent transactions performing updates on the same data rows [S1].\n\nMVCC reduces read-write contention by eschewing the traditional locking methodologies used by other database systems [S1]. Under MVCC, locks acquired for reading data do not conflict with locks acquired for writing data [S1]. As a result, reading never blocks writing, and writing never blocks reading, which minimizes lock contention and allows for reasonable performance in multiuser environments [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831160-H2wVkO4j8rXVCjCn7pro",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1654,
+          "completionTokens": 385,
+          "reasoningTokens": 186,
+          "cachedTokens": 96,
+          "totalTokens": 2039,
+          "costUsd": 0.00388864,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 4764.87,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-postgres-postgis",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-postgres-timescale",
+      "answerability": "unanswerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "The provided documentation does not contain information about TimescaleDB or how it partitions hypertables into chunks. The excerpt only describes general PostgreSQL table partitioning, such as range partitioning [S1]. Therefore, the answer cannot be fully determined from the provided documentation.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 1,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "The provided documentation does not contain information about TimescaleDB or how it partitions hypertables into chunks. The excerpt only describes general PostgreSQL table partitioning, such as range partitioning [S1]. Therefore, the answer cannot be fully determined from the provided documentation.",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831165-Q3BgE0UAHDgjGNg3UnxD",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 657,
+          "completionTokens": 123,
+          "reasoningTokens": 70,
+          "cachedTokens": 96,
+          "totalTokens": 780,
+          "costUsd": 0.00134004,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 1893.42,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-python-generator-expression",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "**Syntax**\nThe syntax for a generator expression is the same as for a list comprehension, except that generator expressions are enclosed in parentheses instead of brackets [S1, S2, S3]. The enclosing parentheses can be omitted in calls when the generator expression is the only positional argument and there are no keyword arguments [S1].\n\n**Memory Behavior**\nAt runtime, a generator expression evaluates to a generator iterator rather than a list, yielding the same values as the corresponding list comprehension [S1, S3]. Generator expressions tend to be more memory friendly than equivalent list comprehensions [S2]. The iterable expression in the leftmost `for` clause is evaluated immediately, but all other expressions are evaluated lazily, in the same fashion as normal generators (when the iterator is asked to yield a value) [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 3,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "**Syntax**\nThe syntax for a generator expression is the same as for a list comprehension, except that generator expressions are enclosed in parentheses instead of brackets [S1, S2, S3]. The enclosing parentheses can be omitted in calls when the generator expression is the only positional argument and there are no keyword arguments [S1].\n\n**Memory Behavior**\nAt runtime, a generator expression evaluates to a generator iterator rather than a list, yielding the same values as the corresponding list comprehension [S1, S3]. Generator expressions tend to be more memory friendly than equivalent list comprehensions [S2]. The iterable expression in the leftmost `for` clause is evaluated immediately, but all other expressions are evaluated lazily, in the same fashion as normal generators (when the iterator is asked to yield a value) [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831167-f7nxkBYHRqx1Dnsyi04L",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1723,
+          "completionTokens": 464,
+          "reasoningTokens": 298,
+          "cachedTokens": 96,
+          "totalTokens": 2187,
+          "costUsd": 0.00433284,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3792.32,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-python-with-context-manager",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "The `with` statement uses the **context manager protocol**, which involves two methods: `__enter__()` and `__exit__()` [S1, S4].\n\nThe execution proceeds as follows:\n\n1. The context expression is evaluated to obtain a context manager [S1, S4].\n2. The context manager's `__enter__()` method is loaded and then invoked [S1, S4].\n3. If a target was included in the `with` statement, the return value from `__enter__()` is assigned to it [S1].\n4. The suite (block) is executed [S1].\n5. The context manager's `__exit__()` method is invoked [S1, S2].\n   - If an exception caused the suite to be exited, the exception's type, value, and traceback are passed as arguments to `__exit__()` [S1, S2].\n   - Otherwise, three `None` arguments are supplied [S1, S2].\n6. If the suite was exited due to an exception:\n   - If the return value from `__exit__()` is false, the exception is reraised [S1, S2].\n   - If the return value is true, the exception is suppressed and execution continues with the statement following the `with` statement [S1, S2].\n7. If the suite was exited for any reason other than an exception, the return value from `__exit__()` is ignored [S1, S2].\n\nThe `with` statement guarantees that if `__enter__()` returns without an error, `__exit__()` will always be called [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "The `with` statement uses the **context manager protocol**, which involves two methods: `__enter__()` and `__exit__()` [S1, S4].\n\nThe execution proceeds as follows:\n\n1. The context expression is evaluated to obtain a context manager [S1, S4].\n2. The context manager's `__enter__()` method is loaded and then invoked [S1, S4].\n3. If a target was included in the `with` statement, the return value from `__enter__()` is assigned to it [S1].\n4. The suite (block) is executed [S1].\n5. The context manager's `__exit__()` method is invoked [S1, S2].\n   - If an exception caused the suite to be exited, the exception's type, value, and traceback are passed as arguments to `__exit__()` [S1, S2].\n   - Otherwise, three `None` arguments are supplied [S1, S2].\n6. If the suite was exited due to an exception:\n   - If the return value from `__exit__()` is false, the exception is reraised [S1, S2].\n   - If the return value is true, the exception is suppressed and execution continues with the statement following the `with` statement [S1, S2].\n7. If the suite was exited for any reason other than an exception, the return value from `__exit__()` is ignored [S1, S2].\n\nThe `with` statement guarantees that if `__enter__()` returns without an error, `__exit__()` will always be called [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831171-qu6fLUOESmUZSHo3jJZk",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2167,
+          "completionTokens": 647,
+          "reasoningTokens": 305,
+          "cachedTokens": 96,
+          "totalTokens": 2814,
+          "costUsd": 0.00575964,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 5994.38,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-python-flask",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-python-pytorch",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-react-hook-placement",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "React Hooks may only be called at the top level of your component or your own custom Hooks [S1, S2]. They cannot be called inside loops or conditions [S2]. If you need state inside a loop or condition, you should extract a new component and move the state into it [S2].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "React Hooks may only be called at the top level of your component or your own custom Hooks [S1, S2]. They cannot be called inside loops or conditions [S2]. If you need state inside a loop or condition, you should extract a new component and move the state into it [S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831177-fW5snSUAqvIItp58WF7V",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2042,
+          "completionTokens": 266,
+          "reasoningTokens": 202,
+          "cachedTokens": 96,
+          "totalTokens": 2308,
+          "costUsd": 0.00390824,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3469.79,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-react-list-keys",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "React list items need stable keys so React can uniquely identify each item among its siblings and keep track of it even if its position changes due to reordering, insertion, or deletion [S1, S3]. A well-chosen key gives React more information than the item’s position in the array and helps it infer what happened and make the correct DOM updates [S1, S3]. If keys change or are generated on the fly, such as with `Math.random()`, React won’t be able to match items between renders, causing components and DOM to be recreated every time, which is slow and can lose user input [S1, S2]. Using an array index as a key is discouraged because item order can change, leading to subtle and confusing bugs [S1, S2].\n\nKeys should usually come from stable IDs in the data [S1, S2]. For data from a database, use the database keys/IDs [S1, S4]. For locally generated and persisted data, use an incrementing counter, `crypto.randomUUID()`, or a package like `uuid` when creating items [S1, S4]. Keys must be unique among siblings and must not change [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "React list items need stable keys so React can uniquely identify each item among its siblings and keep track of it even if its position changes due to reordering, insertion, or deletion [S1, S3]. A well-chosen key gives React more information than the item’s position in the array and helps it infer what happened and make the correct DOM updates [S1, S3]. If keys change or are generated on the fly, such as with `Math.random()`, React won’t be able to match items between renders, causing components and DOM to be recreated every time, which is slow and can lose user input [S1, S2]. Using an array index as a key is discouraged because item order can change, leading to subtle and confusing bugs [S1, S2].\n\nKeys should usually come from stable IDs in the data [S1, S2]. For data from a database, use the database keys/IDs [S1, S4]. For locally generated and persisted data, use an incrementing counter, `crypto.randomUUID()`, or a package like `uuid` when creating items [S1, S4]. Keys must be unique among siblings and must not change [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831180-uTIIcVlYtqllkxpzIbP6",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2253,
+          "completionTokens": 269,
+          "reasoningTokens": 23,
+          "cachedTokens": 96,
+          "totalTokens": 2522,
+          "costUsd": 0.00421684,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 2680.14,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-react-apollo",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-react-zustand",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-rust-loop-break-value",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "A Rust `loop` can return a value to the surrounding code by adding the value you want returned after the `break` expression used to stop the loop [S1, S2]. This value is then returned out of the loop so you can use it [S1, S2]. \n\nSpecifically, a `break` expression can return a value using the form `break EXPR` or `break 'label EXPR`, where `EXPR` is the expression whose result is returned from the loop [S4]. The type of a loop that returns values in this way is the least upper bound of all of the break operands [S4].\n\nAdditionally, you can use the `return` keyword from inside a loop, which will exit the current function entirely, unlike `break` which only exits the current loop [S1, S3].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "A Rust `loop` can return a value to the surrounding code by adding the value you want returned after the `break` expression used to stop the loop [S1, S2]. This value is then returned out of the loop so you can use it [S1, S2]. \n\nSpecifically, a `break` expression can return a value using the form `break EXPR` or `break 'label EXPR`, where `EXPR` is the expression whose result is returned from the loop [S4]. The type of a loop that returns values in this way is the least upper bound of all of the break operands [S4].\n\nAdditionally, you can use the `return` keyword from inside a loop, which will exit the current function entirely, unlike `break` which only exits the current loop [S1, S3].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831183-TxCR6RKKmm9hJZMZb9Xy",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2107,
+          "completionTokens": 349,
+          "reasoningTokens": 176,
+          "cachedTokens": 0,
+          "totalTokens": 2456,
+          "costUsd": 0.0044854,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 2847.79,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-rust-slice-ownership",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "A Rust slice represents a “view” into a sequence of elements of type `T`, and the slice type is written as `[T]` [S1]. Slices let you reference a contiguous sequence of elements in a collection [S2]. A slice is a kind of reference, so it does not have ownership [S2]. For example, a shared slice `&[T]` doesn’t own the data it points to; it borrows it [S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "A Rust slice represents a “view” into a sequence of elements of type `T`, and the slice type is written as `[T]` [S1]. Slices let you reference a contiguous sequence of elements in a collection [S2]. A slice is a kind of reference, so it does not have ownership [S2]. For example, a shared slice `&[T]` doesn’t own the data it points to; it borrows it [S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831186-7WiBr7IlkQQZFwJUPMbd",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 1600,
+          "completionTokens": 156,
+          "reasoningTokens": 58,
+          "cachedTokens": 96,
+          "totalTokens": 1756,
+          "costUsd": 0.00280544,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 1717.18,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-rust-actix",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-rust-rayon",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-typescript-keyof-domain",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "Based on the provided documentation, TypeScript's `keyof` operator can represent the following property-name categories:\n\n*   **String-like properties:** These are properties declared using an identifier, a string literal, or a computed property name of a string literal type [S2]. If the type includes a string index signature, `keyof` includes the `string` type [S1, S2].\n*   **Number-like properties:** These are properties declared using a numeric literal or a computed property name of a numeric literal type (such as numeric enums) [S2]. If the type includes a numeric index signature, `keyof` includes the `number` type [S1, S2].\n*   **Symbol-like properties:** These are properties declared using a computed property name of a unique symbol type [S2].\n\nOverall, an index type `keyof T` for some type `T` is a subtype of `string | number | symbol` [S2].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "Based on the provided documentation, TypeScript's `keyof` operator can represent the following property-name categories:\n\n*   **String-like properties:** These are properties declared using an identifier, a string literal, or a computed property name of a string literal type [S2]. If the type includes a string index signature, `keyof` includes the `string` type [S1, S2].\n*   **Number-like properties:** These are properties declared using a numeric literal or a computed property name of a numeric literal type (such as numeric enums) [S2]. If the type includes a numeric index signature, `keyof` includes the `number` type [S1, S2].\n*   **Symbol-like properties:** These are properties declared using a computed property name of a unique symbol type [S2].\n\nOverall, an index type `keyof T` for some type `T` is a subtype of `string | number | symbol` [S2].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831187-JHd2UjftwNw5XQCsZQHS",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 2087,
+          "completionTokens": 462,
+          "reasoningTokens": 264,
+          "cachedTokens": 96,
+          "totalTokens": 2549,
+          "costUsd": 0.00483364,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 3623.79,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-typescript-unknown-safety",
+      "answerability": "answerable",
+      "generationPolicy": "invoke-generator",
+      "answer": "TypeScript's `unknown` type is safer than `any` because it is the type-safe counterpart of `any` that prevents unverified operations [S4]. While both types can represent any value, `unknown` is safer because it is not legal to do anything with an `unknown` value without first asserting or narrowing it to a more specific type [S3, S4].\n\nSpecifically, the documentation highlights the following safety constraints on `unknown`:\n\n*   **No operations are permitted:** You cannot perform arithmetic operations, property accesses, element accesses, or function calls on an `unknown` value. Only equality operators (like `==` and `!==`) are allowed [S1, S4].\n*   **Restricted assignability:** While anything is assignable to `unknown`, an `unknown` type is only assignable to itself and `any` without a type assertion or control flow narrowing. It cannot be assigned to more specific types like `string`, `object`, or `number` [S1, S4].\n*   **Preservation of type safety:** Unlike `any`, which allows you to do anything with it but causes you to lose most error checking and editor support, `unknown` forces you to verify the type of the value (using `typeof`, `instanceof`, or type predicates) before interacting with it [S2, S1].",
+      "answerStatus": "grounded",
+      "evidenceCount": 4,
+      "invalidCitationLabels": [],
+      "result": {
+        "answer": "TypeScript's `unknown` type is safer than `any` because it is the type-safe counterpart of `any` that prevents unverified operations [S4]. While both types can represent any value, `unknown` is safer because it is not legal to do anything with an `unknown` value without first asserting or narrowing it to a more specific type [S3, S4].\n\nSpecifically, the documentation highlights the following safety constraints on `unknown`:\n\n*   **No operations are permitted:** You cannot perform arithmetic operations, property accesses, element accesses, or function calls on an `unknown` value. Only equality operators (like `==` and `!==`) are allowed [S1, S4].\n*   **Restricted assignability:** While anything is assignable to `unknown`, an `unknown` type is only assignable to itself and `any` without a type assertion or control flow narrowing. It cannot be assigned to more specific types like `string`, `object`, or `number` [S1, S4].\n*   **Preservation of type safety:** Unlike `any`, which allows you to do anything with it but causes you to lose most error checking and editor support, `unknown` forces you to verify the type of the value (using `typeof`, `instanceof`, or type predicates) before interacting with it [S2, S1].",
+        "responseModel": "z-ai/glm-5.2",
+        "responseProvider": "BaseTen",
+        "responseId": "gen-1784831191-kyjmHVg6gHa4RlKISMiG",
+        "finishReason": "stop",
+        "truncated": false,
+        "usage": {
+          "promptTokens": 3382,
+          "completionTokens": 552,
+          "reasoningTokens": 274,
+          "cachedTokens": 96,
+          "totalTokens": 3934,
+          "costUsd": 0.00704264,
+          "costSource": "provider-reported"
+        },
+        "latencyMs": 5032.93,
+        "cacheHit": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-typescript-trpc",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    },
+    {
+      "caseId": "confirm-v1-typescript-typeorm",
+      "answerability": "unanswerable",
+      "generationPolicy": "deterministic-abstention",
+      "answer": "The retrieved documentation does not contain enough information to answer this question.",
+      "answerStatus": "insufficient_context",
+      "evidenceCount": 0,
+      "invalidCitationLabels": [],
+      "result": null,
+      "error": null
+    }
+  ],
+  "provenance": {
+    "gitCommit": "fba424e0869c0e6d52b467c40b3f9a822dc8583c",
+    "protocolSha256": "54e4a45465c7d7c8d4dd44a120bcdc043ec3f86f67410d5c9da5be286b74c397",
+    "retrievalResultSha256": "ddb8da0a1a16a2ef24f52c0faa32e632b08761b0d53ea9368f8741dc94dcf3e6",
+    "benchmarkApprovalState": "confirmed",
+    "independentlyHumanApproved": false
+  },
+  "decisionStatus": "automatic-checks-passed-human-review-required"
+}
