@@ -24,7 +24,7 @@ export default async function JudgeAdjudicationPage() {
     fs.readFile(humanPath, "utf8"), fs.readFile(auditPath, "utf8"), fs.readFile(manifestPath, "utf8")
   ]);
   const manifest = JSON.parse(manifestText) as Manifest;
-  if (sha256(humanText) !== manifest.sources.humanReviewSha256 || sha256(auditText) !== manifest.sources.judgeAuditSha256) {
+  if (sha256NormalizedText(humanText) !== manifest.sources.humanReviewSha256 || sha256NormalizedText(auditText) !== manifest.sources.judgeAuditSha256) {
     throw new Error("Judge adjudication sources no longer match the frozen manifest.");
   }
   const humanById = new Map(parseCsv(humanText).rows.map((row) => [`${row.case_id}::${row.blind_variant_id}`, row]));
@@ -52,4 +52,9 @@ export default async function JudgeAdjudicationPage() {
   return <JudgeAdjudicationWorkbench tasks={tasks} />;
 }
 
-function sha256(value: string) { return crypto.createHash("sha256").update(value).digest("hex"); }
+// Git can check text files out with CRLF on Windows while the frozen manifests
+// were created from LF content. Normalize only line endings so this integrity
+// check remains content-sensitive and reproducible across build platforms.
+function sha256NormalizedText(value: string) {
+  return crypto.createHash("sha256").update(value.replace(/\r\n?/g, "\n")).digest("hex");
+}
