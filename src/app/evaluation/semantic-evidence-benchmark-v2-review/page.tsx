@@ -1,6 +1,6 @@
-import fs from "node:fs/promises";
 import path from "node:path";
 
+import { readLocalReviewFiles } from "@/lib/evaluation/local-review-files";
 import { SemanticEvidenceReviewWorkbench } from "@/components/semantic-evidence-review-workbench";
 import type { SemanticEvidenceReviewTask } from "@/lib/evaluation/semantic-evidence-review";
 import type { DocumentationChunk } from "@/lib/rag/types";
@@ -18,10 +18,10 @@ type Packet = {
 };
 
 export default async function SemanticEvidenceBenchmarkV2ReviewPage() {
-  const [benchmarkRaw, seedRaw, chunksRaw] = await Promise.all([
-    fs.readFile(path.join(process.cwd(), "docs/evaluation/semantic-evidence-benchmark.v2.json"), "utf8"),
-    fs.readFile(path.join(process.cwd(), "docs/evaluation/semantic-evidence-benchmark.v2.seed.json"), "utf8"),
-    fs.readFile(path.join(process.cwd(), "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec/chunks.json"), "utf8"),
+  const [benchmarkRaw, seedRaw, chunksRaw] = await readLocalReviewFiles([
+    path.join(process.cwd(), "docs/evaluation/semantic-evidence-benchmark.v2.json"),
+    path.join(process.cwd(), "docs/evaluation/semantic-evidence-benchmark.v2.seed.json"),
+    path.join(process.cwd(), "data/experiments/baseline-gemini-300-v4-validation/20260717084956473-e60c88ec/chunks.json"),
   ]);
   const benchmark = JSON.parse(benchmarkRaw) as { reviewOrder: string[]; states: Packet[] };
   const questions = new Map((JSON.parse(seedRaw) as { questions: SeedQuestion[] }).questions.map((item) => [item.id, item]));
